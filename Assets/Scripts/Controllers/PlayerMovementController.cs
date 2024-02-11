@@ -8,15 +8,10 @@ namespace Controllers
         /// The arrow key speed
         /// </summary>
         public float moveForce = 25f;
-        /// <summary>
-        /// The boost key speed
-        /// </summary>
-        public float boostForce = 25f;
 
         private Rigidbody2D cRigidbody2D;
-
-        private float boostCharge = 0f;
-        private float boostCooldown = 0f;
+        public float boostCharge = 0f;
+        public float boostCooldown = 0f;
         private bool lastBoostInput = false;
     
         private void Start()
@@ -32,14 +27,14 @@ namespace Controllers
             var boostInput = Input.GetButton("Jump") && boostCooldown == 0f;
             if (boostInput)
             {
-                boostCharge += Time.fixedDeltaTime;
+                boostCharge = Mathf.Min(boostCharge + Time.fixedDeltaTime, 3f);
             }
             else if (lastBoostInput)
             {
-                var boost = boostCharge * boostForce + 1f;
-                // boostCooldown = 3f + boostCharge * 2f;
+                var boost = Mathf.Pow(boostCharge, 2f) + 2f;
+                boostCooldown = boost;
                 boostCharge = 0f;
-                cRigidbody2D.AddForce(boost * cRigidbody2D.velocity.normalized, ForceMode2D.Impulse);
+                cRigidbody2D.velocity *= boost;
             }
             if (boostCooldown > 0f)
             {

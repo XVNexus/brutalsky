@@ -8,5 +8,12 @@ namespace Utils
         {
             return Mathf.Pow(Mathf.Max(x - threshold, 0) * multiplier, power);
         }
+
+        public static float MoveTo(float from, float to, float step)
+        {
+            return from < to ? Mathf.Min(from + step, to)
+                : from > to ? Mathf.Max(from - step, to)
+                : from;
+        }
     }
 }

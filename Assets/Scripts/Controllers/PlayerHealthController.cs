@@ -6,6 +6,10 @@ namespace Controllers
     public class PlayerHealthController : MonoBehaviour
     {
         /// <summary>
+        /// The maximum possible player health
+        /// </summary>
+        public float maxHealth = 100f;
+        /// <summary>
         /// The starting player health
         /// </summary>
         public float health = 100f;
