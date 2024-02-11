@@ -4,15 +4,12 @@ namespace Controllers
 {
     public class PlayerMovementController : MonoBehaviour
     {
-        /// <summary>
-        /// The arrow key speed
-        /// </summary>
         public float moveForce = 25f;
+        public float boostCharge;
+        public float boostCooldown;
+        public bool lastBoostInput;
 
         private Rigidbody2D cRigidbody2D;
-        public float boostCharge = 0f;
-        public float boostCooldown = 0f;
-        private bool lastBoostInput = false;
     
         private void Start()
         {
@@ -21,9 +18,11 @@ namespace Controllers
 
         private void FixedUpdate()
         {
+            // Apply directional movement
             var movementInput = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical")).normalized;
             cRigidbody2D.AddForce(movementInput * moveForce);
-            
+
+            // Apply boost movement
             var boostInput = Input.GetButton("Jump") && boostCooldown == 0f;
             if (boostInput)
             {

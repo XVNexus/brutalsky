@@ -5,17 +5,12 @@ namespace Controllers
 {
     public class PlayerHealthController : MonoBehaviour
     {
-        /// <summary>
-        /// The maximum possible player health
-        /// </summary>
         public float maxHealth = 100f;
-        /// <summary>
-        /// The starting player health
-        /// </summary>
         public float health = 100f;
+        public float lastSpeed;
+        public bool isDead;
 
         private Rigidbody2D cRigidbody2D;
-        private float speedLastFrame = 0f;
     
         private void Start()
         {
@@ -24,20 +19,28 @@ namespace Controllers
 
         private void FixedUpdate()
         {
-            speedLastFrame = cRigidbody2D.velocity.magnitude;
+            // Save the current speed for future reference
+            lastSpeed = cRigidbody2D.velocity.magnitude;
+
+            // Delete the player if dead for more than a frame
+            if (isDead)
+            {
+                Destroy(gameObject);
+            }
         }
 
         private void OnCollisionEnter2D(Collision2D other)
         {
+            // Get collision info
             var impactForce = other.relativeVelocity.magnitude;
-            var impactSpeed = speedLastFrame;
+            var impactSpeed = lastSpeed;
 
-            var damageApplied = MathfExt.TMP(impactForce, 25f, .5f, 1.5f);
+            // Apply damage to player
+            var damageApplied = MathfExt.TMP(impactForce, 25f, .25f, 1.5f);
             var damageMultiplier = Mathf.Min(1f / (impactSpeed * .2f), 1f);
-
             var damage = damageApplied * damageMultiplier;
-
             health = Mathf.Max(health - damage, 0f);
+            isDead = health == 0f;
         }
     }
 }
