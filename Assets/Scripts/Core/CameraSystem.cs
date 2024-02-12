@@ -2,23 +2,31 @@ using UnityEngine;
 using Utils;
 using Random = Unity.Mathematics.Random;
 
-namespace Controllers
+namespace Core
 {
-    public class CameraController : MonoBehaviour
+    public class CameraSystem : MonoBehaviour
     {
-        public Vector2 viewSize = new(20f, 10f);
-        public Vector2 offset;
-        public Vector2 velocity;
-        public float shake;
-        public float dampening = .1f;
-        public float simSpeed = 10f;
-        public float shakeTimer;
-        public float shakeInterval = .25f;
-        public float lastCameraAspect = 0f;
-        public Random random = Random.CreateFromIndex(0);
+        public static CameraSystem current;
+        private void Awake() => current = this;
 
+        // Settings
+        public Vector2 viewSize = new(20f, 10f);
+        public float dampening = .1f;
+        public float shakeInterval = .1f;
+        public float simSpeed = 10f;
+
+        // Variables
+        private Vector2 offset;
+        private Vector2 velocity;
+        private float shake;
+        private float shakeTimer;
+        private float lastCameraAspect = 0f;
+        private Random random = Random.CreateFromIndex(0);
+
+        // References
         private Camera cCamera;
 
+        // Functions
         public void Shove(Vector2 force)
         {
             velocity += force;
@@ -30,18 +38,20 @@ namespace Controllers
             shakeTimer = shakeInterval;
         }
 
+        // Events
+        private void Start()
+        {
+            EventSystem.current.OnCameraShake += OnCameraShake;
+            cCamera = Camera.main;
+        }
+
         private void OnCameraShake(Vector2 shove, float shake)
         {
             Shove(shove);
             Shake(shake);
         }
 
-        private void Start()
-        {
-            EventSystem.current.OnCameraShake += OnCameraShake;
-            cCamera = GetComponent<Camera>();
-        }
-
+        // Updates
         private void Update()
         {
             // Configure the viewport to fit the screen

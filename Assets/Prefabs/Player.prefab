@@ -176,7 +176,6 @@ MonoBehaviour:
   moveForce: 25
   boostCharge: 0
   boostCooldown: 0
-  lastBoostInput: 0
 --- !u!114 &328550718412262110
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -190,9 +189,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 100
-  health: 100
-  lastSpeed: 0
-  isDead: 0
+  health: 0
 --- !u!114 &3399184115846437671
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -205,9 +202,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 134e47056a1bb0ceda9707681dd4a12d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ringAlpha: 0
-  ringThickness: 0
-  ringSpin: 0
   cSpriteRenderer: {fileID: 1062589161020571729}
   cSpriteMask: {fileID: 1309106731501733001}
 --- !u!114 &7684857053292564534
@@ -222,8 +216,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e02e0473101b76d9bee7f36177b3755, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lastSpeed: 0
-  lastHealth: 0
   cBoostParticleSystem: {fileID: 5750454859715637797}
   cImpactParticleSystem: {fileID: 8208163698263707477}
   cHurtParticleSystem: {fileID: 6733936032522987168}
@@ -260,7 +252,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0bb7c28fedab2677a8ba3d025bb1b22a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lastSpeed: 0
 --- !u!1 &3228066767371105852
 GameObject:
   m_ObjectHideFlags: 0

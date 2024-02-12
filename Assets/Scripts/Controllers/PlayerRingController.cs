@@ -5,16 +5,18 @@ namespace Controllers
 {
     public class PlayerRingController : MonoBehaviour
     {
-        public float ringAlpha;
-        public float ringThickness;
-        public float ringSpin;
+        // Variables
+        private float ringAlpha;
+        private float ringThickness;
+        private float ringSpin;
 
+        // References
         public SpriteRenderer cSpriteRenderer;
         public SpriteMask cSpriteMask;
-
         private OptionalComponent<PlayerHealthController> cPlayerHealthController;
         private OptionalComponent<PlayerMovementController> cPlayerMovementController;
 
+        // Events
         private void Start()
         {
             cPlayerHealthController =
@@ -23,6 +25,7 @@ namespace Controllers
                 new OptionalComponent<PlayerMovementController>(GetComponent<PlayerMovementController>());
         }
 
+        // Updates
         private void Update()
         {
             // Calculate target ring properties

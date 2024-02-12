@@ -1,4 +1,5 @@
 using System.Linq;
+using Core;
 using UnityEngine;
 using Utils;
 
@@ -6,19 +7,13 @@ namespace Controllers
 {
     public class PlayerCameraController : MonoBehaviour
     {
-        public float lastSpeed;
-
+        // References
         private Rigidbody2D cRigidbody2D;
 
+        // Events
         private void Start()
         {
             cRigidbody2D = GetComponent<Rigidbody2D>();
-        }
-
-        private void FixedUpdate()
-        {
-            // Save the current speed for future reference
-            lastSpeed = cRigidbody2D.velocity.magnitude;
         }
 
         private void OnCollisionEnter2D(Collision2D other)

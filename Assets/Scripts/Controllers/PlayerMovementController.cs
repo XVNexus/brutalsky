@@ -4,18 +4,24 @@ namespace Controllers
 {
     public class PlayerMovementController : MonoBehaviour
     {
+        // Settings
         public float moveForce = 25f;
+
+        // Variables
         public float boostCharge;
         public float boostCooldown;
-        public bool lastBoostInput;
+        private bool lastBoostInput;
 
+        // References
         private Rigidbody2D cRigidbody2D;
     
+        // Events
         private void Start()
         {
             cRigidbody2D = GetComponent<Rigidbody2D>();
         }
 
+        // Updates
         private void FixedUpdate()
         {
             // Apply directional movement

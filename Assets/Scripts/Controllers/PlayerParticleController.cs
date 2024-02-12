@@ -6,17 +6,19 @@ namespace Controllers
 {
     public class PlayerParticleController : MonoBehaviour
     {
-        public float lastSpeed;
-        public float lastHealth;
+        // Variables
+        private float lastSpeed;
+        private float lastHealth;
 
+        // References
         public ParticleSystem cBoostParticleSystem;
         public ParticleSystem cImpactParticleSystem;
         public ParticleSystem cHurtParticleSystem;
         public ParticleSystem cDeathParticleSystem;
-
         private Rigidbody2D cRigidbody2D;
         private OptionalComponent<PlayerHealthController> cPlayerHealthController;
 
+        // Events
         private void Start()
         {
             cRigidbody2D = GetComponent<Rigidbody2D>();
@@ -24,6 +26,22 @@ namespace Controllers
                 new OptionalComponent<PlayerHealthController>(GetComponent<PlayerHealthController>());
         }
 
+        private void OnCollisionEnter2D(Collision2D other)
+        {
+            // Get collision info
+            var impactForce = other.contacts.Sum(contact => contact.normalImpulse);
+            var impactSpeed = lastSpeed;
+
+            // Display impact particles
+            var effectIntensity = Mathf.Min(MathfExt.TMP(impactForce, 25f, .5f, 1.5f) * .1f, 10f);
+            if (effectIntensity < 3f) return;
+            var psMain = cImpactParticleSystem.main;
+            psMain.startSize = effectIntensity;
+            psMain.startLifetime = effectIntensity * .1f;
+            cImpactParticleSystem.Play();
+        }
+
+        // Updates
         private void FixedUpdate()
         {
             // Display boost particles
@@ -60,21 +78,6 @@ namespace Controllers
             cDeathParticleSystem.transform.SetParent(null, true);
             cDeathParticleSystem.Play();
             if (cPlayerHealthController.exists) lastHealth = cPlayerHealthController.component.health;
-        }
-
-        private void OnCollisionEnter2D(Collision2D other)
-        {
-            // Get collision info
-            var impactForce = other.contacts.Sum(contact => contact.normalImpulse);
-            var impactSpeed = lastSpeed;
-
-            // Display impact particles
-            var effectIntensity = Mathf.Min(MathfExt.TMP(impactForce, 25f, .5f, 1.5f) * .1f, 10f);
-            if (effectIntensity < 3f) return;
-            var psMain = cImpactParticleSystem.main;
-            psMain.startSize = effectIntensity;
-            psMain.startLifetime = effectIntensity * .1f;
-            cImpactParticleSystem.Play();
         }
     }
 }

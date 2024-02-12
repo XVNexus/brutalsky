@@ -366,7 +366,6 @@ GameObject:
   - component: {fileID: 519420031}
   - component: {fileID: 519420029}
   - component: {fileID: 519420030}
-  - component: {fileID: 519420033}
   m_Layer: 0
   m_Name: Camera
   m_TagString: MainCamera
@@ -494,29 +493,6 @@ Transform:
   - {fileID: 601674926}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &519420033
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 519420028}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 78d12ff813b98fce88736ad3b4447297, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  viewSize: {x: 20, y: 10}
-  offset: {x: 0, y: 0}
-  velocity: {x: 0, y: 0}
-  shake: 0
-  dampening: 0.1
-  simSpeed: 10
-  shakeTimer: 0
-  shakeInterval: 0.1
-  lastCameraAspect: 0
-  random:
-    state: 1349503032
 --- !u!1 &581734014
 GameObject:
   m_ObjectHideFlags: 0
@@ -527,6 +503,8 @@ GameObject:
   m_Component:
   - component: {fileID: 581734016}
   - component: {fileID: 581734015}
+  - component: {fileID: 581734018}
+  - component: {fileID: 581734017}
   m_Layer: 0
   m_Name: Core
   m_TagString: Untagged
@@ -561,6 +539,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &581734017
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 581734014}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7fbf46dc596df1301b09437b8e012b50, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  viewSize: {x: 20, y: 10}
+  dampening: 0.1
+  shakeInterval: 0.1
+  simSpeed: 10
+--- !u!114 &581734018
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 581734014}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fde332f467e3423aa5f9f4a3a06f2603, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefabDirectory:
+  - {fileID: 333419446728189740, guid: 375f78b96aebf21d19b4d456bb0d980e, type: 3}
+  - {fileID: 0}
 --- !u!1 &601674925
 GameObject:
   m_ObjectHideFlags: 0
