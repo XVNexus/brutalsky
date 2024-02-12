@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 using Utils;
 
@@ -28,13 +29,14 @@ namespace Controllers
             // Display boost particles
             var speed = cRigidbody2D.velocity.magnitude;
             const float threshold = 40f;
-            if (speed >= threshold && lastSpeed < threshold)
+            switch (speed)
             {
-                cBoostParticleSystem.Play();
-            }
-            else if (speed < threshold && lastSpeed >= threshold)
-            {
-                cBoostParticleSystem.Stop();
+                case >= threshold when lastSpeed < threshold:
+                    cBoostParticleSystem.Play();
+                    break;
+                case < threshold when lastSpeed >= threshold:
+                    cBoostParticleSystem.Stop();
+                    break;
             }
             lastSpeed = speed;
 
@@ -63,10 +65,11 @@ namespace Controllers
         private void OnCollisionEnter2D(Collision2D other)
         {
             // Get collision info
+            var impactForce = other.contacts.Sum(contact => contact.normalImpulse);
             var impactSpeed = lastSpeed;
 
             // Display impact particles
-            var effectIntensity = Mathf.Min(MathfExt.TMP(impactSpeed, 25f, .25f, 1.5f) * .25f, 10f);
+            var effectIntensity = Mathf.Min(MathfExt.TMP(impactForce, 25f, .25f, 1.5f) * .1f, 10f);
             if (effectIntensity < 3f) return;
             var psMain = cImpactParticleSystem.main;
             psMain.startSize = effectIntensity;

@@ -23,7 +23,7 @@ namespace Controllers
                 new OptionalComponent<PlayerMovementController>(GetComponent<PlayerMovementController>());
         }
 
-        private void FixedUpdate()
+        private void Update()
         {
             // Calculate target ring properties
             var targetRingAlpha = .25f;
@@ -51,9 +51,9 @@ namespace Controllers
             }
 
             // Transition current ring properties to calculated target properties
-            ringAlpha = MathfExt.MoveTo(ringAlpha, targetRingAlpha, Time.fixedDeltaTime);
-            ringThickness = MathfExt.MoveTo(ringThickness, targetRingThickness, Time.fixedDeltaTime);
-            ringSpin = MathfExt.MoveTo(ringSpin, targetRingSpin, 1440f * Time.fixedDeltaTime);
+            ringAlpha = MathfExt.MoveTo(ringAlpha, targetRingAlpha, Time.deltaTime);
+            ringThickness = MathfExt.MoveTo(ringThickness, targetRingThickness, Time.deltaTime);
+            ringSpin = MathfExt.MoveTo(ringSpin, targetRingSpin, 1440f * Time.deltaTime);
 
             // Apply current ring properties
             var ringColor = cSpriteRenderer.color;
@@ -61,7 +61,7 @@ namespace Controllers
             cSpriteRenderer.color = ringColor;
             var ringTransform = cSpriteRenderer.transform;
             var ringAngles = ringTransform.localEulerAngles;
-            ringAngles.z -= ringSpin * Time.fixedDeltaTime;
+            ringAngles.z -= ringSpin * Time.deltaTime;
             ringTransform.localEulerAngles = ringAngles;
             var ringMaskScale = 2f - ringThickness * .8f;
             cSpriteMask.transform.localScale = new Vector3(ringMaskScale, ringMaskScale, 1f);

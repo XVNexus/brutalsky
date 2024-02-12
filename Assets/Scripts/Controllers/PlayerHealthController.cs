@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 using Utils;
 
@@ -32,11 +33,11 @@ namespace Controllers
         private void OnCollisionEnter2D(Collision2D other)
         {
             // Get collision info
-            var impactForce = other.relativeVelocity.magnitude;
+            var impactForce = other.contacts.Sum(contact => contact.normalImpulse);
             var impactSpeed = lastSpeed;
 
             // Apply damage to player
-            var damageApplied = MathfExt.TMP(impactForce, 25f, .25f, 1.5f);
+            var damageApplied = MathfExt.TMP(impactForce, 25f, .5f, 1.5f);
             var damageMultiplier = Mathf.Min(1f / (impactSpeed * .2f), 1f);
             var damage = damageApplied * damageMultiplier;
             health = Mathf.Max(health - damage, 0f);
