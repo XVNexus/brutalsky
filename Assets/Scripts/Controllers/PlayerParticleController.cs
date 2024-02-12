@@ -69,7 +69,7 @@ namespace Controllers
             var impactSpeed = lastSpeed;
 
             // Display impact particles
-            var effectIntensity = Mathf.Min(MathfExt.TMP(impactForce, 25f, .25f, 1.5f) * .1f, 10f);
+            var effectIntensity = Mathf.Min(MathfExt.TMP(impactForce, 25f, .5f, 1.5f) * .1f, 10f);
             if (effectIntensity < 3f) return;
             var psMain = cImpactParticleSystem.main;
             psMain.startSize = effectIntensity;

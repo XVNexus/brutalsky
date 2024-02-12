@@ -28,7 +28,7 @@ namespace Controllers
             var impactDirection = ((Vector2)transform.position - other.contacts[0].point).normalized;
 
             // Apply camera shake
-            var shakeForce = MathfExt.TMP(impactForce, 25f, .25f, 1.5f) * .1f;
+            var shakeForce = Mathf.Min(MathfExt.TMP(impactForce, 25f, .5f, 1.5f) * .02f, 5f);
             if (other.gameObject.CompareTag("Player"))
             {
                 EventSystem.current.TriggerCameraShake(Vector2.zero, shakeForce);
