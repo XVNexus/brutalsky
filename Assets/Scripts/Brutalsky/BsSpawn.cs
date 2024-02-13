@@ -6,18 +6,17 @@ namespace Brutalsky
     {
         public Vector2 position { get; set; }
         public int priority { get; set; }
-        public int usages => _usages;
-        private int _usages;
+        public int usages { get; private set; }
 
         public Vector2 Use()
         {
-            _usages++;
+            usages++;
             return position;
         }
 
         public void Reset()
         {
-            _usages = 0;
+            usages = 0;
         }
     }
 }

@@ -9,6 +9,12 @@ namespace Brutalsky
         public Color color { get; set; }
         public float health { get; set; }
 
+        public BsPlayer(string id, Color color, float health) : base(id)
+        {
+            this.color = color;
+            this.health = health;
+        }
+
         protected override GameObject _Create()
         {
             var result = Instantiate(PrefabSystem.current.player);

@@ -67,7 +67,7 @@ namespace Controllers
                 var damage = (int)(-deltaHealth * 5f);
                 var psEmission = cHurtParticleSystem.emission;
                 var psBurst = psEmission.GetBurst(0);
-                psBurst.count = damage;
+                psBurst.count = Mathf.Min(damage, 100);
                 psEmission.SetBurst(0, psBurst);
                 cHurtParticleSystem.Play();
             }

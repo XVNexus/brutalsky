@@ -8,6 +8,13 @@ namespace Brutalsky
         public BsShape mountShape { get; set; }
         public BsShape targetShape { get; set; }
 
+        public BsJoint(string id, BsJointType jointType, BsShape mountShape, BsShape targetShape) : base(id)
+        {
+            this.jointType = jointType;
+            this.mountShape = mountShape;
+            this.targetShape = targetShape;
+        }
+
         protected override GameObject _Create()
         {
             throw new System.NotImplementedException();

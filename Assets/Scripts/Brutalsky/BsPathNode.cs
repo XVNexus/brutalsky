@@ -40,6 +40,11 @@ namespace Brutalsky
             endpoint = point;
         }
 
+        public BsPathStart(float x, float y)
+        {
+            endpoint = new Vector2(x, y);
+        }
+
         public override Vector2 SamplePoint(float t)
         {
             return endpoint;
@@ -53,6 +58,11 @@ namespace Brutalsky
         public BsPathLine(Vector2 point)
         {
             endpoint = point;
+        }
+
+        public BsPathLine(float x, float y)
+        {
+            endpoint = new Vector2(x, y);
         }
 
         public override Vector2 SamplePoint(float t)
@@ -77,6 +87,12 @@ namespace Brutalsky
         {
             this.handle = handle;
             endpoint = point;
+        }
+
+        public BsPathCurve(float a, float b, float x, float y)
+        {
+            handle = new Vector2(a, b);
+            endpoint = new Vector2(x, y);
         }
 
         public override Vector2 SamplePoint(float t)
