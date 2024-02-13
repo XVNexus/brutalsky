@@ -570,7 +570,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 333419446728189740, guid: 375f78b96aebf21d19b4d456bb0d980e, type: 3}
   shape: {fileID: 3486895176260509872, guid: 8015059a29a18574584e3375fa2053cc, type: 3}
-  pool: {fileID: 0}
+  pool: {fileID: 916318484910277029, guid: 03ad247d5d92f3916986acd6db4520cb, type: 3}
 --- !u!114 &581734019
 MonoBehaviour:
   m_ObjectHideFlags: 0

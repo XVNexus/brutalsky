@@ -125,7 +125,6 @@ namespace Brutalsky
             var currentNode = startNode.next;
             while (currentNode != null)
             {
-                Debug.Log(currentNode.detailLevel);
                 for (var i = 1; i <= currentNode.detailLevel; i++)
                 {
                     result.Add(currentNode.SamplePoint(i / (float)currentNode.detailLevel));

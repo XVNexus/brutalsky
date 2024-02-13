@@ -6,21 +6,15 @@ namespace Brutalsky
 {
     public class BsPlayer : BsObject
     {
-        public Color color { get; set; }
+        public string name { get; set; }
         public float health { get; set; }
+        public Color color { get; set; }
 
-        public BsPlayer(string id, Color color, float health) : base(id)
+        public BsPlayer(string name, float health, Color color)
         {
-            this.color = color;
+            this.name = name;
             this.health = health;
-        }
-
-        protected override GameObject _Create()
-        {
-            var result = Instantiate(PrefabSystem.current.player);
-            result.GetComponent<PlayerColorController>().playerColor = color;
-            result.GetComponent<PlayerHealthController>().maxHealth = health;
-            return result;
+            this.color = color;
         }
     }
 }

@@ -39,6 +39,15 @@ namespace Brutalsky
             => new BsColor(layer, new Color(.7f, .9f, .4f), glow);
 
         public static BsColor Glue(BsLayer layer, bool glow = false)
+            => new BsColor(layer, new Color(.0f, .7f, 0f), glow);
+
+        public static BsColor Oil(BsLayer layer, bool glow = false)
+            => new BsColor(layer, new Color(.3f, .3f, .4f), glow);
+
+        public static BsColor Water(BsLayer layer, bool glow = false)
+            => new BsColor(layer, new Color(.4f, .4f, 1f), glow);
+
+        public static BsColor Honey(BsLayer layer, bool glow = false)
             => new BsColor(layer, new Color(.9f, .7f, 0f), glow);
     }
 

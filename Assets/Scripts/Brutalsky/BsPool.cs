@@ -8,16 +8,12 @@ namespace Brutalsky
         public BsChemical chemical { get; set; }
         public BsColor color { get; set; }
 
-        public BsPool(string id, Vector2 size, BsChemical chemical, BsColor color) : base(id)
+        public BsPool(BsTransform transform, Vector2 size, BsChemical chemical, BsColor color)
         {
+            this.transform = transform;
             this.size = size;
             this.chemical = chemical;
             this.color = color;
-        }
-
-        protected override GameObject _Create()
-        {
-            throw new System.NotImplementedException();
         }
     }
 }
