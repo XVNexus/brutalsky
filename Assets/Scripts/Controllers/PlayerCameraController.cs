@@ -23,7 +23,7 @@ namespace Controllers
             var impactDirection = ((Vector2)transform.position - other.contacts[0].point).normalized;
 
             // Apply camera shake
-            var shakeForce = Mathf.Min(MathfExt.TMP(impactForce, 25f, .5f, 1.5f) * .02f, 5f);
+            var shakeForce = Mathf.Min(MathfExt.TMP(impactForce, 25f, .5f, 1.5f) * .01f, 5f);
             if (shakeForce < .5f) return;
             if (other.gameObject.CompareTag("Player"))
             {

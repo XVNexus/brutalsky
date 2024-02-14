@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using UnityEngine;
 
 namespace Controllers
@@ -19,6 +21,18 @@ namespace Controllers
         private void Start()
         {
             cRigidbody2D = GetComponent<Rigidbody2D>();
+        }
+
+        private void OnCollisionEnter2D(Collision2D other)
+        {
+            if (!other.gameObject.CompareTag("Player")) return;
+
+            // Get collision info
+            var impactForce = other.contacts.Sum(contact => contact.normalImpulse);
+            
+            // Reduce velocity based on collision force
+            var velocityFactor = Mathf.Min(1f / (impactForce * .1f), 1f);
+            cRigidbody2D.velocity *= velocityFactor;
         }
 
         // Updates

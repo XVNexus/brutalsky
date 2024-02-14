@@ -30,10 +30,9 @@ namespace Controllers
         {
             // Get collision info
             var impactForce = other.contacts.Sum(contact => contact.normalImpulse);
-            var impactSpeed = lastSpeed;
 
             // Display impact particles
-            var effectIntensity = Mathf.Min(MathfExt.TMP(impactForce, 25f, .5f, 1.5f) * .1f, 10f);
+            var effectIntensity = Mathf.Min(MathfExt.TMP(impactForce, 25f, .5f, 1.5f) * .02f, 10f);
             if (effectIntensity < 3f) return;
             var psMain = cImpactParticleSystem.main;
             psMain.startSize = effectIntensity;
