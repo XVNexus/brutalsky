@@ -32,6 +32,10 @@ namespace Core
             {
                 Create(pool);
             }
+            foreach (var joint in activeMap.joints)
+            {
+                Create(joint);
+            }
         }
 
         public void Unload()
@@ -46,15 +50,15 @@ namespace Core
             if (!mapLoaded || player.active) return false;
 
             // Create new object and apply color and health
-            var playerObj = Instantiate(PrefabSystem.current.player);
-            playerObj.GetComponent<PlayerColorController>().playerColor = player.color;
-            playerObj.GetComponent<PlayerHealthController>().maxHealth = player.health;
+            var playerObject = Instantiate(PrefabSystem.current.player);
+            playerObject.GetComponent<PlayerColorController>().playerColor = player.color;
+            playerObject.GetComponent<PlayerHealthController>().maxHealth = player.health;
 
             // Select a spawnpoint
             var spawnPos = activeMap.SelectSpawn();
-            playerObj.transform.position = spawnPos;
+            playerObject.transform.position = spawnPos;
 
-            player.instance = playerObj;
+            player.instanceObject = playerObject;
             player.active = true;
             return true;
         }
@@ -63,13 +67,13 @@ namespace Core
         {
             if (!player.active) return false;
 
-            Destroy(player.instance);
-            player.instance = null;
+            Destroy(player.instanceObject);
+            player.instanceObject = null;
             player.active = false;
             return true;
         }
 
-        public bool Create(BsShape shape)
+        public static bool Create(BsShape shape)
         {
             if (shape.active) return false;
 
@@ -121,12 +125,12 @@ namespace Core
             shapeObj.transform.position = shape.transform.position;
             shapeObj.transform.rotation = Quaternion.Euler(0f, 0f, shape.transform.rotation);
 
-            shape.instance = shapeObj;
+            shape.instanceObject = shapeObj;
             shape.active = true;
             return true;
         }
 
-        public bool Create(BsPool pool)
+        public static bool Create(BsPool pool)
         {
             if (pool.active) return false;
 
@@ -156,39 +160,96 @@ namespace Core
             poolObj.transform.position = pool.transform.position;
             poolObj.transform.rotation = Quaternion.Euler(0f, 0f, pool.transform.rotation);
 
-            pool.instance = poolObj;
+            pool.instanceObject = poolObj;
             pool.active = true;
             return true;
         }
 
-        public bool Create(BsJoint joint)
+        public static bool Create(BsJoint joint)
         {
-            throw new NotImplementedException();
+            if (joint.active) return false;
+            if (!joint.targetShape.active || joint.mountShape is { active: false }) return false;
+
+            AnchoredJoint2D jointComponent;
+            var shapeObject = joint.targetShape.instanceObject;
+            switch (joint.jointType)
+            {
+                case BsJointType.Hinge:
+                    var hingeJoint = shapeObject.AddComponent<HingeJoint2D>();
+                    if (joint.speed > 0f)
+                    {
+                        hingeJoint.useMotor = true;
+                        var motor = hingeJoint.motor;
+                        motor.motorSpeed = joint.speed;
+                        motor.maxMotorTorque = joint.torque;
+                        hingeJoint.motor = motor;
+                    }
+                    jointComponent = hingeJoint;
+                    break;
+                case BsJointType.Slider:
+                    var sliderJoint = shapeObject.AddComponent<SliderJoint2D>();
+                    if (joint.speed > 0f)
+                    {
+                        sliderJoint.useMotor = true;
+                        var motor = sliderJoint.motor;
+                        motor.motorSpeed = joint.speed;
+                        motor.maxMotorTorque = joint.torque;
+                        sliderJoint.motor = motor;
+                    }
+                    jointComponent = sliderJoint;
+                    break;
+                case BsJointType.Spring:
+                    var springJoint = shapeObject.AddComponent<SpringJoint2D>();
+                    jointComponent = springJoint;
+                    break;
+                case BsJointType.Weld:
+                default:
+                    var weldJoint = shapeObject.AddComponent<FixedJoint2D>();
+                    jointComponent = weldJoint;
+                    break;
+            }
+            if (joint.mountShape != null)
+            {
+                jointComponent.connectedBody = shapeObject.GetComponent<Rigidbody2D>();
+            }
+            if (joint.strength > 0f)
+            {
+                jointComponent.breakForce = joint.strength;
+            }
+
+            joint.instanceComponent = jointComponent;
+            joint.active = true;
+            return true;
         }
 
-        public bool Destroy(BsShape shape)
+        public static bool Destroy(BsShape shape)
         {
             if (!shape.active) return false;
 
-            Destroy(shape.instance);
-            shape.instance = null;
+            Destroy(shape.instanceObject);
+            shape.instanceObject = null;
             shape.active = false;
             return true;
         }
 
-        public bool Destroy(BsPool pool)
+        public static bool Destroy(BsPool pool)
         {
             if (!pool.active) return false;
 
-            Destroy(pool.instance);
-            pool.instance = null;
+            Destroy(pool.instanceObject);
+            pool.instanceObject = null;
             pool.active = false;
             return true;
         }
 
-        public bool Destroy(BsJoint joint)
+        public static bool Destroy(BsJoint joint)
         {
-            throw new NotImplementedException();
+            if (!joint.active) return false;
+
+            Destroy(joint.instanceComponent);
+            joint.instanceComponent = null;
+            joint.active = false;
+            return true;
         }
     }
 }

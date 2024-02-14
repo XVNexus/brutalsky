@@ -47,10 +47,12 @@ public class Testing : MonoBehaviour
             BsMaterial.Rubber(), BsColor.Rubber()));
 
         // Dynamic shapes
-        map.shapes.Add(new BsShape(new BsTransform(-2f, 0f, 0f), BsPath.Star(6, 5f, 2.8f),
-            BsMaterial.Metal(true), BsColor.Metal()));
-        map.shapes.Add(new BsShape(new BsTransform(2f, 0f, 30f), BsPath.Star(6, 5f, 2.8f),
-            BsMaterial.Metal(true), BsColor.Metal()));
+        var spinnerLeft = new BsShape(new BsTransform(-2f, 0f, 0f), BsPath.Star(6, 5f, 2.8f),
+            BsMaterial.Metal(true), BsColor.Metal());
+        map.shapes.Add(spinnerLeft);
+        var spinnerRight = new BsShape(new BsTransform(2f, 0f, 30f), BsPath.Star(6, 5f, 2.8f),
+            BsMaterial.Metal(true), BsColor.Metal());
+        map.shapes.Add(spinnerRight);
 
         // Pools
         map.pools.Add(new BsPool(new BsTransform(-13f, -10.25f), new Vector2(12f, 2.5f),
@@ -61,6 +63,12 @@ public class Testing : MonoBehaviour
             BsChemical.Honey(), BsColor.Honey()));
         map.pools.Add(new BsPool(new BsTransform(17f, 10.5f, 180f), new Vector2(4f, 2f),
             BsChemical.Honey(), BsColor.Honey()));
+
+        // Joints
+        map.joints.Add(new BsJoint(spinnerLeft, null, new BsTransform(),
+            BsJointType.Hinge, 25f, 1000000f));
+        map.joints.Add(new BsJoint(spinnerRight, null, new BsTransform(),
+            BsJointType.Hinge, -25f, 1000000f));
 
         MapSystem.current.Load(map);
     }
