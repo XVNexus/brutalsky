@@ -96,17 +96,26 @@ namespace Core
             meshRenderer.material.color = shape.color.tint;
 
             // Apply material
-            var physicsMaterial = new PhysicsMaterial2D
-            {
-                friction = shape.material.friction,
-                bounciness = shape.material.restitution
-            };
-            polygonCollider.sharedMaterial = physicsMaterial;
             var rigidbody = shapeObj.GetComponent<Rigidbody2D>();
-            rigidbody.sharedMaterial = physicsMaterial;
-            if (!shape.material.dynamic) return shapeObj;
-            rigidbody.bodyType = RigidbodyType2D.Dynamic;
-            polygonCollider.density = shape.material.density;
+            if (shape.simulated)
+            {
+                var physicsMaterial = new PhysicsMaterial2D
+                {
+                    friction = shape.material.friction,
+                    bounciness = shape.material.restitution
+                };
+                polygonCollider.sharedMaterial = physicsMaterial;
+                rigidbody.sharedMaterial = physicsMaterial;
+                if (shape.material.dynamic)
+                {
+                    rigidbody.bodyType = RigidbodyType2D.Dynamic;
+                    polygonCollider.density = shape.material.density;
+                }
+            }
+            else
+            {
+                rigidbody.simulated = false;
+            }
 
             // Apply position and rotation
             shapeObj.transform.position = shape.transform.position;
@@ -132,8 +141,16 @@ namespace Core
 
             // Apply chemical
             var poolController = poolObj.GetComponent<PoolController>();
-            poolController.buoyancy = pool.chemical.buoyancy;
-            poolController.viscosity = pool.chemical.viscosity;
+            if (pool.simulated)
+            {
+                poolController.buoyancy = pool.chemical.buoyancy;
+                poolController.viscosity = pool.chemical.viscosity;
+            }
+            else
+            {
+                poolObj.GetComponent<BoxCollider2D>().enabled = false;
+                poolController.enabled = false;
+            }
 
             // Apply position and rotation
             poolObj.transform.position = pool.transform.position;
