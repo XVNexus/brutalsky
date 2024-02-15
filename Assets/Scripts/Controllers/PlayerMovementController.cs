@@ -6,20 +6,18 @@ namespace Controllers
 {
     public class PlayerMovementController : MonoBehaviour
     {
-        // Settings
-        public float moveForce = 25f;
-
         // Variables
-        public float boostCharge;
-        public float boostCooldown;
+        public float moveForce = 25f;
         private bool lastBoostInput;
 
         // References
+        private PlayerController cPlayerController;
         private Rigidbody2D cRigidbody2D;
     
         // Events
         private void Start()
         {
+            cPlayerController = GetComponent<PlayerController>();
             cRigidbody2D = GetComponent<Rigidbody2D>();
         }
 
@@ -43,21 +41,21 @@ namespace Controllers
             cRigidbody2D.AddForce(movementInput * moveForce);
 
             // Apply boost movement
-            var boostInput = Input.GetButton("Jump") && boostCooldown == 0f;
+            var boostInput = Input.GetButton("Jump") && cPlayerController.boostCooldown == 0f;
             if (boostInput)
             {
-                boostCharge = Mathf.Min(boostCharge + Time.fixedDeltaTime, 3f);
+                cPlayerController.boostCharge = Mathf.Min(cPlayerController.boostCharge + Time.fixedDeltaTime, 3f);
             }
             else if (lastBoostInput)
             {
-                var boost = Mathf.Pow(boostCharge, 2f) + 2f;
-                boostCooldown = boost;
-                boostCharge = 0f;
+                var boost = Mathf.Pow(cPlayerController.boostCharge, 2f) + 2f;
+                cPlayerController.boostCooldown = boost;
+                cPlayerController.boostCharge = 0f;
                 cRigidbody2D.velocity *= boost;
             }
-            if (boostCooldown > 0f)
+            if (cPlayerController.boostCooldown > 0f)
             {
-                boostCooldown = Mathf.Max(boostCooldown - Time.fixedDeltaTime, 0f);
+                cPlayerController.boostCooldown = Mathf.Max(cPlayerController.boostCooldown - Time.fixedDeltaTime, 0f);
             }
             lastBoostInput = boostInput;
         }

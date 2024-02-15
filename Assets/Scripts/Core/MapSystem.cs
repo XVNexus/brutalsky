@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using Brutalsky;
 using Controllers;
@@ -36,11 +35,16 @@ namespace Core
             {
                 Create(joint);
             }
+
+            EventSystem.current.TriggerMapLoad(map);
         }
 
         public void Unload()
         {
             if (!mapLoaded) return;
+
+            EventSystem.current.TriggerMapUnload(activeMap);
+
             activeMap = null;
             mapLoaded = false;
         }
@@ -51,8 +55,14 @@ namespace Core
 
             // Create new object and apply color and health
             var playerObject = Instantiate(PrefabSystem.current.player);
-            playerObject.GetComponent<PlayerColorController>().playerColor = player.color;
-            playerObject.GetComponent<PlayerHealthController>().maxHealth = player.health;
+            var playerController = playerObject.GetComponent<PlayerController>();
+            playerController.bsObject = player;
+            playerController.maxHealth = player.health;
+            playerController.color = player.color;
+            if (player.dummy)
+            {
+                playerObject.GetComponent<PlayerMovementController>().moveForce = 0f;
+            }
 
             // Select a spawnpoint
             var spawnPos = activeMap.SelectSpawn();
@@ -60,12 +70,17 @@ namespace Core
 
             player.instanceObject = playerObject;
             player.active = true;
+
+            EventSystem.current.TriggerPlayerSpawn(activeMap, player);
+
             return true;
         }
 
         public bool Despawn(BsPlayer player)
         {
-            if (!player.active) return false;
+            if (!mapLoaded || !player.active) return false;
+
+            EventSystem.current.TriggerPlayerDespawn(activeMap, player);
 
             Destroy(player.instanceObject);
             player.instanceObject = null;
@@ -76,6 +91,9 @@ namespace Core
         public static bool Create(BsShape shape)
         {
             if (shape.active) return false;
+
+            // Create new object
+            var shapeObj = Instantiate(PrefabSystem.current.shape);
 
             // Convert path to mesh
             var points = shape.path.ToPoints();
@@ -88,8 +106,7 @@ namespace Core
             mesh.RecalculateNormals();
             mesh.RecalculateBounds();
 
-            // Create new object and apply mesh
-            var shapeObj = Instantiate(PrefabSystem.current.shape);
+            // Apply mesh
             shapeObj.GetComponent<MeshFilter>().mesh = mesh;
             var polygonCollider = shapeObj.GetComponent<PolygonCollider2D>();
             polygonCollider.SetPath(0, points);
@@ -134,8 +151,12 @@ namespace Core
         {
             if (pool.active) return false;
 
-            // Create new object and apply size
+            // Create new object
             var poolObj = Instantiate(PrefabSystem.current.pool);
+            var poolController = poolObj.GetComponent<PoolController>();
+            poolController.bsObject = pool;
+
+            // Apply size
             poolObj.transform.localScale = pool.size;
 
             // Apply color
@@ -144,7 +165,6 @@ namespace Core
             spriteRenderer.material.color = pool.color.tint;
 
             // Apply chemical
-            var poolController = poolObj.GetComponent<PoolController>();
             if (pool.simulated)
             {
                 poolController.buoyancy = pool.chemical.buoyancy;

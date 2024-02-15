@@ -11,18 +11,14 @@ namespace Controllers
         private float ringSpin;
 
         // References
+        private PlayerController cPlayerController;
         public SpriteRenderer cSpriteRenderer;
         public SpriteMask cSpriteMask;
-        private OptionalComponent<PlayerHealthController> cPlayerHealthController;
-        private OptionalComponent<PlayerMovementController> cPlayerMovementController;
 
         // Events
         private void Start()
         {
-            cPlayerHealthController =
-                new OptionalComponent<PlayerHealthController>(GetComponent<PlayerHealthController>());
-            cPlayerMovementController =
-                new OptionalComponent<PlayerMovementController>(GetComponent<PlayerMovementController>());
+            cPlayerController = GetComponent<PlayerController>();
         }
 
         // Updates
@@ -30,27 +26,22 @@ namespace Controllers
         {
             // Calculate target ring properties
             var targetRingAlpha = .25f;
-            var targetRingThickness = cPlayerHealthController.exists
-                ? cPlayerHealthController.component.health / cPlayerHealthController.component.maxHealth
-                : 1f;
+            var targetRingThickness = cPlayerController.health / cPlayerController.maxHealth;
             var targetRingSpin = 40f;
-            if (cPlayerMovementController.exists)
+            if (cPlayerController.boostCharge > 0f)
             {
-                if (cPlayerMovementController.component.boostCharge > 0f)
-                {
-                    targetRingAlpha = .25f + cPlayerMovementController.component.boostCharge * .25f;
-                    targetRingSpin = (Mathf.Pow(cPlayerMovementController.component.boostCharge, 2f) + 2f) * 180f + 90f;
-                }
-                else if (cPlayerMovementController.component.boostCooldown > 0f)
-                {
-                    targetRingAlpha = .05f;
-                    targetRingSpin = 10f;
-                }
-                else
-                {
-                    targetRingAlpha = .25f;
-                    targetRingSpin = 40f;
-                }
+                targetRingAlpha = .25f + cPlayerController.boostCharge * .25f;
+                targetRingSpin = (Mathf.Pow(cPlayerController.boostCharge, 2f) + 2f) * 180f + 90f;
+            }
+            else if (cPlayerController.boostCooldown > 0f)
+            {
+                targetRingAlpha = .05f;
+                targetRingSpin = 10f;
+            }
+            else
+            {
+                targetRingAlpha = .25f;
+                targetRingSpin = 40f;
             }
 
             // Transition current ring properties to calculated target properties

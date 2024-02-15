@@ -7,23 +7,23 @@ namespace Controllers
     public class PlayerParticleController : MonoBehaviour
     {
         // Variables
+        public float particleMultiplier = 5f;
         private float lastSpeed;
-        private float lastHealth;
+        private float lastHealth = -1f;
 
         // References
+        public PlayerController cPlayerController;
         public ParticleSystem cBoostParticleSystem;
         public ParticleSystem cImpactParticleSystem;
         public ParticleSystem cHurtParticleSystem;
         public ParticleSystem cDeathParticleSystem;
         private Rigidbody2D cRigidbody2D;
-        private OptionalComponent<PlayerHealthController> cPlayerHealthController;
 
         // Events
         private void Start()
         {
+            cPlayerController = GetComponent<PlayerController>();
             cRigidbody2D = GetComponent<Rigidbody2D>();
-            cPlayerHealthController =
-                new OptionalComponent<PlayerHealthController>(GetComponent<PlayerHealthController>());
         }
 
         private void OnCollisionEnter2D(Collision2D other)
@@ -58,25 +58,25 @@ namespace Controllers
             lastSpeed = speed;
 
             // Display hurt particles
-            if (!cPlayerHealthController.exists) return;
-            var health = cPlayerHealthController.component.health;
+            var health = Mathf.Ceil(cPlayerController.health * particleMultiplier) / particleMultiplier;
             var deltaHealth = health - lastHealth;
-            if (deltaHealth <= -1f)
+            if (deltaHealth < 0f)
             {
-                var damage = (int)(-deltaHealth * 5f);
+                var particleCount = (int)(-deltaHealth * particleMultiplier);
                 var psEmission = cHurtParticleSystem.emission;
                 var psBurst = psEmission.GetBurst(0);
-                psBurst.count = Mathf.Min(damage, 100);
+                psBurst.count = Mathf.Min(particleCount, (int)(100 * particleMultiplier * Time.fixedDeltaTime));
                 psEmission.SetBurst(0, psBurst);
                 cHurtParticleSystem.Play();
             }
             lastHealth = health;
 
             // Display death particles
-            if (cPlayerHealthController.component.health != 0f || cDeathParticleSystem.isPlaying) return;
-            cDeathParticleSystem.transform.SetParent(null, true);
-            cDeathParticleSystem.Play();
-            if (cPlayerHealthController.exists) lastHealth = cPlayerHealthController.component.health;
+            if (health == 0f && cDeathParticleSystem.isStopped)
+            {
+                cDeathParticleSystem.transform.SetParent(null, true);
+                cDeathParticleSystem.Play();
+            }
         }
     }
 }

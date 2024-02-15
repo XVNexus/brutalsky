@@ -7,13 +7,16 @@ namespace Controllers
 {
     public class PlayerCameraController : MonoBehaviour
     {
+        // Variables
+        private float lastHealth = -1f;
+
         // References
-        private Rigidbody2D cRigidbody2D;
+        public PlayerController cPlayerController;
 
         // Events
         private void Start()
         {
-            cRigidbody2D = GetComponent<Rigidbody2D>();
+            cPlayerController = GetComponent<PlayerController>();
         }
 
         private void OnCollisionEnter2D(Collision2D other)
@@ -27,12 +30,26 @@ namespace Controllers
             if (shakeForce < .5f) return;
             if (other.gameObject.CompareTag("Player"))
             {
-                EventSystem.current.TriggerCameraShake(Vector2.zero, shakeForce);
+                CameraSystem.current.Shake(shakeForce);
             }
             else
             {
-                EventSystem.current.TriggerCameraShake(shakeForce * impactDirection, 0f);
+                CameraSystem.current.Shove(shakeForce * impactDirection);
             }
+        }
+
+        // Updates
+        private void FixedUpdate()
+        {
+            // Apply camera shake after taking damage
+            var health = cPlayerController.health;
+            var deltaHealth = health - lastHealth;
+            if (deltaHealth < 0f)
+            {
+                var shakeForce = Mathf.Min(-deltaHealth * .05f, 5f);
+                CameraSystem.current.Shake(shakeForce);
+            }
+            lastHealth = health;
         }
     }
 }

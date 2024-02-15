@@ -19,7 +19,7 @@ public class Testing : MonoBehaviour
             BsMaterial.Stone(), BsColor.Stone()));
         map.shapes.Add(new BsShape(new BsTransform(20f, 0f), BsPath.Rectangle(2f, 22f),
             BsMaterial.Stone(), BsColor.Stone()));
-        map.shapes.Add(new BsShape(new BsTransform(0f, 10f), BsPath.FromString("15 1 L 15 .25 L 14.25 -.5 L -14.25 -.5 L -15 .25 L -15 1"),
+        map.shapes.Add(new BsShape(new BsTransform(0f, 10f), BsPath.FromString("-15 1 L 15 1 L 15 0 L 14 -.5 L -14 -.5 L -15 0"),
             BsMaterial.Stone(), BsColor.Stone()));
         map.shapes.Add(new BsShape(new BsTransform(-19f, 0f), BsPath.FromString("-1 2.5 L 0 2.5 C 0 .5 2 .5 L 8 .5 L 8.5 0 L 8 -.5 L 2 -.5 C 0 -.5 0 -2.5 L -1 -2.5"),
             BsMaterial.Stone(), BsColor.Stone()));
@@ -59,10 +59,14 @@ public class Testing : MonoBehaviour
             BsMaterial.Stone(), BsColor.Stone()));
 
         // Interactive shapes
-        map.shapes.Add(new BsShape(new BsTransform(0f, 10f), BsPath.FromString("-14.25 -.5 L -15 .25 L -15 -.5 L -14.5 -1 L -4 -1 L -4 -.5"),
+        map.shapes.Add(new BsShape(new BsTransform(-9f, 9.25f), BsPath.Rectangle(10f, .5f), 
             BsMaterial.Glue(), BsColor.Glue()));
-        map.shapes.Add(new BsShape(new BsTransform(0f, 10f), BsPath.FromString("14.25 -.5 L 15 .25 L 15 -.5 L 14.5 -1 L 4 -1 L 4 -.5"),
+        map.shapes.Add(new BsShape(new BsTransform(9f, 9.25f), BsPath.Rectangle(10f, .5f),
             BsMaterial.Glue(), BsColor.Glue()));
+        map.shapes.Add(new BsShape(new BsTransform(-14.5f, 9.5f), BsPath.FromString("-.5 .5 L .5 0 L .5 -.5 L -.5 0"),
+            BsMaterial.Ice(), BsColor.Ice()));
+        map.shapes.Add(new BsShape(new BsTransform(14.5f, 9.5f), BsPath.FromString(".5 .5 L -.5 0 L -.5 -.5 L .5 0"),
+            BsMaterial.Ice(), BsColor.Ice()));
         map.shapes.Add(new BsShape(new BsTransform(0, -9.5f), BsPath.FromString("-7 0 L -7 .5 L 0 3 L 7 .5 L 7 0 L 0 2.5"),
             BsMaterial.Ice(), BsColor.Ice()));
         map.shapes.Add(new BsShape(new BsTransform(0, 9.25f), BsPath.FromString("4 .25 L 4 -.25 L 0 -1.25 L -4 -.25 L -4 .25"),
@@ -104,6 +108,13 @@ public class Testing : MonoBehaviour
         map.joints.Add(new BsJoint(spinnerRight, null, new BsTransform(),
             BsJointType.Hinge, -100f, 1000000f));
 
+        // Spawns
+        map.spawns.Add(new BsSpawn(-15f, 1f));
+        map.spawns.Add(new BsSpawn(15f, 1f));
+
         MapSystem.current.Load(map);
+
+        MapSystem.current.Spawn(new BsPlayer("Player 1", 100f, new Color(1f, .5f, 0f)));
+        MapSystem.current.Spawn(new BsPlayer("Player 2", 100f, new Color(0f, .5f, 1f), true));
     }
 }

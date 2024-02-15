@@ -12,11 +12,11 @@ GameObject:
   - component: {fileID: 5040466549905720202}
   - component: {fileID: 5564369552224740061}
   - component: {fileID: 25362455484795478}
+  - component: {fileID: 125284452002897716}
   - component: {fileID: 6636566231499246727}
   - component: {fileID: 328550718412262110}
   - component: {fileID: 3399184115846437671}
   - component: {fileID: 7684857053292564534}
-  - component: {fileID: 6257465232271042279}
   - component: {fileID: 4554995576766166513}
   m_Layer: 0
   m_Name: Player
@@ -161,6 +161,30 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 4
+--- !u!114 &125284452002897716
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 333419446728189740}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2aa817db9dc24dec81a884d953c1711c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 100
+  health: -1
+  color: {r: 0, g: 0, b: 0, a: 0}
+  boostCharge: 0
+  boostCooldown: 0
+  cLight2D: {fileID: 5161598684334631783}
+  cRingSpriteRenderer: {fileID: 1062589161020571729}
+  cParticleSystems:
+  - {fileID: 5750454859715637797}
+  - {fileID: 8208163698263707477}
+  - {fileID: 6733936032522987168}
+  - {fileID: 7700580177397742090}
 --- !u!114 &6636566231499246727
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -174,8 +198,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveForce: 25
-  boostCharge: 0
-  boostCooldown: 0
 --- !u!114 &328550718412262110
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -188,8 +210,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02c7aa6a8c3ef4415b68365f601c54bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 1000000
-  health: 0
 --- !u!114 &3399184115846437671
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -216,30 +236,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e02e0473101b76d9bee7f36177b3755, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  particleMultiplier: 5
+  cPlayerController: {fileID: 0}
   cBoostParticleSystem: {fileID: 5750454859715637797}
   cImpactParticleSystem: {fileID: 8208163698263707477}
   cHurtParticleSystem: {fileID: 6733936032522987168}
   cDeathParticleSystem: {fileID: 7700580177397742090}
---- !u!114 &6257465232271042279
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 333419446728189740}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 141fa3251f6082c60ab9e1f32809c6f2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerColor: {r: 1, g: 1, b: 1, a: 0}
-  cLight2D: {fileID: 5161598684334631783}
-  cRingSpriteRenderer: {fileID: 1062589161020571729}
-  cParticleSystems:
-  - {fileID: 5750454859715637797}
-  - {fileID: 8208163698263707477}
-  - {fileID: 6733936032522987168}
-  - {fileID: 7700580177397742090}
 --- !u!114 &4554995576766166513
 MonoBehaviour:
   m_ObjectHideFlags: 0

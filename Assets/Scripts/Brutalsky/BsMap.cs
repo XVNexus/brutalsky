@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
+using Core;
 using UnityEngine;
-using Random = Unity.Mathematics.Random;
 
 namespace Brutalsky
 {
@@ -12,13 +12,11 @@ namespace Brutalsky
         public List<BsPool> pools = new();
         public List<BsJoint> joints = new();
 
-        private Random random = Random.CreateFromIndex(0);
-
         public Vector2 SelectSpawn()
         {
             var leastUsages = spawns.Select(spawn => spawn.usages).Prepend(int.MaxValue).Min();
             var possibleSpawns = spawns.Where(spawn => spawn.usages == leastUsages).ToList();
-            var spawnChoice = possibleSpawns[random.NextInt(possibleSpawns.Count)];
+            var spawnChoice = possibleSpawns[EventSystem.random.NextInt(possibleSpawns.Count)];
             return spawnChoice.Use();
         }
 
