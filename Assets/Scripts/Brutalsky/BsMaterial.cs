@@ -39,6 +39,6 @@ namespace Brutalsky
 
         // Sticky
         public static BsMaterial Glue(bool dynamic = false)
-            => new BsMaterial(0f, 0f, 5f, 1f, dynamic);
+            => new BsMaterial(10f, 0f, 5f, 1f, dynamic);
     }
 }

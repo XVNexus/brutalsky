@@ -176,7 +176,7 @@ namespace Core
             {
                 case BsJointType.Hinge:
                     var hingeJoint = shapeObject.AddComponent<HingeJoint2D>();
-                    if (joint.speed > 0f)
+                    if (joint.speed != 0f)
                     {
                         hingeJoint.useMotor = true;
                         var motor = hingeJoint.motor;
@@ -188,7 +188,7 @@ namespace Core
                     break;
                 case BsJointType.Slider:
                     var sliderJoint = shapeObject.AddComponent<SliderJoint2D>();
-                    if (joint.speed > 0f)
+                    if (joint.speed != 0f)
                     {
                         sliderJoint.useMotor = true;
                         var motor = sliderJoint.motor;

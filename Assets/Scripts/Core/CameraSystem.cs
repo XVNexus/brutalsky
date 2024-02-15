@@ -10,7 +10,7 @@ namespace Core
         private void Awake() => current = this;
 
         // Settings
-        public Vector2 viewSize = new(20f, 10f);
+        public Vector2 viewSize = new(40f, 20f);
         public float dampening = .1f;
         public float shakeInterval = .1f;
         public float simSpeed = 10f;
@@ -58,7 +58,7 @@ namespace Core
             if (!Mathf.Approximately(cCamera.aspect, lastCameraAspect))
             {
                 cCamera.orthographicSize =
-                    Mathf.Max(viewSize.y * (viewSize.x / viewSize.y) / cCamera.aspect, viewSize.y);
+                    Mathf.Max(viewSize.y * .5f * (viewSize.x / viewSize.y) / cCamera.aspect, viewSize.y * .5f);
                 lastCameraAspect = cCamera.aspect;
             }
 

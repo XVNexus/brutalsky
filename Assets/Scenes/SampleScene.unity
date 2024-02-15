@@ -394,7 +394,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7fbf46dc596df1301b09437b8e012b50, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewSize: {x: 20, y: 10}
+  viewSize: {x: 40, y: 20}
   dampening: 0.1
   shakeInterval: 0.1
   simSpeed: 10
