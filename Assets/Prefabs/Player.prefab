@@ -178,6 +178,7 @@ MonoBehaviour:
   color: {r: 0, g: 0, b: 0, a: 0}
   boostCharge: 0
   boostCooldown: 0
+  alive: 1
   cLight2D: {fileID: 5161598684334631783}
   cRingSpriteRenderer: {fileID: 1062589161020571729}
   cParticleSystems:
@@ -254,6 +255,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0bb7c28fedab2677a8ba3d025bb1b22a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cPlayerController: {fileID: 0}
 --- !u!1 &3228066767371105852
 GameObject:
   m_ObjectHideFlags: 0

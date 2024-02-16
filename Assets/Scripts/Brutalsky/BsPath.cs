@@ -20,7 +20,7 @@ namespace Brutalsky
             }
         }
 
-        public static BsPath FromString(string pathString)
+        public static BsPath Path(string pathString) // X
         {
             var parts = new Regex(@" (?=[LC])").Split(pathString.ToUpper());
             if (parts.Length < 3) throw new ArgumentException("Cannot make a path with less than 3 points");
@@ -47,17 +47,17 @@ namespace Brutalsky
             return new BsPath(startpoint, nodes);
         }
 
-        public static BsPath Triangle(Vector2 point1, Vector2 point2, Vector2 point3)
+        public static BsPath Triangle(Vector2 point1, Vector2 point2, Vector2 point3) // T
         {
             return Polygon(new[] { point1, point2, point3 });
         }
 
-        public static BsPath Square(float diameter)
+        public static BsPath Square(float diameter) // S
         {
             return Rectangle(diameter, diameter);
         }
 
-        public static BsPath Rectangle(float width, float height)
+        public static BsPath Rectangle(float width, float height) // R
         {
             return Polygon(new Vector2[]
             {
@@ -68,12 +68,12 @@ namespace Brutalsky
             });
         }
 
-        public static BsPath Circle(float diameter)
+        public static BsPath Circle(float diameter) // C
         {
             return Ellipse(diameter, diameter);
         }
 
-        public static BsPath Ellipse(float width, float height)
+        public static BsPath Ellipse(float width, float height) // E
         {
             return new BsPath(new Vector2(0f, height / 2f), new BsPathNode[]
             {
@@ -84,7 +84,7 @@ namespace Brutalsky
             });
         }
 
-        public static BsPath Ngon(int sides, float diameter)
+        public static BsPath Ngon(int sides, float diameter) // N
         {
             var vertices = new Vector2[sides];
             for (var i = 0; i < sides; i++)
@@ -95,7 +95,7 @@ namespace Brutalsky
             return Polygon(vertices);
         }
 
-        public static BsPath Star(int points, float outerDiameter, float innerDiameter)
+        public static BsPath Star(int points, float outerDiameter, float innerDiameter) // T
         {
             var vertices = new Vector2[points * 2];
             for (var i = 0; i < points * 2; i++)
@@ -107,7 +107,7 @@ namespace Brutalsky
             return Polygon(vertices);
         }
 
-        public static BsPath Polygon(Vector2[] points)
+        public static BsPath Polygon(Vector2[] points) // P
         {
             if (points.Length < 3) throw new ArgumentException("Cannot make a polygon with less than 3 points");
             var startpoint = points[0];

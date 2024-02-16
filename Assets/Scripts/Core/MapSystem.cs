@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using Brutalsky;
 using Controllers;
@@ -88,7 +89,7 @@ namespace Core
             return true;
         }
 
-        public static bool Create(BsShape shape)
+        public bool Create(BsShape shape)
         {
             if (shape.active) return false;
 
@@ -111,10 +112,10 @@ namespace Core
             var polygonCollider = shapeObj.GetComponent<PolygonCollider2D>();
             polygonCollider.SetPath(0, points);
 
-            // Apply color
+            // Apply color and layer
             var meshRenderer = shapeObj.GetComponent<MeshRenderer>();
-            meshRenderer.sortingOrder = shape.color.sortingOrder;
             meshRenderer.material.color = shape.color.tint;
+            meshRenderer.sortingOrder = Layer2Order(shape.layer);
 
             // Apply material
             var rigidbody = shapeObj.GetComponent<Rigidbody2D>();
@@ -147,7 +148,7 @@ namespace Core
             return true;
         }
 
-        public static bool Create(BsPool pool)
+        public bool Create(BsPool pool)
         {
             if (pool.active) return false;
 
@@ -159,10 +160,10 @@ namespace Core
             // Apply size
             poolObj.transform.localScale = pool.size;
 
-            // Apply color
+            // Apply color and layer
             var spriteRenderer = poolObj.GetComponent<SpriteRenderer>();
-            spriteRenderer.sortingOrder = pool.color.sortingOrder;
             spriteRenderer.material.color = pool.color.tint;
+            spriteRenderer.sortingOrder = Layer2Order(pool.layer);
 
             // Apply chemical
             if (pool.simulated)
@@ -185,7 +186,7 @@ namespace Core
             return true;
         }
 
-        public static bool Create(BsJoint joint)
+        public bool Create(BsJoint joint)
         {
             if (joint.active) return false;
             if (!joint.targetShape.active || joint.mountShape is { active: false }) return false;
@@ -218,19 +219,12 @@ namespace Core
                     }
                     jointComponent = sliderJoint;
                     break;
-                case BsJointType.Spring:
-                    var springJoint = shapeObject.AddComponent<SpringJoint2D>();
-                    jointComponent = springJoint;
-                    break;
-                case BsJointType.Weld:
                 default:
-                    var weldJoint = shapeObject.AddComponent<FixedJoint2D>();
-                    jointComponent = weldJoint;
-                    break;
+                    throw new ArgumentException("Unknown joint type");
             }
             if (joint.mountShape != null)
             {
-                jointComponent.connectedBody = shapeObject.GetComponent<Rigidbody2D>();
+                jointComponent.connectedBody = joint.mountShape.instanceObject.GetComponent<Rigidbody2D>();
             }
             if (joint.strength > 0f)
             {
@@ -242,7 +236,7 @@ namespace Core
             return true;
         }
 
-        public static bool Destroy(BsShape shape)
+        public bool Destroy(BsShape shape)
         {
             if (!shape.active) return false;
 
@@ -252,7 +246,7 @@ namespace Core
             return true;
         }
 
-        public static bool Destroy(BsPool pool)
+        public bool Destroy(BsPool pool)
         {
             if (!pool.active) return false;
 
@@ -262,7 +256,7 @@ namespace Core
             return true;
         }
 
-        public static bool Destroy(BsJoint joint)
+        public bool Destroy(BsJoint joint)
         {
             if (!joint.active) return false;
 
@@ -270,6 +264,17 @@ namespace Core
             joint.instanceComponent = null;
             joint.active = false;
             return true;
+        }
+
+        // Utilities
+        public static int Layer2Order(BsLayer layer)
+        {
+            return layer switch
+            {
+                BsLayer.Background => -2,
+                BsLayer.Foreground => 2,
+                _ => 0
+            };
         }
     }
 }

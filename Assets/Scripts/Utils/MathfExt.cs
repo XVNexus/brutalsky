@@ -10,7 +10,7 @@ namespace Utils
             return (value - a) / (b - a);
         }
 
-        public static float TMP(float x, float threshold, float multiplier, float power)
+        public static float TMP(float x, float threshold, float multiplier = 1f, float power = 1f)
         {
             return Mathf.Pow(Mathf.Max(x - threshold, 0) * multiplier, power);
         }

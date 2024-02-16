@@ -5,54 +5,45 @@ namespace Brutalsky
     public class BsColor
     {
         public Color tint { get; set; }
-        public BsLayer layer { get; set; }
+        public bool glow { get; set; }
 
-        public int sortingOrder => layer switch
-        {
-            BsLayer.Background => -2,
-            BsLayer.Midground => 0,
-            BsLayer.Foreground => 2,
-            _ => 0
-        };
-
-        public BsColor(Color tint, BsLayer layer = BsLayer.Midground)
+        public BsColor(Color tint, bool glow = false)
         {
             this.tint = tint;
-            this.layer = layer;
+            this.glow = glow;
         }
 
-        public static BsColor Wood(BsLayer layer = BsLayer.Midground)
-            => new BsColor(new Color(.9f, .6f, .3f), layer);
+        public BsColor(float r, float g, float b, float a = 1f, bool glow = false)
+        {
+            tint = new Color(r, g, b, a);
+            this.glow = glow;
+        }
 
-        public static BsColor Metal(BsLayer layer = BsLayer.Midground)
-            => new BsColor(new Color(.9f, .9f, 1f), layer);
+        public static BsColor Wood()
+            => new BsColor(new Color(.9f, .6f, .3f));
 
-        public static BsColor Stone(BsLayer layer = BsLayer.Midground)
-            => new BsColor(new Color(.7f, .7f, .7f), layer);
+        public static BsColor Metal()
+            => new BsColor(new Color(.9f, .9f, 1f));
 
-        public static BsColor Ice(BsLayer layer = BsLayer.Midground)
-            => new BsColor(new Color(.5f, .8f, 1f), layer);
+        public static BsColor Stone()
+            => new BsColor(new Color(.7f, .7f, .7f));
 
-        public static BsColor Rubber(BsLayer layer = BsLayer.Midground)
-            => new BsColor(new Color(.7f, .4f, .9f), layer);
+        public static BsColor Ice()
+            => new BsColor(new Color(.5f, .8f, 1f));
 
-        public static BsColor Glue(BsLayer layer = BsLayer.Midground)
-            => new BsColor(new Color(.7f, .9f, .4f), layer);
+        public static BsColor Rubber()
+            => new BsColor(new Color(.7f, .4f, .9f));
 
-        public static BsColor Oil(BsLayer layer = BsLayer.Midground)
-            => new BsColor(new Color(.3f, .3f, .4f), layer);
+        public static BsColor Glue()
+            => new BsColor(new Color(.7f, .9f, .4f));
 
-        public static BsColor Water(BsLayer layer = BsLayer.Midground)
-            => new BsColor(new Color(.4f, .4f, 1f), layer);
+        public static BsColor Oil()
+            => new BsColor(new Color(.3f, .3f, .4f));
 
-        public static BsColor Honey(BsLayer layer = BsLayer.Midground)
-            => new BsColor(new Color(.9f, .7f, 0f), layer);
-    }
+        public static BsColor Water()
+            => new BsColor(new Color(.4f, .4f, 1f));
 
-    public enum BsLayer
-    {
-        Background,
-        Midground,
-        Foreground
+        public static BsColor Honey()
+            => new BsColor(new Color(.9f, .7f, 0f));
     }
 }

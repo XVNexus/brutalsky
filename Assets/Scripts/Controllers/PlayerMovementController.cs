@@ -9,6 +9,7 @@ namespace Controllers
         // Variables
         public float moveForce = 25f;
         private bool lastBoostInput;
+        private float lastSpeed;
 
         // References
         private PlayerController cPlayerController;
@@ -26,10 +27,10 @@ namespace Controllers
             if (!other.gameObject.CompareTag("Player")) return;
 
             // Get collision info
-            var impactForce = other.contacts.Sum(contact => contact.normalImpulse);
+            var impactSpeed = lastSpeed;
             
             // Reduce velocity based on collision force
-            var velocityFactor = Mathf.Min(1f / (impactForce * .1f), 1f);
+            var velocityFactor = Mathf.Min(10f / impactSpeed, 1f) / 2f;
             cRigidbody2D.velocity *= velocityFactor;
         }
 
@@ -58,6 +59,9 @@ namespace Controllers
                 cPlayerController.boostCooldown = Mathf.Max(cPlayerController.boostCooldown - Time.fixedDeltaTime, 0f);
             }
             lastBoostInput = boostInput;
+
+            // Save the current speed for future reference
+            lastSpeed = cRigidbody2D.velocity.magnitude;
         }
     }
 }

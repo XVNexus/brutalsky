@@ -11,6 +11,8 @@ namespace Brutalsky
         public float torque { get; set; }
         public float strength { get; set; }
 
+        public override char saveSymbol => 'J';
+
         public BsJoint(BsShape targetShape, [CanBeNull] BsShape mountShape, BsTransform transform, BsJointType jointType, float speed = 0f, float torque = 0f, float strength = 0f)
         {
             this.targetShape = targetShape;
@@ -21,13 +23,25 @@ namespace Brutalsky
             this.torque = torque;
             this.strength = strength;
         }
+
+        public BsJoint()
+        {
+        }
+
+        public override void Parse(string[][] raw)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override string[][] Stringify()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 
     public enum BsJointType
     {
-        Weld,
         Hinge,
-        Slider,
-        Spring
+        Slider
     }
 }

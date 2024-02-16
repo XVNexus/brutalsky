@@ -10,22 +10,22 @@ public class Testing : MonoBehaviour
 
         // Decorative shapes
         map.shapes.Add(new BsShape(new BsTransform(-2f, 0f), BsPath.Circle(5f),
-            BsMaterial.Stone(), new BsColor(new Color(.3f, .3f, .3f), BsLayer.Background), false));
+            BsMaterial.Stone(), new BsColor(.3f, .3f, .3f), BsLayer.Background, false));
         map.shapes.Add(new BsShape(new BsTransform(2f, 0f), BsPath.Circle(5f),
-            BsMaterial.Stone(), new BsColor(new Color(.3f, .3f, .3f), BsLayer.Background), false));
+            BsMaterial.Stone(), new BsColor(.3f, .3f, .3f), BsLayer.Background, false));
 
         // Structure shapes
         map.shapes.Add(new BsShape(new BsTransform(-20f, 0f), BsPath.Rectangle(2f, 22f),
             BsMaterial.Stone(), BsColor.Stone()));
         map.shapes.Add(new BsShape(new BsTransform(20f, 0f), BsPath.Rectangle(2f, 22f),
             BsMaterial.Stone(), BsColor.Stone()));
-        map.shapes.Add(new BsShape(new BsTransform(0f, 10f), BsPath.FromString("-15 1 L 15 1 L 15 0 L 14 -.5 L -14 -.5 L -15 0"),
+        map.shapes.Add(new BsShape(new BsTransform(0f, 10f), BsPath.Path("-15 1 L 15 1 L 15 0 L 14 -.5 L -14 -.5 L -15 0"),
             BsMaterial.Stone(), BsColor.Stone()));
-        map.shapes.Add(new BsShape(new BsTransform(-19f, 0f), BsPath.FromString("-1 2.5 L 0 2.5 C 0 .5 2 .5 L 8 .5 L 8.5 0 L 8 -.5 L 2 -.5 C 0 -.5 0 -2.5 L -1 -2.5"),
+        map.shapes.Add(new BsShape(new BsTransform(-19f, 0f), BsPath.Path("-1 2.5 L 0 2.5 C 0 .5 2 .5 L 8 .5 L 8.5 0 L 8 -.5 L 2 -.5 C 0 -.5 0 -2.5 L -1 -2.5"),
             BsMaterial.Stone(), BsColor.Stone()));
-        map.shapes.Add(new BsShape(new BsTransform(19f, 0f), BsPath.FromString("1 2.5 L 0 2.5 C 0 .5 -2 .5 L -8 .5 L -8.5 0 L -8 -.5 L -2 -.5 C 0 -.5 0 -2.5 L 1 -2.5"),
+        map.shapes.Add(new BsShape(new BsTransform(19f, 0f), BsPath.Path("1 2.5 L 0 2.5 C 0 .5 -2 .5 L -8 .5 L -8.5 0 L -8 -.5 L -2 -.5 C 0 -.5 0 -2.5 L 1 -2.5"),
             BsMaterial.Stone(), BsColor.Stone()));
-        map.shapes.Add(new BsShape(new BsTransform(0f, -10f), BsPath.FromString("-7 -1 L -7 .5 L 0 3 L 7 .5 L 7 -1"),
+        map.shapes.Add(new BsShape(new BsTransform(0f, -10f), BsPath.Path("-7 -1 L -7 .5 L 0 3 L 7 .5 L 7 -1"),
             BsMaterial.Stone(), BsColor.Stone()));
 
         // Exterior shapes
@@ -53,9 +53,9 @@ public class Testing : MonoBehaviour
             BsMaterial.Ice(), BsColor.Ice()));
         map.shapes.Add(new BsShape(new BsTransform(22.5f, 12.25f), BsPath.Rectangle(1f, 1.5f),
             BsMaterial.Ice(), BsColor.Ice()));
-        map.shapes.Add(new BsShape(new BsTransform(-23f, -13f), BsPath.FromString("0 0 L 0 4 C 0 0 2 0"),
+        map.shapes.Add(new BsShape(new BsTransform(-23f, -13f), BsPath.Path("0 0 L 0 4 C 0 0 2 0"),
             BsMaterial.Stone(), BsColor.Stone()));
-        map.shapes.Add(new BsShape(new BsTransform(23f, -13f), BsPath.FromString("0 0 L 0 4 C 0 0 -2 0"),
+        map.shapes.Add(new BsShape(new BsTransform(23f, -13f), BsPath.Path("0 0 L 0 4 C 0 0 -2 0"),
             BsMaterial.Stone(), BsColor.Stone()));
 
         // Interactive shapes
@@ -63,13 +63,13 @@ public class Testing : MonoBehaviour
             BsMaterial.Glue(), BsColor.Glue()));
         map.shapes.Add(new BsShape(new BsTransform(9f, 9.25f), BsPath.Rectangle(10f, .5f),
             BsMaterial.Glue(), BsColor.Glue()));
-        map.shapes.Add(new BsShape(new BsTransform(-14.5f, 9.5f), BsPath.FromString("-.5 .5 L .5 0 L .5 -.5 L -.5 0"),
+        map.shapes.Add(new BsShape(new BsTransform(-14.5f, 9.5f), BsPath.Path("-.5 .5 L .5 0 L .5 -.5 L -.5 0"),
             BsMaterial.Ice(), BsColor.Ice()));
-        map.shapes.Add(new BsShape(new BsTransform(14.5f, 9.5f), BsPath.FromString(".5 .5 L -.5 0 L -.5 -.5 L .5 0"),
+        map.shapes.Add(new BsShape(new BsTransform(14.5f, 9.5f), BsPath.Path(".5 .5 L -.5 0 L -.5 -.5 L .5 0"),
             BsMaterial.Ice(), BsColor.Ice()));
-        map.shapes.Add(new BsShape(new BsTransform(0, -9.5f), BsPath.FromString("-7 0 L -7 .5 L 0 3 L 7 .5 L 7 0 L 0 2.5"),
+        map.shapes.Add(new BsShape(new BsTransform(0, -9.5f), BsPath.Path("-7 0 L -7 .5 L 0 3 L 7 .5 L 7 0 L 0 2.5"),
             BsMaterial.Ice(), BsColor.Ice()));
-        map.shapes.Add(new BsShape(new BsTransform(0, 9.25f), BsPath.FromString("4 .25 L 4 -.25 L 0 -1.25 L -4 -.25 L -4 .25"),
+        map.shapes.Add(new BsShape(new BsTransform(0, 9.25f), BsPath.Path("4 .25 L 4 -.25 L 0 -1.25 L -4 -.25 L -4 .25"),
             BsMaterial.Rubber(), BsColor.Rubber()));
 
         // Dynamic shapes
@@ -82,25 +82,25 @@ public class Testing : MonoBehaviour
 
         // Pools
         map.pools.Add(new BsPool(new BsTransform(-17f, 11f, 0f), new Vector2(4f, 3f),
-            BsChemical.Honey(), BsColor.Honey(BsLayer.Foreground)));
+            BsChemical.Honey(), BsColor.Honey(), BsLayer.Foreground));
         map.pools.Add(new BsPool(new BsTransform(17f, 11f, 0f), new Vector2(4f, 3f),
-            BsChemical.Honey(), BsColor.Honey(BsLayer.Foreground)));
+            BsChemical.Honey(), BsColor.Honey(), BsLayer.Foreground));
         map.pools.Add(new BsPool(new BsTransform(-18f, 12f, 90f), new Vector2(2f, 6f),
-            BsChemical.Water(), BsColor.Water(BsLayer.Background)));
+            BsChemical.Water(), BsColor.Water(), BsLayer.Background));
         map.pools.Add(new BsPool(new BsTransform(18f, 12f, 270f), new Vector2(2f, 6f),
-            BsChemical.Water(), BsColor.Water(BsLayer.Background)));
+            BsChemical.Water(), BsColor.Water(), BsLayer.Background));
         map.pools.Add(new BsPool(new BsTransform(-22f, 1f, 180f), new Vector2(2f, 24f),
-            BsChemical.Water(), BsColor.Water(BsLayer.Background)));
+            BsChemical.Water(), BsColor.Water(), BsLayer.Background));
         map.pools.Add(new BsPool(new BsTransform(22f, 1f, 180f), new Vector2(2f, 24f),
-            BsChemical.Water(), BsColor.Water(BsLayer.Background)));
+            BsChemical.Water(), BsColor.Water(), BsLayer.Background));
         map.pools.Add(new BsPool(new BsTransform(-21f, -12f, 270f), new Vector2(2f, 4f),
-            BsChemical.Water(), BsColor.Water(BsLayer.Background)));
+            BsChemical.Water(), BsColor.Water(), BsLayer.Background));
         map.pools.Add(new BsPool(new BsTransform(21f, -12f, 90f), new Vector2(2f, 4f),
-            BsChemical.Water(), BsColor.Water(BsLayer.Background)));
+            BsChemical.Water(), BsColor.Water(), BsLayer.Background));
         map.pools.Add(new BsPool(new BsTransform(-13f, -11f), new Vector2(12f, 4f),
-            BsChemical.Water(), BsColor.Water(BsLayer.Foreground)));
+            BsChemical.Water(), BsColor.Water(), BsLayer.Foreground));
         map.pools.Add(new BsPool(new BsTransform(13f, -11f), new Vector2(12f, 4f),
-            BsChemical.Water(), BsColor.Water(BsLayer.Foreground)));
+            BsChemical.Water(), BsColor.Water(), BsLayer.Foreground));
 
         // Joints
         map.joints.Add(new BsJoint(spinnerLeft, null, new BsTransform(),
@@ -109,8 +109,8 @@ public class Testing : MonoBehaviour
             BsJointType.Hinge, -100f, 1000000f));
 
         // Spawns
-        map.spawns.Add(new BsSpawn(-15f, 1f));
-        map.spawns.Add(new BsSpawn(15f, 1f));
+        map.spawns.Add(new BsSpawn(new BsTransform(-15f, 1f)));
+        map.spawns.Add(new BsSpawn(new BsTransform(15f, 1f)));
 
         MapSystem.current.Load(map);
 

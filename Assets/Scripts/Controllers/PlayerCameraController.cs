@@ -1,4 +1,5 @@
 using System.Linq;
+using Brutalsky;
 using Core;
 using UnityEngine;
 using Utils;
@@ -26,8 +27,7 @@ namespace Controllers
             var impactDirection = ((Vector2)transform.position - other.contacts[0].point).normalized;
 
             // Apply camera shake
-            var shakeForce = Mathf.Min(MathfExt.TMP(impactForce, 25f, .5f, 1.5f) * .01f, 5f);
-            if (shakeForce < .5f) return;
+            var shakeForce = Mathf.Min(Mathf.Pow(BsPlayer.CalculateDamage(impactForce), 1.5f) * .01f, 5f);
             if (other.gameObject.CompareTag("Player"))
             {
                 CameraSystem.current.Shake(shakeForce);

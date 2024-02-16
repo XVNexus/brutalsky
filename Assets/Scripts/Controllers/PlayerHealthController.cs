@@ -1,4 +1,5 @@
 using System.Linq;
+using Brutalsky;
 using Core;
 using UnityEngine;
 using Utils;
@@ -30,12 +31,13 @@ namespace Controllers
             if (!cPlayerController.alive) return;
 
             // Get collision info
-            var impactForce = other.contacts.Sum(contact => contact.normalImpulse);
+            var impactForce = other.contacts.Sum(contact => contact.normalImpulse)
+                * (other.gameObject.CompareTag("Player") ? 2f : 1f);
             if (impactForce < 25f) return;
             var impactSpeed = lastSpeed;
 
             // Apply damage to player
-            var damageApplied = MathfExt.TMP(impactForce, 25f, .5f, 1.5f);
+            var damageApplied = BsPlayer.CalculateDamage(impactForce);
             var damageMultiplier = Mathf.Min(1f / (impactSpeed * .2f), 1f);
             var damage = damageApplied * damageMultiplier;
             cPlayerController.health = Mathf.Max(cPlayerController.health - damage, 0f);
