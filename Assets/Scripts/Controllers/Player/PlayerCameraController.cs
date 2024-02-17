@@ -1,10 +1,9 @@
 using System.Linq;
-using Brutalsky;
+using Brutalsky.Object;
 using Core;
 using UnityEngine;
-using Utils;
 
-namespace Controllers
+namespace Controllers.Player
 {
     public class PlayerCameraController : MonoBehaviour
     {
@@ -12,7 +11,7 @@ namespace Controllers
         private float lastHealth = -1f;
 
         // References
-        public PlayerController cPlayerController;
+        private PlayerController cPlayerController;
 
         // Events
         private void Start()
@@ -48,6 +47,10 @@ namespace Controllers
             {
                 var shakeForce = Mathf.Min(-deltaHealth * .05f, 5f);
                 CameraSystem.current.Shake(shakeForce);
+            }
+            if (health == 0f && lastHealth > 0f)
+            {
+                CameraSystem.current.Shake(2f);
             }
             lastHealth = health;
         }

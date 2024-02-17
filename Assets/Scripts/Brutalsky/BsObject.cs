@@ -1,3 +1,4 @@
+using Brutalsky.Property;
 using JetBrains.Annotations;
 using UnityEngine;
 using EventSystem = Core.EventSystem;
@@ -13,10 +14,8 @@ namespace Brutalsky
         [CanBeNull] public Component instanceComponent { get; set; }
         public bool active { get; set; }
 
-        public abstract char saveSymbol { get; }
+        public abstract void Parse(string[] raw);
 
-        public abstract void Parse(string[][] raw);
-
-        public abstract string[][] Stringify();
+        public abstract string[] Stringify();
     }
 }

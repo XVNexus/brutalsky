@@ -1,10 +1,8 @@
 using System.Linq;
-using Brutalsky;
-using Core;
+using Brutalsky.Object;
 using UnityEngine;
-using Utils;
 
-namespace Controllers
+namespace Controllers.Player
 {
     public class PlayerHealthController : MonoBehaviour
     {

@@ -1,5 +1,6 @@
 using System;
 using Brutalsky;
+using Brutalsky.Object;
 using UnityEngine;
 using Random = Unity.Mathematics.Random;
 

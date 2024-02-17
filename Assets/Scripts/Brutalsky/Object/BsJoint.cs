@@ -1,6 +1,7 @@
+using Brutalsky.Property;
 using JetBrains.Annotations;
 
-namespace Brutalsky
+namespace Brutalsky.Object
 {
     public class BsJoint : BsObject
     {
@@ -10,8 +11,6 @@ namespace Brutalsky
         public float speed { get; set; }
         public float torque { get; set; }
         public float strength { get; set; }
-
-        public override char saveSymbol => 'J';
 
         public BsJoint(BsShape targetShape, [CanBeNull] BsShape mountShape, BsTransform transform, BsJointType jointType, float speed = 0f, float torque = 0f, float strength = 0f)
         {
@@ -28,14 +27,13 @@ namespace Brutalsky
         {
         }
 
-        public override void Parse(string[][] raw)
+        public override void Parse(string[] raw)
         {
-            throw new System.NotImplementedException();
         }
 
-        public override string[][] Stringify()
+        public override string[] Stringify()
         {
-            throw new System.NotImplementedException();
+            return new[] { "I FARTED IN UR ASS" };
         }
     }
 

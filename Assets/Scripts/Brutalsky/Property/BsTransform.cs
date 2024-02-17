@@ -1,8 +1,8 @@
 using UnityEngine;
 
-namespace Brutalsky
+namespace Brutalsky.Property
 {
-    public class BsTransform
+    public class BsTransform : BsProperty
     {
         public Vector2 position { get; set; }
         public float rotation { get; set; }
@@ -36,6 +36,18 @@ namespace Brutalsky
 
         public BsTransform()
         {
+        }
+
+        public override void Parse(string raw)
+        {
+            var parts = raw.Split(' ');
+            position = new Vector2(float.Parse(parts[0]), float.Parse(parts[1]));
+            rotation = float.Parse(parts[2]);
+        }
+
+        public override string Stringify()
+        {
+            return $"{position.x} {position.y} {rotation}";
         }
     }
 }

@@ -1,7 +1,7 @@
 using UnityEngine;
 using Utils;
 
-namespace Controllers
+namespace Controllers.Player
 {
     public class PlayerRingController : MonoBehaviour
     {
@@ -11,9 +11,9 @@ namespace Controllers
         private float ringSpin;
 
         // References
-        private PlayerController cPlayerController;
         public SpriteRenderer cSpriteRenderer;
         public SpriteMask cSpriteMask;
+        private PlayerController cPlayerController;
 
         // Events
         private void Start()

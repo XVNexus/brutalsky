@@ -1,7 +1,7 @@
 using UnityEngine;
 using Utils;
 
-namespace Brutalsky
+namespace Brutalsky.Property
 {
     public abstract class BsPathNode
     {

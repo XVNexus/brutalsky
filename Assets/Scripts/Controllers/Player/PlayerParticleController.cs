@@ -1,9 +1,8 @@
 using System.Linq;
-using Brutalsky;
+using Brutalsky.Object;
 using UnityEngine;
-using Utils;
 
-namespace Controllers
+namespace Controllers.Player
 {
     public class PlayerParticleController : MonoBehaviour
     {
@@ -13,11 +12,11 @@ namespace Controllers
         private float lastHealth = -1f;
 
         // References
-        public PlayerController cPlayerController;
         public ParticleSystem cBoostParticleSystem;
         public ParticleSystem cImpactParticleSystem;
         public ParticleSystem cHurtParticleSystem;
         public ParticleSystem cDeathParticleSystem;
+        private PlayerController cPlayerController;
         private Rigidbody2D cRigidbody2D;
 
         // Events

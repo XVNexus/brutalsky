@@ -1,7 +1,10 @@
 using System;
 using System.Linq;
 using Brutalsky;
+using Brutalsky.Object;
+using Brutalsky.Property;
 using Controllers;
+using Controllers.Player;
 using JetBrains.Annotations;
 using UnityEngine;
 using Utils;
@@ -59,7 +62,7 @@ namespace Core
             var playerController = playerObject.GetComponent<PlayerController>();
             playerController.bsObject = player;
             playerController.maxHealth = player.health;
-            playerController.color = player.color;
+            playerController.color = player.color.tint;
             if (player.dummy)
             {
                 playerObject.GetComponent<PlayerMovementController>().moveForce = 0f;

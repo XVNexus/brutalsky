@@ -1,8 +1,6 @@
-using System;
-using System.Linq;
 using UnityEngine;
 
-namespace Controllers
+namespace Controllers.Player
 {
     public class PlayerMovementController : MonoBehaviour
     {

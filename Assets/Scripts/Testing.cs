@@ -1,4 +1,8 @@
+using System;
+using System.IO;
 using Brutalsky;
+using Brutalsky.Object;
+using Brutalsky.Property;
 using Core;
 using UnityEngine;
 
@@ -114,7 +118,17 @@ public class Testing : MonoBehaviour
 
         MapSystem.current.Load(map);
 
-        MapSystem.current.Spawn(new BsPlayer("Player 1", 100f, new Color(1f, .5f, 0f)));
-        MapSystem.current.Spawn(new BsPlayer("Player 2", 100f, new Color(0f, .5f, 1f), true));
+        MapSystem.current.Spawn(new BsPlayer("Player 1", 100f, new BsColor(1f, .5f, 0f)));
+        MapSystem.current.Spawn(new BsPlayer("Player 2", 100f, new BsColor(0f, .5f, 1f), true));
+
+        try
+        {
+            using var writer = new StreamWriter("/home/ian/Downloads/BSMap.txt");
+            writer.Write(map.Stringify());
+        }
+        catch (IOException e)
+        {
+            Console.WriteLine($"Error while saving map: {e.Message}");
+        }
     }
 }

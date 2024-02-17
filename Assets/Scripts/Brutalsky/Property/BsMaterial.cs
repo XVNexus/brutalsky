@@ -1,12 +1,12 @@
-namespace Brutalsky
+namespace Brutalsky.Property
 {
-    public class BsMaterial
+    public class BsMaterial : BsProperty
     {
-        public float friction { get; }
-        public float restitution { get; }
-        public float adhesion { get; }
-        public float density { get; }
-        public bool dynamic { get; }
+        public float friction { get; private set; }
+        public float restitution { get; private set; }
+        public float adhesion { get; private set; }
+        public float density { get; private set; }
+        public bool dynamic { get; private set; }
 
         public BsMaterial(float friction, float restitution, float adhesion, float density = 0f, bool dynamic = false)
         {
@@ -15,6 +15,10 @@ namespace Brutalsky
             this.adhesion = adhesion;
             this.density = density;
             this.dynamic = dynamic;
+        }
+
+        public BsMaterial()
+        {
         }
 
         // Lightweight
@@ -40,5 +44,20 @@ namespace Brutalsky
         // Sticky
         public static BsMaterial Glue(bool dynamic = false)
             => new BsMaterial(10f, 0f, 5f, 1f, dynamic);
+
+        public override void Parse(string raw)
+        {
+            var parts = raw.Split(' ');
+            friction = float.Parse(parts[0]);
+            restitution = float.Parse(parts[1]);
+            adhesion = float.Parse(parts[2]);
+            density = float.Parse(parts[3]);
+            dynamic = parts[4][0] == '1';
+        }
+
+        public override string Stringify()
+        {
+            return $"{friction} {restitution} {adhesion} {density} {(dynamic ? '1' : '0')}";
+        }
     }
 }
