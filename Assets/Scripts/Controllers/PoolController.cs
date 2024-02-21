@@ -14,11 +14,25 @@ namespace Controllers
         private Vector2 buoyancyForce;
         private float surfaceAngle;
         private float surfacePosition;
-        private float lineWidth;
+        private float waveHeight;
+        private int wavePoints;
 
         // References
         public LineRenderer cLineRenderer;
         private SpriteRenderer cSpriteRenderer;
+
+        // Functions
+        public void SetWavePointHeight(int index, float height)
+        {
+            if (index < 0 || index >= wavePoints) return;
+            cLineRenderer.SetPosition(index + 2,
+                new Vector3(cLineRenderer.GetPosition(index + 2).x, height * waveHeight));
+        }
+
+        public float GetWavePointOffset(int index)
+        {
+            return cLineRenderer.GetPosition(index + 2).x * bsObject.size.x;
+;        }
 
         // Events
         private void Start()
@@ -32,23 +46,30 @@ namespace Controllers
             cLineRenderer.sortingOrder = cSpriteRenderer.sortingOrder;
 
             // Set up fluid properties
-            lineWidth = cLineRenderer.widthMultiplier;
+            var lineWidth = cLineRenderer.widthMultiplier;
             var poolTransform = transform;
+            var poolScale = poolTransform.localScale;
+            poolScale.y -= lineWidth * .5f;
+            poolTransform.localScale = poolScale;
+            var poolPosition = poolTransform.localPosition;
+            poolPosition.y -= lineWidth * .25f;
+            poolTransform.localPosition = poolPosition;
             surfaceAngle = (poolTransform.rotation.eulerAngles.z + 90f) * Mathf.Deg2Rad;
             surfacePosition = bsObject.size.y * .5f;
             buoyancyForce = new Vector2(Mathf.Cos(surfaceAngle), Mathf.Sin(surfaceAngle)) * bsObject.chemical.buoyancy;
 
             // Set up wave renderer
-            cLineRenderer.positionCount = Mathf.RoundToInt(bsObject.size.x * wavePointDensity) + 3;
+            cLineRenderer.positionCount = Mathf.RoundToInt(poolScale.x * wavePointDensity) + 3;
             var posCount = cLineRenderer.positionCount;
-            var surfaceOffset = lineWidth * 2f / bsObject.size.y;
-            var edgeOffset = lineWidth * .5f / bsObject.size.x;
-            var wavePointInterval = 1f / wavePointDensity / bsObject.size.x;
-            Debug.Log($"Size: {bsObject.size} / Surface Offset: {surfaceOffset * bsObject.size.y} / Edge Offset: {edgeOffset * bsObject.size.x} / Point Interval: {wavePointInterval * bsObject.size.x}");
-            cLineRenderer.SetPosition(0, new Vector2(.5f - edgeOffset, -surfaceOffset));
-            cLineRenderer.SetPosition(1, new Vector2(.5f - edgeOffset, 0f));
-            cLineRenderer.SetPosition(posCount - 2, new Vector2(-.5f + edgeOffset, 0f));
-            cLineRenderer.SetPosition(posCount - 1, new Vector2(-.5f + edgeOffset, -surfaceOffset));
+            wavePoints = posCount - 4;
+            var surfaceOffset = lineWidth * 2f / poolScale.y;
+            var edgeOffset = lineWidth * .5f / poolScale.x;
+            var wavePointInterval = 1f / wavePointDensity / poolScale.x;
+            waveHeight = lineWidth * .5f / poolScale.y;
+            cLineRenderer.SetPosition(0, new Vector2(-.5f + edgeOffset, -surfaceOffset));
+            cLineRenderer.SetPosition(1, new Vector2(-.5f + edgeOffset, 0f));
+            cLineRenderer.SetPosition(posCount - 2, new Vector2(.5f - edgeOffset, 0f));
+            cLineRenderer.SetPosition(posCount - 1, new Vector2(.5f - edgeOffset, -surfaceOffset));
             for (var i = 2; i < cLineRenderer.positionCount - 2; i++)
             {
                 cLineRenderer.SetPosition(i, new Vector2(-.5f + wavePointInterval * (i - 1), 0f));
@@ -65,8 +86,9 @@ namespace Controllers
             var objRadius = MathfExt.WeightedMean(
                 bounds.extents.x, Mathf.Abs(Mathf.Cos(surfaceAngle)),
                 bounds.extents.y, Mathf.Abs(Mathf.Sin(surfaceAngle)));
-            var relativePosition = transform.InverseTransformPoint(bounds.center);
-            var objDistance = relativePosition.y * transform.localScale.y - surfacePosition;
+            var poolTransform = transform;
+            var relativePosition = poolTransform.InverseTransformPoint(bounds.center);
+            var objDistance = relativePosition.y * poolTransform.localScale.y - surfacePosition;
             var submersionFactor = Mathf.Max(MathfExt.InverseLerp(objRadius, -objRadius, objDistance), 0f);
 
             // Apply fluid force
@@ -87,6 +109,15 @@ namespace Controllers
             else
             {
                 playerController.Heal(-damage * Time.fixedDeltaTime);
+            }
+        }
+
+        // Updates
+        private void FixedUpdate()
+        {
+            for (var i = 0; i < wavePoints; i++)
+            {
+                SetWavePointHeight(i, Mathf.Sin(GetWavePointOffset(i) + Time.timeSinceLevelLoad * 2f));
             }
         }
     }
