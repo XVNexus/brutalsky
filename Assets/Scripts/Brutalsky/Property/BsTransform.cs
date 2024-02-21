@@ -7,26 +7,16 @@ namespace Brutalsky.Property
         public Vector2 position { get; set; }
         public float rotation { get; set; }
 
-        public BsTransform(Vector2 position, float rotation)
+        public BsTransform(Vector2 position, float rotation = 0f)
         {
             this.position = position;
             this.rotation = rotation;
         }
 
-        public BsTransform(float x, float y, float rotation)
+        public BsTransform(float x, float y, float rotation = 0f)
         {
             position = new Vector2(x, y);
             this.rotation = rotation;
-        }
-
-        public BsTransform(Vector2 position)
-        {
-            this.position = position;
-        }
-
-        public BsTransform(float x, float y)
-        {
-            position = new Vector2(x, y);
         }
 
         public BsTransform(float rotation)

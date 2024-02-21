@@ -41,6 +41,12 @@ namespace Brutalsky.Property
         public static BsColor Glue()
             => new BsColor(new Color(.7f, .9f, .4f));
 
+        public static BsColor Medkit()
+            => new BsColor(new Color(.2f, 1f, 1f));
+
+        public static BsColor Electric()
+            => new BsColor(new Color(1f, 1f, .2f));
+
         public static BsColor Oil()
             => new BsColor(new Color(.3f, .3f, .4f));
 
@@ -49,6 +55,18 @@ namespace Brutalsky.Property
 
         public static BsColor Honey()
             => new BsColor(new Color(.9f, .7f, 0f));
+
+        public static BsColor Medicine()
+            => new BsColor(new Color(.3f, 1f, .2f));
+
+        public static BsColor Lava()
+            => new BsColor(new Color(1f, .3f, .2f));
+
+        public static BsColor Void()
+            => new BsColor(new Color(0f, 0f, 0f));
+
+        public static BsColor Ether()
+            => new BsColor(new Color(1f, 1f, 1f));
 
         public override void Parse(string raw)
         {

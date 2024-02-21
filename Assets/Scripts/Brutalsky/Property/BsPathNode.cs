@@ -67,7 +67,7 @@ namespace Brutalsky.Property
 
         public override Vector2 SamplePoint(float t)
         {
-            return MathfExt.Lerp2(startpoint, endpoint, t);
+            return MathfExt.Lerp(startpoint, endpoint, t);
         }
     }
 
@@ -78,8 +78,8 @@ namespace Brutalsky.Property
 
         private static readonly float HandleMultiplier = Mathf.Pow(1f / 6f, 1f / 3f);
         private Vector2 p0 => startpoint;
-        private Vector2 p1 => MathfExt.Lerp2(startpoint, handle, HandleMultiplier);
-        private Vector2 p2 => MathfExt.Lerp2(endpoint, handle, HandleMultiplier);
+        private Vector2 p1 => MathfExt.Lerp(startpoint, handle, HandleMultiplier);
+        private Vector2 p2 => MathfExt.Lerp(endpoint, handle, HandleMultiplier);
         private Vector2 p3 => endpoint;
         private float length => ((p3 - p0).magnitude + (p1 - p0).magnitude + (p2 - p1).magnitude + (p3 - p2).magnitude) / 2f;
 
@@ -97,12 +97,12 @@ namespace Brutalsky.Property
 
         public override Vector2 SamplePoint(float t)
         {
-            var p01 = MathfExt.Lerp2(p0, p1, t);
-            var p12 = MathfExt.Lerp2(p1, p2, t);
-            var p23 = MathfExt.Lerp2(p2, p3, t);
-            var p012 = MathfExt.Lerp2(p01, p12, t);
-            var p123 = MathfExt.Lerp2(p12, p23, t);
-            return MathfExt.Lerp2(p012, p123, t);
+            var p01 = MathfExt.Lerp(p0, p1, t);
+            var p12 = MathfExt.Lerp(p1, p2, t);
+            var p23 = MathfExt.Lerp(p2, p3, t);
+            var p012 = MathfExt.Lerp(p01, p12, t);
+            var p123 = MathfExt.Lerp(p12, p23, t);
+            return MathfExt.Lerp(p012, p123, t);
         }
     }
 }

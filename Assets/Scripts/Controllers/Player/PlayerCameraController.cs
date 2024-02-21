@@ -45,7 +45,7 @@ namespace Controllers.Player
             var deltaHealth = health - lastHealth;
             if (deltaHealth < 0f)
             {
-                var shakeForce = Mathf.Min(-deltaHealth * .05f, 5f);
+                var shakeForce = Mathf.Min(-deltaHealth * .02f, 2f);
                 CameraSystem.current.Shake(shakeForce);
             }
             if (health == 0f && lastHealth > 0f)

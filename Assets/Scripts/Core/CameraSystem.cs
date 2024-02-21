@@ -65,7 +65,7 @@ namespace Core
             // Simulate camera spring mount
             var velocityFromSpring = velocity + -offset * (simSpeed * Time.deltaTime);
             var velocityFromDampening = -offset;
-            velocity = MathfExt.Lerp2(velocityFromSpring, velocityFromDampening, dampening);
+            velocity = MathfExt.Lerp(velocityFromSpring, velocityFromDampening, dampening);
             offset += velocity * (simSpeed * Time.deltaTime);
 
             // Apply shake offset

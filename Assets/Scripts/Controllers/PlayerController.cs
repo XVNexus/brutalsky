@@ -24,6 +24,17 @@ namespace Controllers
         public ParticleSystem[] cParticleSystems;
         private SpriteRenderer cPlayerSpriteRenderer;
 
+        // Functions
+        public void Heal(float amount)
+        {
+            health = Mathf.Min(health + amount, maxHealth);
+        }
+
+        public void Hurt(float amount)
+        {
+            health = Mathf.Max(health - amount, 0f);
+        }
+
         // Events
         private void Start()
         {

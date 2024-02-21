@@ -32,14 +32,9 @@ namespace Utils
                 : from;
         }
 
-        public static Vector2 Lerp2(Vector2 a, Vector2 b, float t)
+        public static Vector2 Lerp(Vector2 a, Vector2 b, float t)
         {
             return new Vector2(Mathf.Lerp(a.x, b.x, t), Mathf.Lerp(a.y, b.y, t));
-        }
-
-        public static Vector3 Lerp3(Vector3 a, Vector3 b, float t)
-        {
-            return new Vector3(Mathf.Lerp(a.x, b.x, t), Mathf.Lerp(a.y, b.y, t), Mathf.Lerp(a.z, b.z, t));
         }
 
         public static float Mean(float a, float b)
@@ -47,28 +42,20 @@ namespace Utils
             return (a + b) / 2f;
         }
 
-        public static float WeightedMean(float valueA, float weightA, float valueB, float weightB)
+        public static Vector2 Mean(Vector2 a, Vector2 b)
         {
-            return (valueA * weightA + valueB * weightB) / (weightA + weightB);
+            return new Vector2(Mean(a.x, b.x), Mean(a.y, b.y));
         }
 
-        public static float Mean(params float[] values)
+        public static float WeightedMean(float a, float aWeight, float b, float bWeight)
         {
-            return values.Sum() / values.Length;
+            return (a * aWeight + b * bWeight) / (aWeight + bWeight);
         }
 
-        public static float WeightedMean(params float[] valuesAndWeights)
+        public static Vector2 WeightedMean(Vector2 a, float aWeight, Vector2 b, float bWeight)
         {
-            var valueSum = 0f;
-            var weightSum = 0f;
-            for (var i = 0; i < valuesAndWeights.Length - 1; i += 2)
-            {
-                var value = valuesAndWeights[i];
-                var weight = valuesAndWeights[i + 1];
-                valueSum += value * weight;
-                weightSum += weight;
-            }
-            return valueSum / weightSum;
+            return new Vector2(WeightedMean(a.x, aWeight, b.x, bWeight),
+                WeightedMean(a.y, aWeight, b.y, bWeight));
         }
     }
 }

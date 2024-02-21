@@ -1,12 +1,16 @@
 using UnityEngine;
+using UnityEngine.Serialization;
+using Utils;
 
 namespace Controllers.Player
 {
     public class PlayerMovementController : MonoBehaviour
     {
         // Variables
-        public float moveForce = 25f;
+        public float movementForce = 25f;
+        private float movementPush;
         private bool lastBoostInput;
+        private Vector2 lastPosition;
         private float lastSpeed;
 
         // References
@@ -35,9 +39,22 @@ namespace Controllers.Player
         // Updates
         private void FixedUpdate()
         {
+            // Get movement data
+            var position = (Vector2)transform.position;
+            var derivedVelocity = (position - lastPosition) / Time.fixedDeltaTime;
+            //// This works because glue causes rapid vibration,
+            //// resulting in actual velocity being much higher than derived velocity.
+            var playerStuck = derivedVelocity.magnitude < .1f && cRigidbody2D.velocity.magnitude > .1f;
+            var velocity = !playerStuck ? cRigidbody2D.velocity : Vector2.zero;
+            var speed = velocity.magnitude;
+
             // Apply directional movement
             var movementInput = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical")).normalized;
-            cRigidbody2D.AddForce(movementInput * moveForce);
+            movementPush = playerStuck && movementInput.magnitude > 0f
+                ? movementPush + Time.fixedDeltaTime
+                : Mathf.Max(movementPush - speed * Time.fixedDeltaTime, 1f);
+            movementInput *= movementPush;
+            cRigidbody2D.AddForce(movementInput * movementForce);
 
             // Apply boost movement
             var boostInput = Input.GetButton("Jump") && cPlayerController.boostCooldown == 0f;
@@ -48,9 +65,10 @@ namespace Controllers.Player
             else if (lastBoostInput)
             {
                 var boost = Mathf.Pow(cPlayerController.boostCharge, 2f) + 2f;
-                cPlayerController.boostCooldown = boost;
+                velocity *= boost;
+                cRigidbody2D.velocity = velocity;
                 cPlayerController.boostCharge = 0f;
-                cRigidbody2D.velocity *= boost;
+                cPlayerController.boostCooldown = Mathf.Min(boost, speed);
             }
             if (cPlayerController.boostCooldown > 0f)
             {
@@ -58,7 +76,8 @@ namespace Controllers.Player
             }
             lastBoostInput = boostInput;
 
-            // Save the current speed for future reference
+            // Save the current position and speed for future reference
+            lastPosition = transform.position;
             lastSpeed = cRigidbody2D.velocity.magnitude;
         }
     }

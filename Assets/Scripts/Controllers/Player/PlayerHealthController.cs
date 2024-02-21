@@ -37,8 +37,7 @@ namespace Controllers.Player
             // Apply damage to player
             var damageApplied = BsPlayer.CalculateDamage(impactForce);
             var damageMultiplier = Mathf.Min(1f / (impactSpeed * .2f), 1f);
-            var damage = damageApplied * damageMultiplier;
-            cPlayerController.health = Mathf.Max(cPlayerController.health - damage, 0f);
+            cPlayerController.Hurt(damageApplied * damageMultiplier);
         }
 
         // Updates

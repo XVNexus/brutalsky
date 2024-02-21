@@ -1,4 +1,3 @@
-using Brutalsky;
 using Brutalsky.Object;
 using UnityEngine;
 using Utils;
@@ -11,8 +10,6 @@ namespace Controllers
         public BsPool bsObject;
 
         // Variables
-        public float buoyancy;
-        public float viscosity;
         private Vector2 buoyancyForce;
         private float surfaceAngle;
         private float surfaceDistance;
@@ -24,13 +21,13 @@ namespace Controllers
             var poolTransform = transform;
             surfaceAngle = (poolTransform.rotation.eulerAngles.z + 90f) * Mathf.Deg2Rad;
             surfaceDistance = poolTransform.localScale.y / 2f;
-            buoyancyForce = new Vector2(Mathf.Cos(surfaceAngle), Mathf.Sin(surfaceAngle)) * buoyancy;
+            buoyancyForce = new Vector2(Mathf.Cos(surfaceAngle), Mathf.Sin(surfaceAngle)) * bsObject.chemical.buoyancy;
         }
 
         private void OnTriggerStay2D(Collider2D other)
         {
             // Get collision info
-            var rigidbody = other.attachedRigidbody;
+            var otherRigidbody = other.attachedRigidbody;
             var bounds = other.bounds;
 
             // Calculate fluid force
@@ -42,11 +39,24 @@ namespace Controllers
             var submersionFactor = Mathf.Max(MathfExt.InverseLerp(objRadius, -objRadius, objDistance), 0f);
 
             // Apply fluid force
-            var velocity = rigidbody.velocity;
-            rigidbody.velocity = velocity - velocity * (viscosity * Time.fixedDeltaTime);
-            var angularVelocity = rigidbody.angularVelocity;
-            rigidbody.angularVelocity = angularVelocity - angularVelocity * (viscosity * Time.fixedDeltaTime);
-            rigidbody.AddForceAtPosition(buoyancyForce * (submersionFactor * buoyancy), rigidbody.worldCenterOfMass);
+            var velocity = otherRigidbody.velocity;
+            otherRigidbody.velocity = velocity - velocity * (bsObject.chemical.viscosity * Time.fixedDeltaTime);
+            var angularVelocity = otherRigidbody.angularVelocity;
+            otherRigidbody.angularVelocity = angularVelocity - angularVelocity * (bsObject.chemical.viscosity * Time.fixedDeltaTime);
+            otherRigidbody.AddForceAtPosition(buoyancyForce * submersionFactor, otherRigidbody.worldCenterOfMass);
+
+            // Apply damage to player
+            var damage = bsObject.chemical.damage;
+            if (!other.gameObject.CompareTag("Player") || damage == 0f) return;
+            var playerController = other.gameObject.GetComponent<PlayerController>();
+            if (damage > 0f)
+            {
+                playerController.Hurt(damage * Time.fixedDeltaTime);
+            }
+            else
+            {
+                playerController.Heal(-damage * Time.fixedDeltaTime);
+            }
         }
     }
 }

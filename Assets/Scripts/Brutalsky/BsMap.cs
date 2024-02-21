@@ -16,6 +16,16 @@ namespace Brutalsky
         public List<BsPool> pools { get; } = new();
         public List<BsJoint> joints { get; } = new();
 
+        public BsMap(string title, string author)
+        {
+            this.title = title;
+            this.author = author;
+        }
+
+        public BsMap()
+        {
+        }
+
         public Vector2 SelectSpawn()
         {
             var leastUsages = spawns.Select(spawn => spawn.usages).Prepend(int.MaxValue).Min();

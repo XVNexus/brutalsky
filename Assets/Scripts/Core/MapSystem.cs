@@ -65,7 +65,7 @@ namespace Core
             playerController.color = player.color.tint;
             if (player.dummy)
             {
-                playerObject.GetComponent<PlayerMovementController>().moveForce = 0f;
+                playerObject.GetComponent<PlayerMovementController>().movementForce = 0f;
             }
 
             // Select a spawnpoint
@@ -98,6 +98,8 @@ namespace Core
 
             // Create new object
             var shapeObj = Instantiate(PrefabSystem.current.shape);
+            var shapeController = shapeObj.GetComponent<ShapeController>();
+            shapeController.bsObject = shape;
 
             // Convert path to mesh
             var points = shape.path.ToPoints();
@@ -169,12 +171,7 @@ namespace Core
             spriteRenderer.sortingOrder = Layer2Order(pool.layer);
 
             // Apply chemical
-            if (pool.simulated)
-            {
-                poolController.buoyancy = pool.chemical.buoyancy;
-                poolController.viscosity = pool.chemical.viscosity;
-            }
-            else
+            if (!pool.simulated)
             {
                 poolObj.GetComponent<BoxCollider2D>().enabled = false;
                 poolController.enabled = false;
