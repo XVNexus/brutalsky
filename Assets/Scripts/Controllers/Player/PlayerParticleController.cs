@@ -65,7 +65,7 @@ namespace Controllers.Player
                 var particleCount = (int)(-deltaHealth * particleMultiplier);
                 var psEmission = cHurtParticleSystem.emission;
                 var psBurst = psEmission.GetBurst(0);
-                psBurst.count = Mathf.Min(particleCount, (int)(100 * particleMultiplier * Time.fixedDeltaTime));
+                psBurst.count = Mathf.Min(particleCount, (int)(5000 * Time.fixedDeltaTime));
                 psEmission.SetBurst(0, psBurst);
                 cHurtParticleSystem.Play();
             }
