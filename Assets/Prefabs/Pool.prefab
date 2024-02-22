@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5631278713412177135}
   - component: {fileID: 3350177403979998677}
   - component: {fileID: 3318997621100020314}
+  - component: {fileID: 3378984992518005029}
   m_Layer: 0
   m_Name: Pool
   m_TagString: Untagged
@@ -142,6 +143,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a49b992d6d6d7f1c3bf4ceafc5135086, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cLineRenderer: {fileID: 5449310121527418907}
+--- !u!114 &3378984992518005029
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 916318484910277029}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 400cac6399474110b0251b487076bc70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   wavePointDensity: 2

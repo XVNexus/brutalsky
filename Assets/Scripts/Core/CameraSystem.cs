@@ -9,13 +9,11 @@ namespace Core
         public static CameraSystem current;
         private void Awake() => current = this;
 
-        // Settings
+        // Variables
         public Vector2 viewSize = new(40f, 20f);
         public float dampening = .1f;
         public float shakeInterval = .1f;
         public float simSpeed = 10f;
-
-        // Variables
         private Vector2 offset;
         private Vector2 velocity;
         private float shake;

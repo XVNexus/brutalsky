@@ -88,9 +88,9 @@ public class Testing : MonoBehaviour
         map.pools.Add(new BsPool(new BsTransform(17f, 11.25f, 180f), new Vector2(4f, 3.5f),
             BsChemical.Water(), BsColor.Water(), BsLayer.Foreground));
         map.pools.Add(new BsPool(new BsTransform(-13f, -11f), new Vector2(12f, 4f),
-            BsChemical.Lava(), BsColor.Lava(), BsLayer.Foreground));
+            BsChemical.Water(), BsColor.Water(), BsLayer.Foreground));
         map.pools.Add(new BsPool(new BsTransform(13f, -11f), new Vector2(12f, 4f),
-            BsChemical.Lava(), BsColor.Lava(), BsLayer.Foreground));
+            BsChemical.Water(), BsColor.Water(), BsLayer.Foreground));
 
         // Joints
         map.joints.Add(new BsJoint(spinnerLeft, null, new BsTransform(),
