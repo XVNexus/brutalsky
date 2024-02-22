@@ -1,8 +1,8 @@
 using System;
 using System.Linq;
 using Brutalsky;
+using Brutalsky.Joint;
 using Brutalsky.Object;
-using Brutalsky.Property;
 using Controllers;
 using Controllers.Player;
 using JetBrains.Annotations;
@@ -193,7 +193,7 @@ namespace Core
 
             AnchoredJoint2D jointComponent;
             var shapeObject = joint.targetShape.instanceObject;
-            switch (joint.jointType)
+            switch (BsJoint.jointType)
             {
                 case BsJointType.Hinge:
                     var hingeJoint = shapeObject.AddComponent<HingeJoint2D>();

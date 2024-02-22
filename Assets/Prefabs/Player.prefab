@@ -198,7 +198,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a6aee8084966ee7b90ed74611bd98be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveForce: 25
+  movementForce: 25
 --- !u!114 &328550718412262110
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -238,7 +238,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   particleMultiplier: 5
-  cPlayerController: {fileID: 0}
   cBoostParticleSystem: {fileID: 5750454859715637797}
   cImpactParticleSystem: {fileID: 8208163698263707477}
   cHurtParticleSystem: {fileID: 6733936032522987168}
@@ -255,7 +254,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0bb7c28fedab2677a8ba3d025bb1b22a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cPlayerController: {fileID: 0}
 --- !u!1 &3228066767371105852
 GameObject:
   m_ObjectHideFlags: 0

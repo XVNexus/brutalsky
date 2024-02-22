@@ -1,8 +1,10 @@
 using System;
 using System.IO;
 using Brutalsky;
+using Brutalsky.Joint;
 using Brutalsky.Object;
-using Brutalsky.Property;
+using Brutalsky.Pool;
+using Brutalsky.Shape;
 using Core;
 using UnityEngine;
 
@@ -81,6 +83,10 @@ public class Testing : MonoBehaviour
         var spinnerRight = new BsShape(new BsTransform(2f, 0f, 15f), BsPath.Star(6, 5f, 2.8f),
             BsMaterial.Metal(true), BsColor.Metal());
         map.shapes.Add(spinnerRight);
+        // map.shapes.Add(new BsShape(new BsTransform(-12f, 5f), BsPath.Rectangle(.5f, 2f),
+        //     BsMaterial.Glue(true).Modify(adhesion: 3f), BsColor.Ether()));
+        // map.shapes.Add(new BsShape(new BsTransform(12f, 5f), BsPath.Rectangle(.5f, 2f),
+        //     BsMaterial.Glue(true).Modify(adhesion: 3f), BsColor.Ether()));
 
         // Pools
         map.pools.Add(new BsPool(new BsTransform(-17f, 11.25f, 180f), new Vector2(4f, 3.5f),
@@ -88,9 +94,9 @@ public class Testing : MonoBehaviour
         map.pools.Add(new BsPool(new BsTransform(17f, 11.25f, 180f), new Vector2(4f, 3.5f),
             BsChemical.Water(), BsColor.Water(), BsLayer.Foreground));
         map.pools.Add(new BsPool(new BsTransform(-13f, -11f), new Vector2(12f, 4f),
-            BsChemical.Water(), BsColor.Water(), BsLayer.Foreground));
+            BsChemical.Lava(), BsColor.Lava(), BsLayer.Foreground));
         map.pools.Add(new BsPool(new BsTransform(13f, -11f), new Vector2(12f, 4f),
-            BsChemical.Water(), BsColor.Water(), BsLayer.Foreground));
+            BsChemical.Lava(), BsColor.Lava(), BsLayer.Foreground));
 
         // Joints
         map.joints.Add(new BsJoint(spinnerLeft, null, new BsTransform(),
@@ -107,6 +113,7 @@ public class Testing : MonoBehaviour
         MapSystem.current.Spawn(new BsPlayer("Player 1", 1000000f, new BsColor(1f, .5f, 0f)));
         MapSystem.current.Spawn(new BsPlayer("Player 2", 1000000f, new BsColor(0f, .5f, 1f), true));
 
+        /*
         try
         {
             using var writer = new StreamWriter("/home/ian/Downloads/BSMap.txt");
@@ -116,5 +123,6 @@ public class Testing : MonoBehaviour
         {
             Console.WriteLine($"Error while saving map: {e.Message}");
         }
+        */
     }
 }

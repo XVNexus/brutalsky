@@ -1,4 +1,4 @@
-namespace Brutalsky.Property
+namespace Brutalsky.Object
 {
     public enum BsLayer
     {

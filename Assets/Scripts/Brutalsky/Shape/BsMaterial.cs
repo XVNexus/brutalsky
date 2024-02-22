@@ -1,6 +1,6 @@
-namespace Brutalsky.Property
+namespace Brutalsky.Shape
 {
-    public class BsMaterial : BsProperty
+    public class BsMaterial
     {
         public float friction { get; private set; }
         public float restitution { get; private set; }
@@ -68,20 +68,5 @@ namespace Brutalsky.Property
         // Harmful
         public static BsMaterial Electric(bool dynamic = false)
             => new BsMaterial(2f, 0f, 0f, 1f, 25f, dynamic);
-
-        public override void Parse(string raw)
-        {
-            var parts = raw.Split(' ');
-            friction = float.Parse(parts[0]);
-            restitution = float.Parse(parts[1]);
-            adhesion = float.Parse(parts[2]);
-            density = float.Parse(parts[3]);
-            dynamic = parts[4][0] == '1';
-        }
-
-        public override string Stringify()
-        {
-            return $"{friction} {restitution} {adhesion} {density} {(dynamic ? '1' : '0')}";
-        }
     }
 }

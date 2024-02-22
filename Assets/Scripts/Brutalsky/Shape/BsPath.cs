@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using UnityEngine;
 
-namespace Brutalsky.Property
+namespace Brutalsky.Shape
 {
-    public class BsPath : BsProperty
+    public class BsPath
     {
         public BsPathNode startNode { get; set; }
         public string pathString { get; private set; } = "";
@@ -155,55 +155,6 @@ namespace Brutalsky.Property
             if (result[^1] == result[0]) result.RemoveAt(result.Count - 1);
 
             return result.ToArray();
-        }
-
-        public override void Parse(string raw)
-        {
-            BsPath result;
-            var pathType = raw[0];
-            var pathData = raw[2..];
-            var pathParts = pathData.Split(' ');
-            switch (pathType)
-            {
-                case 'X':
-                    result = Path(pathData);
-                    break;
-                case 'Y':
-                    List<Vector2> polygonPoints = new();
-                    for (var i = 0; i < pathParts.Length; i += 2)
-                    {
-                        polygonPoints.Add(new Vector2(float.Parse(pathParts[i]), float.Parse(pathParts[i + 1])));
-                    }
-                    result = Polygon(polygonPoints.ToArray());
-                    break;
-                case 'S':
-                    result = Square(float.Parse(pathParts[0]));
-                    break;
-                case 'R':
-                    result = Rectangle(float.Parse(pathParts[0]), float.Parse(pathParts[1]));
-                    break;
-                case 'C':
-                    result = Circle(float.Parse(pathParts[0]));
-                    break;
-                case 'E':
-                    result = Ellipse(float.Parse(pathParts[0]), float.Parse(pathParts[1]));
-                    break;
-                case 'N':
-                    result = Ngon(int.Parse(pathParts[0]), float.Parse(pathParts[1]));
-                    break;
-                case 'T':
-                    result = Star(int.Parse(pathParts[0]), float.Parse(pathParts[1]), float.Parse(pathParts[2]));
-                    break;
-                default:
-                    result = BsPath.Ngon(3, 1f);
-                    break;
-            }
-            startNode = result.startNode;
-        }
-
-        public override string Stringify()
-        {
-            return pathString;
         }
 
         /*

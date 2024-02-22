@@ -1,8 +1,8 @@
 using UnityEngine;
 
-namespace Brutalsky.Property
+namespace Brutalsky.Object
 {
-    public class BsColor : BsProperty
+    public class BsColor
     {
         public Color tint { get; set; }
         public bool glow { get; set; }
@@ -67,18 +67,5 @@ namespace Brutalsky.Property
 
         public static BsColor Ether()
             => new BsColor(new Color(1f, 1f, 1f));
-
-        public override void Parse(string raw)
-        {
-            var parts = raw.Split(' ');
-            tint = new Color(float.Parse(parts[0]), float.Parse(parts[1]), float.Parse(parts[2]),
-                float.Parse(parts[3]));
-            glow = parts[4][0] == '1';
-        }
-
-        public override string Stringify()
-        {
-            return $"{tint.r} {tint.g} {tint.b} {tint.a} {(glow ? '1' : '0')}";
-        }
     }
 }

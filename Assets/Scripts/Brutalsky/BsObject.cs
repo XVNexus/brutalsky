@@ -1,21 +1,21 @@
-using Brutalsky.Property;
+using Brutalsky.Object;
 using JetBrains.Annotations;
 using UnityEngine;
-using EventSystem = Core.EventSystem;
 
 namespace Brutalsky
 {
     public abstract class BsObject
     {
-        public uint id { get; } = EventSystem.random.NextUInt();
+        public string id { get; set; }
         
         public BsTransform transform { get; set; }
         [CanBeNull] public GameObject instanceObject { get; set; }
         [CanBeNull] public Component instanceComponent { get; set; }
         public bool active { get; set; }
 
-        public abstract void Parse(string[] raw);
-
-        public abstract string[] Stringify();
+        protected BsObject(string id)
+        {
+            this.id = id;
+        }
     }
 }
