@@ -22,10 +22,6 @@ namespace Brutalsky.Shape
             }
         }
 
-        public BsPath()
-        {
-        }
-
         public static BsPath Path(string pathString)
         {
             var parts = new Regex(@" (?=[LC])").Split(pathString.ToUpper());
@@ -52,7 +48,7 @@ namespace Brutalsky.Shape
             }
 
             var result = new BsPath(startpoint, nodes);
-            result.pathString = $"X {pathString}";
+            result.pathString = $"X {pathString.ToUpper()}";
             return result;
         }
 
@@ -155,6 +151,55 @@ namespace Brutalsky.Shape
             if (result[^1] == result[0]) result.RemoveAt(result.Count - 1);
 
             return result.ToArray();
+        }
+
+        public static BsPath FromString(string raw)
+        {
+            BsPath result;
+            var pathType = raw[0];
+            var pathData = raw[2..];
+            var pathParts = pathData.Split(' ');
+            switch (pathType)
+            {
+                case 'X':
+                    result = Path(pathData);
+                    break;
+                case 'Y':
+                    List<Vector2> polygonPoints = new();
+                    for (var i = 0; i < pathParts.Length; i += 2)
+                    {
+                        polygonPoints.Add(new Vector2(float.Parse(pathParts[i]), float.Parse(pathParts[i + 1])));
+                    }
+                    result = Polygon(polygonPoints.ToArray());
+                    break;
+                case 'S':
+                    result = Square(float.Parse(pathParts[0]));
+                    break;
+                case 'R':
+                    result = Rectangle(float.Parse(pathParts[0]), float.Parse(pathParts[1]));
+                    break;
+                case 'C':
+                    result = Circle(float.Parse(pathParts[0]));
+                    break;
+                case 'E':
+                    result = Ellipse(float.Parse(pathParts[0]), float.Parse(pathParts[1]));
+                    break;
+                case 'N':
+                    result = Ngon(int.Parse(pathParts[0]), float.Parse(pathParts[1]));
+                    break;
+                case 'T':
+                    result = Star(int.Parse(pathParts[0]), float.Parse(pathParts[1]), float.Parse(pathParts[2]));
+                    break;
+                default:
+                    result = Ngon(3, 1f);
+                    break;
+            }
+            return result;
+        }
+
+        public override string ToString()
+        {
+            return pathString;
         }
 
         /*

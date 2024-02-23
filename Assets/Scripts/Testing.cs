@@ -1,3 +1,5 @@
+using System;
+using System.IO;
 using Brutalsky;
 using Brutalsky.Joint;
 using Brutalsky.Object;
@@ -5,10 +7,30 @@ using Brutalsky.Pool;
 using Brutalsky.Shape;
 using Core;
 using UnityEngine;
+using YamlDotNet.Serialization;
+using YamlDotNet.Serialization.NamingConventions;
 
 public class Testing : MonoBehaviour
 {
     public void Start()
+    {
+        var material = BsMaterial.Stone();
+        var serializer = new SerializerBuilder()
+            .WithNamingConvention(CamelCaseNamingConvention.Instance)
+            .Build();
+        var yaml = serializer.Serialize(material);
+        try
+        {
+            using var writer = new StreamWriter("/home/ian/Downloads/output.txt");
+            writer.Write(yaml);
+        }
+        catch (IOException ex)
+        {
+            Console.WriteLine($"IO error: {ex.Message}");
+        }
+    }
+
+    public void Start2()
     {
         var map = new BsMap("Brutalsky", "xveon")
         {

@@ -113,8 +113,10 @@ namespace Brutalsky
 
         public Vector2 SelectSpawn()
         {
+            // TODO: MAKE THIS TAKE PRIORITY INTO ACCOUNT
             var leastUsages = spawns.Values.Select(spawn => spawn.usages).Prepend(int.MaxValue).Min();
             var possibleSpawns = spawns.Values.Where(spawn => spawn.usages == leastUsages).ToList();
+            possibleSpawns.Sort((a, b) => a.priority - b.priority);
             var spawnChoice = possibleSpawns[EventSystem.random.NextInt(possibleSpawns.Count)];
             return spawnChoice.Use();
         }
