@@ -8,6 +8,7 @@ using Brutalsky.Shape;
 using Core;
 using Serializable;
 using UnityEngine;
+using Utils;
 using YamlDotNet.Core;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
@@ -112,24 +113,13 @@ public class Testing : MonoBehaviour
         map.Add(new BsSpawn("spawn-left", new BsTransform(-15f, 1f)));
         map.Add(new BsSpawn("spawn-right", new BsTransform(15f, 1f)));
 
-        // Write map to string and save to file
-        var serializer = new SerializerBuilder().Build();
-        var mapString = serializer.Serialize(SrzMap.Simplify(map));
-        try
-        {
-            using var writer = new StreamWriter("/home/ian/Downloads/output.yaml");
-            writer.Write(mapString);
-        }
-        catch (IOException ex)
-        {
-            Debug.Log("IO ERROR");
-        }
-
-        // Read map from string and load
-        var deserializer = new DeserializerBuilder().Build();
-        var mapParsed = deserializer.Deserialize<SrzMap>(mapString).Expand();
-        MapSystem.current.Load(mapParsed);
+        // Load map
+        MapSystem.current.Load(map);
         MapSystem.current.Spawn(new BsPlayer("player-1", 100f, new BsColor(1f, .5f, 0f)));
         MapSystem.current.Spawn(new BsPlayer("player-2", 100f, new BsColor(0f, .5f, 1f), true));
+
+        // Write map to string and save to file
+        var mapString = new Serializer().Serialize(SrzMap.Simplify(map));
+        YamlCompressor.AliasKeys(mapString);
     }
 }
