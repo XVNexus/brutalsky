@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Brutalsky;
 using Brutalsky.Object;
 using UnityEngine;
+using Utils;
 
 namespace Serializable
 {
@@ -46,12 +47,11 @@ namespace Serializable
 
         public BsMap Expand()
         {
-            var sizeParts = size.Split(' ');
             var result = new BsMap
             {
                 title = title,
                 author = author,
-                size = new Vector2(float.Parse(sizeParts[0]), float.Parse(sizeParts[1])),
+                size = Vector2Ext.Parse(size),
                 lighting = BsColor.Parse(lighting)
             };
             foreach (var spawn in spawns)

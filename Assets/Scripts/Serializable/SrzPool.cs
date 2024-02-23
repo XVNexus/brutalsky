@@ -2,6 +2,7 @@ using Brutalsky;
 using Brutalsky.Object;
 using Brutalsky.Pool;
 using UnityEngine;
+using Utils;
 
 namespace Serializable
 {
@@ -10,7 +11,7 @@ namespace Serializable
         public string id { get; set; }
         public string transform { get; set; }
         public string size { get; set; }
-        public BsChemical chemical { get; set; }
+        public string chemical { get; set; }
         public string color { get; set; }
         public BsLayer layer { get; set; }
         public bool simulated { get; set; }
@@ -22,7 +23,7 @@ namespace Serializable
                 id = pool.id,
                 transform = pool.transform.ToString(),
                 size = $"{pool.size.x} {pool.size.y}",
-                chemical = pool.chemical,
+                chemical = pool.chemical.ToString(),
                 color = pool.color.ToString(),
                 layer = pool.layer,
                 simulated = pool.simulated
@@ -31,13 +32,12 @@ namespace Serializable
 
         public BsPool Expand()
         {
-            var sizeParts = size.Split(' ');
             return new BsPool
             (
                 id,
                 BsTransform.Parse(transform),
-                new Vector2(float.Parse(sizeParts[0]), float.Parse(sizeParts[1])),
-                chemical,
+                Vector2Ext.Parse(size),
+                BsChemical.Parse(chemical), 
                 BsColor.Parse(color),
                 layer,
                 simulated

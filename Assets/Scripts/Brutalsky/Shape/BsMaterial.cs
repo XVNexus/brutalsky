@@ -68,5 +68,18 @@ namespace Brutalsky.Shape
         // Harmful
         public static BsMaterial Electric(bool dynamic = false)
             => new BsMaterial(2f, 0f, 0f, 1f, 25f, dynamic);
+
+        public static BsMaterial Parse(string raw)
+        {
+            var parts = raw.Split(' ');
+            return new BsMaterial(float.Parse(parts[0]), float.Parse(parts[1]),
+                float.Parse(parts[2]), float.Parse(parts[3]), float.Parse(parts[4]),
+                bool.Parse(parts[5]));
+        }
+
+        public override string ToString()
+        {
+            return $"{friction} {restitution} {adhesion} {density} {damage} {dynamic}";
+        }
     }
 }

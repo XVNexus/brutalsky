@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using Brutalsky;
 using Brutalsky.Joint;
@@ -37,6 +36,7 @@ namespace Core
             activeMap = map;
             mapLoaded = true;
 
+            CameraSystem.current.viewSize = map.size;
             mapParent = new GameObject();
             cMapLight2D.color = map.lighting.tint;
             cMapLight2D.intensity = map.lighting.alpha;

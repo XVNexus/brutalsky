@@ -85,9 +85,9 @@ public class Testing : MonoBehaviour
             BsMaterial.Electric(), BsColor.Electric()));
 
         // Dynamic shapes
-        map.Add(new BsShape("spinner-left", new BsTransform(-2f, 0f, -15f), BsPath.Star(6, 4.9f, 2.9f),
+        map.Add(new BsShape("spinner-left", new BsTransform(-2f, 0f), BsPath.Star(6, 4.9f, 2.9f),
             BsMaterial.Metal(true), BsColor.Metal()));
-        map.Add(new BsShape("spinner-right", new BsTransform(2f, 0f, 15f), BsPath.Star(6, 4.9f, 2.9f),
+        map.Add(new BsShape("spinner-right", new BsTransform(2f, 0f, 30f), BsPath.Star(6, 4.9f, 2.9f),
             BsMaterial.Metal(true), BsColor.Metal()));
 
         // Pools
@@ -112,13 +112,22 @@ public class Testing : MonoBehaviour
         map.Add(new BsSpawn("spawn-left", new BsTransform(-15f, 1f)));
         map.Add(new BsSpawn("spawn-right", new BsTransform(15f, 1f)));
 
-        // Write map to string
-        var mapString = new Serializer().Serialize(SrzMap.Simplify(map));
+        // Write map to string and save to file
+        var serializer = new SerializerBuilder().Build();
+        var mapString = serializer.Serialize(SrzMap.Simplify(map));
+        try
+        {
+            using var writer = new StreamWriter("/home/ian/Downloads/output.yaml");
+            writer.Write(mapString);
+        }
+        catch (IOException ex)
+        {
+            Debug.Log("IO ERROR");
+        }
 
-        // Read map from string
-        var mapParsed = new Deserializer().Deserialize<SrzMap>(mapString).Expand();
-
-        // Load map
+        // Read map from string and load
+        var deserializer = new DeserializerBuilder().Build();
+        var mapParsed = deserializer.Deserialize<SrzMap>(mapString).Expand();
         MapSystem.current.Load(mapParsed);
         MapSystem.current.Spawn(new BsPlayer("player-1", 100f, new BsColor(1f, .5f, 0f)));
         MapSystem.current.Spawn(new BsPlayer("player-2", 100f, new BsColor(0f, .5f, 1f), true));
