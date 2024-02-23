@@ -77,5 +77,17 @@ namespace Brutalsky.Object
 
         public static BsColor Ether(bool glow = false)
             => new BsColor(1f, 1f, 1f, 1f, glow);
+
+        public static BsColor Parse(string raw)
+        {
+            var parts = raw.Split(' ');
+            return new BsColor(float.Parse(parts[0]), float.Parse(parts[1]), float.Parse(parts[2]),
+                float.Parse(parts[3]), bool.Parse(parts[4]));
+        }
+
+        public override string ToString()
+        {
+            return $"{tint.r} {tint.g} {tint.b} {tint.a} {glow}";
+        }
     }
 }

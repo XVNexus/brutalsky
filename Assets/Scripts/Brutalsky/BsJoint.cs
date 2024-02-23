@@ -3,6 +3,7 @@ using Brutalsky.Joint;
 using Brutalsky.Object;
 using JetBrains.Annotations;
 using UnityEngine;
+using Utils;
 
 namespace Brutalsky
 {
@@ -16,8 +17,8 @@ namespace Brutalsky
         public bool collision { get; set; }
         public BsJointStrength strength { get; set; }
 
-        public BsJoint(BsJointType jointType, string id, BsTransform transform, string targetShapeId, string mountShapeId, bool collision,
-            BsJointStrength strength) : base(id, transform)
+        public BsJoint(BsJointType jointType, string id, BsTransform transform, string targetShapeId,
+            string mountShapeId, bool collision, BsJointStrength strength) : base(id, transform)
         {
             this.jointType = jointType;
 
@@ -40,7 +41,7 @@ namespace Brutalsky
             if (mountShape == null) return;
             if (mountShape.instanceObject == null)
             {
-                throw new ArgumentNullException(nameof(mountShape), "Joints cannot be built while attached shapes are inactive");
+                throw Errors.MountShapeUnbuilt(this);
             }
             jointComponent.connectedBody = mountShape.instanceObject.GetComponent<Rigidbody2D>();
             jointComponent.autoConfigureConnectedAnchor = true;

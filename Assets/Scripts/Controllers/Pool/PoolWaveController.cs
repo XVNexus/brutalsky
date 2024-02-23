@@ -68,14 +68,14 @@ namespace Controllers.Pool
         {
             // Trigger wave splash effect
             var splashPoint = transform.InverseTransformPoint(other.transform.position).x * cPoolController.bsObject.size.x;
-            waveEffects.Add(new WaveEffect(splashPoint, 20f, 2f, 2f, -1f));
+            waveEffects.Add(new WaveEffect(splashPoint, 25f, 2f, 3f, -1f));
         }
 
         private void OnTriggerExit2D(Collider2D other)
         {
             // Trigger wave splash effect
             var splashPoint = transform.InverseTransformPoint(other.transform.position).x * cPoolController.bsObject.size.x;
-            waveEffects.Add(new WaveEffect(splashPoint, 20f, 2f, 2f));
+            waveEffects.Add(new WaveEffect(splashPoint, 25f, 2f, 3f));
         }
 
         // Updates

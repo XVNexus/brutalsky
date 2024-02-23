@@ -27,5 +27,16 @@ namespace Brutalsky.Object
         public BsTransform()
         {
         }
+
+        public static BsTransform Parse(string raw)
+        {
+            var parts = raw.Split(' ');
+            return new BsTransform(float.Parse(parts[0]), float.Parse(parts[1]), float.Parse(parts[2]));
+        }
+
+        public override string ToString()
+        {
+            return $"{position.x} {position.y} {rotation}";
+        }
     }
 }

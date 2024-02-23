@@ -6,7 +6,7 @@ namespace Serializable
     public class SrzSpawn
     {
         public string id { get; set; }
-        public BsTransform transform { get; set; }
+        public string transform { get; set; }
         public int priority { get; set; }
 
         public static SrzSpawn Simplify(BsSpawn spawn)
@@ -14,7 +14,7 @@ namespace Serializable
             return new SrzSpawn
             {
                 id = spawn.id,
-                transform = spawn.transform,
+                transform = spawn.transform.ToString(),
                 priority = spawn.priority
             };
         }
@@ -24,7 +24,7 @@ namespace Serializable
             return new BsSpawn
             (
                 id,
-                transform,
+                BsTransform.Parse(transform),
                 priority
             );
         }

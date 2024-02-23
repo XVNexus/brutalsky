@@ -22,5 +22,17 @@ namespace Brutalsky.Joint
         {
             return new BsJointLimits(false, 0f, 0f);
         }
+
+        public static BsJointLimits Parse(string raw)
+        {
+            if (raw == "x") return Unlimited();
+            var parts = raw.Split(' ');
+            return Limited(float.Parse(parts[0]), float.Parse(parts[1]));
+        }
+
+        public override string ToString()
+        {
+            return use ? $"{min} {max}" : "x";
+        }
     }
 }

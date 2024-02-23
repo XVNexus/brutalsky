@@ -16,9 +16,22 @@ namespace Brutalsky.Joint
             return new BsJointStrength(breakForce, breakTorque);
         }
 
-        public static BsJointStrength Immortal()
+        public static BsJointStrength Unbreakable()
         {
             return new BsJointStrength(float.PositiveInfinity, float.PositiveInfinity);
+        }
+
+        public static BsJointStrength Parse(string raw)
+        {
+            if (raw == "x") return Unbreakable();
+            var parts = raw.Split(' ');
+            return Breakable(float.Parse(parts[0]), float.Parse(parts[1]));
+        }
+
+        public override string ToString()
+        {
+            var breakable = !float.IsPositiveInfinity(breakForce) || !float.IsPositiveInfinity(breakTorque);
+            return breakable ? $"{breakForce} {breakTorque}" : "x";
         }
     }
 }

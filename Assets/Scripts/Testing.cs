@@ -6,31 +6,15 @@ using Brutalsky.Object;
 using Brutalsky.Pool;
 using Brutalsky.Shape;
 using Core;
+using Serializable;
 using UnityEngine;
+using YamlDotNet.Core;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 
 public class Testing : MonoBehaviour
 {
     public void Start()
-    {
-        var material = BsMaterial.Stone();
-        var serializer = new SerializerBuilder()
-            .WithNamingConvention(CamelCaseNamingConvention.Instance)
-            .Build();
-        var yaml = serializer.Serialize(material);
-        try
-        {
-            using var writer = new StreamWriter("/home/ian/Downloads/output.txt");
-            writer.Write(yaml);
-        }
-        catch (IOException ex)
-        {
-            Console.WriteLine($"IO error: {ex.Message}");
-        }
-    }
-
-    public void Start2()
     {
         var map = new BsMap("Brutalsky", "xveon")
         {
@@ -101,35 +85,41 @@ public class Testing : MonoBehaviour
             BsMaterial.Electric(), BsColor.Electric()));
 
         // Dynamic shapes
-        map.Add(new BsShape("spinner-left", new BsTransform(-2f, 0f, -15f), BsPath.Star(6, 5f, 2.8f),
+        map.Add(new BsShape("spinner-left", new BsTransform(-2f, 0f, -15f), BsPath.Star(6, 4.9f, 2.9f),
             BsMaterial.Metal(true), BsColor.Metal()));
-        map.Add(new BsShape("spinner-right", new BsTransform(2f, 0f, 15f), BsPath.Star(6, 5f, 2.8f),
+        map.Add(new BsShape("spinner-right", new BsTransform(2f, 0f, 15f), BsPath.Star(6, 4.9f, 2.9f),
             BsMaterial.Metal(true), BsColor.Metal()));
 
         // Pools
-        map.Add(new BsPool("pool-tl", new BsTransform(-17f, 11.25f, 180f), new Vector2(4f, 3.5f),
+        map.Add(new BsPool("water-left", new BsTransform(-17f, 11.25f, 180f), new Vector2(4f, 3.5f),
             BsChemical.Water(), BsColor.Water(), BsLayer.Foreground));
-        map.Add(new BsPool("pool-tr", new BsTransform(17f, 11.25f, 180f), new Vector2(4f, 3.5f),
+        map.Add(new BsPool("water-right", new BsTransform(17f, 11.25f, 180f), new Vector2(4f, 3.5f),
             BsChemical.Water(), BsColor.Water(), BsLayer.Foreground));
-        map.Add(new BsPool("pool-bl", new BsTransform(-13f, -11f), new Vector2(12f, 4f),
+        map.Add(new BsPool("lava-left", new BsTransform(-13f, -11f), new Vector2(12f, 4f),
             BsChemical.Lava(), BsColor.Lava(), BsLayer.Foreground));
-        map.Add(new BsPool("pool-br", new BsTransform(13f, -11f), new Vector2(12f, 4f),
+        map.Add(new BsPool("lava-right", new BsTransform(13f, -11f), new Vector2(12f, 4f),
             BsChemical.Lava(), BsColor.Lava(), BsLayer.Foreground));
 
         // Joints
         map.Add(new BsJointHinge("spinner-left-motor", new BsTransform(),
             "spinner-left", "",
-            false, BsJointStrength.Immortal(), BsJointMotor.Powered(100f), BsJointLimits.Unlimited()));
+            false, BsJointStrength.Unbreakable(), BsJointMotor.Powered(100f), BsJointLimits.Unlimited()));
         map.Add(new BsJointHinge("spinner-right-motor", new BsTransform(),
             "spinner-right", "",
-            false, BsJointStrength.Immortal(), BsJointMotor.Powered(-100f), BsJointLimits.Unlimited()));
+            false, BsJointStrength.Unbreakable(), BsJointMotor.Powered(-100f), BsJointLimits.Unlimited()));
 
         // Spawns
         map.Add(new BsSpawn("spawn-left", new BsTransform(-15f, 1f)));
         map.Add(new BsSpawn("spawn-right", new BsTransform(15f, 1f)));
 
+        // Write map to string
+        var mapString = new Serializer().Serialize(SrzMap.Simplify(map));
+
+        // Read map from string
+        var mapParsed = new Deserializer().Deserialize<SrzMap>(mapString).Expand();
+
         // Load map
-        MapSystem.current.Load(map);
+        MapSystem.current.Load(mapParsed);
         MapSystem.current.Spawn(new BsPlayer("player-1", 100f, new BsColor(1f, .5f, 0f)));
         MapSystem.current.Spawn(new BsPlayer("player-2", 100f, new BsColor(0f, .5f, 1f), true));
     }

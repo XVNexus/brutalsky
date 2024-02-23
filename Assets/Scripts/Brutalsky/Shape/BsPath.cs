@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using UnityEngine;
+using Utils;
 
 namespace Brutalsky.Shape
 {
@@ -25,7 +26,10 @@ namespace Brutalsky.Shape
         public static BsPath Path(string pathString)
         {
             var parts = new Regex(@" (?=[LC])").Split(pathString.ToUpper());
-            if (parts.Length < 3) throw new ArgumentException("Cannot make a path with less than 3 points");
+            if (parts.Length < 3)
+            {
+                throw Errors.MissingPathParams("path", 3);
+            }
             var startValues = parts[0].Split(' ');
             var startpoint = new Vector2(float.Parse(startValues[0]), float.Parse(startValues[1]));
             var nodes = new List<BsPathNode>();
@@ -36,11 +40,17 @@ namespace Brutalsky.Shape
                 switch (nodeType)
                 {
                     case "L":
-                        if (values.Length < 3) throw new ArgumentException("Cannot make a line node with less than 2 parameters");
+                        if (values.Length < 3)
+                        {
+                            throw Errors.MissingPathParams("line node", 2);
+                        }
                         nodes.Add(new BsPathLine(float.Parse(values[1]), float.Parse(values[2])));
                         break;
                     case "C":
-                        if (values.Length < 3) throw new ArgumentException("Cannot make a curve node with less than 4 parameters");
+                        if (values.Length < 5)
+                        {
+                            throw Errors.MissingPathParams("curve node", 4);
+                        }
                         nodes.Add(new BsPathCurve(float.Parse(values[1]), float.Parse(values[2]),
                             float.Parse(values[3]), float.Parse(values[4])));
                         break;
@@ -54,7 +64,10 @@ namespace Brutalsky.Shape
 
         public static BsPath Polygon(Vector2[] points)
         {
-            if (points.Length < 3) throw new ArgumentException("Cannot make a polygon with less than 3 points");
+            if (points.Length < 3)
+            {
+                throw Errors.MissingPathParams("polygon", 3);
+            }
             var startpoint = points[0];
             var nodes = new BsPathLine[points.Length - 1];
             for (var i = 1; i < points.Length; i++)
@@ -153,7 +166,7 @@ namespace Brutalsky.Shape
             return result.ToArray();
         }
 
-        public static BsPath FromString(string raw)
+        public static BsPath Parse(string raw)
         {
             BsPath result;
             var pathType = raw[0];

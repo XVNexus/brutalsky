@@ -7,10 +7,10 @@ namespace Serializable
     public class SrzShape
     {
         public string id { get; set; }
-        public BsTransform transform { get; set; }
+        public string transform { get; set; }
         public string path { get; set; }
         public BsMaterial material { get; set; }
-        public BsColor color { get; set; }
+        public string color { get; set; }
         public BsLayer layer { get; set; }
         public bool simulated { get; set; }
 
@@ -19,10 +19,10 @@ namespace Serializable
             return new SrzShape
             {
                 id = shape.id,
-                transform = shape.transform,
+                transform = shape.transform.ToString(),
                 path = shape.path.ToString(),
                 material = shape.material,
-                color = shape.color,
+                color = shape.color.ToString(),
                 layer = shape.layer,
                 simulated = shape.simulated
             };
@@ -33,10 +33,10 @@ namespace Serializable
             return new BsShape
             (
                 id,
-                transform,
-                BsPath.FromString(path),
+                BsTransform.Parse(transform), 
+                BsPath.Parse(path),
                 material,
-                color,
+                BsColor.Parse(color),
                 layer,
                 simulated
             );

@@ -226,12 +226,12 @@ namespace Core
             var mountShape = joint.mountShapeId.Length > 0 ? activeMap.GetShape(joint.mountShapeId) : null;
             if (targetShape == null)
             {
-                throw new ArgumentNullException(nameof(joint), "Cannot create a joint without a target shape");
+                throw Errors.NoTargetShape(joint);
             }
             var targetGameObject = targetShape.instanceObject;
             if (targetGameObject == null)
             {
-                throw new ArgumentNullException(nameof(joint), "Cannot create a joint on an unbuilt shape");
+                throw Errors.TargetShapeUnbuilt(joint);
             }
 
             // Apply joint config
@@ -263,7 +263,7 @@ namespace Core
                     break;
                 case BsJointType.None:
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(joint), $"{joint.jointType} is not a valid joint type");
+                    throw Errors.InvalidJointType(joint.jointType);
             }
             joint.ApplyConfigToInstance(jointComponent);
 

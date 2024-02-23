@@ -20,5 +20,16 @@ namespace Brutalsky.Joint
         {
             return new BsJointDamping(0f, frequency);
         }
+
+        public static BsJointDamping Parse(string raw)
+        {
+            var parts = raw.Split(' ');
+            return Damped(float.Parse(parts[0]), float.Parse(parts[1]));
+        }
+
+        public override string ToString()
+        {
+            return $"{ratio} {frequency}";
+        }
     }
 }

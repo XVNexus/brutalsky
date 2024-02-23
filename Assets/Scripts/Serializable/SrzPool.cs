@@ -8,10 +8,10 @@ namespace Serializable
     public class SrzPool
     {
         public string id { get; set; }
-        public BsTransform transform { get; set; }
-        public Vector2 size { get; set; }
+        public string transform { get; set; }
+        public string size { get; set; }
         public BsChemical chemical { get; set; }
-        public BsColor color { get; set; }
+        public string color { get; set; }
         public BsLayer layer { get; set; }
         public bool simulated { get; set; }
 
@@ -20,10 +20,10 @@ namespace Serializable
             return new SrzPool
             {
                 id = pool.id,
-                transform = pool.transform,
-                size = pool.size,
+                transform = pool.transform.ToString(),
+                size = $"{pool.size.x} {pool.size.y}",
                 chemical = pool.chemical,
-                color = pool.color,
+                color = pool.color.ToString(),
                 layer = pool.layer,
                 simulated = pool.simulated
             };
@@ -31,13 +31,14 @@ namespace Serializable
 
         public BsPool Expand()
         {
+            var sizeParts = size.Split(' ');
             return new BsPool
             (
                 id,
-                transform,
-                size,
+                BsTransform.Parse(transform),
+                new Vector2(float.Parse(sizeParts[0]), float.Parse(sizeParts[1])),
                 chemical,
-                color,
+                BsColor.Parse(color),
                 layer,
                 simulated
             );

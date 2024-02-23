@@ -20,5 +20,15 @@ namespace Brutalsky.Joint
         {
             return new BsJointConfig(0f, true);
         }
+
+        public static BsJointConfig Parse(string raw)
+        {
+            return raw == "x" ? Auto() : Value(float.Parse(raw));
+        }
+
+        public override string ToString()
+        {
+            return autoConfig ? "x" : value.ToString();
+        }
     }
 }

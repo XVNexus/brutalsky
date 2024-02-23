@@ -22,5 +22,17 @@ namespace Brutalsky.Joint
         {
             return new BsJointMotor(false, 0f, 0f);
         }
+
+        public static BsJointMotor Parse(string raw)
+        {
+            if (raw == "x") return Unpowered();
+            var parts = raw.Split(' ');
+            return Powered(float.Parse(parts[0]), float.Parse(parts[1]));
+        }
+
+        public override string ToString()
+        {
+            return use ? $"{speed} {maxForce}" : "x";
+        }
     }
 }
