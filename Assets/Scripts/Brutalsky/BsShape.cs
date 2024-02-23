@@ -12,9 +12,8 @@ namespace Brutalsky
         public bool simulated { get; set; }
 
         public BsShape(string id, BsTransform transform, BsPath path, BsMaterial material, BsColor color,
-            BsLayer layer = BsLayer.Midground, bool simulated = true) : base(id)
+            BsLayer layer = BsLayer.Midground, bool simulated = true) : base(id, transform)
         {
-            this.transform = transform;
             this.path = path;
             this.material = material;
             this.color = color;

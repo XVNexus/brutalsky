@@ -1,3 +1,4 @@
+using Brutalsky.Object;
 using UnityEngine;
 
 namespace Brutalsky.Joint
@@ -6,9 +7,9 @@ namespace Brutalsky.Joint
     {
         public BsJointDamping damping { get; set; }
 
-        public BsJointFixed(string id, string targetShapeId, string mountShapeId, bool collision,
-            BsJointStrength strength, BsJointDamping damping)
-            : base(BsJointType.Fixed, id, targetShapeId, mountShapeId, collision, strength)
+        public BsJointFixed(string id, BsTransform transform, string targetShapeId, string mountShapeId,
+            bool collision, BsJointStrength strength, BsJointDamping damping)
+            : base(BsJointType.Fixed, id, transform, targetShapeId, mountShapeId, collision, strength)
         {
             this.damping = damping;
         }

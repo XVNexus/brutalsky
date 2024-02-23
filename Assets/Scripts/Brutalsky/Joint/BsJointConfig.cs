@@ -5,10 +5,20 @@ namespace Brutalsky.Joint
         public float value { get; set; }
         public bool autoConfig { get; set; }
 
-        public BsJointConfig(float value, bool autoConfig)
+        private BsJointConfig(float value, bool autoConfig)
         {
             this.value = value;
             this.autoConfig = autoConfig;
+        }
+
+        public static BsJointConfig Value(float value)
+        {
+            return new BsJointConfig(value, false);
+        }
+
+        public static BsJointConfig Auto()
+        {
+            return new BsJointConfig(0f, true);
         }
     }
 }

@@ -7,6 +7,7 @@ using Controllers;
 using Controllers.Player;
 using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 using Utils;
 
 namespace Core
@@ -20,6 +21,15 @@ namespace Core
         [CanBeNull] public BsMap activeMap { get; private set; }
         public bool mapLoaded { get; private set; }
 
+        // References
+        public Light2D cMapLight2D;
+        public GameObject playerPrefab;
+        public GameObject shapePrefab;
+        public GameObject poolPrefab;
+        public Material litMaterial;
+        public Material unlitMaterial;
+        private GameObject mapParent;
+
         // Functions
         public void Load(BsMap map)
         {
@@ -27,15 +37,18 @@ namespace Core
             activeMap = map;
             mapLoaded = true;
 
-            foreach (var shape in activeMap.shapes)
+            mapParent = new GameObject();
+            cMapLight2D.color = map.lighting.tint;
+            cMapLight2D.intensity = map.lighting.alpha;
+            foreach (var shape in map.shapes.Values)
             {
                 Create(shape);
             }
-            foreach (var pool in activeMap.pools)
+            foreach (var pool in map.pools.Values)
             {
                 Create(pool);
             }
-            foreach (var joint in activeMap.joints)
+            foreach (var joint in map.joints.Values)
             {
                 Create(joint);
             }
@@ -46,6 +59,21 @@ namespace Core
         public void Unload()
         {
             if (!mapLoaded) return;
+
+            foreach (var joint in activeMap.joints.Values)
+            {
+                Delete(joint);
+            }
+            foreach (var pool in activeMap.pools.Values)
+            {
+                Delete(pool);
+            }
+            foreach (var shape in activeMap.shapes.Values)
+            {
+                Delete(shape);
+            }
+            Destroy(mapParent);
+            mapParent = null;
 
             EventSystem.current.TriggerMapUnload(activeMap);
 
@@ -58,7 +86,7 @@ namespace Core
             if (!mapLoaded || player.active) return false;
 
             // Create new object and apply color and health
-            var playerObject = Instantiate(PrefabSystem.current.player);
+            var playerObject = Instantiate(playerPrefab);
             var playerController = playerObject.GetComponent<PlayerController>();
             playerController.bsObject = player;
             playerController.maxHealth = player.health;
@@ -94,10 +122,10 @@ namespace Core
 
         public bool Create(BsShape shape)
         {
-            if (shape.active) return false;
+            if (!mapLoaded || shape.active) return false;
 
             // Create new object
-            var shapeObj = Instantiate(PrefabSystem.current.shape);
+            var shapeObj = Instantiate(shapePrefab, mapParent.transform);
             var shapeController = shapeObj.GetComponent<ShapeController>();
             shapeController.bsObject = shape;
 
@@ -119,6 +147,7 @@ namespace Core
 
             // Apply color and layer
             var meshRenderer = shapeObj.GetComponent<MeshRenderer>();
+            meshRenderer.material = shape.color.glow ? unlitMaterial : litMaterial;
             meshRenderer.material.color = shape.color.tint;
             meshRenderer.sortingOrder = Layer2Order(shape.layer);
 
@@ -155,10 +184,10 @@ namespace Core
 
         public bool Create(BsPool pool)
         {
-            if (pool.active) return false;
+            if (!mapLoaded || pool.active) return false;
 
             // Create new object
-            var poolObj = Instantiate(PrefabSystem.current.pool);
+            var poolObj = Instantiate(poolPrefab, mapParent.transform);
             var poolController = poolObj.GetComponent<PoolController>();
             poolController.bsObject = pool;
 
@@ -167,6 +196,7 @@ namespace Core
 
             // Apply color and layer
             var spriteRenderer = poolObj.GetComponent<SpriteRenderer>();
+            spriteRenderer.material = pool.color.glow ? unlitMaterial : litMaterial;
             spriteRenderer.material.color = pool.color.tint;
             spriteRenderer.sortingOrder = Layer2Order(pool.layer);
 
@@ -188,55 +218,61 @@ namespace Core
 
         public bool Create(BsJoint joint)
         {
-            if (joint.active) return false;
-            if (!joint.targetShape.active || joint.mountShape is { active: false }) return false;
+            if (!mapLoaded || joint.active) return false;
 
+            // Create new component
             AnchoredJoint2D jointComponent;
-            var shapeObject = joint.targetShape.instanceObject;
-            switch (BsJoint.jointType)
+            var targetShape = activeMap.GetShape(joint.targetShapeId);
+            var mountShape = joint.mountShapeId.Length > 0 ? activeMap.GetShape(joint.mountShapeId) : null;
+            if (targetShape == null)
             {
+                throw new ArgumentNullException(nameof(joint), "Cannot create a joint without a target shape");
+            }
+            var targetGameObject = targetShape.instanceObject;
+            if (targetGameObject == null)
+            {
+                throw new ArgumentNullException(nameof(joint), "Cannot create a joint on an unbuilt shape");
+            }
+
+            // Apply joint config
+            switch (joint.jointType)
+            {
+                case BsJointType.Fixed:
+                    jointComponent = targetGameObject.AddComponent<FixedJoint2D>();
+                    ((BsJointFixed)joint).ApplyBaseConfigToInstance(jointComponent, mountShape);
+                    break;
+                case BsJointType.Distance:
+                    jointComponent = targetGameObject.AddComponent<DistanceJoint2D>();
+                    ((BsJointDistance)joint).ApplyBaseConfigToInstance(jointComponent, mountShape);
+                    break;
+                case BsJointType.Spring:
+                    jointComponent = targetGameObject.AddComponent<SpringJoint2D>();
+                    ((BsJointSpring)joint).ApplyBaseConfigToInstance(jointComponent, mountShape);
+                    break;
                 case BsJointType.Hinge:
-                    var hingeJoint = shapeObject.AddComponent<HingeJoint2D>();
-                    if (joint.speed != 0f)
-                    {
-                        hingeJoint.useMotor = true;
-                        var motor = hingeJoint.motor;
-                        motor.motorSpeed = joint.speed;
-                        motor.maxMotorTorque = joint.torque;
-                        hingeJoint.motor = motor;
-                    }
-                    jointComponent = hingeJoint;
+                    jointComponent = targetGameObject.AddComponent<HingeJoint2D>();
+                    ((BsJointHinge)joint).ApplyBaseConfigToInstance(jointComponent, mountShape);
                     break;
                 case BsJointType.Slider:
-                    var sliderJoint = shapeObject.AddComponent<SliderJoint2D>();
-                    if (joint.speed != 0f)
-                    {
-                        sliderJoint.useMotor = true;
-                        var motor = sliderJoint.motor;
-                        motor.motorSpeed = joint.speed;
-                        motor.maxMotorTorque = joint.torque;
-                        sliderJoint.motor = motor;
-                    }
-                    jointComponent = sliderJoint;
+                    jointComponent = targetGameObject.AddComponent<SliderJoint2D>();
+                    ((BsJointSlider)joint).ApplyBaseConfigToInstance(jointComponent, mountShape);
                     break;
+                case BsJointType.Wheel:
+                    jointComponent = targetGameObject.AddComponent<WheelJoint2D>();
+                    ((BsJointWheel)joint).ApplyBaseConfigToInstance(jointComponent, mountShape);
+                    break;
+                case BsJointType.None:
                 default:
-                    throw new ArgumentException("Unknown joint type");
+                    throw new ArgumentOutOfRangeException(nameof(joint), $"{joint.jointType} is not a valid joint type");
             }
-            if (joint.mountShape != null)
-            {
-                jointComponent.connectedBody = joint.mountShape.instanceObject.GetComponent<Rigidbody2D>();
-            }
-            if (joint.strength > 0f)
-            {
-                jointComponent.breakForce = joint.strength;
-            }
+            joint.ApplyConfigToInstance(jointComponent);
 
             joint.instanceComponent = jointComponent;
             joint.active = true;
             return true;
         }
 
-        public bool Destroy(BsShape shape)
+        public bool Delete(BsShape shape)
         {
             if (!shape.active) return false;
 
@@ -246,7 +282,7 @@ namespace Core
             return true;
         }
 
-        public bool Destroy(BsPool pool)
+        public bool Delete(BsPool pool)
         {
             if (!pool.active) return false;
 
@@ -256,7 +292,7 @@ namespace Core
             return true;
         }
 
-        public bool Destroy(BsJoint joint)
+        public bool Delete(BsJoint joint)
         {
             if (!joint.active) return false;
 

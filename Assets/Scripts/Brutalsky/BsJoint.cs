@@ -16,8 +16,8 @@ namespace Brutalsky
         public bool collision { get; set; }
         public BsJointStrength strength { get; set; }
 
-        public BsJoint(BsJointType jointType, string id, string targetShapeId, string mountShapeId, bool collision,
-            BsJointStrength strength) : base(id)
+        public BsJoint(BsJointType jointType, string id, BsTransform transform, string targetShapeId, string mountShapeId, bool collision,
+            BsJointStrength strength) : base(id, transform)
         {
             this.jointType = jointType;
 

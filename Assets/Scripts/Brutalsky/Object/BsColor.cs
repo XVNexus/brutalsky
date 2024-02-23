@@ -5,6 +5,16 @@ namespace Brutalsky.Object
     public class BsColor
     {
         public Color tint { get; set; }
+        public float alpha
+        {
+            get => tint.a;
+            set
+            {
+                var color = tint;
+                color.a = value;
+                tint = color;
+            }
+        }
         public bool glow { get; set; }
 
         public BsColor(Color tint, bool glow = false)
@@ -23,49 +33,49 @@ namespace Brutalsky.Object
         {
         }
 
-        public static BsColor Wood()
-            => new BsColor(new Color(.9f, .6f, .3f));
+        public static BsColor Wood(bool glow = false)
+            => new BsColor(.9f, .6f, .3f, 1f, glow);
 
-        public static BsColor Metal()
-            => new BsColor(new Color(.9f, .9f, 1f));
+        public static BsColor Metal(bool glow = false)
+            => new BsColor(.9f, .9f, 1f, 1f, glow);
 
-        public static BsColor Stone()
-            => new BsColor(new Color(.7f, .7f, .7f));
+        public static BsColor Stone(bool glow = false)
+            => new BsColor(.7f, .7f, .7f, 1f, glow);
 
-        public static BsColor Ice()
-            => new BsColor(new Color(.5f, .8f, 1f));
+        public static BsColor Ice(bool glow = false)
+            => new BsColor(.5f, .8f, 1f, 1f, glow);
 
-        public static BsColor Rubber()
-            => new BsColor(new Color(.7f, .4f, .9f));
+        public static BsColor Rubber(bool glow = false)
+            => new BsColor(.7f, .4f, .9f, 1f, glow);
 
-        public static BsColor Glue()
-            => new BsColor(new Color(.7f, .9f, .4f));
+        public static BsColor Glue(bool glow = false)
+            => new BsColor(.7f, .9f, .4f, 1f, glow);
 
-        public static BsColor Medkit()
-            => new BsColor(new Color(.2f, 1f, 1f));
+        public static BsColor Medkit(bool glow = true)
+            => new BsColor(.2f, 1f, 1f, 1f, glow);
 
-        public static BsColor Electric()
-            => new BsColor(new Color(1f, 1f, .2f));
+        public static BsColor Electric(bool glow = true)
+            => new BsColor(1f, 1f, .2f, 1f, glow);
 
-        public static BsColor Oil()
-            => new BsColor(new Color(.3f, .3f, .4f));
+        public static BsColor Oil(bool glow = false)
+            => new BsColor(.3f, .3f, .4f, 1f, glow);
 
-        public static BsColor Water()
-            => new BsColor(new Color(.4f, .4f, 1f));
+        public static BsColor Water(bool glow = false)
+            => new BsColor(.4f, .4f, 1f, 1f, glow);
 
-        public static BsColor Honey()
-            => new BsColor(new Color(.9f, .7f, 0f));
+        public static BsColor Honey(bool glow = false)
+            => new BsColor(.9f, .7f, 0f, 1f, glow);
 
-        public static BsColor Medicine()
-            => new BsColor(new Color(.3f, 1f, .2f));
+        public static BsColor Medicine(bool glow = true)
+            => new BsColor(.3f, 1f, .2f, 1f, glow);
 
-        public static BsColor Lava()
-            => new BsColor(new Color(1f, .3f, .2f));
+        public static BsColor Lava(bool glow = true)
+            => new BsColor(1f, .3f, .2f, 1f, glow);
 
-        public static BsColor Void()
-            => new BsColor(new Color(0f, 0f, 0f));
+        public static BsColor Void(bool glow = false)
+            => new BsColor(0f, 0f, 0f, 1f, glow);
 
-        public static BsColor Ether()
-            => new BsColor(new Color(1f, 1f, 1f));
+        public static BsColor Ether(bool glow = false)
+            => new BsColor(1f, 1f, 1f, 1f, glow);
     }
 }

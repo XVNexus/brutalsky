@@ -9,7 +9,7 @@ namespace Brutalsky
         public BsColor color { get; set; }
         public bool dummy { get; set; }
 
-        public BsPlayer(string id, float health, BsColor color, bool dummy = false) : base(id)
+        public BsPlayer(string id, float health, BsColor color, bool dummy = false) : base(id, new BsTransform())
         {
             this.health = health;
             this.color = color;

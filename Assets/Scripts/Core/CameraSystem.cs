@@ -39,14 +39,7 @@ namespace Core
         // Events
         private void Start()
         {
-            EventSystem.current.OnCameraShake += OnCameraShake;
             cCamera = Camera.main;
-        }
-
-        private void OnCameraShake(Vector2 shove, float shake)
-        {
-            Shove(shove);
-            Shake(shake);
         }
 
         // Updates

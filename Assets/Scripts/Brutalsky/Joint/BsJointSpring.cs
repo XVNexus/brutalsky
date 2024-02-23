@@ -1,3 +1,4 @@
+using Brutalsky.Object;
 using UnityEngine;
 
 namespace Brutalsky.Joint
@@ -7,9 +8,9 @@ namespace Brutalsky.Joint
         public BsJointConfig distance { get; set; }
         public BsJointDamping damping { get; set; }
 
-        public BsJointSpring(string id, string targetShapeId, string mountShapeId, bool collision,
-            BsJointStrength strength, BsJointConfig distance, BsJointDamping damping)
-            : base(BsJointType.Spring, id, targetShapeId, mountShapeId, collision, strength)
+        public BsJointSpring(string id, BsTransform transform, string targetShapeId, string mountShapeId,
+            bool collision, BsJointStrength strength, BsJointConfig distance, BsJointDamping damping)
+            : base(BsJointType.Spring, id, transform, targetShapeId, mountShapeId, collision, strength)
         {
             this.distance = distance;
             this.damping = damping;

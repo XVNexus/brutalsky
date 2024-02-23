@@ -5,10 +5,20 @@ namespace Brutalsky.Joint
         public float breakForce { get; set; }
         public float breakTorque { get; set; }
 
-        public BsJointStrength(float breakForce, float breakTorque)
+        private BsJointStrength(float breakForce, float breakTorque)
         {
             this.breakForce = breakForce;
             this.breakTorque = breakTorque;
+        }
+
+        public static BsJointStrength Breakable(float breakForce, float breakTorque = float.PositiveInfinity)
+        {
+            return new BsJointStrength(breakForce, breakTorque);
+        }
+
+        public static BsJointStrength Immortal()
+        {
+            return new BsJointStrength(float.PositiveInfinity, float.PositiveInfinity);
         }
     }
 }

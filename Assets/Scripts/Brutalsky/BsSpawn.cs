@@ -8,9 +8,8 @@ namespace Brutalsky
         public int priority { get; set; }
         public int usages { get; private set; }
 
-        public BsSpawn(string id, BsTransform transform, int priority = 0) : base(id)
+        public BsSpawn(string id, BsTransform transform, int priority = 0) : base(id, transform)
         {
-            this.transform = transform;
             this.priority = priority;
         }
 

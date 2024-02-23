@@ -1,3 +1,4 @@
+using Brutalsky.Object;
 using UnityEngine;
 
 namespace Brutalsky.Joint
@@ -8,9 +9,9 @@ namespace Brutalsky.Joint
         public float suspensionAngle { get; set; }
         public BsJointMotor motor { get; set; }
 
-        public BsJointWheel(string id, string targetShapeId, string mountShapeId, bool collision,
-            BsJointStrength strength, BsJointDamping suspensionDamping, float suspensionAngle, BsJointMotor motor)
-            : base(BsJointType.Wheel, id, targetShapeId, mountShapeId, collision, strength)
+        public BsJointWheel(string id, BsTransform transform, string targetShapeId, string mountShapeId,
+            bool collision, BsJointStrength strength, BsJointDamping suspensionDamping, float suspensionAngle, BsJointMotor motor)
+            : base(BsJointType.Wheel, id, transform, targetShapeId, mountShapeId, collision, strength)
         {
             this.suspensionDamping = suspensionDamping;
             this.suspensionAngle = suspensionAngle;

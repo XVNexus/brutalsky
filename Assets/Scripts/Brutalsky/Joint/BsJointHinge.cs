@@ -1,3 +1,4 @@
+using Brutalsky.Object;
 using UnityEngine;
 
 namespace Brutalsky.Joint
@@ -7,9 +8,9 @@ namespace Brutalsky.Joint
         public BsJointMotor motor { get; set; }
         public BsJointLimits limits { get; set; }
 
-        public BsJointHinge(string id, string targetShapeId, string mountShapeId, bool collision,
-            BsJointStrength strength, BsJointMotor motor, BsJointLimits limits)
-            : base(BsJointType.Hinge, id, targetShapeId, mountShapeId, collision, strength)
+        public BsJointHinge(string id, BsTransform transform, string targetShapeId, string mountShapeId,
+            bool collision, BsJointStrength strength, BsJointMotor motor, BsJointLimits limits)
+            : base(BsJointType.Hinge, id, transform, targetShapeId, mountShapeId, collision, strength)
         {
             this.motor = motor;
             this.limits = limits;

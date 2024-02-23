@@ -27,11 +27,5 @@ namespace Core
 
         public void TriggerPlayerDespawn(BsMap map, BsPlayer player) => OnPlayerDespawn?.Invoke(map, player);
         public event Action<BsMap, BsPlayer> OnPlayerDespawn;
-
-        public void TriggerPlayerDie(BsPlayer player) => OnPlayerDie?.Invoke(player);
-        public event Action<BsPlayer> OnPlayerDie;
-
-        public void TriggerCameraShake(Vector2 shove, float shake) => OnCameraShake?.Invoke(shove, shake);
-        public event Action<Vector2, float> OnCameraShake;
     }
 }

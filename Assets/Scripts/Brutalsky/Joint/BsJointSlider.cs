@@ -1,3 +1,4 @@
+using Brutalsky.Object;
 using UnityEngine;
 
 namespace Brutalsky.Joint
@@ -8,9 +9,9 @@ namespace Brutalsky.Joint
         public BsJointMotor motor { get; set; }
         public BsJointLimits limits { get; set; }
 
-        public BsJointSlider(string id, string targetShapeId, string mountShapeId, bool collision,
-            BsJointStrength strength, BsJointConfig angle, BsJointMotor motor, BsJointLimits limits)
-            : base(BsJointType.Slider, id, targetShapeId, mountShapeId, collision, strength)
+        public BsJointSlider(string id, BsTransform transform, string targetShapeId, string mountShapeId,
+            bool collision, BsJointStrength strength, BsJointConfig angle, BsJointMotor motor, BsJointLimits limits)
+            : base(BsJointType.Slider, id, transform, targetShapeId, mountShapeId, collision, strength)
         {
             this.angle = angle;
             this.motor = motor;

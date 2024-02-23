@@ -1,6 +1,5 @@
 using System.Linq;
 using Brutalsky;
-using Brutalsky.Object;
 using UnityEngine;
 
 namespace Controllers.Player

@@ -13,9 +13,8 @@ namespace Brutalsky
         public bool simulated { get; set; }
 
         public BsPool(string id, BsTransform transform, Vector2 size, BsChemical chemical, BsColor color,
-            BsLayer layer = BsLayer.Midground, bool simulated = true) : base(id)
+            BsLayer layer = BsLayer.Midground, bool simulated = true) : base(id, transform)
         {
-            this.transform = transform;
             this.size = size;
             this.chemical = chemical;
             this.color = color;

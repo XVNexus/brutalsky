@@ -1,3 +1,4 @@
+using Brutalsky.Object;
 using UnityEngine;
 
 namespace Brutalsky.Joint
@@ -7,9 +8,9 @@ namespace Brutalsky.Joint
         public BsJointConfig distance { get; set; }
         public bool maxDistanceOnly { get; set; }
 
-        public BsJointDistance(string id, string targetShapeId, string mountShapeId, bool collision,
-            BsJointStrength strength, BsJointConfig distance, bool maxDistanceOnly)
-            : base(BsJointType.Distance, id, targetShapeId, mountShapeId, collision, strength)
+        public BsJointDistance(string id, BsTransform transform, string targetShapeId, string mountShapeId,
+            bool collision, BsJointStrength strength, BsJointConfig distance, bool maxDistanceOnly)
+            : base(BsJointType.Distance, id, transform, targetShapeId, mountShapeId, collision, strength)
         {
             this.distance = distance;
             this.maxDistanceOnly = maxDistanceOnly;
