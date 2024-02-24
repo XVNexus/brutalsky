@@ -1,6 +1,7 @@
 using Brutalsky;
 using Brutalsky.Object;
 using Brutalsky.Shape;
+using Utils;
 
 namespace Serializable
 {
@@ -11,8 +12,8 @@ namespace Serializable
         public string path { get; set; }
         public string material { get; set; }
         public string color { get; set; }
-        public BsLayer layer { get; set; }
-        public bool simulated { get; set; }
+        public int layer { get; set; }
+        public string simulated { get; set; }
 
         public static SrzShape Simplify(BsShape shape)
         {
@@ -23,8 +24,8 @@ namespace Serializable
                 path = shape.path.ToString(),
                 material = shape.material.ToString(),
                 color = shape.color.ToString(),
-                layer = shape.layer,
-                simulated = shape.simulated
+                layer = (int)shape.layer,
+                simulated = BoolExt.ToString(shape.simulated)
             };
         }
 
@@ -37,8 +38,8 @@ namespace Serializable
                 BsPath.Parse(path),
                 BsMaterial.Parse(material), 
                 BsColor.Parse(color),
-                layer,
-                simulated
+                (BsLayer)layer,
+                BoolExt.Parse(simulated)
             );
         }
     }

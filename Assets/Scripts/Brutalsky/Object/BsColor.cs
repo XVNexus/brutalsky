@@ -1,4 +1,5 @@
 using UnityEngine;
+using Utils;
 
 namespace Brutalsky.Object
 {
@@ -27,10 +28,6 @@ namespace Brutalsky.Object
         {
             tint = new Color(r, g, b, a);
             this.glow = glow;
-        }
-
-        public BsColor()
-        {
         }
 
         public static BsColor Wood(bool glow = false)
@@ -82,12 +79,12 @@ namespace Brutalsky.Object
         {
             var parts = raw.Split(' ');
             return new BsColor(float.Parse(parts[0]), float.Parse(parts[1]), float.Parse(parts[2]),
-                float.Parse(parts[3]), bool.Parse(parts[4]));
+                float.Parse(parts[3]), BoolExt.Parse(parts[4]));
         }
 
         public override string ToString()
         {
-            return $"{tint.r} {tint.g} {tint.b} {tint.a} {glow}";
+            return $"{tint.r} {tint.g} {tint.b} {tint.a} {BoolExt.ToString(glow)}";
         }
     }
 }

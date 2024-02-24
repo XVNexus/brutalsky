@@ -8,7 +8,7 @@ namespace Serializable
         public string id { get; set; }
         public float health { get; set; }
         public string color { get; set; }
-        public bool dummy { get; set; }
+        public string dummy { get; set; }
 
         public static SrzPlayer Simplify(BsPlayer player)
         {
@@ -17,7 +17,7 @@ namespace Serializable
                 id = player.id,
                 health = player.health,
                 color = player.color.ToString(),
-                dummy = player.dummy
+                dummy = player.dummy ? "1" : "0"
             };
         }
 
@@ -28,7 +28,7 @@ namespace Serializable
                 id,
                 health,
                 BsColor.Parse(color),
-                dummy
+                dummy == "1"
             );
         }
     }

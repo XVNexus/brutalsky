@@ -19,7 +19,7 @@ namespace Serializable
         {
             var properties = new Dictionary<string, string>
             {
-                ["collision"] = joint.collision.ToString(),
+                ["collision"] = BoolExt.ToString(joint.collision),
                 ["strength"] = joint.strength.ToString()
             };
             switch (joint.jointType)
@@ -31,7 +31,7 @@ namespace Serializable
                 case BsJointType.Distance:
                     var distanceJoint = (BsJointDistance)joint;
                     properties["distance"] = distanceJoint.distance.ToString();
-                    properties["maxDistanceOnly"] = distanceJoint.maxDistanceOnly.ToString();
+                    properties["maxDistanceOnly"] = BoolExt.ToString(distanceJoint.maxDistanceOnly);
                     break;
                 case BsJointType.Spring:
                     var springJoint = (BsJointSpring)joint;
@@ -73,7 +73,7 @@ namespace Serializable
         public BsJoint Expand()
         {
             var transformParsed = BsTransform.Parse(transform);
-            var collision = bool.Parse(properties["collision"]);
+            var collision = BoolExt.Parse(properties["collision"]);
             var strength = BsJointStrength.Parse(properties["strength"]);
             switch (jointType)
             {
@@ -88,7 +88,7 @@ namespace Serializable
                     (
                         id, transformParsed, targetShapeId, mountShapeId, collision, strength,
                         BsJointConfig.Parse(properties["distance"]),
-                        bool.Parse(properties["maxDistanceOnly"])
+                        BoolExt.Parse(properties["maxDistanceOnly"])
                     );
                 case BsJointType.Spring:
                     return new BsJointSpring

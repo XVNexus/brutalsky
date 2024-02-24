@@ -1,3 +1,5 @@
+using Utils;
+
 namespace Brutalsky.Shape
 {
     public class BsMaterial
@@ -74,12 +76,12 @@ namespace Brutalsky.Shape
             var parts = raw.Split(' ');
             return new BsMaterial(float.Parse(parts[0]), float.Parse(parts[1]),
                 float.Parse(parts[2]), float.Parse(parts[3]), float.Parse(parts[4]),
-                bool.Parse(parts[5]));
+                BoolExt.Parse(parts[5]));
         }
 
         public override string ToString()
         {
-            return $"{friction} {restitution} {adhesion} {density} {damage} {dynamic}";
+            return $"{friction} {restitution} {adhesion} {density} {damage} {BoolExt.ToString(dynamic)}";
         }
     }
 }
