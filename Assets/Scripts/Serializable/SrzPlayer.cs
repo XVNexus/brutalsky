@@ -1,11 +1,13 @@
 using Brutalsky;
 using Brutalsky.Object;
+using Utils;
 
 namespace Serializable
 {
     public class SrzPlayer
     {
         public string id { get; set; }
+        public string name { get; set; }
         public float health { get; set; }
         public string color { get; set; }
         public string dummy { get; set; }
@@ -15,9 +17,10 @@ namespace Serializable
             return new SrzPlayer
             {
                 id = player.id,
+                name = player.name,
                 health = player.health,
                 color = player.color.ToString(),
-                dummy = player.dummy ? "1" : "0"
+                dummy = BoolExt.ToString(player.dummy)
             };
         }
 
@@ -26,9 +29,10 @@ namespace Serializable
             return new BsPlayer
             (
                 id,
+                name,
                 health,
                 BsColor.Parse(color),
-                dummy == "1"
+                BoolExt.Parse(dummy)
             );
         }
     }
