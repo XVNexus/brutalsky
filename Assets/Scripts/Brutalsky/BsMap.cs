@@ -1,13 +1,20 @@
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Brutalsky.Object;
 using Core;
+using Serializable;
 using UnityEngine;
+using Utils;
+using YamlDotNet.Serialization;
 
 namespace Brutalsky
 {
     public class BsMap
     {
+        public const string SavePath = "/home/ian/Documents/Brutalsky/";
+        public const string SaveFormat = "yaml";
+
         public string title { get; set; }
         public string author { get; set; }
         public Vector2 size { get; set; }
@@ -127,6 +134,18 @@ namespace Brutalsky
             {
                 spawn.Reset();
             }
+        }
+
+        public static BsMap Load(string filename)
+        {
+            using var reader = new StreamReader($"{SavePath}{filename}.{SaveFormat}");
+            return new Deserializer().Deserialize<SrzMap>(reader.ReadToEnd()).Expand();
+        }
+
+        public void Save(string filename)
+        {
+            using var writer = new StreamWriter($"{SavePath}{filename}.{SaveFormat}");
+            writer.Write(new Serializer().Serialize(SrzMap.Simplify(this)));
         }
     }
 }

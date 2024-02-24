@@ -113,15 +113,6 @@ public class Testing : MonoBehaviour
         map.Add(new BsSpawn("spawn-left", new BsTransform(-15f, 1f)));
         map.Add(new BsSpawn("spawn-right", new BsTransform(15f, 1f)));
 
-        // Write map to string and save to file
-        var mapString = new Serializer().Serialize(SrzMap.Simplify(map));
-        using var writer = new StreamWriter("/home/ian/Downloads/output.yaml");
-        writer.Write(mapString);
-
-        // Load map from string
-        var parsedMap = new Deserializer().Deserialize<SrzMap>(mapString).Expand();
-        MapSystem.current.Load(parsedMap);
-        MapSystem.current.Spawn(new BsPlayer("player-1", 100f, new BsColor(1f, .5f, 0f)));
-        MapSystem.current.Spawn(new BsPlayer("player-2", 100f, new BsColor(0f, .5f, 1f), true));
+        map.Save("testing", true);
     }
 }
