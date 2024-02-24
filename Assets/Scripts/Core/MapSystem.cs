@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using Brutalsky;
 using Brutalsky.Joint;
@@ -16,9 +18,13 @@ namespace Core
         public static MapSystem current;
         private void Awake() => current = this;
 
+        // Constants
+        public const float AnimationTime = 1f;
+
         // Variables
         [CanBeNull] public BsMap activeMap { get; private set; }
         public bool mapLoaded { get; private set; }
+        public Dictionary<string, BsPlayer> activePlayers { get; private set; } = new();
 
         // References
         public Light2D cMapLight2D;
@@ -30,7 +36,40 @@ namespace Core
         private GameObject mapParent;
 
         // Functions
-        public void Load(BsMap map)
+        public void LoadLevel(BsMap map, IEnumerable<BsPlayer> players)
+        {
+            BuildMap(map);
+            SpawnPlayers(players);
+        }
+
+        public void ChangeLevel(BsMap newMap)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void UnloadLevel()
+        {
+            DespawnPlayers();
+            UnbuildMap();
+        }
+
+        public void FreezePlayers()
+        {
+            foreach (var player in activePlayers.Values)
+            {
+                player.instanceObject.GetComponent<PlayerController>().Freeze();
+            }
+        }
+
+        public void UnfreezePlayers()
+        {
+            foreach (var player in activePlayers.Values)
+            {
+                player.instanceObject.GetComponent<PlayerController>().Unfreeze();
+            }
+        }
+
+        public void BuildMap(BsMap map)
         {
             if (mapLoaded) return;
             activeMap = map;
@@ -42,46 +81,57 @@ namespace Core
             cMapLight2D.intensity = map.lighting.alpha;
             foreach (var shape in map.shapes.Values)
             {
-                Create(shape);
+                CreateObject(shape);
             }
             foreach (var pool in map.pools.Values)
             {
-                Create(pool);
+                CreateObject(pool);
             }
             foreach (var joint in map.joints.Values)
             {
-                Create(joint);
+                CreateObject(joint);
             }
 
             EventSystem.current.TriggerMapLoad(map);
         }
 
-        public void Unload()
+        public void UnbuildMap()
         {
             if (!mapLoaded) return;
+            
+            EventSystem.current.TriggerMapUnload(activeMap);
 
             foreach (var joint in activeMap.joints.Values)
             {
-                Delete(joint);
+                DeleteObject(joint);
             }
             foreach (var pool in activeMap.pools.Values)
             {
-                Delete(pool);
+                DeleteObject(pool);
             }
             foreach (var shape in activeMap.shapes.Values)
             {
-                Delete(shape);
+                DeleteObject(shape);
             }
             Destroy(mapParent);
             mapParent = null;
-
-            EventSystem.current.TriggerMapUnload(activeMap);
 
             activeMap = null;
             mapLoaded = false;
         }
 
-        public bool Spawn(BsPlayer player)
+        public void SpawnPlayers(IEnumerable<BsPlayer> players)
+        {
+            var playerList = players.ToList();
+            while (playerList.Count > 0)
+            {
+                var index = EventSystem.random.NextInt(playerList.Count);
+                SpawnPlayer(playerList[index]);
+                playerList.RemoveAt(index);
+            }
+        }
+
+        public bool SpawnPlayer(BsPlayer player)
         {
             if (!mapLoaded || player.active) return false;
 
@@ -102,25 +152,41 @@ namespace Core
 
             player.instanceObject = playerObject;
             player.active = true;
+            activePlayers[player.id] = player;
 
             EventSystem.current.TriggerPlayerSpawn(activeMap, player);
 
             return true;
         }
 
-        public bool Despawn(BsPlayer player)
+        public void DespawnPlayers()
         {
-            if (!mapLoaded || !player.active) return false;
+            DespawnPlayers(activePlayers.Values);
+        }
 
-            EventSystem.current.TriggerPlayerDespawn(activeMap, player);
+        public void DespawnPlayers(IEnumerable<BsPlayer> players)
+        {
+            var playerList = players.ToList();
+            foreach (var player in playerList)
+            {
+                DespawnPlayer(player);
+            }
+        }
+
+        public bool DespawnPlayer(BsPlayer player)
+        {
+            if (!player.active) return false;
+
+            EventSystem.current.TriggerPlayerDespawn(player);
 
             Destroy(player.instanceObject);
             player.instanceObject = null;
             player.active = false;
+            activePlayers.Remove(player.id);
             return true;
         }
 
-        public bool Create(BsShape shape)
+        public bool CreateObject(BsShape shape)
         {
             if (!mapLoaded || shape.active) return false;
 
@@ -182,7 +248,7 @@ namespace Core
             return true;
         }
 
-        public bool Create(BsPool pool)
+        public bool CreateObject(BsPool pool)
         {
             if (!mapLoaded || pool.active) return false;
 
@@ -216,7 +282,7 @@ namespace Core
             return true;
         }
 
-        public bool Create(BsJoint joint)
+        public bool CreateObject(BsJoint joint)
         {
             if (!mapLoaded || joint.active) return false;
 
@@ -272,7 +338,7 @@ namespace Core
             return true;
         }
 
-        public bool Delete(BsShape shape)
+        public bool DeleteObject(BsShape shape)
         {
             if (!shape.active) return false;
 
@@ -282,7 +348,7 @@ namespace Core
             return true;
         }
 
-        public bool Delete(BsPool pool)
+        public bool DeleteObject(BsPool pool)
         {
             if (!pool.active) return false;
 
@@ -292,7 +358,7 @@ namespace Core
             return true;
         }
 
-        public bool Delete(BsJoint joint)
+        public bool DeleteObject(BsJoint joint)
         {
             if (!joint.active) return false;
 

@@ -69,14 +69,13 @@ namespace Controllers.Player
                 psEmission.SetBurst(0, psBurst);
                 cHurtParticleSystem.Play();
             }
-            lastHealth = health;
 
             // Display death particles
-            if (health == 0f && cDeathParticleSystem.isStopped)
-            {
-                cDeathParticleSystem.transform.SetParent(null, true);
-                cDeathParticleSystem.Play();
-            }
+            if (health != 0f || lastHealth == 0f) return;
+            cDeathParticleSystem.transform.localPosition =
+                new Vector3(-PlayerController.DeathOffset, -PlayerController.DeathOffset);
+            cDeathParticleSystem.Play();
+            lastHealth = health;
         }
     }
 }

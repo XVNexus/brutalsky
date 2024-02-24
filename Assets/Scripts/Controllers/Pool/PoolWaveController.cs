@@ -8,9 +8,6 @@ namespace Controllers.Pool
     {
         // Variables
         public float wavePointDensity = 2f;
-        private Vector2 buoyancyForce;
-        private float surfaceAngle;
-        private float surfacePosition;
         private float waveHeight;
         private int wavePointCount;
         private float[] wavePointOffsets;
@@ -20,15 +17,6 @@ namespace Controllers.Pool
         public LineRenderer cLineRenderer;
         private PoolController cPoolController;
         private SpriteRenderer cSpriteRenderer;
-
-        // Functions
-        public void SetWavePointHeight(int index, float height)
-        {
-            if (index < 0 || index >= wavePointCount) return;
-            cLineRenderer.SetPosition(index + 2,
-                new Vector3(cLineRenderer.GetPosition(index + 2).x,
-                    Mathf.Clamp(height, -1f, 1f) * waveHeight));
-        }
 
         // Events
         private void Start()
@@ -66,16 +54,19 @@ namespace Controllers.Pool
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            // Trigger wave splash effect
-            var splashPoint = transform.InverseTransformPoint(other.transform.position).x * cPoolController.bsObject.size.x;
-            waveEffects.Add(new WaveEffect(splashPoint, 25f, 2f, 3f, -1f));
+            OnTrigger2D(other, true);
         }
 
         private void OnTriggerExit2D(Collider2D other)
         {
+            OnTrigger2D(other, false);
+        }
+
+        private void OnTrigger2D(Component other, bool invertWaves)
+        {
             // Trigger wave splash effect
             var splashPoint = transform.InverseTransformPoint(other.transform.position).x * cPoolController.bsObject.size.x;
-            waveEffects.Add(new WaveEffect(splashPoint, 25f, 2f, 3f));
+            waveEffects.Add(new WaveEffect(splashPoint, 25f, 2f, 3f, invertWaves ? -1f : 1f));
         }
 
         // Updates
