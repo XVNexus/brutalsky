@@ -1,11 +1,8 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using Brutalsky;
 using Brutalsky.Joint;
 using Brutalsky.Object;
 using Controllers;
-using Controllers.Player;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
@@ -18,17 +15,12 @@ namespace Core
         public static MapSystem current;
         private void Awake() => current = this;
 
-        // Constants
-        public const float AnimationTime = 1f;
-
         // Variables
         [CanBeNull] public BsMap activeMap { get; private set; }
         public bool mapLoaded { get; private set; }
-        public Dictionary<string, BsPlayer> activePlayers { get; private set; } = new();
 
         // References
         public Light2D cMapLight2D;
-        public GameObject playerPrefab;
         public GameObject shapePrefab;
         public GameObject poolPrefab;
         public Material litMaterial;
@@ -36,159 +28,66 @@ namespace Core
         private GameObject mapParent;
 
         // Functions
-        public void LoadLevel(BsMap map, IEnumerable<BsPlayer> players)
+        public void Build(BsMap map)
         {
-            BuildMap(map);
-            SpawnPlayers(players);
-        }
-
-        public void ChangeLevel(BsMap newMap)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void UnloadLevel()
-        {
-            DespawnPlayers();
-            UnbuildMap();
-        }
-
-        public void FreezePlayers()
-        {
-            foreach (var player in activePlayers.Values)
-            {
-                player.instanceObject.GetComponent<PlayerController>().Freeze();
-            }
-        }
-
-        public void UnfreezePlayers()
-        {
-            foreach (var player in activePlayers.Values)
-            {
-                player.instanceObject.GetComponent<PlayerController>().Unfreeze();
-            }
-        }
-
-        public void BuildMap(BsMap map)
-        {
+            // Make sure there is not already an active map
             if (mapLoaded) return;
+
+            // Note map as active
             activeMap = map;
             mapLoaded = true;
 
-            CameraSystem.current.viewSize = map.size;
-            mapParent = new GameObject();
+            // Set camera and lighting config
+            CameraSystem.current.ResizeView(map.size);;
             cMapLight2D.color = map.lighting.tint;
             cMapLight2D.intensity = map.lighting.alpha;
+
+            // Instantiate the map container and create all objects
+            mapParent = new GameObject();
             foreach (var shape in map.shapes.Values)
             {
-                CreateObject(shape);
+                Create(shape);
             }
             foreach (var pool in map.pools.Values)
             {
-                CreateObject(pool);
+                Create(pool);
             }
             foreach (var joint in map.joints.Values)
             {
-                CreateObject(joint);
+                Create(joint);
             }
-
-            EventSystem.current.TriggerMapLoad(map);
         }
 
-        public void UnbuildMap()
+        public void Unbuild()
         {
+            // Make sure there is an active map to unbuild
             if (!mapLoaded) return;
-            
-            EventSystem.current.TriggerMapUnload(activeMap);
 
+            // Delete all objects and destroy the map container
             foreach (var joint in activeMap.joints.Values)
             {
-                DeleteObject(joint);
+                Delete(joint);
             }
             foreach (var pool in activeMap.pools.Values)
             {
-                DeleteObject(pool);
+                Delete(pool);
             }
             foreach (var shape in activeMap.shapes.Values)
             {
-                DeleteObject(shape);
+                Delete(shape);
             }
             Destroy(mapParent);
             mapParent = null;
 
+            // Note map as inactive
             activeMap = null;
             mapLoaded = false;
         }
 
-        public void SpawnPlayers(IEnumerable<BsPlayer> players)
+        public bool Create(BsShape shape)
         {
-            var playerList = players.ToList();
-            while (playerList.Count > 0)
-            {
-                var index = EventSystem.random.NextInt(playerList.Count);
-                SpawnPlayer(playerList[index]);
-                playerList.RemoveAt(index);
-            }
-        }
-
-        public bool SpawnPlayer(BsPlayer player)
-        {
-            if (!mapLoaded || player.active) return false;
-
-            // Create new object and apply color and health
-            var playerObject = Instantiate(playerPrefab);
-            var playerController = playerObject.GetComponent<PlayerController>();
-            playerController.bsObject = player;
-            playerController.maxHealth = player.health;
-            playerController.color = player.color.tint;
-            if (player.dummy)
-            {
-                playerObject.GetComponent<PlayerMovementController>().movementForce = 0f;
-            }
-
-            // Select a spawnpoint
-            var spawnPos = activeMap.SelectSpawn();
-            playerObject.transform.position = spawnPos;
-
-            player.instanceObject = playerObject;
-            player.active = true;
-            activePlayers[player.id] = player;
-
-            EventSystem.current.TriggerPlayerSpawn(activeMap, player);
-
-            return true;
-        }
-
-        public void DespawnPlayers()
-        {
-            DespawnPlayers(activePlayers.Values);
-        }
-
-        public void DespawnPlayers(IEnumerable<BsPlayer> players)
-        {
-            var playerList = players.ToList();
-            foreach (var player in playerList)
-            {
-                DespawnPlayer(player);
-            }
-        }
-
-        public bool DespawnPlayer(BsPlayer player)
-        {
-            if (!player.active) return false;
-
-            EventSystem.current.TriggerPlayerDespawn(player);
-
-            Destroy(player.instanceObject);
-            player.instanceObject = null;
-            player.active = false;
-            activePlayers.Remove(player.id);
-            return true;
-        }
-
-        public bool CreateObject(BsShape shape)
-        {
-            if (!mapLoaded || shape.active) return false;
+            // Make sure the shape is not already created
+            if (shape.active) return false;
 
             // Create new object
             var shapeObj = Instantiate(shapePrefab, mapParent.transform);
@@ -243,14 +142,16 @@ namespace Core
             shapeObj.transform.position = shape.transform.position;
             shapeObj.transform.rotation = Quaternion.Euler(0f, 0f, shape.transform.rotation);
 
+            // Note shape as active
             shape.instanceObject = shapeObj;
             shape.active = true;
             return true;
         }
 
-        public bool CreateObject(BsPool pool)
+        public bool Create(BsPool pool)
         {
-            if (!mapLoaded || pool.active) return false;
+            // Make sure the pool is not already created
+            if (pool.active) return false;
 
             // Create new object
             var poolObj = Instantiate(poolPrefab, mapParent.transform);
@@ -277,14 +178,16 @@ namespace Core
             poolObj.transform.position = pool.transform.position;
             poolObj.transform.rotation = Quaternion.Euler(0f, 0f, pool.transform.rotation);
 
+            // Note pool as active
             pool.instanceObject = poolObj;
             pool.active = true;
             return true;
         }
 
-        public bool CreateObject(BsJoint joint)
+        public bool Create(BsJoint joint)
         {
-            if (!mapLoaded || joint.active) return false;
+            // Make sure the joint is not already created
+            if (joint.active) return false;
 
             // Create new component
             AnchoredJoint2D jointComponent;
@@ -333,36 +236,49 @@ namespace Core
             }
             joint.ApplyConfigToInstance(jointComponent);
 
+            // Note joint as active
             joint.instanceComponent = jointComponent;
             joint.active = true;
             return true;
         }
 
-        public bool DeleteObject(BsShape shape)
+        public bool Delete(BsShape shape)
         {
+            // Make sure the shape is not already deleted
             if (!shape.active) return false;
 
+            // Destroy the shape object
             Destroy(shape.instanceObject);
+            
+            // Note shape as inactive
             shape.instanceObject = null;
             shape.active = false;
             return true;
         }
 
-        public bool DeleteObject(BsPool pool)
+        public bool Delete(BsPool pool)
         {
+            // Make sure the pool is not already deleted
             if (!pool.active) return false;
 
+            // Destroy the pool object
             Destroy(pool.instanceObject);
+            
+            // Note pool as inactive
             pool.instanceObject = null;
             pool.active = false;
             return true;
         }
 
-        public bool DeleteObject(BsJoint joint)
+        public bool Delete(BsJoint joint)
         {
+            // Make sure the joint is not already deleted
             if (!joint.active) return false;
 
+            // Destroy the joint component
             Destroy(joint.instanceComponent);
+            
+            // Note joint as inactive
             joint.instanceComponent = null;
             joint.active = false;
             return true;

@@ -10,10 +10,11 @@ namespace Core
         private void Awake() => current = this;
 
         // Variables
-        public Vector2 viewSize = new(40f, 20f);
+        public Vector2 viewSize = new(10f, 10f);
         public float dampening = .1f;
         public float shakeInterval = .1f;
         public float simSpeed = 10f;
+        private float offsetMultiplier;
         private Vector2 offset;
         private Vector2 velocity;
         private float shake;
@@ -25,9 +26,15 @@ namespace Core
         private Camera cCamera;
 
         // Functions
+        public void ResizeView(Vector2 viewSize)
+        {
+            this.viewSize = viewSize;
+            offsetMultiplier = Mathf.Min(viewSize.x, viewSize.y);
+        }
+
         public void Shove(Vector2 force)
         {
-            velocity += force;
+            velocity += force * .01f;
         }
 
         public void Shake(float force)
@@ -61,7 +68,8 @@ namespace Core
 
             // Apply shake offset
             var cameraTransform = cCamera.transform;
-            cameraTransform.position = new Vector3(offset.x, offset.y, cameraTransform.position.z);
+            var scaledOffset = offset * offsetMultiplier;
+            cameraTransform.position = new Vector3(scaledOffset.x, scaledOffset.y, cameraTransform.position.z);
         }
 
         private void FixedUpdate()

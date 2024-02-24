@@ -24,6 +24,11 @@ namespace Controllers.Player
         {
             cPlayerController = GetComponent<PlayerController>();
             cRigidbody2D = GetComponent<Rigidbody2D>();
+
+            // Offset death particle system by the opposite amount the player is moved on death
+            // This ensures that death particles will play where the player was before dying
+            cDeathParticleSystem.transform.localPosition =
+                new Vector3(-PlayerController.DeathOffset, -PlayerController.DeathOffset);
         }
 
         private void OnCollisionEnter2D(Collision2D other)
@@ -71,10 +76,10 @@ namespace Controllers.Player
             }
 
             // Display death particles
-            if (health != 0f || lastHealth == 0f) return;
-            cDeathParticleSystem.transform.localPosition =
-                new Vector3(-PlayerController.DeathOffset, -PlayerController.DeathOffset);
-            cDeathParticleSystem.Play();
+            if (health == 0f && lastHealth > 0f)
+            {
+                cDeathParticleSystem.Play();
+            }
             lastHealth = health;
         }
     }

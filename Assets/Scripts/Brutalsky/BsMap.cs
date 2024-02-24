@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -14,10 +15,28 @@ namespace Brutalsky
     {
         public const string SavePath = "/home/ian/Documents/Brutalsky/";
         public const string SaveFormat = "yaml";
+        public const float SizeLimit = 80f;
 
         public string title { get; set; }
         public string author { get; set; }
-        public Vector2 size { get; set; }
+
+        public Vector2 size
+        {
+            get => _size;
+            set
+            {
+                if (value is { x: <= SizeLimit, y: <= SizeLimit })
+                {
+                    _size = value;
+                }
+                else
+                {
+                    throw Errors.MapTooBig(size, SizeLimit);
+                }
+            }
+        }
+
+        private Vector2 _size;
         public BsColor lighting { get; set; }
         public Dictionary<string, BsSpawn> spawns { get; } = new();
         public Dictionary<string, BsShape> shapes { get; } = new();

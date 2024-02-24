@@ -43,6 +43,7 @@ namespace Controllers
         {
             transform.position -= new Vector3(DeathOffset, DeathOffset);
             Unfreeze();
+            health = maxHealth;
             alive = true;
         }
 

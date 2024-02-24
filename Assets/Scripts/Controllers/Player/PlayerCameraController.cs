@@ -27,7 +27,7 @@ namespace Controllers.Player
             var impactDirection = ((Vector2)transform.position - other.contacts[0].point).normalized;
 
             // Apply camera shake
-            var shakeForce = Mathf.Min(BsPlayer.CalculateDamage(impactForce) * .03f, 3f);
+            var shakeForce = Mathf.Min(BsPlayer.CalculateDamage(impactForce) * .15f, 15f);
             CameraSystem.current.Shove(shakeForce * impactDirection);
         }
 
@@ -39,12 +39,12 @@ namespace Controllers.Player
             var deltaHealth = health - lastHealth;
             if (deltaHealth < 0f)
             {
-                var shakeForce = Mathf.Min(-deltaHealth * .03f, 3f);
+                var shakeForce = Mathf.Min(-deltaHealth * .15f, 15f);
                 CameraSystem.current.Shake(shakeForce);
             }
             if (health == 0f && lastHealth > 0f)
             {
-                CameraSystem.current.Shake(2f);
+                CameraSystem.current.Shake(10f);
             }
             lastHealth = health;
         }
