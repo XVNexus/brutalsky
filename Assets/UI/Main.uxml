@@ -1,22 +1,22 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/UI/Brutalsky.uss?fileID=7433441132597879392&amp;guid=6528c61135849952387c3681c08489c6&amp;type=3#Brutalsky" />
-    <ui:VisualElement name="PauseMenu" class="bs menu-pane" style="width: 25%; height: 60%; max-height: 60%;">
-        <ui:Label tabindex="-1" text="FIGHT PAUSED" parse-escape-sequences="true" display-tooltip-when-elided="true" class="menu-title" />
-        <ui:GroupBox class="menu-box">
-            <ui:Button text="Continue" parse-escape-sequences="true" display-tooltip-when-elided="true" class="menu-button" style="color: rgb(128, 255, 128);" />
+    <ui:VisualElement name="PauseMenu" class="bs bs-pane" style="width: 25%; height: 60%; max-height: 60%; top: 20%;">
+        <ui:Label tabindex="-1" text="FIGHT PAUSED" parse-escape-sequences="true" display-tooltip-when-elided="true" class="bs bs-title" />
+        <ui:GroupBox class="bs bs-box">
+            <ui:Button text="Continue" parse-escape-sequences="true" display-tooltip-when-elided="true" class="bs bs-button" style="color: rgb(128, 255, 128);" />
         </ui:GroupBox>
-        <ui:GroupBox class="menu-box">
-            <ui:Button text="Level Selector" parse-escape-sequences="true" display-tooltip-when-elided="true" class="menu-button" style="color: rgb(128, 255, 255);" />
-            <ui:GroupBox class="menu-row">
-                <ui:Button text="Previous" parse-escape-sequences="true" display-tooltip-when-elided="true" class="menu-button" style="color: rgb(128, 255, 255);" />
-                <ui:Button text="Next" parse-escape-sequences="true" display-tooltip-when-elided="true" class="menu-button" style="color: rgb(128, 255, 255);" />
+        <ui:GroupBox class="bs bs-box">
+            <ui:Button text="Level Selector" parse-escape-sequences="true" display-tooltip-when-elided="true" class="bs bs-button" style="color: rgb(128, 255, 255);" />
+            <ui:GroupBox class="bs bs-row">
+                <ui:Button text="Previous" parse-escape-sequences="true" display-tooltip-when-elided="true" class="bs bs-button" style="color: rgb(128, 255, 255);" />
+                <ui:Button text="Next" parse-escape-sequences="true" display-tooltip-when-elided="true" class="bs bs-button" style="color: rgb(128, 255, 255);" />
             </ui:GroupBox>
         </ui:GroupBox>
-        <ui:VisualElement style="flex-grow: 1;" />
-        <ui:GroupBox class="menu-box">
-            <ui:GroupBox class="menu-row">
-                <ui:Button text="Main Menu" parse-escape-sequences="true" display-tooltip-when-elided="true" class="menu-button" style="color: rgb(255, 191, 128);" />
-                <ui:Button text="Exit" parse-escape-sequences="true" display-tooltip-when-elided="true" class="menu-button" style="color: rgb(255, 191, 128);" />
+        <ui:VisualElement class="bs bs-spacer" style="flex-grow: 1;" />
+        <ui:GroupBox class="bs bs-box">
+            <ui:GroupBox class="bs bs-row">
+                <ui:Button text="Main Menu" parse-escape-sequences="true" display-tooltip-when-elided="true" class="bs bs-button" style="color: rgb(255, 191, 128);" />
+                <ui:Button text="Exit" parse-escape-sequences="true" display-tooltip-when-elided="true" class="bs bs-button" style="color: rgb(255, 191, 128);" />
             </ui:GroupBox>
         </ui:GroupBox>
     </ui:VisualElement>
