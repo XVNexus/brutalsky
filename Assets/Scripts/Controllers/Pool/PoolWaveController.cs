@@ -70,7 +70,7 @@ namespace Controllers.Pool
         }
 
         // Updates
-        private void FixedUpdate()
+        private void Update()
         {
             // Update wave effects
             if (waveEffects.Count == 0) return;
@@ -78,7 +78,7 @@ namespace Controllers.Pool
             for (var i = waveEffects.Count - 1; i >= 0; i--)
             {
                 var waveEffect = waveEffects[i];
-                waveEffect.Update(Time.fixedDeltaTime);
+                waveEffect.Update(Time.deltaTime);
                 if (!waveEffect.active)
                 {
                     waveEffects.RemoveAt(i);
