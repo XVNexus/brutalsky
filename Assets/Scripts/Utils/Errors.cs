@@ -10,6 +10,9 @@ namespace Utils
         public static ArgumentException MapTooBig(Vector2 size, float limit)
             => new($"Map size {size} exceeds size limit of {limit}");
 
+        public static ArgumentOutOfRangeException InvalidGuiElement()
+            => new("", $"Invalid gui element query");
+
         public static ArgumentOutOfRangeException InvalidJointType(BsJointType jointType)
             => new(nameof(jointType), $"{jointType} is not a valid joint type");
 

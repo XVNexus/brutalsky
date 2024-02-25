@@ -39,6 +39,18 @@ namespace Controllers
             health = Mathf.Max(health - amount, 0f);
         }
 
+        public void Refresh()
+        {
+            if (alive)
+            {
+                health = maxHealth;
+            }
+            else
+            {
+                Revive();
+            }
+        }
+
         public void Revive()
         {
             transform.position -= new Vector3(DeathOffset, DeathOffset);

@@ -47,20 +47,27 @@ namespace Core
             }
         }
 
-        public bool Spawn(BsPlayer player, BsMap map)
+        public void Spawn(BsPlayer player, BsMap map)
         {
-            // Make sure the player is not already spawned
-            if (player.active) return false;
-
-            // Create new object and apply config
-            var playerObject = Instantiate(playerPrefab);
-            var playerController = playerObject.GetComponent<PlayerController>();
-            playerController.bsObject = player;
-            playerController.maxHealth = player.health;
-            playerController.color = player.color.tint;
-            if (player.dummy)
+            GameObject playerObject;
+            if (!player.active)
             {
-                playerObject.GetComponent<PlayerMovementController>().movementForce = 0f;
+                // Create new object and apply config
+                playerObject = Instantiate(playerPrefab);
+                var playerController = playerObject.GetComponent<PlayerController>();
+                playerController.bsObject = player;
+                playerController.maxHealth = player.health;
+                playerController.color = player.color.tint;
+                if (player.dummy)
+                {
+                    playerObject.GetComponent<PlayerMovementController>().movementForce = 0f;
+                }
+            }
+            else
+            {
+                // Get reference to existing object and ensure player is reset to full health
+                playerObject = player.instanceObject;
+                playerObject.GetComponent<PlayerController>().Revive();
             }
 
             // Select a spawnpoint and move the new player object to it
@@ -68,10 +75,10 @@ namespace Core
             playerObject.transform.position = spawnPos;
 
             // Note player as active and add it to the active player list
+            if (player.active) return;
             player.instanceObject = playerObject;
             player.active = true;
             activePlayers[player.id] = player;
-            return true;
         }
 
         public void Despawn([CanBeNull] IEnumerable<BsPlayer> players = null)
@@ -83,10 +90,10 @@ namespace Core
             }
         }
 
-        public bool Despawn(BsPlayer player)
+        public void Despawn(BsPlayer player)
         {
             // Make sure the player is not already despawned
-            if (!player.active) return false;
+            if (!player.active) return;
 
             // Destroy the player object
             Destroy(player.instanceObject);
@@ -95,7 +102,6 @@ namespace Core
             player.instanceObject = null;
             player.active = false;
             activePlayers.Remove(player.id);
-            return true;
         }
     }
 }
