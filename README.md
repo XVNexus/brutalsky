@@ -1,2 +1,2 @@
-# brutalsky
-Physics-based PVP game
+# Brutalsky
+Description coming soon™
