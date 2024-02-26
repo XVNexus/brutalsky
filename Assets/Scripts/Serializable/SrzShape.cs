@@ -1,7 +1,7 @@
 using Brutalsky;
 using Brutalsky.Object;
 using Brutalsky.Shape;
-using Utils;
+using Utils.Ext;
 
 namespace Serializable
 {

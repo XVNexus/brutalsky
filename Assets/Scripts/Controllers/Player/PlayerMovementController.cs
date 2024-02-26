@@ -16,7 +16,7 @@ namespace Controllers.Player
         private Rigidbody2D cRigidbody2D;
     
         // Events
-        private void Start()
+        private void OnEnable()
         {
             cPlayerController = GetComponent<PlayerController>();
             cRigidbody2D = GetComponent<Rigidbody2D>();

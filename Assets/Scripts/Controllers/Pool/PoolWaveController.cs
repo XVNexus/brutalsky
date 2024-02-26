@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Utils;
@@ -19,11 +20,14 @@ namespace Controllers.Pool
         private SpriteRenderer cSpriteRenderer;
 
         // Events
-        private void Start()
+        private void OnEnable()
         {
             cPoolController = GetComponent<PoolController>();
             cSpriteRenderer = GetComponent<SpriteRenderer>();
+        }
 
+        private void Start()
+        {
             // Set wave color to match the pool color
             cLineRenderer.material = cSpriteRenderer.material;
             cLineRenderer.sortingOrder = cSpriteRenderer.sortingOrder;

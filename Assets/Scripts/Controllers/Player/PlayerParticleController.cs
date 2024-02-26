@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using Brutalsky;
 using UnityEngine;
@@ -20,11 +21,14 @@ namespace Controllers.Player
         private Rigidbody2D cRigidbody2D;
 
         // Events
-        private void Start()
+        private void OnEnable()
         {
             cPlayerController = GetComponent<PlayerController>();
             cRigidbody2D = GetComponent<Rigidbody2D>();
+        }
 
+        private void Start()
+        {
             // Offset death particle system by the opposite amount the player is moved on death
             // This ensures that death particles will play where the player was before dying
             cDeathParticleSystem.transform.localPosition =

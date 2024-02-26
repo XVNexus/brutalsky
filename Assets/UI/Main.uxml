@@ -1,6 +1,6 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/UI/Brutalsky.uss?fileID=7433441132597879392&amp;guid=6528c61135849952387c3681c08489c6&amp;type=3#Brutalsky" />
-    <ui:VisualElement name="container" class="bs bs-container">
+    <ui:VisualElement class="bs bs-container">
         <ui:VisualElement name="pane-pm" class="bs bs-pane" style="width: 300px; height: 400px;">
             <ui:Label tabindex="-1" text="FIGHT PAUSED" parse-escape-sequences="true" display-tooltip-when-elided="true" class="bs bs-title" />
             <ui:GroupBox class="bs bs-box">

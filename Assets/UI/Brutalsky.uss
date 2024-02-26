@@ -26,13 +26,13 @@
     border-right-color: rgba(0, 0, 0, 0);
     border-top-color: rgba(0, 0, 0, 0);
     border-bottom-color: rgba(0, 0, 0, 0);
+    transition-timing-function: ease-out-sine;
 }
 
 .bs-container {
     justify-content: center;
     align-items: center;
     flex-grow: 1;
-    background-color: rgba(0, 0, 0, 0.25);
 }
 
 .bs-pane {
@@ -104,4 +104,9 @@
 
 .bs-spacer {
     flex-grow: 1;
+}
+
+.bs-disabled {
+    scale: 0.8 0.8;
+    opacity: 0;
 }

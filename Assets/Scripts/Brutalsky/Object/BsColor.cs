@@ -1,5 +1,5 @@
 using UnityEngine;
-using Utils;
+using Utils.Ext;
 
 namespace Brutalsky.Object
 {

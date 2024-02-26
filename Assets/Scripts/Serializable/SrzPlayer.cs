@@ -1,6 +1,6 @@
 using Brutalsky;
 using Brutalsky.Object;
-using Utils;
+using Utils.Ext;
 
 namespace Serializable
 {

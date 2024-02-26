@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Utils
+namespace Utils.Ext
 {
     public static class Vector2Ext
     {

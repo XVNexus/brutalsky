@@ -1,3 +1,4 @@
+using System;
 using Brutalsky;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
@@ -79,12 +80,15 @@ namespace Controllers
         }
 
         // Events
-        private void Start()
+        private void OnEnable()
         {
             cPlayerSpriteRenderer = GetComponent<SpriteRenderer>();
             cRigidbody2D = GetComponent<Rigidbody2D>();
             cCircleCollider2D = GetComponent<CircleCollider2D>();
-            
+        }
+
+        private void Start()
+        {
             // Sync health with max health
             health = maxHealth;
 

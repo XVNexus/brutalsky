@@ -1,5 +1,5 @@
 using UnityEngine;
-using Utils;
+using Utils.Ext;
 
 namespace Controllers.Player
 {
@@ -16,7 +16,7 @@ namespace Controllers.Player
         private PlayerController cPlayerController;
 
         // Events
-        private void Start()
+        private void OnEnable()
         {
             cPlayerController = GetComponent<PlayerController>();
         }

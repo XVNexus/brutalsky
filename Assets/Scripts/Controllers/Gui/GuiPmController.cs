@@ -1,6 +1,6 @@
+using System;
 using Core;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 namespace Controllers.Gui
 {
@@ -11,86 +11,107 @@ namespace Controllers.Gui
 
         // References
         private GuiController cGuiController;
-        private VisualElement cPaneVisualElement;
 
         // Events
-        private void Start()
+        private void OnEnable()
         {
             EventSystem.current.OnGuiLoad += OnGuiLoad;
+            EventSystem.current.OnGuiAction += OnGuiAction;
 
             cGuiController = GetComponent<GuiController>();
         }
 
+        private void Start()
+        {
+            cGuiController.RegisterPane(PaneId, this);
+        }
+
         private void OnGuiLoad()
         {
-            cPaneVisualElement = cGuiController.GetPane(PaneId);
-
-            var contButton = cGuiController.GetElement<Button>(PaneId, "cont");
-            contButton.clicked += OnCont;
-
-            var lvlsButton = cGuiController.GetElement<Button>(PaneId, "lvls");
-            lvlsButton.clicked += OnLvls;
-            var prevButton = cGuiController.GetElement<Button>(PaneId, "prev");
-            prevButton.clicked += OnPrev;
-            var restButton = cGuiController.GetElement<Button>(PaneId, "rest");
-            restButton.clicked += OnRest;
-            var nextButton = cGuiController.GetElement<Button>(PaneId, "next");
-            nextButton.clicked += OnNext;
-
-            var cnfgButton = cGuiController.GetElement<Button>(PaneId, "cnfg");
-            cnfgButton.clicked += OnCnfg;
-            var helpButton = cGuiController.GetElement<Button>(PaneId, "help");
-            helpButton.clicked += OnHelp;
-
-            var menuButton = cGuiController.GetElement<Button>(PaneId, "menu");
-            menuButton.clicked += OnMenu;
-            var exitButton = cGuiController.GetElement<Button>(PaneId, "exit");
-            exitButton.clicked += OnExit;
+            cGuiController.RegisterButtons(PaneId, new[]
+            {
+                "cont", "lvls", "prev", "rest", "next", "cnfg", "help", "menu", "exit"
+            });
         }
 
-        private static void OnCont()
+        private void OnGuiAction(GuiAction action, string paneId, string itemId)
         {
-            Debug.Log("OnCont");
+            if (paneId != PaneId) return;
+            switch (itemId)
+            {
+                case "cont":
+                    OnButtonPressCont();
+                    break;
+                case "lvls":
+                    OnButtonPressLvls();
+                    break;
+                case "prev":
+                    OnButtonPressPrev();
+                    break;
+                case "rest":
+                    OnButtonPressRest();
+                    break;
+                case "next":
+                    OnButtonPressNext();
+                    break;
+                case "cnfg":
+                    OnButtonPressCnfg();
+                    break;
+                case "help":
+                    OnButtonPressHelp();
+                    break;
+                case "menu":
+                    OnButtonPressMenu();
+                    break;
+                case "exit":
+                    OnButtonPressExit();
+                    break;
+            }
         }
 
-        private static void OnLvls()
+        private void OnButtonPressCont()
         {
-            Debug.Log("OnLvls");
+            cGuiController.DeactivatePane(PaneId);
         }
 
-        private static void OnPrev()
+        private void OnButtonPressLvls()
         {
-            Debug.Log("OnPrev");
+            throw new NotImplementedException();
         }
 
-        private static void OnRest()
+        private void OnButtonPressPrev()
         {
-            Debug.Log("OnRest");
+            throw new NotImplementedException();
         }
 
-        private static void OnNext()
+        private void OnButtonPressRest()
         {
-            Debug.Log("OnNext");
+            throw new NotImplementedException();
         }
 
-        private static void OnCnfg()
+        private void OnButtonPressNext()
         {
-            Debug.Log("OnCnfg");
+            throw new NotImplementedException();
         }
 
-        private static void OnHelp()
+        private void OnButtonPressCnfg()
         {
-            Debug.Log("OnHelp");
+            cGuiController.ActivatePane("cf");
         }
 
-        private static void OnMenu()
+        private void OnButtonPressHelp()
         {
-            Debug.Log("OnMenu");
+            cGuiController.ActivatePane("he");
         }
 
-        private static void OnExit()
+        private void OnButtonPressMenu()
         {
-            Debug.Log("OnExit");
+            throw new NotImplementedException();
+        }
+
+        private void OnButtonPressExit()
+        {
+            Application.Quit();
         }
     }
 }

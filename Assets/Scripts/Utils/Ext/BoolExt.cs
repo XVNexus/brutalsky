@@ -1,4 +1,4 @@
-namespace Utils
+namespace Utils.Ext
 {
     public static class BoolExt
     {

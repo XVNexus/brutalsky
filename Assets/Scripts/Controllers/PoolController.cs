@@ -1,6 +1,6 @@
 using Brutalsky;
 using UnityEngine;
-using Utils;
+using Utils.Ext;
 
 namespace Controllers
 {

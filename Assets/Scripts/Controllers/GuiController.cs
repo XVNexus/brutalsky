@@ -1,4 +1,8 @@
+using System.Collections.Generic;
+using System.Linq;
+using Controllers.Gui;
 using Core;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Utils;
@@ -7,11 +11,85 @@ namespace Controllers
 {
     public class GuiController : MonoBehaviour
     {
+        // Constants
+        public const string DisabledClass = "bs-disabled";
+
+        // Variables
+        private Dictionary<string, GuiPane> panes = new();
+
         // References
         public VisualElement root;
 
         // Functions
-        public VisualElement GetPane(string paneId)
+        public bool GoBack()
+        {
+            return GetVisiblePane()?.Deactivate() ?? false;
+        }
+
+        [CanBeNull]
+        public GuiPane GetPane(string id)
+        {
+            return panes.GetValueOrDefault(id, null);
+        }
+
+        [CanBeNull]
+        public GuiPane GetVisiblePane()
+        {
+            return panes.Values.FirstOrDefault(pane => pane.visible);
+        }
+
+        public bool RegisterPane(string id, MonoBehaviour controller, string parentId = "")
+        {
+            if (ContainsPane(id)) return false;
+            var pane = new GuiPane(id, GetPaneElement(id), controller);
+            panes[id] = pane;
+            if (parentId.Length > 0)
+            {
+                pane.AddChild(GetPane(parentId));
+            }
+            return true;
+        }
+
+        public bool UnregisterPane(string id)
+        {
+            if (!ContainsPane(id)) return false;
+            panes.Remove(id);
+            return true;
+        }
+
+        public bool ContainsPane(string id)
+        {
+            return panes.ContainsKey(id);
+        }
+
+        public bool ActivatePane(string id)
+        {
+            return GetPane(id)?.Activate() ?? false;
+        }
+
+        public bool DeactivatePane(string id)
+        {
+            return GetPane(id)?.Deactivate() ?? false;
+        }
+
+        public void RegisterButtons(string paneId, IEnumerable<string> itemIds)
+        {
+            foreach (var itemId in itemIds)
+            {
+                RegisterButton(paneId, itemId);
+            }
+        }
+
+        public void RegisterButton(string paneId, string itemId)
+        {
+            var contButton = GetElement<Button>(paneId, itemId);
+            contButton.clicked += () =>
+            {
+                EventSystem.current.EmitGuiAction(GuiAction.ButtonPress, paneId, itemId);
+            };
+        }
+
+        public VisualElement GetPaneElement(string paneId)
         {
             return root.Q<VisualElement>($"pane-{paneId}");
         }
@@ -35,7 +113,7 @@ namespace Controllers
         {
             root = GetComponent<UIDocument>().rootVisualElement;
 
-            EventSystem.current.TriggerGuiLoad();
+            EventSystem.current.EmitGuiLoad();
         }
     }
 }

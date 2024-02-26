@@ -12,7 +12,7 @@ namespace Controllers
         private Rigidbody2D cRigidbody2D;
 
         // Events
-        private void Start()
+        private void OnEnable()
         {
             cRigidbody2D = GetComponent<Rigidbody2D>();
         }
