@@ -1,4 +1,3 @@
-using System;
 using Brutalsky;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;

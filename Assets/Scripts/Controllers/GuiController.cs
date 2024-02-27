@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Controllers.Gui;
@@ -15,27 +16,33 @@ namespace Controllers
         public const string DisabledClass = "bs-disabled";
 
         // Variables
+        public string pauseMenuId = "pm";
         private Dictionary<string, GuiPane> panes = new();
 
         // References
         public VisualElement root;
 
         // Functions
-        public bool GoBack()
+        public bool Escape()
         {
-            return GetVisiblePane()?.Deactivate() ?? false;
-        }
-
-        [CanBeNull]
-        public GuiPane GetPane(string id)
-        {
-            return panes.GetValueOrDefault(id, null);
+            return GetVisiblePane()?.Deactivate() ?? GetPane(pauseMenuId)?.Activate() ?? false;
         }
 
         [CanBeNull]
         public GuiPane GetVisiblePane()
         {
             return panes.Values.FirstOrDefault(pane => pane.visible);
+        }
+
+        public bool ContainsVisiblePane()
+        {
+            return panes.Values.Any(pane => pane.visible);
+        }
+
+        [CanBeNull]
+        public GuiPane GetPane(string id)
+        {
+            return panes.GetValueOrDefault(id, null);
         }
 
         public bool RegisterPane(string id, MonoBehaviour controller, string parentId = "")

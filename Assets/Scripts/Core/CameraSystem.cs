@@ -1,5 +1,4 @@
 using UnityEngine;
-using Utils;
 using Utils.Ext;
 using Random = Unity.Mathematics.Random;
 

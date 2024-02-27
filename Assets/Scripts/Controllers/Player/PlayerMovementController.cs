@@ -1,4 +1,6 @@
+using System.Linq;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace Controllers.Player
 {
@@ -14,12 +16,21 @@ namespace Controllers.Player
         // References
         private PlayerController cPlayerController;
         private Rigidbody2D cRigidbody2D;
+        private InputAction movementInput;
+        private InputAction boostInput;
     
         // Events
         private void OnEnable()
         {
             cPlayerController = GetComponent<PlayerController>();
             cRigidbody2D = GetComponent<Rigidbody2D>();
+        }
+
+        private void Start()
+        {
+            // TODO: MAKE THIS WORK
+            movementInput.Enable();
+            boostInput.Enable();
         }
 
         private void OnCollisionEnter2D(Collision2D other)
@@ -47,7 +58,7 @@ namespace Controllers.Player
             var speed = velocity.magnitude;
 
             // Apply directional movement
-            var movementInput = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical")).normalized;
+            var movementInput = this.movementInput.ReadValue<Vector2>();
             movementPush = playerStuck && movementInput.magnitude > 0f
                 ? movementPush + Time.fixedDeltaTime
                 : Mathf.Max(movementPush - speed * Time.fixedDeltaTime, 1f);
@@ -55,7 +66,7 @@ namespace Controllers.Player
             cRigidbody2D.AddForce(movementInput * movementForce);
 
             // Apply boost movement
-            var boostInput = Input.GetButton("Jump") && cPlayerController.boostCooldown == 0f;
+            var boostInput = this.boostInput.IsPressed() && cPlayerController.boostCooldown == 0f;
             if (boostInput)
             {
                 cPlayerController.boostCharge = Mathf.Min(cPlayerController.boostCharge + Time.fixedDeltaTime, 3f);
