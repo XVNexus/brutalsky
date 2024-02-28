@@ -6,6 +6,9 @@ namespace Controllers.Player
 {
     public class PlayerParticleController : MonoBehaviour
     {
+        // Constants
+        const float boostThreshold = 40f;
+
         // Variables
         public float particleMultiplier = 5f;
         private float lastSpeed;
@@ -18,6 +21,46 @@ namespace Controllers.Player
         public ParticleSystem cDeathParticleSystem;
         private PlayerController cPlayerController;
         private Rigidbody2D cRigidbody2D;
+
+        // Functions
+        public void DisplayBoostParticles(float speed)
+        {
+            switch (speed)
+            {
+                case >= boostThreshold when lastSpeed < boostThreshold:
+                    cBoostParticleSystem.Play();
+                    break;
+                case < boostThreshold when lastSpeed >= boostThreshold:
+                    cBoostParticleSystem.Stop();
+                    break;
+            }
+        }
+
+        public void DisplayImpactParticles(float impactForce)
+        {
+            var effectIntensity = Mathf.Min(BsPlayer.CalculateDamage(impactForce) * .1f, 10f);
+            if (effectIntensity < 3f) return;
+            var psMain = cImpactParticleSystem.main;
+            psMain.startSize = effectIntensity;
+            psMain.startLifetime = effectIntensity * .1f;
+            cImpactParticleSystem.Play();
+        }
+
+        public void DisplayHurtParticles(float deltaHealth)
+        {
+            if (deltaHealth >= 0f) return;
+            var particleCount = (int)(-deltaHealth * particleMultiplier);
+            var psEmission = cHurtParticleSystem.emission;
+            var psBurst = psEmission.GetBurst(0);
+            psBurst.count = Mathf.Min(particleCount, (int)(1000 * Time.fixedDeltaTime));
+            psEmission.SetBurst(0, psBurst);
+            cHurtParticleSystem.Play();
+        }
+
+        public void DisplayDeathParticles()
+        {
+            cDeathParticleSystem.Play();
+        }
 
         // Events
         private void OnEnable()
@@ -36,52 +79,21 @@ namespace Controllers.Player
 
         private void OnCollisionEnter2D(Collision2D other)
         {
-            // Get collision info
-            var impactForce = other.contacts.Sum(contact => contact.normalImpulse);
-
-            // Display impact particles
-            var effectIntensity = Mathf.Min(BsPlayer.CalculateDamage(impactForce) * .1f, 10f);
-            if (effectIntensity < 3f) return;
-            var psMain = cImpactParticleSystem.main;
-            psMain.startSize = effectIntensity;
-            psMain.startLifetime = effectIntensity * .1f;
-            cImpactParticleSystem.Play();
+            DisplayImpactParticles(other.contacts.Sum(contact => contact.normalImpulse));
         }
 
         // Updates
         private void FixedUpdate()
         {
-            // Display boost particles
             var speed = cRigidbody2D.velocity.magnitude;
-            const float threshold = 40f;
-            switch (speed)
-            {
-                case >= threshold when lastSpeed < threshold:
-                    cBoostParticleSystem.Play();
-                    break;
-                case < threshold when lastSpeed >= threshold:
-                    cBoostParticleSystem.Stop();
-                    break;
-            }
+            DisplayBoostParticles(speed);
             lastSpeed = speed;
 
-            // Display hurt particles
-            var health = Mathf.Ceil(cPlayerController.health * particleMultiplier) / particleMultiplier;
-            var deltaHealth = health - lastHealth;
-            if (deltaHealth < 0f)
-            {
-                var particleCount = (int)(-deltaHealth * particleMultiplier);
-                var psEmission = cHurtParticleSystem.emission;
-                var psBurst = psEmission.GetBurst(0);
-                psBurst.count = Mathf.Min(particleCount, (int)(1000 * Time.fixedDeltaTime));
-                psEmission.SetBurst(0, psBurst);
-                cHurtParticleSystem.Play();
-            }
-
-            // Display death particles
+            var health = Mathf.Floor(cPlayerController.health * particleMultiplier) / particleMultiplier;
+            DisplayHurtParticles(health - lastHealth);
             if (health == 0f && lastHealth > 0f)
             {
-                cDeathParticleSystem.Play();
+                DisplayDeathParticles();
             }
             lastHealth = health;
         }

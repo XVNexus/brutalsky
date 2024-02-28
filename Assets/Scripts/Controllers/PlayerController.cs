@@ -1,5 +1,7 @@
 using Brutalsky;
+using Core;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.Rendering.Universal;
 
 namespace Controllers
@@ -8,6 +10,7 @@ namespace Controllers
     {
         // Constants
         public const float DeathOffset = 1000f;
+        public const int MaxOnGroundFrames = 5;
 
         // Source
         public BsPlayer bsObject;
@@ -19,6 +22,8 @@ namespace Controllers
         public Color color;
         public float boostCharge;
         public float boostCooldown;
+        public bool onGround;
+        private int onGroundFrames;
 
         // References
         public Light2D cLight2D;
@@ -27,6 +32,10 @@ namespace Controllers
         private SpriteRenderer cPlayerSpriteRenderer;
         private Rigidbody2D cRigidbody2D;
         private CircleCollider2D cCircleCollider2D;
+
+        // Controls
+        public InputAction iMovement;
+        public InputAction iBoost;
 
         // Functions
         public void Heal(float amount)
@@ -91,6 +100,11 @@ namespace Controllers
             cPlayerSpriteRenderer = GetComponent<SpriteRenderer>();
             cRigidbody2D = GetComponent<Rigidbody2D>();
             cCircleCollider2D = GetComponent<CircleCollider2D>();
+
+            iMovement = EventSystem.current.inputActionAsset.FindAction("Movement");
+            iMovement.Enable();
+            iBoost = EventSystem.current.inputActionAsset.FindAction("Boost");
+            iBoost.Enable();
         }
 
         private void Start()
@@ -109,9 +123,32 @@ namespace Controllers
             }
         }
 
+        private void OnCollisionEnter2D(Collision2D other)
+        {
+            OnCollision(other);
+        }
+
+        private void OnCollisionStay2D(Collision2D other)
+        {
+            OnCollision(other);
+        }
+
+        private void OnCollision(Collision2D other)
+        {
+            // Update ground status
+            if (!other.gameObject.CompareTag("Shape") && !other.gameObject.CompareTag("Player")) return;
+            if (!(other.GetContact(0).point.y < transform.position.y - .25f)) return;
+            onGroundFrames = MaxOnGroundFrames;
+            onGround = true;
+        }
+
         // Updates
         private void FixedUpdate()
         {
+            // Update ground status
+            onGround = onGroundFrames > 0;
+            onGroundFrames = Mathf.Max(onGroundFrames - 1, 0);
+
             // Kill the player if health reaches zero
             if (alive && health == 0)
             {

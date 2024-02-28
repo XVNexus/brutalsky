@@ -60,7 +60,9 @@ namespace Core
                 playerController.color = player.color.tint;
                 if (player.dummy)
                 {
-                    playerObject.GetComponent<PlayerMovementController>().movementForce = 0f;
+                    var movementController = playerObject.GetComponent<PlayerMovementController>();
+                    movementController.movementForce = 0f;
+                    movementController.jumpForce = 0f;
                 }
             }
             else

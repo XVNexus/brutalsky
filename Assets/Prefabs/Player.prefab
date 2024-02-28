@@ -179,6 +179,7 @@ MonoBehaviour:
   color: {r: 0, g: 0, b: 0, a: 0}
   boostCharge: 0
   boostCooldown: 0
+  onGround: 0
   cLight2D: {fileID: 5161598684334631783}
   cRingSpriteRenderer: {fileID: 1062589161020571729}
   cParticleSystems:
@@ -186,6 +187,24 @@ MonoBehaviour:
   - {fileID: 8208163698263707477}
   - {fileID: 6733936032522987168}
   - {fileID: 7700580177397742090}
+  iMovement:
+    m_Name: I Movement
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 9cf20e42-96ba-4f42-ae74-83cfa25a1fc7
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
+  iBoost:
+    m_Name: I Boost
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 5ab72d8a-8d6b-4f10-a948-c1df44cd2b38
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
 --- !u!114 &6636566231499246727
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -199,6 +218,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementForce: 20
+  jumpForce: 10
 --- !u!114 &328550718412262110
 MonoBehaviour:
   m_ObjectHideFlags: 0

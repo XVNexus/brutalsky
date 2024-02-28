@@ -691,6 +691,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pauseMenuId: pm
+  iEscape:
+    m_Name: I Escape
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 12b47409-54ed-4593-b90d-58d1c862e03a
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
 --- !u!114 &2021743627
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -21,7 +21,9 @@ namespace Controllers
 
         // References
         public VisualElement root;
-        private InputAction iEscape;
+
+        // Controls
+        public InputAction iEscape;
 
         // Functions
         public void Escape()
