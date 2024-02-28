@@ -36,18 +36,18 @@ namespace Core
             }
         }
 
-        public void Spawn(IEnumerable<BsPlayer> players, BsMap map)
+        public void Spawn(BsMap map, [CanBeNull] IEnumerable<BsPlayer> players = null)
         {
-            var playerList = players.ToList();
+            var playerList = (players ?? activePlayers.Values).ToList();
             while (playerList.Count > 0)
             {
                 var index = EventSystem.random.NextInt(playerList.Count);
-                Spawn(playerList[index], map);
+                Spawn(map, playerList[index]);
                 playerList.RemoveAt(index);
             }
         }
 
-        public void Spawn(BsPlayer player, BsMap map)
+        public void Spawn(BsMap map, BsPlayer player)
         {
             GameObject playerObject;
             if (!player.active)
@@ -67,7 +67,7 @@ namespace Core
             {
                 // Get reference to existing object and ensure player is reset to full health
                 playerObject = player.instanceObject;
-                playerObject.GetComponent<PlayerController>().Revive();
+                playerObject.GetComponent<PlayerController>().Refresh();
             }
 
             // Select a spawnpoint and move the new player object to it

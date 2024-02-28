@@ -71,7 +71,7 @@ namespace Controllers.Gui
 
         private void OnButtonPressCont()
         {
-            cGuiController.DeactivatePane(PaneId);
+            cGuiController.Escape();
         }
 
         private void OnButtonPressLvls()
@@ -81,17 +81,18 @@ namespace Controllers.Gui
 
         private void OnButtonPressPrev()
         {
-            throw new NotImplementedException();
+            OnButtonPressRest();
         }
 
         private void OnButtonPressRest()
         {
-            throw new NotImplementedException();
+            MapSystem.current.Rebuild();
+            PlayerSystem.current.Spawn(MapSystem.current.activeMap);
         }
 
         private void OnButtonPressNext()
         {
-            throw new NotImplementedException();
+            OnButtonPressRest();
         }
 
         private void OnButtonPressCnfg()

@@ -1,10 +1,10 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Controllers.Gui;
 using Core;
 using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 using Utils;
 
@@ -21,11 +21,19 @@ namespace Controllers
 
         // References
         public VisualElement root;
+        private InputAction escapeInput;
 
         // Functions
-        public bool Escape()
+        public void Escape()
         {
-            return GetVisiblePane()?.Deactivate() ?? GetPane(pauseMenuId)?.Activate() ?? false;
+            if ((GetVisiblePane()?.Deactivate() ?? false) && !ContainsVisiblePane())
+            {
+                TimeSystem.current.Unpause();
+            }
+            else if (GetPane(pauseMenuId)?.Activate() ?? false)
+            {
+                TimeSystem.current.Pause();
+            }
         }
 
         [CanBeNull]
@@ -89,7 +97,7 @@ namespace Controllers
 
         public void RegisterButton(string paneId, string itemId)
         {
-            var contButton = GetElement<Button>(paneId, itemId);
+            var contButton = GetInputElement<Button>(paneId, itemId);
             contButton.clicked += () =>
             {
                 EventSystem.current.EmitGuiAction(GuiAction.ButtonPress, paneId, itemId);
@@ -101,7 +109,7 @@ namespace Controllers
             return root.Q<VisualElement>($"pane-{paneId}");
         }
 
-        public T GetElement<T>(string paneId, string itemId) where T : VisualElement
+        public T GetInputElement<T>(string paneId, string itemId) where T : VisualElement
         {
             var type = typeof(T);
             return type switch
@@ -116,11 +124,24 @@ namespace Controllers
         }
 
         // Events
-        private void Start()
+        private void OnEnable()
         {
             root = GetComponent<UIDocument>().rootVisualElement;
 
+            escapeInput = EventSystem.current.inputActionAsset.FindAction("Escape");
+            escapeInput.Enable();
+
+            escapeInput.performed += OnEscape;
+        }
+
+        private void Start()
+        {
             EventSystem.current.EmitGuiLoad();
+        }
+
+        private void OnEscape(InputAction.CallbackContext context)
+        {
+            Escape();
         }
     }
 }

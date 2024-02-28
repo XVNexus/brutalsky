@@ -271,6 +271,7 @@ GameObject:
   m_Component:
   - component: {fileID: 581734016}
   - component: {fileID: 581734015}
+  - component: {fileID: 581734021}
   - component: {fileID: 581734017}
   - component: {fileID: 581734019}
   - component: {fileID: 581734020}
@@ -293,6 +294,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a487516fa1cc222dbf95c9b02aa70c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inputActionAsset: {fileID: -944628639613478452, guid: fdb601a97dacffaca8166411b904bf1b, type: 3}
 --- !u!4 &581734016
 Transform:
   m_ObjectHideFlags: 0
@@ -321,7 +323,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7fbf46dc596df1301b09437b8e012b50, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewSize: {x: 40, y: 20}
+  viewSize: {x: 10, y: 10}
   dampening: 0.1
   shakeInterval: 0.1
   simSpeed: 10
@@ -355,6 +357,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerPrefab: {fileID: 333419446728189740, guid: 375f78b96aebf21d19b4d456bb0d980e, type: 3}
+--- !u!114 &581734021
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 581734014}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8542157c84b4a99a48df8f8fa37683b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &601674925
 GameObject:
   m_ObjectHideFlags: 0
@@ -676,6 +690,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1db1e7a376054c39b47305fce91ef979, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pauseMenuId: pm
 --- !u!114 &2021743627
 MonoBehaviour:
   m_ObjectHideFlags: 0

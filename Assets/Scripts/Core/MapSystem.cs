@@ -28,6 +28,14 @@ namespace Core
         private GameObject mapParent;
 
         // Functions
+        public void Rebuild()
+        {
+            if (!mapLoaded) return;
+            var map = activeMap;
+            Unbuild();
+            Build(map);
+        }
+
         public void Build(BsMap map)
         {
             // Make sure there is not already an active map

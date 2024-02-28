@@ -1,6 +1,7 @@
 using System;
 using Controllers.Gui;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using Random = Unity.Mathematics.Random;
 
 namespace Core
@@ -16,6 +17,10 @@ namespace Core
             random = Random.CreateFromIndex((uint)DateTime.UtcNow.Ticks);
         }
 
+        // References
+        public InputActionAsset inputActionAsset;
+
+        // Events
         public void EmitGuiLoad() => OnGuiLoad?.Invoke();
         public event Action OnGuiLoad;
 

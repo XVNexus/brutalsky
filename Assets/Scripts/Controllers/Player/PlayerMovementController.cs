@@ -1,4 +1,5 @@
 using System.Linq;
+using Core;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -24,12 +25,10 @@ namespace Controllers.Player
         {
             cPlayerController = GetComponent<PlayerController>();
             cRigidbody2D = GetComponent<Rigidbody2D>();
-        }
 
-        private void Start()
-        {
-            // TODO: MAKE THIS WORK
+            movementInput = EventSystem.current.inputActionAsset.FindAction("Movement");
             movementInput.Enable();
+            boostInput = EventSystem.current.inputActionAsset.FindAction("Boost");
             boostInput.Enable();
         }
 

@@ -173,13 +173,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2aa817db9dc24dec81a884d953c1711c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DeathOffset: 1000
   maxHealth: 100
   health: -1
+  alive: 1
   color: {r: 0, g: 0, b: 0, a: 0}
   boostCharge: 0
   boostCooldown: 0
-  alive: 1
   cLight2D: {fileID: 5161598684334631783}
   cRingSpriteRenderer: {fileID: 1062589161020571729}
   cParticleSystems:

@@ -21,14 +21,14 @@ namespace Controllers.Gui
             this.id = id;
             this.element = element;
             this.controller = controller;
-            if (element.visible)
+            if (element.ClassListContains(GuiController.DisabledClass))
             {
-                active = true;
-                Show();
+                Hide();
             }
             else
             {
-                Hide();
+                active = true;
+                Show();
             }
         }
 

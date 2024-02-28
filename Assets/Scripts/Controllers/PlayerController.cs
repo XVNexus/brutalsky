@@ -49,21 +49,26 @@ namespace Controllers
             {
                 Revive();
             }
+            cRigidbody2D.velocity = Vector2.zero;
         }
 
-        public void Revive()
+        public bool Revive()
         {
+            if (alive) return false;
             transform.position -= new Vector3(DeathOffset, DeathOffset);
             Unfreeze();
             health = maxHealth;
             alive = true;
+            return true;
         }
 
-        public void Kill()
+        public bool Kill()
         {
+            if (!alive) return false;
             transform.position += new Vector3(DeathOffset, DeathOffset);
             Freeze();
             alive = false;
+            return true;
         }
 
         public void Freeze()
