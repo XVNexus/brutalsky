@@ -21,7 +21,7 @@ namespace Controllers
 
         // References
         public VisualElement root;
-        private InputAction escapeInput;
+        private InputAction iEscape;
 
         // Functions
         public void Escape()
@@ -128,10 +128,10 @@ namespace Controllers
         {
             root = GetComponent<UIDocument>().rootVisualElement;
 
-            escapeInput = EventSystem.current.inputActionAsset.FindAction("Escape");
-            escapeInput.Enable();
+            iEscape = EventSystem.current.inputActionAsset.FindAction("Escape");
+            iEscape.Enable();
 
-            escapeInput.performed += OnEscape;
+            iEscape.performed += onIEscape;
         }
 
         private void Start()
@@ -139,7 +139,7 @@ namespace Controllers
             EventSystem.current.EmitGuiLoad();
         }
 
-        private void OnEscape(InputAction.CallbackContext context)
+        private void onIEscape(InputAction.CallbackContext context)
         {
             Escape();
         }

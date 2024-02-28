@@ -50,6 +50,8 @@ namespace Controllers
                 Revive();
             }
             cRigidbody2D.velocity = Vector2.zero;
+            boostCharge = 0f;
+            boostCooldown = 0f;
         }
 
         public bool Revive()

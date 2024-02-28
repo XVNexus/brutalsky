@@ -57,7 +57,7 @@ namespace Controllers.Player
             var ringAngles = ringTransform.localEulerAngles;
             ringAngles.z -= ringSpin * Time.deltaTime;
             ringTransform.localEulerAngles = ringAngles;
-            var ringMaskScale = 2f - ringThickness * .8f;
+            var ringMaskScale = 1.8f - ringThickness * .6f;
             cSpriteMask.transform.localScale = new Vector3(ringMaskScale, ringMaskScale, 1f);
         }
     }

@@ -68,6 +68,7 @@ namespace Core
                 // Get reference to existing object and ensure player is reset to full health
                 playerObject = player.instanceObject;
                 playerObject.GetComponent<PlayerController>().Refresh();
+                var movementController = playerObject.GetComponent<PlayerMovementController>();
             }
 
             // Select a spawnpoint and move the new player object to it
