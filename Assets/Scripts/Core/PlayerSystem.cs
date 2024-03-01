@@ -13,6 +13,9 @@ namespace Core
         public static PlayerSystem current;
         private void Awake() => current = this;
 
+        // Constants
+        public const float AnimationTime = .5f;
+
         // Variables
         public Dictionary<string, BsPlayer> activePlayers { get; private set; } = new();
 
@@ -60,9 +63,7 @@ namespace Core
                 playerController.color = player.color.tint;
                 if (player.dummy)
                 {
-                    var movementController = playerObject.GetComponent<PlayerMovementController>();
-                    movementController.movementForce = 0f;
-                    movementController.jumpForce = 0f;
+                    playerObject.GetComponent<PlayerMovementController>().enabled = false;
                 }
             }
             else
@@ -70,7 +71,7 @@ namespace Core
                 // Get reference to existing object and ensure player is reset to full health
                 playerObject = player.instanceObject;
                 playerObject.GetComponent<PlayerController>().Refresh();
-                var movementController = playerObject.GetComponent<PlayerMovementController>();
+                var playerController = playerObject.GetComponent<PlayerController>();
             }
 
             // Select a spawnpoint and move the new player object to it

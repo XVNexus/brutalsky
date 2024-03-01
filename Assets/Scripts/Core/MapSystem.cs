@@ -3,6 +3,7 @@ using Brutalsky;
 using Brutalsky.Joint;
 using Brutalsky.Object;
 using Controllers;
+using Controllers.Shape;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
@@ -108,7 +109,7 @@ namespace Core
             var mesh = new Mesh
             {
                 vertices = vertices,
-                triangles = new Triangulator(points).Triangulate()
+                triangles = new ShapeTriangulator(points).Triangulate()
             };
             mesh.RecalculateNormals();
             mesh.RecalculateBounds();

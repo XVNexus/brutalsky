@@ -47,7 +47,7 @@ namespace Controllers
             var poolTransform = transform;
             var relativePosition = poolTransform.InverseTransformPoint(bounds.center);
             var objDistance = relativePosition.y * poolTransform.localScale.y - surfacePosition;
-            var submersionFactor = Mathf.Max(MathfExt.InverseLerp(objRadius, -objRadius, objDistance), 0f);
+            var submersionFactor = Mathf.Max(Mathf.InverseLerp(objRadius, -objRadius, objDistance), 0f);
 
             // Apply fluid force
             var velocity = otherRigidbody.velocity;

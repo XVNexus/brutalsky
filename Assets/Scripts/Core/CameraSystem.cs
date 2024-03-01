@@ -10,10 +10,10 @@ namespace Core
         private void Awake() => current = this;
 
         // Variables
-        public Vector2 viewSize = new(10f, 10f);
-        public float dampening = .1f;
-        public float shakeInterval = .1f;
-        public float simSpeed = 10f;
+        public Vector2 viewSize;
+        public float dampening;
+        public float shakeInterval;
+        public float simSpeed;
         private float offsetMultiplier;
         private Vector2 offset;
         private Vector2 velocity;

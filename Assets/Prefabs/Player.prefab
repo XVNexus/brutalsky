@@ -218,7 +218,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementForce: 20
-  jumpForce: 10
+  jumpForce: 12
 --- !u!114 &328550718412262110
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -257,7 +257,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e02e0473101b76d9bee7f36177b3755, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  particleMultiplier: 5
   cBoostParticleSystem: {fileID: 5750454859715637797}
   cImpactParticleSystem: {fileID: 8208163698263707477}
   cHurtParticleSystem: {fileID: 6733936032522987168}
@@ -9006,7 +9005,7 @@ ParticleSystem:
         m_NumAlphaKeys: 2
     range: {x: 0, y: 1}
   CollisionModule:
-    enabled: 1
+    enabled: 0
     serializedVersion: 4
     type: 1
     collisionMode: 1

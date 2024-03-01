@@ -16,7 +16,7 @@ namespace Controllers
         public BsPlayer bsObject;
 
         // Variables
-        public float maxHealth = 100f;
+        public float maxHealth;
         public float health = -1f;
         public bool alive = true;
         public Color color;

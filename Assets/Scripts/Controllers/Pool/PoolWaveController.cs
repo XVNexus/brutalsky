@@ -1,17 +1,18 @@
 using System.Collections.Generic;
 using UnityEngine;
-using Utils;
 
 namespace Controllers.Pool
 {
     public class PoolWaveController : MonoBehaviour
     {
+        // Constants
+        public const float WavePointDensity = 2f;
+
         // Variables
-        public float wavePointDensity = 2f;
         private float waveHeight;
         private int wavePointCount;
         private float[] wavePointOffsets;
-        private List<WaveEffect> waveEffects = new();
+        private List<PoolWaveEffect> waveEffects = new();
 
         // References
         public LineRenderer cLineRenderer;
@@ -35,13 +36,13 @@ namespace Controllers.Pool
             var lineWidth = cLineRenderer.widthMultiplier;
             var poolTransform = transform;
             var poolScale = poolTransform.localScale;
-            cLineRenderer.positionCount = Mathf.RoundToInt(poolScale.x * wavePointDensity) + 3;
+            cLineRenderer.positionCount = Mathf.RoundToInt(poolScale.x * WavePointDensity) + 3;
             var posCount = cLineRenderer.positionCount;
             wavePointCount = posCount - 4;
             wavePointOffsets = new float[wavePointCount];
             var surfaceOffset = lineWidth * 2f / poolScale.y;
             var edgeOffset = lineWidth * .5f / poolScale.x;
-            var wavePointInterval = 1f / wavePointDensity / poolScale.x;
+            var wavePointInterval = 1f / WavePointDensity / poolScale.x;
             waveHeight = lineWidth * .5f / poolScale.y;
             cLineRenderer.SetPosition(0, new Vector2(-.5f + edgeOffset, -surfaceOffset));
             cLineRenderer.SetPosition(1, new Vector2(-.5f + edgeOffset, 0f));
@@ -57,19 +58,19 @@ namespace Controllers.Pool
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            OnTrigger2D(other, true);
+            OnTrigger2D(other);
         }
 
         private void OnTriggerExit2D(Collider2D other)
         {
-            OnTrigger2D(other, false);
+            OnTrigger2D(other);
         }
 
-        private void OnTrigger2D(Component other, bool invertWaves)
+        private void OnTrigger2D(Component other)
         {
             // Trigger wave splash effect
             var splashPoint = transform.InverseTransformPoint(other.transform.position).x * cPoolController.bsObject.size.x;
-            waveEffects.Add(new WaveEffect(splashPoint, 25f, 2f, 3f, invertWaves ? -1f : 1f));
+            waveEffects.Add(new PoolWaveEffect(splashPoint, 25f, 2f, 3f));
         }
 
         // Updates
@@ -82,7 +83,7 @@ namespace Controllers.Pool
             {
                 var waveEffect = waveEffects[i];
                 waveEffect.Update(Time.deltaTime);
-                if (!waveEffect.active)
+                if (waveEffect.idle)
                 {
                     waveEffects.RemoveAt(i);
                     continue;

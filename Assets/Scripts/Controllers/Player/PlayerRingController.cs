@@ -31,17 +31,12 @@ namespace Controllers.Player
             if (cPlayerController.boostCharge > 0f)
             {
                 targetRingAlpha = .25f + cPlayerController.boostCharge * .25f;
-                targetRingSpin = (Mathf.Pow(cPlayerController.boostCharge, 2f) + 2f) * 180f + 90f;
+                targetRingSpin = (Mathf.Pow(cPlayerController.boostCharge, 1.5f) + 1.5f) * 360f;
             }
             else if (cPlayerController.boostCooldown > 0f)
             {
                 targetRingAlpha = .05f;
                 targetRingSpin = 10f;
-            }
-            else
-            {
-                targetRingAlpha = .25f;
-                targetRingSpin = 40f;
             }
 
             // Transition current ring properties to calculated target properties

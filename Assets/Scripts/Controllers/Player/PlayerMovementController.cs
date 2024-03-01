@@ -5,8 +5,9 @@ namespace Controllers.Player
     public class PlayerMovementController : MonoBehaviour
     {
         // Variables
-        public float movementForce = 20f;
-        public float jumpForce = 10f;
+        public float movementForce;
+        public float jumpForce;
+        private Vector2 movementForceMultiplier;
         private float movementPush;
         private int jumpCooldown;
         private bool lastBoostInput;
@@ -22,6 +23,11 @@ namespace Controllers.Player
         {
             cPlayerController = GetComponent<PlayerController>();
             cRigidbody2D = GetComponent<Rigidbody2D>();
+        }
+
+        private void Start()
+        {
+            movementForceMultiplier = new Vector2(1f, 1f / movementForce * Physics2D.gravity.magnitude * .5f);
         }
 
         private void OnCollisionEnter2D(Collision2D other)
@@ -48,8 +54,7 @@ namespace Controllers.Player
             var speed = velocity.magnitude;
 
             // Apply directional movement
-            var movementInput = cPlayerController.iMovement.ReadValue<Vector2>();
-            var movementVector = new Vector2(movementInput.x, movementInput.y * .25f);
+            var movementInput = cPlayerController.iMovement.ReadValue<Vector2>() * movementForceMultiplier;
             var jumpInput = cPlayerController.onGround && movementInput.y > 0f && jumpCooldown == 0;
             if (jumpInput)
             {
@@ -59,8 +64,8 @@ namespace Controllers.Player
             movementPush = playerStuck && movementInput.magnitude > 0f
                 ? movementPush + Time.fixedDeltaTime
                 : Mathf.Max(movementPush - speed * Time.fixedDeltaTime, 1f);
-            movementVector *= movementPush;
-            cRigidbody2D.AddForce(movementVector * movementForce);
+            movementInput *= movementPush;
+            cRigidbody2D.AddForce(movementInput * movementForce);
 
             // Apply boost movement
             var boostInput = cPlayerController.iBoost.IsPressed() && cPlayerController.boostCooldown == 0f;
@@ -70,7 +75,7 @@ namespace Controllers.Player
             }
             else if (lastBoostInput)
             {
-                var boost = Mathf.Pow(cPlayerController.boostCharge, 2f) + 2f;
+                var boost = Mathf.Pow(cPlayerController.boostCharge, 1.5f) + 1.5f;
                 velocity *= boost;
                 cRigidbody2D.velocity = velocity;
                 cPlayerController.boostCharge = 0f;

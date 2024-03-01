@@ -7,10 +7,10 @@ namespace Controllers.Player
     public class PlayerParticleController : MonoBehaviour
     {
         // Constants
-        const float boostThreshold = 40f;
+        public const float BoostThreshold = 40f;
+        public const float ParticleMultiplier = 5f;
 
         // Variables
-        public float particleMultiplier = 5f;
         private float lastSpeed;
         private float lastHealth = -1f;
 
@@ -27,10 +27,10 @@ namespace Controllers.Player
         {
             switch (speed)
             {
-                case >= boostThreshold when lastSpeed < boostThreshold:
+                case >= BoostThreshold when lastSpeed < BoostThreshold:
                     cBoostParticleSystem.Play();
                     break;
-                case < boostThreshold when lastSpeed >= boostThreshold:
+                case < BoostThreshold when lastSpeed >= BoostThreshold:
                     cBoostParticleSystem.Stop();
                     break;
             }
@@ -49,7 +49,7 @@ namespace Controllers.Player
         public void DisplayHurtParticles(float deltaHealth)
         {
             if (deltaHealth >= 0f) return;
-            var particleCount = (int)(-deltaHealth * particleMultiplier);
+            var particleCount = (int)(-deltaHealth * ParticleMultiplier);
             var psEmission = cHurtParticleSystem.emission;
             var psBurst = psEmission.GetBurst(0);
             psBurst.count = Mathf.Min(particleCount, (int)(1000 * Time.fixedDeltaTime));
@@ -89,7 +89,7 @@ namespace Controllers.Player
             DisplayBoostParticles(speed);
             lastSpeed = speed;
 
-            var health = Mathf.Floor(cPlayerController.health * particleMultiplier) / particleMultiplier;
+            var health = Mathf.Floor(cPlayerController.health * ParticleMultiplier) / ParticleMultiplier;
             DisplayHurtParticles(health - lastHealth);
             if (health == 0f && lastHealth > 0f)
             {
