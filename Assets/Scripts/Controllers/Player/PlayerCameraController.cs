@@ -1,7 +1,7 @@
-using System.Linq;
 using Brutalsky;
 using Core;
 using UnityEngine;
+using Utils.Ext;
 
 namespace Controllers.Player
 {
@@ -23,7 +23,7 @@ namespace Controllers.Player
         {
             // Get collision info
             if (other.gameObject.CompareTag("Player")) return;
-            var impactForce = other.contacts.Sum(contact => contact.normalImpulse);
+            var impactForce = other.TotalNormalImpulse();
             var impactDirection = ((Vector2)transform.position - other.contacts[0].point).normalized;
 
             // Apply camera shake

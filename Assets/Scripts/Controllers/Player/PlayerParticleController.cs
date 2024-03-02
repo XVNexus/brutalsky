@@ -1,6 +1,6 @@
-using System.Linq;
 using Brutalsky;
 using UnityEngine;
+using Utils.Ext;
 
 namespace Controllers.Player
 {
@@ -15,6 +15,7 @@ namespace Controllers.Player
         private float lastHealth = -1f;
 
         // References
+        public ParticleSystem cJumpParticleSystem;
         public ParticleSystem cBoostParticleSystem;
         public ParticleSystem cImpactParticleSystem;
         public ParticleSystem cHurtParticleSystem;
@@ -23,6 +24,12 @@ namespace Controllers.Player
         private Rigidbody2D cRigidbody2D;
 
         // Functions
+        public void DisplayJumpParticles(float contactAngle)
+        {
+            cJumpParticleSystem.transform.localRotation = Quaternion.Euler(0f, 0f, contactAngle);
+            cJumpParticleSystem.Play();
+        }
+
         public void DisplayBoostParticles(float speed)
         {
             switch (speed)
@@ -79,7 +86,10 @@ namespace Controllers.Player
 
         private void OnCollisionEnter2D(Collision2D other)
         {
-            DisplayImpactParticles(other.contacts.Sum(contact => contact.normalImpulse));
+            DisplayImpactParticles(other.TotalNormalImpulse());
+            if (other.DirectnessFactor() < .8f) return;
+            DisplayJumpParticles(MathfExt.Atan2(
+                other.GetContact(0).point - (Vector2)transform.position) * Mathf.Rad2Deg);
         }
 
         // Updates

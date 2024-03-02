@@ -4,9 +4,9 @@ namespace Utils.Ext
 {
     public static class MathfExt
     {
-        public static float InverseLerp(float a, float b, float value)
+        public static float Atan2(Vector2 vector)
         {
-            return (value - a) / (b - a);
+            return Mathf.Atan2(vector.y, vector.x);
         }
 
         public static float TMP(float x, float threshold, float multiplier = 1f, float power = 1f)
