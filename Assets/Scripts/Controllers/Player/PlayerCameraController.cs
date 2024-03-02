@@ -22,7 +22,7 @@ namespace Controllers.Player
         private void OnCollisionEnter2D(Collision2D other)
         {
             // Get collision info
-            if (other.gameObject.CompareTag("Player")) return;
+            if (other.gameObject.CompareTag(PlayerController.Tag)) return;
             var impactForce = other.TotalNormalImpulse();
             var impactDirection = ((Vector2)transform.position - other.contacts[0].point).normalized;
 

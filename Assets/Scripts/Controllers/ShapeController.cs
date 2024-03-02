@@ -5,6 +5,9 @@ namespace Controllers
 {
     public class ShapeController : MonoBehaviour
     {
+        // Constants
+        public const string Tag = "Shape";
+
         // Source
         public BsShape bsObject;
 
@@ -21,7 +24,7 @@ namespace Controllers
         {
             // Apply damage to player
             var damage = bsObject.material.damage;
-            if (!other.gameObject.CompareTag("Player") || damage == 0f) return;
+            if (!other.gameObject.CompareTag(PlayerController.Tag) || damage == 0f) return;
             var playerController = other.gameObject.GetComponent<PlayerController>();
             if (damage > 0f)
             {
@@ -40,8 +43,8 @@ namespace Controllers
             // Get collision info
             var otherRigidbody = other.rigidbody;
             var thisDynamic = bsObject.material.dynamic;
-            var otherDynamic = other.gameObject.CompareTag("Player")
-                || (other.gameObject.CompareTag("Shape")
+            var otherDynamic = other.gameObject.CompareTag(PlayerController.Tag)
+                || (other.gameObject.CompareTag(Tag)
                     && other.gameObject.GetComponent<ShapeController>().bsObject.material.dynamic);
 
             // Apply adhesion force

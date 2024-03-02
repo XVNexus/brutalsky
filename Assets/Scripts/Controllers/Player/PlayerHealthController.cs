@@ -29,7 +29,7 @@ namespace Controllers.Player
             if (!cPlayerController.alive) return;
 
             // Get collision info
-            var impactForce = other.TotalNormalImpulse() * (other.gameObject.CompareTag("Player") ? 2f : 1f);
+            var impactForce = other.TotalNormalImpulse() * (other.gameObject.CompareTag(PlayerController.Tag) ? 2f : 1f);
             if (impactForce < 25f) return;
             var impactSpeed = lastSpeed;
 

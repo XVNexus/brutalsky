@@ -13,6 +13,7 @@ namespace Controllers
     public class GuiController : MonoBehaviour
     {
         // Constants
+        public const string Tag = "Gui";
         public const string DisabledClass = "bs-disabled";
 
         // Variables

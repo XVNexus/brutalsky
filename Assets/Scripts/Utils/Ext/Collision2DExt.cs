@@ -5,26 +5,29 @@ namespace Utils.Ext
 {
     public static class Collision2DExt
     {
-        public const float Atan2Percent = 0.636619772368f;
-
-        public static float DirectnessFactor(this Collision2D @this)
+        public static float DirectnessFactor(this Collision2D _)
         {
-            return Mathf.Atan2(@this.TotalNormalImpulse(), Mathf.Abs(@this.TotalTangentImpulse())) * Atan2Percent;
+            var normal = _.GetContact(0).normal;
+            var velocity = _.relativeVelocity;
+            var deltaAngle = Mathf.DeltaAngle(
+                MathfExt.Atan2(normal) * Mathf.Rad2Deg,
+                MathfExt.Atan2(velocity) * Mathf.Rad2Deg);
+            return Mathf.Clamp01((90f - Mathf.Abs(deltaAngle)) / 90f);
         }
 
-        public static float TotalNormalImpulse(this Collision2D @this)
+        public static float TotalNormalImpulse(this Collision2D _)
         {
-            return @this.contacts.Sum(contact => contact.normalImpulse);
+            return _.contacts.Sum(contact => contact.normalImpulse);
         }
 
-        public static float TotalTangentImpulse(this Collision2D @this)
+        public static float TotalTangentImpulse(this Collision2D _)
         {
-            return @this.contacts.Sum(contact => contact.tangentImpulse);
+            return _.contacts.Sum(contact => contact.tangentImpulse);
         }
 
-        public static float TotalImpulse(this Collision2D @this)
+        public static float TotalImpulse(this Collision2D _)
         {
-            return @this.contacts.Sum(contact => contact.normalImpulse + contact.tangentImpulse);
+            return _.contacts.Sum(contact => contact.normalImpulse + contact.tangentImpulse);
         }
     }
 }

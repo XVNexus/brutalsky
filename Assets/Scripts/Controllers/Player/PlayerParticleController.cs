@@ -7,27 +7,37 @@ namespace Controllers.Player
     public class PlayerParticleController : MonoBehaviour
     {
         // Constants
-        public const float BoostThreshold = 40f;
-        public const float ParticleMultiplier = 5f;
+        public const float BoostThreshold = 30f;
+        public const float ParticleMultiplier = 3f;
 
         // Variables
         private float lastSpeed;
-        private float lastHealth = -1f;
+        private int lastHealth = -1;
 
         // References
-        public ParticleSystem cJumpParticleSystem;
+        public ParticleSystem cTouchParticleSystem;
+        public ParticleSystem cSlideParticleSystem;
         public ParticleSystem cBoostParticleSystem;
         public ParticleSystem cImpactParticleSystem;
+        public ParticleSystem cHealParticleSystem;
         public ParticleSystem cHurtParticleSystem;
         public ParticleSystem cDeathParticleSystem;
         private PlayerController cPlayerController;
         private Rigidbody2D cRigidbody2D;
 
         // Functions
-        public void DisplayJumpParticles(float contactAngle)
+        public void DisplayTouchParticles(float contactAngle, Material shapeMaterial)
         {
-            cJumpParticleSystem.transform.localRotation = Quaternion.Euler(0f, 0f, contactAngle);
-            cJumpParticleSystem.Play();
+            cTouchParticleSystem.GetComponent<Renderer>().material = shapeMaterial;
+            cTouchParticleSystem.transform.localRotation = Quaternion.Euler(0f, 0f, contactAngle);
+            cTouchParticleSystem.Play();
+        }
+
+        public void DisplaySlideParticles(float contactAngle, Material shapeMaterial)
+        {
+            cSlideParticleSystem.GetComponent<Renderer>().material = shapeMaterial;
+            cSlideParticleSystem.transform.localRotation = Quaternion.Euler(0f, 0f, contactAngle);
+            cSlideParticleSystem.Play();
         }
 
         public void DisplayBoostParticles(float speed)
@@ -45,7 +55,7 @@ namespace Controllers.Player
 
         public void DisplayImpactParticles(float impactForce)
         {
-            var effectIntensity = Mathf.Min(BsPlayer.CalculateDamage(impactForce) * .1f, 10f);
+            var effectIntensity = Mathf.Min(BsPlayer.CalculateDamage(impactForce) * .2f, 10f);
             if (effectIntensity < 3f) return;
             var psMain = cImpactParticleSystem.main;
             psMain.startSize = effectIntensity;
@@ -53,15 +63,14 @@ namespace Controllers.Player
             cImpactParticleSystem.Play();
         }
 
-        public void DisplayHurtParticles(float deltaHealth)
+        public void DisplayHealHurtParticles(int deltaHealth)
         {
-            if (deltaHealth >= 0f) return;
-            var particleCount = (int)(-deltaHealth * ParticleMultiplier);
-            var psEmission = cHurtParticleSystem.emission;
+            var healHurtParticleSystem = deltaHealth > 0f ? cHealParticleSystem : cHurtParticleSystem;
+            var psEmission = healHurtParticleSystem.emission;
             var psBurst = psEmission.GetBurst(0);
-            psBurst.count = Mathf.Min(particleCount, (int)(1000 * Time.fixedDeltaTime));
+            psBurst.count = Mathf.Min(Mathf.Abs(deltaHealth), (int)(1000 * Time.fixedDeltaTime));
             psEmission.SetBurst(0, psBurst);
-            cHurtParticleSystem.Play();
+            healHurtParticleSystem.Play();
         }
 
         public void DisplayDeathParticles()
@@ -87,9 +96,18 @@ namespace Controllers.Player
         private void OnCollisionEnter2D(Collision2D other)
         {
             DisplayImpactParticles(other.TotalNormalImpulse());
-            if (other.DirectnessFactor() < .8f) return;
-            DisplayJumpParticles(MathfExt.Atan2(
-                other.GetContact(0).point - (Vector2)transform.position) * Mathf.Rad2Deg);
+            if (!other.gameObject.CompareTag(ShapeController.Tag) || other.DirectnessFactor() < .5f) return;
+            DisplayTouchParticles(MathfExt.Atan2(
+                other.GetContact(0).point - (Vector2)transform.position) * Mathf.Rad2Deg,
+                other.gameObject.GetComponent<MeshRenderer>().material);
+        }
+
+        private void OnCollisionStay2D(Collision2D other)
+        {
+            if (!other.gameObject.CompareTag(ShapeController.Tag) || other.relativeVelocity.magnitude < 3f) return;
+            DisplaySlideParticles(MathfExt.Atan2(
+                other.GetContact(0).point - (Vector2)transform.position) * Mathf.Rad2Deg,
+                other.gameObject.GetComponent<MeshRenderer>().material);
         }
 
         // Updates
@@ -99,9 +117,11 @@ namespace Controllers.Player
             DisplayBoostParticles(speed);
             lastSpeed = speed;
 
-            var health = Mathf.Floor(cPlayerController.health * ParticleMultiplier) / ParticleMultiplier;
-            DisplayHurtParticles(health - lastHealth);
-            if (health == 0f && lastHealth > 0f)
+            var health = Mathf.FloorToInt(cPlayerController.health * ParticleMultiplier);
+            var deltaHealth = health - lastHealth;
+            if (deltaHealth == 0) return;
+            DisplayHealHurtParticles(deltaHealth);
+            if (health == 0 && lastHealth > 0)
             {
                 DisplayDeathParticles();
             }

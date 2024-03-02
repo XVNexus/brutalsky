@@ -9,6 +9,7 @@ namespace Controllers
     public class PlayerController : MonoBehaviour
     {
         // Constants
+        public const string Tag = "Player";
         public const float DeathOffset = 1000f;
         public const int MaxOnGroundFrames = 5;
 
@@ -136,7 +137,7 @@ namespace Controllers
         private void OnCollision(Collision2D other)
         {
             // Update ground status
-            if (!other.gameObject.CompareTag("Shape") && !other.gameObject.CompareTag("Player")) return;
+            if (!other.gameObject.CompareTag(ShapeController.Tag) && !other.gameObject.CompareTag(Tag)) return;
             if (!(other.GetContact(0).point.y < transform.position.y - .25f)) return;
             onGroundFrames = MaxOnGroundFrames;
             onGround = true;

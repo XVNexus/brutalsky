@@ -6,6 +6,9 @@ namespace Controllers
 {
     public class PoolController : MonoBehaviour
     {
+        // Constants
+        public const string Tag = "Pool";
+
         // Source
         public BsPool bsObject;
 
@@ -58,7 +61,7 @@ namespace Controllers
 
             // Apply damage to player
             var damage = bsObject.chemical.damage;
-            if (!other.gameObject.CompareTag("Player") || damage == 0f) return;
+            if (!other.gameObject.CompareTag(PlayerController.Tag) || damage == 0f) return;
             var playerController = other.gameObject.GetComponent<PlayerController>();
             if (damage > 0f)
             {
