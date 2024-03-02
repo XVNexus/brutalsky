@@ -61,15 +61,15 @@ namespace Brutalsky.Shape
 
         // Sticky
         public static BsMaterial Glue(bool dynamic = false)
-            => new BsMaterial(5f, 0f, 1f, 1f, 0f, dynamic);
+            => new BsMaterial(5f, 0f, 2f, 1f, 0f, dynamic);
 
         // Healing
         public static BsMaterial Medkit(bool dynamic = false)
-            => new BsMaterial(2f, 0f, 0f, 1f, -25f, dynamic);
+            => new BsMaterial(2f, 0f, 0f, 1f, 25f, dynamic);
 
         // Harmful
         public static BsMaterial Electric(bool dynamic = false)
-            => new BsMaterial(2f, 0f, 0f, 1f, 25f, dynamic);
+            => new BsMaterial(2f, 0f, 0f, 1f, -25f, dynamic);
 
         public static BsMaterial Parse(string raw)
         {

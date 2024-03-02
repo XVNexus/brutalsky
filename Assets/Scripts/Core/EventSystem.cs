@@ -8,13 +8,17 @@ namespace Core
 {
     public class EventSystem : MonoBehaviour
     {
+        public const string MapsFolder = "Maps";
+
         public static EventSystem current;
         public static Random random;
+        public static string dataPath;
 
         private void Awake()
         {
             current = this;
             random = Random.CreateFromIndex((uint)DateTime.UtcNow.Ticks);
+            dataPath = Application.persistentDataPath;
         }
 
         // References

@@ -12,7 +12,6 @@ namespace Brutalsky
 {
     public class BsMap
     {
-        public const string SavePath = "/home/ian/Documents/Brutalsky/";
         public const string SaveFormat = "yaml";
         public const float SizeLimit = 80f;
 
@@ -155,16 +154,29 @@ namespace Brutalsky
             }
         }
 
+        public static BsMap Parse(string yaml)
+        {
+            return new Deserializer().Deserialize<SrzMap>(yaml).Expand();
+        }
+
+        public string Stringify()
+        {
+            return new Serializer().Serialize(SrzMap.Simplify(this));
+        }
+
         public static BsMap Load(string filename)
         {
-            using var reader = new StreamReader($"{SavePath}{filename}.{SaveFormat}");
-            return new Deserializer().Deserialize<SrzMap>(reader.ReadToEnd()).Expand();
+            var path = $"{EventSystem.dataPath}/{EventSystem.MapsFolder}/{filename}.{SaveFormat}";
+            using var reader = new StreamReader(path);
+            return Parse(reader.ReadToEnd());
         }
 
         public void Save(string filename)
         {
-            using var writer = new StreamWriter($"{SavePath}{filename}.{SaveFormat}");
-            writer.Write(new Serializer().Serialize(SrzMap.Simplify(this)));
+            var path = $"{EventSystem.dataPath}/{EventSystem.MapsFolder}/{filename}.{SaveFormat}";
+            new FileInfo(path).Directory?.Create();
+            using var writer = new StreamWriter(path);
+            writer.Write(Stringify());
         }
     }
 }

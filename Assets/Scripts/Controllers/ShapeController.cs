@@ -28,11 +28,11 @@ namespace Controllers
             var playerController = other.gameObject.GetComponent<PlayerController>();
             if (damage > 0f)
             {
-                playerController.Hurt(damage);
+                playerController.Heal(damage);
             }
             else
             {
-                playerController.Heal(-damage);
+                playerController.Hurt(-damage);
             }
         }
 

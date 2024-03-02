@@ -41,11 +41,11 @@ namespace Brutalsky.Pool
 
         // Healing
         public static BsChemical Medicine()
-            => new BsChemical(25f, 1f, -25f);
+            => new BsChemical(25f, 1f, 25f);
 
         // Harmful
         public static BsChemical Lava()
-            => new BsChemical(25f, 1f, 25f);
+            => new BsChemical(25f, 1f, -25f);
 
         public static BsChemical Parse(string raw)
         {

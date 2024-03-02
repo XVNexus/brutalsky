@@ -65,11 +65,11 @@ namespace Controllers
             var playerController = other.gameObject.GetComponent<PlayerController>();
             if (damage > 0f)
             {
-                playerController.Hurt(damage * Time.fixedDeltaTime);
+                playerController.Heal(damage * Time.fixedDeltaTime);
             }
             else
             {
-                playerController.Heal(-damage * Time.fixedDeltaTime);
+                playerController.Hurt(-damage * Time.fixedDeltaTime);
             }
         }
     }
