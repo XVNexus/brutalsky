@@ -117,7 +117,7 @@ namespace Controllers.Player
             DisplayBoostParticles(speed);
             lastSpeed = speed;
 
-            var health = Mathf.FloorToInt(cPlayerController.health * ParticleMultiplier);
+            var health = Mathf.CeilToInt(cPlayerController.health * ParticleMultiplier);
             var deltaHealth = health - lastHealth;
             if (deltaHealth == 0) return;
             DisplayHealHurtParticles(deltaHealth);

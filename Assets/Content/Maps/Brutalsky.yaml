@@ -1,0 +1,272 @@
+title: Brutalsky
+author: Xveon
+size: 40 20
+lighting: 1 1 1 0.8 0
+spawns:
+  - id: spawn-left
+    transform: -15 1 0
+    priority: 0
+  - id: spawn-right
+    transform: 15 1 0
+    priority: 0
+shapes:
+  - id: spinner-left-bg
+    transform: -2 0 0
+    path: C 5
+    material: 2 0 0 10 0 0
+    color: 0.3 0.3 0.3 1 0
+    layer: 0
+    simulated: 0
+  - id: spinner-right-bg
+    transform: 2 0 0
+    path: C 5
+    material: 2 0 0 10 0 0
+    color: 0.3 0.3 0.3 1 0
+    layer: 0
+    simulated: 0
+  - id: wall-left
+    transform: -20 0 0
+    path: R 2 22
+    material: 2 0 0 10 0 0
+    color: 0.7 0.7 0.7 1 0
+    layer: 1
+    simulated: 1
+  - id: wall-right
+    transform: 20 0 0
+    path: R 2 22
+    material: 2 0 0 10 0 0
+    color: 0.7 0.7 0.7 1 0
+    layer: 1
+    simulated: 1
+  - id: wall-top
+    transform: 0 10 0
+    path: X -15 1 L 15 1 L 15 0 L 14 -.5 L -14 -.5 L -15 0
+    material: 2 0 0 10 0 0
+    color: 0.7 0.7 0.7 1 0
+    layer: 1
+    simulated: 1
+  - id: wall-bottom
+    transform: 0 -10 0
+    path: X -7 -1 L -7 .5 L 0 3 L 7 .5 L 7 -1
+    material: 2 0 0 10 0 0
+    color: 0.7 0.7 0.7 1 0
+    layer: 1
+    simulated: 1
+  - id: platform-left
+    transform: -19 0 0
+    path: X -1 2.5 L 0 2.5 C 0 .5 2 .5 L 8 .5 L 7.5 0 L 8 -.5 L 2 -.5 C 0 -.5 0 -2.5 L -1 -2.5
+    material: 2 0 0 10 0 0
+    color: 0.7 0.7 0.7 1 0
+    layer: 1
+    simulated: 1
+  - id: platform-right
+    transform: 19 0 0
+    path: X 1 2.5 L 0 2.5 C 0 .5 -2 .5 L -8 .5 L -7.5 0 L -8 -.5 L -2 -.5 C 0 -.5 0 -2.5 L 1 -2.5
+    material: 2 0 0 10 0 0
+    color: 0.7 0.7 0.7 1 0
+    layer: 1
+    simulated: 1
+  - id: pool-tl-wall-top
+    transform: -17 13.25 0
+    path: R 5 0.5
+    material: 2 0 0 10 0 0
+    color: 0.7 0.7 0.7 1 0
+    layer: 1
+    simulated: 1
+  - id: pool-tl-wall-left
+    transform: -19.25 12 0
+    path: R 0.5 2
+    material: 2 0 0 10 0 0
+    color: 0.7 0.7 0.7 1 0
+    layer: 1
+    simulated: 1
+  - id: pool-tl-wall-right
+    transform: -14.75 12 0
+    path: R 0.5 2
+    material: 2 0 0 10 0 0
+    color: 0.7 0.7 0.7 1 0
+    layer: 1
+    simulated: 1
+  - id: pool-tr-wall-top
+    transform: 17 13.25 0
+    path: R 5 0.5
+    material: 2 0 0 10 0 0
+    color: 0.7 0.7 0.7 1 0
+    layer: 1
+    simulated: 1
+  - id: pool-tr-wall-left
+    transform: 14.75 12 0
+    path: R 0.5 2
+    material: 2 0 0 10 0 0
+    color: 0.7 0.7 0.7 1 0
+    layer: 1
+    simulated: 1
+  - id: pool-tr-wall-right
+    transform: 19.25 12 0
+    path: R 0.5 2
+    material: 2 0 0 10 0 0
+    color: 0.7 0.7 0.7 1 0
+    layer: 1
+    simulated: 1
+  - id: pool-bl-wall-bottom
+    transform: -13 -13.25 0
+    path: R 13 0.5
+    material: 2 0 0 10 0 0
+    color: 0.7 0.7 0.7 1 0
+    layer: 1
+    simulated: 1
+  - id: pool-bl-wall-left
+    transform: -19.25 -12 0
+    path: R 0.5 2
+    material: 2 0 0 10 0 0
+    color: 0.7 0.7 0.7 1 0
+    layer: 1
+    simulated: 1
+  - id: pool-bl-wall-right
+    transform: -6.75 -12 0
+    path: R 0.5 2
+    material: 2 0 0 10 0 0
+    color: 0.7 0.7 0.7 1 0
+    layer: 1
+    simulated: 1
+  - id: pool-br-wall-bottom
+    transform: 13 -13.25 0
+    path: R 13 0.5
+    material: 2 0 0 10 0 0
+    color: 0.7 0.7 0.7 1 0
+    layer: 1
+    simulated: 1
+  - id: pool-br-wall-left
+    transform: 6.75 -12 0
+    path: R 0.5 2
+    material: 2 0 0 10 0 0
+    color: 0.7 0.7 0.7 1 0
+    layer: 1
+    simulated: 1
+  - id: pool-br-wall-right
+    transform: 19.25 -12 0
+    path: R 0.5 2
+    material: 2 0 0 10 0 0
+    color: 0.7 0.7 0.7 1 0
+    layer: 1
+    simulated: 1
+  - id: glue-left
+    transform: -9 9.25 0
+    path: R 10 0.5
+    material: 5 0 2 1 0 0
+    color: 0.7 0.9 0.4 1 0
+    layer: 1
+    simulated: 1
+  - id: glue-right
+    transform: 9 9.25 0
+    path: R 10 0.5
+    material: 5 0 2 1 0 0
+    color: 0.7 0.9 0.4 1 0
+    layer: 1
+    simulated: 1
+  - id: ice-left
+    transform: -14.5 9.5 0
+    path: X -.5 .5 L .5 0 L .5 -.5 L -.5 0
+    material: 0 0 0 1 0 0
+    color: 0.5 0.8 1 1 0
+    layer: 1
+    simulated: 1
+  - id: ice-right
+    transform: 14.5 9.5 0
+    path: X .5 .5 L -.5 0 L -.5 -.5 L .5 0
+    material: 0 0 0 1 0 0
+    color: 0.5 0.8 1 1 0
+    layer: 1
+    simulated: 1
+  - id: ice-bottom
+    transform: 0 -9.5 0
+    path: X -7 0 L -7 .5 L 0 3 L 7 .5 L 7 0 L 0 2.5
+    material: 0 0 0 1 0 0
+    color: 0.5 0.8 1 1 0
+    layer: 1
+    simulated: 1
+  - id: rubber-top
+    transform: 0 9.25 0
+    path: X 4 .25 L 4 -.25 L 0 -1.25 L -4 -.25 L -4 .25
+    material: 0 1 0 1 0 0
+    color: 0.7 0.4 0.9 1 0
+    layer: 1
+    simulated: 1
+  - id: electric-left
+    transform: -11 0 45
+    path: S 0.7
+    material: 2 0 0 1 -25 0
+    color: 1 1 0.2 1 1
+    layer: 1
+    simulated: 1
+  - id: electric-right
+    transform: 11 0 45
+    path: S 0.7
+    material: 2 0 0 1 -25 0
+    color: 1 1 0.2 1 1
+    layer: 1
+    simulated: 1
+  - id: spinner-left
+    transform: -2 0 0
+    path: T 6 4.9 2.9
+    material: 2 0 0 1 0 1
+    color: 0.9 0.9 1 1 0
+    layer: 1
+    simulated: 1
+  - id: spinner-right
+    transform: 2 0 30
+    path: T 6 4.9 2.9
+    material: 2 0 0 1 0 1
+    color: 0.9 0.9 1 1 0
+    layer: 1
+    simulated: 1
+pools:
+  - id: water-left
+    transform: -17 11.25 180
+    size: 4 3.5
+    chemical: 25 1 0
+    color: 0.4 0.4 1 1 0
+    layer: 2
+    simulated: 1
+  - id: water-right
+    transform: 17 11.25 180
+    size: 4 3.5
+    chemical: 25 1 0
+    color: 0.4 0.4 1 1 0
+    layer: 2
+    simulated: 1
+  - id: lava-left
+    transform: -13 -11 0
+    size: 12 4
+    chemical: 25 1 -25
+    color: 1 0.3 0.2 1 1
+    layer: 2
+    simulated: 1
+  - id: lava-right
+    transform: 13 -11 0
+    size: 12 4
+    chemical: 25 1 -25
+    color: 1 0.3 0.2 1 1
+    layer: 2
+    simulated: 1
+joints:
+  - jointType: Hinge
+    id: spinner-left-motor
+    transform: 0 0 0
+    targetShapeId: spinner-left
+    mountShapeId: ''
+    properties:
+      collision: 0
+      strength: x
+      motor: 100 10000
+      limits: x
+  - jointType: Hinge
+    id: spinner-right-motor
+    transform: 0 0 0
+    targetShapeId: spinner-right
+    mountShapeId: ''
+    properties:
+      collision: 0
+      strength: x
+      motor: -100 10000
+      limits: x

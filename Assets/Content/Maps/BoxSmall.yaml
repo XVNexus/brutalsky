@@ -1,0 +1,49 @@
+title: Box Small
+author: Xveon
+size: 20 10
+lighting: 1 1 1 0.8 0
+spawns:
+- id: spawn-left
+  transform: -1 -3.5 0
+  priority: 0
+- id: spawn-right
+  transform: 1 -3.5 0
+  priority: 0
+shapes:
+- id: wall-bottom
+  transform: 0 -4.5 0
+  path: R 20 1
+  material: 2 0 0 10 0 0
+  color: 0.7 0.7 0.7 1 0
+  layer: 1
+  simulated: 1
+- id: wall-left
+  transform: -9.5 0 0
+  path: R 1 10
+  material: 2 0 0 10 0 0
+  color: 0.7 0.7 0.7 1 0
+  layer: 1
+  simulated: 1
+- id: wall-right
+  transform: 9.5 0 0
+  path: R 1 10
+  material: 2 0 0 10 0 0
+  color: 0.7 0.7 0.7 1 0
+  layer: 1
+  simulated: 1
+- id: corner-bl
+  transform: -9 -4 0
+  path: X 0 0 L 3 0 C 0 0 0 3
+  material: 2 0 0 10 0 0
+  color: 0.7 0.7 0.7 1 0
+  layer: 1
+  simulated: 1
+- id: corner-br
+  transform: 9 -4 0
+  path: X 0 0 L -3 0 C 0 0 0 3
+  material: 2 0 0 10 0 0
+  color: 0.7 0.7 0.7 1 0
+  layer: 1
+  simulated: 1
+pools: []
+joints: []

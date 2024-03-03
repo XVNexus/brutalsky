@@ -5,7 +5,6 @@ using Brutalsky.Object;
 using Core;
 using Serializable;
 using UnityEngine;
-using Utils;
 using YamlDotNet.Serialization;
 
 namespace Brutalsky
@@ -13,28 +12,10 @@ namespace Brutalsky
     public class BsMap
     {
         public const string SaveFormat = "yaml";
-        public const float SizeLimit = 80f;
 
         public string title { get; set; }
         public string author { get; set; }
-
-        public Vector2 size
-        {
-            get => _size;
-            set
-            {
-                if (value is { x: <= SizeLimit, y: <= SizeLimit })
-                {
-                    _size = value;
-                }
-                else
-                {
-                    throw Errors.MapTooBig(size, SizeLimit);
-                }
-            }
-        }
-
-        private Vector2 _size;
+        public Vector2 size { get; set; }
         public BsColor lighting { get; set; }
         public Dictionary<string, BsSpawn> spawns { get; } = new();
         public Dictionary<string, BsShape> shapes { get; } = new();
@@ -164,16 +145,18 @@ namespace Brutalsky
             return new Serializer().Serialize(SrzMap.Simplify(this));
         }
 
-        public static BsMap Load(string filename)
+        public static BsMap Load(string filename, bool local = false)
         {
-            var path = $"{EventSystem.dataPath}/{EventSystem.MapsFolder}/{filename}.{SaveFormat}";
+            var pathBase = local ? EventSystem.ContentPath : EventSystem.dataPath;
+            var path = $"{pathBase}/{EventSystem.MapsFolder}/{filename}.{SaveFormat}";
             using var reader = new StreamReader(path);
             return Parse(reader.ReadToEnd());
         }
 
-        public void Save(string filename)
+        public void Save(string filename, bool local = false)
         {
-            var path = $"{EventSystem.dataPath}/{EventSystem.MapsFolder}/{filename}.{SaveFormat}";
+            var pathBase = local ? EventSystem.ContentPath : EventSystem.dataPath;
+            var path = $"{pathBase}/{EventSystem.MapsFolder}/{filename}.{SaveFormat}";
             new FileInfo(path).Directory?.Create();
             using var writer = new StreamWriter(path);
             writer.Write(Stringify());

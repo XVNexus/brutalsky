@@ -25,6 +25,7 @@ namespace Controllers
         public float boostCooldown;
         public bool onGround;
         private int onGroundFrames;
+        private float lastPositionY;
 
         // References
         public Light2D cLight2D;
@@ -79,6 +80,7 @@ namespace Controllers
             if (!alive) return false;
             transform.position += new Vector3(DeathOffset, DeathOffset);
             Freeze();
+            health = 0f;
             alive = false;
             return true;
         }
@@ -138,7 +140,7 @@ namespace Controllers
         {
             // Update ground status
             if (!other.gameObject.CompareTag(ShapeController.Tag) && !other.gameObject.CompareTag(Tag)) return;
-            if (!(other.GetContact(0).point.y < transform.position.y - .25f)) return;
+            if (other.GetContact(0).point.y > lastPositionY - .25f) return;
             onGroundFrames = MaxOnGroundFrames;
             onGround = true;
         }
@@ -149,6 +151,7 @@ namespace Controllers
             // Update ground status
             onGround = onGroundFrames > 0;
             onGroundFrames = Mathf.Max(onGroundFrames - 1, 0);
+            lastPositionY = transform.position.y;
 
             // Kill the player if health reaches zero
             if (alive && health == 0)

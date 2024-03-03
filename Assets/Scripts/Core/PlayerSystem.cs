@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Brutalsky;
@@ -13,9 +14,6 @@ namespace Core
         public static PlayerSystem current;
         private void Awake() => current = this;
 
-        // Constants
-        public const float AnimationTime = .5f;
-
         // Variables
         public Dictionary<string, BsPlayer> activePlayers { get; private set; } = new();
 
@@ -27,7 +25,7 @@ namespace Core
         {
             foreach (var player in activePlayers.Values)
             {
-                player.instanceObject.GetComponent<PlayerController>().Freeze();
+                ((PlayerController)player.instanceComponent).Freeze();
             }
         }
 
@@ -35,7 +33,7 @@ namespace Core
         {
             foreach (var player in activePlayers.Values)
             {
-                player.instanceObject.GetComponent<PlayerController>().Unfreeze();
+                ((PlayerController)player.instanceComponent).Unfreeze();
             }
         }
 
@@ -53,11 +51,12 @@ namespace Core
         public void Spawn(BsMap map, BsPlayer player)
         {
             GameObject playerObject;
+            PlayerController playerController;
             if (!player.active)
             {
                 // Create new object and apply config
                 playerObject = Instantiate(playerPrefab);
-                var playerController = playerObject.GetComponent<PlayerController>();
+                playerController = playerObject.GetComponent<PlayerController>();
                 playerController.bsObject = player;
                 playerController.maxHealth = player.health;
                 playerController.color = player.color.tint;
@@ -70,8 +69,8 @@ namespace Core
             {
                 // Get reference to existing object and ensure player is reset to full health
                 playerObject = player.instanceObject;
-                playerObject.GetComponent<PlayerController>().Refresh();
-                var playerController = playerObject.GetComponent<PlayerController>();
+                playerController = playerObject.GetComponent<PlayerController>();
+                playerController.Refresh();
             }
 
             // Select a spawnpoint and move the new player object to it
@@ -81,6 +80,7 @@ namespace Core
             // Note player as active and add it to the active player list
             if (player.active) return;
             player.instanceObject = playerObject;
+            player.instanceComponent = playerController;
             player.active = true;
             activePlayers[player.id] = player;
         }
@@ -106,6 +106,23 @@ namespace Core
             player.instanceObject = null;
             player.active = false;
             activePlayers.Remove(player.id);
+        }
+
+        // Updates
+        private void FixedUpdate()
+        {
+            if (!MapSystem.current.mapLoaded) return;
+            var mapSize = MapSystem.current.activeMap.size;
+            foreach (var player in activePlayers.Values)
+            {
+                var position = player.instanceObject.transform.position;
+                var x = Mathf.Abs(position.x);
+                var y = Mathf.Abs(position.y);
+                if (x > mapSize.x / 2f + 3f || y > mapSize.y / 2f + 3f)
+                {
+                    ((PlayerController)player.instanceComponent).Kill();
+                }
+            }
         }
     }
 }

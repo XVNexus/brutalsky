@@ -8,7 +8,6 @@ namespace Controllers.Player
         // Variables
         public float movementForce;
         public float jumpForce;
-        private Vector2 movementForceMultiplier;
         private float movementPush;
         private int jumpCooldown;
         private bool lastBoostInput;
@@ -24,11 +23,6 @@ namespace Controllers.Player
         {
             cPlayerController = GetComponent<PlayerController>();
             cRigidbody2D = GetComponent<Rigidbody2D>();
-        }
-
-        private void Start()
-        {
-            movementForceMultiplier = new Vector2(1f, 1f / movementForce * Physics2D.gravity.magnitude * .5f);
         }
 
         private void OnCollisionEnter2D(Collision2D other)
@@ -55,7 +49,7 @@ namespace Controllers.Player
             var speed = velocity.magnitude;
 
             // Apply directional movement
-            var movementInput = cPlayerController.iMovement.ReadValue<Vector2>() * movementForceMultiplier;
+            var movementInput = cPlayerController.iMovement.ReadValue<Vector2>();
             var jumpInput = cPlayerController.onGround && movementInput.y > 0f && jumpCooldown == 0;
             if (jumpInput)
             {
@@ -66,7 +60,7 @@ namespace Controllers.Player
                 ? movementPush + Time.fixedDeltaTime
                 : Mathf.Max(movementPush - speed * Time.fixedDeltaTime, 1f);
             movementInput *= movementPush;
-            cRigidbody2D.AddForce(movementInput * movementForce);
+            cRigidbody2D.AddForce(movementInput * new Vector2(movementForce, Physics2D.gravity.magnitude * .5f));
 
             // Apply boost movement
             var boostInput = cPlayerController.iBoost.IsPressed() && cPlayerController.boostCooldown == 0f;

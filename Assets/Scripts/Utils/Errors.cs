@@ -1,15 +1,11 @@
 using System;
 using Brutalsky;
 using Brutalsky.Joint;
-using UnityEngine;
 
 namespace Utils
 {
     public static class Errors
     {
-        public static ArgumentException MapTooBig(Vector2 size, float limit)
-            => new($"Map size {size} exceeds size limit of {limit}");
-
         public static ArgumentOutOfRangeException InvalidGuiElement()
             => new("", $"Invalid gui element query");
 

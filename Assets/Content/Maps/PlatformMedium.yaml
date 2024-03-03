@@ -1,0 +1,21 @@
+title: Platform Medium
+author: Xveon
+size: 40 20
+lighting: 1 1 1 0.8 0
+spawns:
+- id: spawn-left
+  transform: -1 -8.5 0
+  priority: 0
+- id: spawn-right
+  transform: 1 -8.5 0
+  priority: 0
+shapes:
+- id: wall-bottom
+  transform: 0 -9.5 0
+  path: R 40 1
+  material: 2 0 0 10 0 0
+  color: 0.7 0.7 0.7 1 0
+  layer: 1
+  simulated: 1
+pools: []
+joints: []

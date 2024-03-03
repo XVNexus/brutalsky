@@ -8,6 +8,7 @@ namespace Core
 {
     public class EventSystem : MonoBehaviour
     {
+        public const string ContentPath = "./Assets/Content";
         public const string MapsFolder = "Maps";
 
         public static EventSystem current;

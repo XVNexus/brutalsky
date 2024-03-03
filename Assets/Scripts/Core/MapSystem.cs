@@ -21,6 +21,7 @@ namespace Core
         public bool mapLoaded { get; private set; }
 
         // References
+        public GameObject mapMargins;
         public Light2D cMapLight2D;
         public GameObject shapePrefab;
         public GameObject poolPrefab;
@@ -47,7 +48,8 @@ namespace Core
             mapLoaded = true;
 
             // Set camera and lighting config
-            CameraSystem.current.ResizeView(map.size);;
+            CameraSystem.current.ResizeView(map.size);
+            mapMargins.transform.localScale = map.size;
             cMapLight2D.color = map.lighting.tint;
             cMapLight2D.intensity = map.lighting.alpha;
 
@@ -99,8 +101,8 @@ namespace Core
             if (shape.active) return false;
 
             // Create new object
-            var shapeObj = Instantiate(shapePrefab, mapParent.transform);
-            var shapeController = shapeObj.GetComponent<ShapeController>();
+            var shapeObject = Instantiate(shapePrefab, mapParent.transform);
+            var shapeController = shapeObject.GetComponent<ShapeController>();
             shapeController.bsObject = shape;
 
             // Convert path to mesh
@@ -115,18 +117,18 @@ namespace Core
             mesh.RecalculateBounds();
 
             // Apply mesh
-            shapeObj.GetComponent<MeshFilter>().mesh = mesh;
-            var polygonCollider = shapeObj.GetComponent<PolygonCollider2D>();
+            shapeObject.GetComponent<MeshFilter>().mesh = mesh;
+            var polygonCollider = shapeObject.GetComponent<PolygonCollider2D>();
             polygonCollider.SetPath(0, points);
 
             // Apply color and layer
-            var meshRenderer = shapeObj.GetComponent<MeshRenderer>();
+            var meshRenderer = shapeObject.GetComponent<MeshRenderer>();
             meshRenderer.material = shape.color.glow ? unlitMaterial : litMaterial;
             meshRenderer.material.color = shape.color.tint;
             meshRenderer.sortingOrder = Layer2Order(shape.layer);
 
             // Apply material
-            var rigidbody = shapeObj.GetComponent<Rigidbody2D>();
+            var rigidbody = shapeObject.GetComponent<Rigidbody2D>();
             if (shape.simulated)
             {
                 var physicsMaterial = new PhysicsMaterial2D
@@ -148,11 +150,12 @@ namespace Core
             }
 
             // Apply position and rotation
-            shapeObj.transform.position = shape.transform.position;
-            shapeObj.transform.rotation = Quaternion.Euler(0f, 0f, shape.transform.rotation);
+            shapeObject.transform.position = shape.transform.position;
+            shapeObject.transform.rotation = Quaternion.Euler(0f, 0f, shape.transform.rotation);
 
             // Note shape as active
-            shape.instanceObject = shapeObj;
+            shape.instanceObject = shapeObject;
+            shape.instanceComponent = shapeController;
             shape.active = true;
             return true;
         }
@@ -163,15 +166,15 @@ namespace Core
             if (pool.active) return false;
 
             // Create new object
-            var poolObj = Instantiate(poolPrefab, mapParent.transform);
-            var poolController = poolObj.GetComponent<PoolController>();
+            var poolObject = Instantiate(poolPrefab, mapParent.transform);
+            var poolController = poolObject.GetComponent<PoolController>();
             poolController.bsObject = pool;
 
             // Apply size
-            poolObj.transform.localScale = pool.size;
+            poolObject.transform.localScale = pool.size;
 
             // Apply color and layer
-            var spriteRenderer = poolObj.GetComponent<SpriteRenderer>();
+            var spriteRenderer = poolObject.GetComponent<SpriteRenderer>();
             spriteRenderer.material = pool.color.glow ? unlitMaterial : litMaterial;
             spriteRenderer.material.color = pool.color.tint;
             spriteRenderer.sortingOrder = Layer2Order(pool.layer);
@@ -179,16 +182,17 @@ namespace Core
             // Apply chemical
             if (!pool.simulated)
             {
-                poolObj.GetComponent<BoxCollider2D>().enabled = false;
+                poolObject.GetComponent<BoxCollider2D>().enabled = false;
                 poolController.enabled = false;
             }
 
             // Apply position and rotation
-            poolObj.transform.position = pool.transform.position;
-            poolObj.transform.rotation = Quaternion.Euler(0f, 0f, pool.transform.rotation);
+            poolObject.transform.position = pool.transform.position;
+            poolObject.transform.rotation = Quaternion.Euler(0f, 0f, pool.transform.rotation);
 
             // Note pool as active
-            pool.instanceObject = poolObj;
+            pool.instanceObject = poolObject;
+            pool.instanceComponent = poolController;
             pool.active = true;
             return true;
         }
