@@ -97,14 +97,14 @@ namespace Controllers.Gui
         private void Show()
         {
             if (dummy) return;
-            element.parent.RemoveFromClassList(GuiController.DisabledClass);
+            element.RemoveFromClassList(GuiController.DisabledClass);
             visible = true;
         }
 
         private void Hide()
         {
             if (dummy) return;
-            element.parent.AddToClassList(GuiController.DisabledClass);
+            element.AddToClassList(GuiController.DisabledClass);
             visible = false;
         }
     }
