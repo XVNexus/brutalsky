@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -15,21 +16,17 @@ namespace Controllers.Gui
         public MonoBehaviour controller { get; set; }
         public bool active { get; private set; }
         public bool visible { get; private set; }
+        public bool dummy { get; private set; }
 
-        public GuiPane(string id, VisualElement element, MonoBehaviour controller)
+        public GuiPane(string id, VisualElement element, MonoBehaviour controller, bool dummy = false)
         {
             this.id = id;
             this.element = element;
             this.controller = controller;
-            if (element.ClassListContains(GuiController.DisabledClass))
-            {
-                Hide();
-            }
-            else
-            {
-                active = true;
-                Show();
-            }
+            if (!dummy) return;
+            this.dummy = true;
+            active = true;
+            visible = true;
         }
 
         public void SetParent([CanBeNull] GuiPane pane)
@@ -41,8 +38,8 @@ namespace Controllers.Gui
 
         public bool AddChild(GuiPane pane)
         {
-            if (ContainsChild(id)) return false;
-            children[id] = pane;
+            if (ContainsChild(pane.id)) return false;
+            children[pane.id] = pane;
             pane.parent?.RemoveChild(pane);
             pane.parent = this;
             return true;
@@ -74,11 +71,11 @@ namespace Controllers.Gui
 
         public bool Activate()
         {
-            if (active || parent is { active: false }) return false;
+            if (dummy || active || parent is { active: false }) return false;
             if (parent != null)
             {
                 parent.Hide();
-                foreach (var child in parent.children.Values)
+                foreach (var child in parent.children.Values.Where(child => child.id != id))
                 {
                     child.Deactivate();
                 }
@@ -90,7 +87,7 @@ namespace Controllers.Gui
 
         public bool Deactivate()
         {
-            if (!active) return false;
+            if (dummy || !active) return false;
             Hide();
             parent?.Show();
             active = false;
@@ -99,12 +96,14 @@ namespace Controllers.Gui
 
         private void Show()
         {
+            if (dummy) return;
             element.parent.RemoveFromClassList(GuiController.DisabledClass);
             visible = true;
         }
 
         private void Hide()
         {
+            if (dummy) return;
             element.parent.AddToClassList(GuiController.DisabledClass);
             visible = false;
         }

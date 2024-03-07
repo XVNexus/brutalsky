@@ -19,12 +19,11 @@ namespace Controllers.Gui
             EventSystem.current.OnGuiAction += OnGuiAction;
 
             cGuiController = GetComponent<GuiController>();
-
-            cGuiController.RegisterPane(PaneId, this);
         }
 
         private void OnGuiLoad()
         {
+            cGuiController.RegisterPane(PaneId, this);
             cGuiController.RegisterButtons(PaneId, new[]
             {
                 "cont", "lvls", "prev", "rest", "next", "cnfg", "help", "menu", "exit"

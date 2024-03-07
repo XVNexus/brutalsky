@@ -19,6 +19,7 @@ namespace Controllers
 
         // Variables
         private Dictionary<string, GuiPane> panes = new();
+        private Dictionary<string, string> parentRegistrationHold = new();
 
         // References
         public VisualElement root;
@@ -29,9 +30,12 @@ namespace Controllers
         // Functions
         public void Escape()
         {
-            if ((GetVisiblePane()?.Deactivate() ?? false) && !ContainsVisiblePane())
+            if (GetVisiblePane()?.Deactivate() ?? false)
             {
-                TimeSystem.current.Unpause();
+                if (!ContainsVisiblePane())
+                {
+                    TimeSystem.current.Unpause();
+                }
             }
             else if (GetPane(PauseMenuId)?.Activate() ?? false)
             {
@@ -42,12 +46,12 @@ namespace Controllers
         [CanBeNull]
         public GuiPane GetVisiblePane()
         {
-            return panes.Values.FirstOrDefault(pane => pane.visible);
+            return panes.Values.FirstOrDefault(pane => pane.visible && !pane.dummy);
         }
 
         public bool ContainsVisiblePane()
         {
-            return panes.Values.Any(pane => pane.visible);
+            return panes.Values.Any(pane => pane.visible && !pane.dummy);
         }
 
         [CanBeNull]
@@ -59,12 +63,27 @@ namespace Controllers
         public bool RegisterPane(string id, MonoBehaviour controller, string parentId = "")
         {
             if (ContainsPane(id)) return false;
+
             var pane = new GuiPane(id, GetPaneElement(id), controller);
             panes[id] = pane;
-            if (parentId.Length > 0)
+            if (ContainsPane(parentId))
             {
-                pane.AddChild(GetPane(parentId));
+                pane.SetParent(GetPane(parentId));
             }
+            else
+            {
+                parentRegistrationHold[id] = parentId;
+            }
+
+            var childrenToRegister = (from childId in parentRegistrationHold.Keys
+                where parentRegistrationHold[childId] == id select GetPane(childId)).ToList();
+            for (var i = 0; i < childrenToRegister.Count; i++)
+            {
+                var childToRegister = childrenToRegister[i];
+                childToRegister.SetParent(pane);
+                parentRegistrationHold.Remove(childToRegister.id);
+            }
+
             return true;
         }
 
@@ -130,12 +149,18 @@ namespace Controllers
         private void Start()
         {
             root = GetComponent<UIDocument>().rootVisualElement;
+            panes[""] = new GuiPane("", root, this, true);
 
             iEscape = EventSystem.current.inputActionAsset.FindAction("Escape");
             iEscape.Enable();
 
             iEscape.performed += OnIEscape;
 
+            Invoke(nameof(LoadGui), .1f);
+        }
+
+        private void LoadGui()
+        {
             EventSystem.current.EmitGuiLoad();
         }
 

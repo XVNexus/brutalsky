@@ -18,12 +18,11 @@ namespace Controllers.Gui
             EventSystem.current.OnGuiAction += OnGuiAction;
 
             cGuiController = GetComponent<GuiController>();
-
-            cGuiController.RegisterPane(PaneId, this);
         }
 
         private void OnGuiLoad()
         {
+            cGuiController.RegisterPane(PaneId, this, GuiPmController.PaneId);
             cGuiController.RegisterButton(PaneId, "back");
         }
 

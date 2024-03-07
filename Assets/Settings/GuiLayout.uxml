@@ -37,29 +37,7 @@
         <ui:VisualElement class="bs bs-container bs-disabled">
             <ui:VisualElement name="pane-ls" class="bs bs-pane" style="width: 80%; height: 80%;">
                 <ui:Label tabindex="-1" text="SELECT LEVEL" parse-escape-sequences="true" display-tooltip-when-elided="true" class="bs bs-title" />
-                <ui:GroupBox class="bs bs-grid bs-spacer">
-                    <ui:GroupBox class="bs bs-cell">
-                        <ui:Button text="Back" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ls-btn-back" class="bs bs-button" style="color: rgb(255, 191, 128);" />
-                    </ui:GroupBox>
-                    <ui:GroupBox class="bs bs-cell">
-                        <ui:Button text="Back" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ls-btn-back" class="bs bs-button" style="color: rgb(255, 191, 128);" />
-                    </ui:GroupBox>
-                    <ui:GroupBox class="bs bs-cell">
-                        <ui:Button text="Back" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ls-btn-back" class="bs bs-button" style="color: rgb(255, 191, 128);" />
-                    </ui:GroupBox>
-                    <ui:GroupBox class="bs bs-cell">
-                        <ui:Button text="Back" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ls-btn-back" class="bs bs-button" style="color: rgb(255, 191, 128);" />
-                    </ui:GroupBox>
-                    <ui:GroupBox class="bs bs-cell">
-                        <ui:Button text="Back" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ls-btn-back" class="bs bs-button" style="color: rgb(255, 191, 128);" />
-                    </ui:GroupBox>
-                    <ui:GroupBox class="bs bs-cell">
-                        <ui:Button text="Back" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ls-btn-back" class="bs bs-button" style="color: rgb(255, 191, 128);" />
-                    </ui:GroupBox>
-                    <ui:GroupBox class="bs bs-cell">
-                        <ui:Button text="Back" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ls-btn-back" class="bs bs-button" style="color: rgb(255, 191, 128);" />
-                    </ui:GroupBox>
-                </ui:GroupBox>
+                <ui:GroupBox class="bs bs-grid bs-spacer" />
                 <ui:GroupBox class="bs bs-box">
                     <ui:GroupBox class="bs bs-row">
                         <ui:Button text="Back" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ls-btn-back" class="bs bs-button" style="color: rgb(255, 191, 128);" />
