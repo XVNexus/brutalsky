@@ -160,3 +160,66 @@
     display: none;
     scale: 0.5 0.5;
 }
+
+.unity-scroller {
+    width: 30px;
+    transition-duration: 50ms;
+    transition-timing-function: ease-out-sine;
+    margin-top: 5px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    margin-left: 5px;
+}
+
+.unity-scroller > #unity-low-button {
+    width: 100%;
+    border-top-width: 0;
+    border-right-width: 0;
+    border-bottom-width: 0;
+    border-left-width: 0;
+    background-color: rgba(255, 255, 255, 0.02);
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+.unity-scroller > #unity-low-button:hover {
+    background-color: rgba(255, 255, 255, 0.04);
+}
+
+.unity-scroller > #unity-high-button {
+    width: 100%;
+    border-top-width: 0;
+    border-right-width: 0;
+    border-bottom-width: 0;
+    border-left-width: 0;
+    background-color: rgba(255, 255, 255, 0.02);
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+.unity-scroller > #unity-high-button:hover {
+    background-color: rgba(255, 255, 255, 0.04);
+}
+
+.unity-scroller > #unity-slider {
+    width: 100%;
+}
+
+.unity-scroller > * > * > * > #unity-tracker {
+    background-color: rgba(255, 255, 255, 0.02);
+    border-top-width: 0;
+    border-right-width: 0;
+    border-bottom-width: 0;
+    border-left-width: 0;
+}
+
+.unity-scroller > * > * > * > #unity-dragger {
+    position: absolute;
+    left: 5px;
+    width: 20px;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.unity-scroller > * > * > * > #unity-dragger:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
