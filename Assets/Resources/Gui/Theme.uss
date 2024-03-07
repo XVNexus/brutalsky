@@ -67,7 +67,6 @@
 }
 
 .bs-box {
-    width: 100%;
     padding-top: 5px;
     padding-right: 5px;
     padding-bottom: 5px;
@@ -81,19 +80,35 @@
 
 .bs-grid {
     width: 100%;
-    padding-top: 5px;
-    padding-right: 5px;
-    padding-bottom: 5px;
-    padding-left: 5px;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.bs-grid > * > * > #unity-content-container {
+    width: 100%;
     flex-direction: row;
     flex-wrap: wrap;
 }
 
 .bs-cell {
-    flex-direction: row;
-    flex-wrap: wrap;
-    width: 20%;
-    height: 25%;
+    background-color: rgba(255, 255, 255, 0.02);
+    height: 120px;
+    border-right-width: 5px;
+    border-left-width: 5px;
+    padding-top: 5px;
+    padding-right: 5px;
+    padding-bottom: 5px;
+    padding-left: 5px;
+    border-right-color: rgba(255, 255, 255, 0);
+    border-left-color: rgba(255, 255, 255, 0);
+}
+
+.bs-cell:hover {
+    background-color: rgba(255, 255, 255, 0.04);
+    border-right-width: 5px;
+    border-left-width: 5px;
+    border-right-color: rgba(255, 255, 255, 0.2);
+    border-left-color: rgba(255, 255, 255, 0.2);
 }
 
 .bs-label {
