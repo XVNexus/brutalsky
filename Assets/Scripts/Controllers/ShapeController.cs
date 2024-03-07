@@ -15,13 +15,10 @@ namespace Controllers
         private Rigidbody2D cRigidbody2D;
 
         // Events
-        private void OnEnable()
-        {
-            cRigidbody2D = GetComponent<Rigidbody2D>();
-        }
-
         private void OnCollisionEnter2D(Collision2D other)
         {
+            cRigidbody2D = GetComponent<Rigidbody2D>();
+
             // Apply damage to player
             var damage = bsObject.material.damage;
             if (!other.gameObject.CompareTag(PlayerController.Tag) || damage == 0f) return;

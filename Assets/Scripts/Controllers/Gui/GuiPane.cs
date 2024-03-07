@@ -99,13 +99,13 @@ namespace Controllers.Gui
 
         private void Show()
         {
-            element.RemoveFromClassList(GuiController.DisabledClass);
+            element.parent.RemoveFromClassList(GuiController.DisabledClass);
             visible = true;
         }
 
         private void Hide()
         {
-            element.AddToClassList(GuiController.DisabledClass);
+            element.parent.AddToClassList(GuiController.DisabledClass);
             visible = false;
         }
     }

@@ -8,6 +8,7 @@ namespace Controllers.Player
         // Variables
         public float movementForce;
         public float jumpForce;
+        public bool dummy;
         private float movementPush;
         private int jumpCooldown;
         private bool lastBoostInput;
@@ -19,7 +20,7 @@ namespace Controllers.Player
         private Rigidbody2D cRigidbody2D;
     
         // Events
-        private void OnEnable()
+        private void Start()
         {
             cPlayerController = GetComponent<PlayerController>();
             cRigidbody2D = GetComponent<Rigidbody2D>();
@@ -39,6 +40,8 @@ namespace Controllers.Player
         // Updates
         private void FixedUpdate()
         {
+            if (dummy) return;
+
             // Get movement data
             var position = (Vector2)transform.position;
             //// This works because glue causes rapid vibration,

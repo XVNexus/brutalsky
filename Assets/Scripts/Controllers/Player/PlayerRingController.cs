@@ -16,7 +16,7 @@ namespace Controllers.Player
         private PlayerController cPlayerController;
 
         // Events
-        private void OnEnable()
+        private void Start()
         {
             cPlayerController = GetComponent<PlayerController>();
         }

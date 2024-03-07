@@ -15,9 +15,9 @@ namespace Controllers
         // Constants
         public const string Tag = "Gui";
         public const string DisabledClass = "bs-disabled";
+        public const string PauseMenuId = "pm";
 
         // Variables
-        public string pauseMenuId = "pm";
         private Dictionary<string, GuiPane> panes = new();
 
         // References
@@ -33,7 +33,7 @@ namespace Controllers
             {
                 TimeSystem.current.Unpause();
             }
-            else if (GetPane(pauseMenuId)?.Activate() ?? false)
+            else if (GetPane(PauseMenuId)?.Activate() ?? false)
             {
                 TimeSystem.current.Pause();
             }
@@ -100,8 +100,8 @@ namespace Controllers
 
         public void RegisterButton(string paneId, string itemId)
         {
-            var contButton = GetInputElement<Button>(paneId, itemId);
-            contButton.clicked += () =>
+            var button = GetInputElement<Button>(paneId, itemId);
+            button.clicked += () =>
             {
                 EventSystem.current.EmitGuiAction(GuiAction.ButtonPress, paneId, itemId);
             };
@@ -127,22 +127,19 @@ namespace Controllers
         }
 
         // Events
-        private void OnEnable()
+        private void Start()
         {
             root = GetComponent<UIDocument>().rootVisualElement;
 
             iEscape = EventSystem.current.inputActionAsset.FindAction("Escape");
             iEscape.Enable();
 
-            iEscape.performed += onIEscape;
-        }
+            iEscape.performed += OnIEscape;
 
-        private void Start()
-        {
             EventSystem.current.EmitGuiLoad();
         }
 
-        private void onIEscape(InputAction.CallbackContext context)
+        private void OnIEscape(InputAction.CallbackContext context)
         {
             Escape();
         }

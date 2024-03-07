@@ -60,10 +60,7 @@ namespace Core
                 playerController.bsObject = player;
                 playerController.maxHealth = player.health;
                 playerController.color = player.color.tint;
-                if (player.dummy)
-                {
-                    playerObject.GetComponent<PlayerMovementController>().enabled = false;
-                }
+                playerObject.GetComponent<PlayerMovementController>().dummy = player.dummy;
             }
             else
             {

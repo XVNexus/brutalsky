@@ -1063,7 +1063,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1db1e7a376054c39b47305fce91ef979, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pauseMenuId: pm
   iEscape:
     m_Name: I Escape
     m_Type: 0

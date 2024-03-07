@@ -98,7 +98,7 @@ namespace Controllers
         }
 
         // Events
-        private void OnEnable()
+        private void Start()
         {
             cPlayerSpriteRenderer = GetComponent<SpriteRenderer>();
             cRigidbody2D = GetComponent<Rigidbody2D>();
@@ -108,10 +108,7 @@ namespace Controllers
             iMovement.Enable();
             iBoost = EventSystem.current.inputActionAsset.FindAction("Boost");
             iBoost.Enable();
-        }
 
-        private void Start()
-        {
             // Sync health with max health
             health = maxHealth;
 

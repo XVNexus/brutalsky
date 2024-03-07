@@ -13,16 +13,13 @@ namespace Controllers.Gui
         private GuiController cGuiController;
 
         // Events
-        private void OnEnable()
+        private void Start()
         {
             EventSystem.current.OnGuiLoad += OnGuiLoad;
             EventSystem.current.OnGuiAction += OnGuiAction;
 
             cGuiController = GetComponent<GuiController>();
-        }
 
-        private void Start()
-        {
             cGuiController.RegisterPane(PaneId, this);
         }
 
@@ -76,7 +73,7 @@ namespace Controllers.Gui
 
         private void OnButtonPressLvls()
         {
-            throw new NotImplementedException();
+            cGuiController.ActivatePane(GuiLsController.PaneId);
         }
 
         private void OnButtonPressPrev()
@@ -97,11 +94,13 @@ namespace Controllers.Gui
 
         private void OnButtonPressCnfg()
         {
+            // TODO: DO NOT HARDCODE THIS ID
             cGuiController.ActivatePane("cf");
         }
 
         private void OnButtonPressHelp()
         {
+            // TODO: DO NOT HARDCODE THIS ID
             cGuiController.ActivatePane("he");
         }
 

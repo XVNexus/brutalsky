@@ -20,14 +20,11 @@ namespace Controllers.Pool
         private SpriteRenderer cSpriteRenderer;
 
         // Events
-        private void OnEnable()
+        private void Start()
         {
             cPoolController = GetComponent<PoolController>();
             cSpriteRenderer = GetComponent<SpriteRenderer>();
-        }
 
-        private void Start()
-        {
             // Set wave color to match the pool color
             cLineRenderer.material = cSpriteRenderer.material;
             cLineRenderer.sortingOrder = cSpriteRenderer.sortingOrder;
