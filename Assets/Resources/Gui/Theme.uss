@@ -93,6 +93,12 @@
     flex-direction: row;
     flex-wrap: wrap;
     width: 20%;
+    height: 25%;
+}
+
+.bs-label {
+    height: 40px;
+    width: 100%;
 }
 
 .bs-button {
