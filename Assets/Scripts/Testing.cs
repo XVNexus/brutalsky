@@ -8,7 +8,9 @@ public class Testing : MonoBehaviour
 {
     private void Start()
     {
-        var map = BsMap.Parse(MapSystem.Load("Brutalsky", true));
+        GenerateDefaultMaps();
+        MapSystem.current.GenerateMapList();
+        var map = BsMap.Parse(MapSystem.LoadInternal("Brutalsky"));
         MapSystem.current.Build(map);
         PlayerSystem.current.Spawn(map, new[]
         {
@@ -32,7 +34,7 @@ public class Testing : MonoBehaviour
 
     private void GenerateBoxMap(string title, float size, string name, bool bottom, bool top, bool left, bool right)
     {
-        var map = new BsMap($"{title} {name}", "Xveon")
+        var map = new BsMap($"{name} {title}", "Brutalsky")
         {
             size = new Vector2(size, size / 2f),
             lighting = new BsColor(1f, 1f, 1f, .8f)
@@ -63,6 +65,6 @@ public class Testing : MonoBehaviour
                 BsMaterial.Stone(), BsColor.Stone()));
         map.Add(new BsSpawn("spawn-left", new BsTransform(-1f, -size / 4f + 1.5f)));
         map.Add(new BsSpawn("spawn-right", new BsTransform(1f, -size / 4f + 1.5f)));
-        MapSystem.Save(map.Stringify(), $"{title}{name}", true);
+        MapSystem.Save(map.Stringify(), $"{title}{name}");
     }
 }

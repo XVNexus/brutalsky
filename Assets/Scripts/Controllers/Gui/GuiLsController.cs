@@ -1,7 +1,5 @@
 using Brutalsky;
 using Core;
-using JetBrains.Annotations;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -22,8 +20,8 @@ namespace Controllers.Gui
             mapTileBox.AddToClassList("bs");
             mapTileBox.AddToClassList("bs-box");
 
-            var mapTileCell = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(
-                $"{EventSystem.ResourcesPath}/{EventSystem.GuiElementsFolder}/MapTile.uxml").Instantiate();
+            var resource = Resources.Load<VisualTreeAsset>($"Gui/Elements/MapTile");
+            var mapTileCell = resource.Instantiate();
             mapTileCell.AddToClassList("bs");
             mapTileCell.AddToClassList("bs-cell");
             cGuiController.RegisterButton(mapTileCell.Q<Button>("button"), PaneId, $"load-{map.id}");

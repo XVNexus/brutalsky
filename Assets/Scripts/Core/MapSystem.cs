@@ -38,31 +38,38 @@ namespace Core
         private GameObject mapParent;
 
         // Functions
-        public void GenerateMapList(bool local = false)
+        public void GenerateMapList()
         {
-            var pathBase = local ? EventSystem.ContentPath : EventSystem.dataPath;
-            var path = $"{pathBase}/{EventSystem.MapsFolder}";
+            rawMapList.Clear();
+            var defaultRawMap = LoadInternal("Brutalsky");
+            var defaultMap = BsMap.Parse(defaultRawMap);
+            rawMapList[defaultMap.id] = defaultRawMap;
+            var path = $"{EventSystem.dataPath}/Maps";
+            if (!Directory.Exists(path)) return;
             foreach (var mapPath in Directory.GetFiles(path, $"*.{SaveFormat}"))
             {
                 var mapFilename = Regex.Match(mapPath, $@"\w+(?=\.{SaveFormat})").Value;
-                var rawMap = Load(mapFilename, local);
+                var rawMap = Load(mapFilename);
                 var map = BsMap.Parse(rawMap);
                 rawMapList[map.id] = rawMap;
             }
         }
 
-        public static string Load(string filename, bool local = false)
+        public static string LoadInternal(string filename)
         {
-            var pathBase = local ? EventSystem.ContentPath : EventSystem.dataPath;
-            var path = $"{pathBase}/{EventSystem.MapsFolder}/{filename}.{SaveFormat}";
+            return Resources.Load<TextAsset>($"Content/Maps/{filename}").text;
+        }
+
+        public static string Load(string filename)
+        {
+            var path = $"{EventSystem.dataPath}/Maps/{filename}.{SaveFormat}";
             using var reader = new StreamReader(path);
             return reader.ReadToEnd();
         }
 
-        public static void Save(string raw, string filename, bool local = false)
+        public static void Save(string raw, string filename)
         {
-            var pathBase = local ? EventSystem.ContentPath : EventSystem.dataPath;
-            var path = $"{pathBase}/{EventSystem.MapsFolder}/{filename}.{SaveFormat}";
+            var path = $"{EventSystem.dataPath}/Maps/{filename}.{SaveFormat}";
             new FileInfo(path).Directory?.Create();
             using var writer = new StreamWriter(path);
             writer.Write(raw);
@@ -338,7 +345,6 @@ namespace Core
         // Events
         private void Start()
         {
-            GenerateMapList(true);
             GenerateMapList();
         }
 
