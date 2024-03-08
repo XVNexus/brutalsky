@@ -30,6 +30,8 @@ namespace Core
         {
             this.viewSize = viewSize;
             offsetMultiplier = Mathf.Min(viewSize.x, viewSize.y);
+            cCamera.orthographicSize =
+                Mathf.Max(viewSize.y * .5f * (viewSize.x / viewSize.y) / cCamera.aspect, viewSize.y * .5f);
         }
 
         public void Shove(Vector2 force)
@@ -55,8 +57,7 @@ namespace Core
             // Configure the viewport to fit the screen
             if (!Mathf.Approximately(cCamera.aspect, lastCameraAspect))
             {
-                cCamera.orthographicSize =
-                    Mathf.Max(viewSize.y * .5f * (viewSize.x / viewSize.y) / cCamera.aspect, viewSize.y * .5f);
+                ResizeView(viewSize);
                 lastCameraAspect = cCamera.aspect;
             }
 

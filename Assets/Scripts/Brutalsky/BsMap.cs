@@ -1,18 +1,17 @@
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using Brutalsky.Object;
 using Core;
 using Serializable;
 using UnityEngine;
 using YamlDotNet.Serialization;
+using Random = Unity.Mathematics.Random;
 
 namespace Brutalsky
 {
     public class BsMap
     {
-        public const string SaveFormat = "yaml";
-
+        public uint id { get; private set; }
         public string title { get; set; }
         public string author { get; set; }
         public Vector2 size { get; set; }
@@ -26,6 +25,14 @@ namespace Brutalsky
         {
             this.title = title;
             this.author = author;
+            id = CalculateId(title, author);
+        }
+
+        public static uint CalculateId(string title, string author)
+        {
+            var idSeed = author.Aggregate<char, uint>(1, (current, letter) => current * letter)
+                         + title.Aggregate<char, uint>(0, (current, letter) => current + letter);
+            return Random.CreateFromIndex(idSeed).NextUInt();
         }
 
         public BsSpawn GetSpawn(string id)
@@ -143,23 +150,6 @@ namespace Brutalsky
         public string Stringify()
         {
             return new Serializer().Serialize(SrzMap.Simplify(this));
-        }
-
-        public static BsMap Load(string filename, bool local = false)
-        {
-            var pathBase = local ? EventSystem.ContentPath : EventSystem.dataPath;
-            var path = $"{pathBase}/{EventSystem.MapsFolder}/{filename}.{SaveFormat}";
-            using var reader = new StreamReader(path);
-            return Parse(reader.ReadToEnd());
-        }
-
-        public void Save(string filename, bool local = false)
-        {
-            var pathBase = local ? EventSystem.ContentPath : EventSystem.dataPath;
-            var path = $"{pathBase}/{EventSystem.MapsFolder}/{filename}.{SaveFormat}";
-            new FileInfo(path).Directory?.Create();
-            using var writer = new StreamWriter(path);
-            writer.Write(Stringify());
         }
     }
 }

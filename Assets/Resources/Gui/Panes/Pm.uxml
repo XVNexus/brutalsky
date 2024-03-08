@@ -12,9 +12,7 @@
                 <ui:Button text="Select Level &gt;" parse-escape-sequences="true" display-tooltip-when-elided="true" name="pm-btn-lvls" class="bs bs-button" style="color: rgb(128, 255, 255); border-bottom-right-radius: 0; border-bottom-left-radius: 0;" />
             </ui:GroupBox>
             <ui:GroupBox class="bs bs-row">
-                <ui:Button text="Prev" parse-escape-sequences="true" display-tooltip-when-elided="true" name="pm-btn-prev" class="bs bs-button" style="color: rgb(128, 255, 255); border-top-right-radius: 0; border-bottom-right-radius: 0; border-top-left-radius: 0;" />
-                <ui:Button text="Restart" parse-escape-sequences="true" display-tooltip-when-elided="true" name="pm-btn-rest" class="bs bs-button" style="color: rgb(128, 255, 255); border-top-right-radius: 0; border-bottom-right-radius: 0; border-top-left-radius: 0; border-bottom-left-radius: 0; flex-grow: 2;" />
-                <ui:Button text="Next" parse-escape-sequences="true" display-tooltip-when-elided="true" name="pm-btn-next" class="bs bs-button" style="color: rgb(128, 255, 255); border-top-left-radius: 0; border-top-right-radius: 0; border-bottom-left-radius: 0;" />
+                <ui:Button text="Restart Fight" parse-escape-sequences="true" display-tooltip-when-elided="true" name="pm-btn-rest" class="bs bs-button" style="color: rgb(128, 255, 255); border-top-right-radius: 0; border-top-left-radius: 0;" />
             </ui:GroupBox>
         </ui:GroupBox>
         <ui:GroupBox class="bs bs-box">

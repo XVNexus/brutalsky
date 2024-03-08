@@ -13,7 +13,6 @@ namespace Controllers
     public class GuiController : MonoBehaviour
     {
         // Constants
-        public const string Tag = "Gui";
         public const string DisabledClass = "bs-disabled";
         public const string PauseMenuId = "pm";
 
@@ -119,7 +118,11 @@ namespace Controllers
 
         public void RegisterButton(string paneId, string itemId)
         {
-            var button = GetInputElement<Button>(paneId, itemId);
+            RegisterButton(GetInputElement<Button>(paneId, itemId), paneId, itemId);
+        }
+
+        public void RegisterButton(Button button, string paneId, string itemId)
+        {
             button.clicked += () =>
             {
                 EventSystem.current.EmitGuiAction(GuiAction.ButtonPress, paneId, itemId);

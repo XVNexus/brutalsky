@@ -238,14 +238,14 @@ pools:
   - id: lava-left
     transform: -13 -11 0
     size: 12 4
-    chemical: 25 1 0
+    chemical: 25 1 -25
     color: 1 0.3 0.2 1 1
     layer: 2
     simulated: 1
   - id: lava-right
     transform: 13 -11 0
     size: 12 4
-    chemical: 25 1 0
+    chemical: 25 1 -25
     color: 1 0.3 0.2 1 1
     layer: 2
     simulated: 1

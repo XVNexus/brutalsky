@@ -46,10 +46,8 @@ namespace Serializable
 
         public BsMap Expand()
         {
-            var result = new BsMap
+            var result = new BsMap(title, author)
             {
-                title = title,
-                author = author,
                 size = Vector2Ext.Parse(size),
                 lighting = BsColor.Parse(lighting)
             };

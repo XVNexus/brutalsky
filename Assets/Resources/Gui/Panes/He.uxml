@@ -3,7 +3,7 @@
     <ui:VisualElement class="bs bs-pane" style="width: 80%; height: 80%;">
         <ui:Label tabindex="-1" text="GUIDE" parse-escape-sequences="true" display-tooltip-when-elided="true" class="bs bs-title" />
         <ui:GroupBox class="bs bs-spacer">
-            <ui:Label tabindex="-1" text="fuck u" parse-escape-sequences="true" display-tooltip-when-elided="true" />
+            <ui:Label tabindex="-1" text="idk lol" parse-escape-sequences="true" display-tooltip-when-elided="true" />
         </ui:GroupBox>
         <ui:GroupBox class="bs bs-box">
             <ui:GroupBox class="bs bs-row">

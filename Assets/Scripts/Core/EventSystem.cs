@@ -9,7 +9,9 @@ namespace Core
     public class EventSystem : MonoBehaviour
     {
         public const string ContentPath = "./Assets/Content";
+        public const string ResourcesPath = "Assets/Resources";
         public const string MapsFolder = "Maps";
+        public const string GuiElementsFolder = "Gui/Elements";
 
         public static EventSystem current;
         public static Random random;

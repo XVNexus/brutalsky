@@ -26,7 +26,7 @@ namespace Controllers.Gui
             cGuiController.RegisterPane(PaneId, this);
             cGuiController.RegisterButtons(PaneId, new[]
             {
-                "cont", "lvls", "prev", "rest", "next", "cnfg", "help", "menu", "exit"
+                "cont", "lvls", "rest", "cnfg", "help", "menu", "exit"
             });
         }
 
@@ -93,14 +93,12 @@ namespace Controllers.Gui
 
         private void OnButtonPressCnfg()
         {
-            // TODO: DO NOT HARDCODE THIS ID
-            cGuiController.ActivatePane("cf");
+            cGuiController.ActivatePane(GuiCfController.PaneId);
         }
 
         private void OnButtonPressHelp()
         {
-            // TODO: DO NOT HARDCODE THIS ID
-            cGuiController.ActivatePane("he");
+            cGuiController.ActivatePane(GuiHeController.PaneId);
         }
 
         private void OnButtonPressMenu()

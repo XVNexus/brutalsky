@@ -1,46 +1,8 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <ui:Template name="MapTile" src="project://database/Assets/Resources/Gui/Elements/MapTile.uxml?fileID=9197481963319205126&amp;guid=ef37a8ef635839925bf01f87f25c397e&amp;type=3#MapTile" />
     <Style src="project://database/Assets/Resources/Gui/Theme.uss?fileID=7433441132597879392&amp;guid=6528c61135849952387c3681c08489c6&amp;type=3#Theme" />
     <ui:VisualElement class="bs bs-pane" style="width: 80%; height: 80%;">
         <ui:Label tabindex="-1" text="SELECT LEVEL" parse-escape-sequences="true" display-tooltip-when-elided="true" class="bs bs-title" />
-        <ui:ScrollView class="bs bs-grid bs-spacer">
-            <ui:VisualElement class="bs bs-box" style="width: 20%;">
-                <ui:Instance template="MapTile" name="MapTile" class="bs bs-cell" />
-            </ui:VisualElement>
-            <ui:VisualElement class="bs bs-box" style="width: 20%;">
-                <ui:Instance template="MapTile" name="MapTile" class="bs bs-cell" />
-            </ui:VisualElement>
-            <ui:VisualElement class="bs bs-box" style="width: 20%;">
-                <ui:Instance template="MapTile" name="MapTile" class="bs bs-cell" />
-            </ui:VisualElement>
-            <ui:VisualElement class="bs bs-box" style="width: 20%;">
-                <ui:Instance template="MapTile" name="MapTile" class="bs bs-cell" />
-            </ui:VisualElement>
-            <ui:VisualElement class="bs bs-box" style="width: 20%;">
-                <ui:Instance template="MapTile" name="MapTile" class="bs bs-cell" />
-            </ui:VisualElement>
-            <ui:VisualElement class="bs bs-box" style="width: 20%;">
-                <ui:Instance template="MapTile" name="MapTile" class="bs bs-cell" />
-            </ui:VisualElement>
-            <ui:VisualElement class="bs bs-box" style="width: 20%;">
-                <ui:Instance template="MapTile" name="MapTile" class="bs bs-cell" />
-            </ui:VisualElement>
-            <ui:VisualElement class="bs bs-box" style="width: 20%;">
-                <ui:Instance template="MapTile" name="MapTile" class="bs bs-cell" />
-            </ui:VisualElement>
-            <ui:VisualElement class="bs bs-box" style="width: 20%;">
-                <ui:Instance template="MapTile" name="MapTile" class="bs bs-cell" />
-            </ui:VisualElement>
-            <ui:VisualElement class="bs bs-box" style="width: 20%;">
-                <ui:Instance template="MapTile" name="MapTile" class="bs bs-cell" />
-            </ui:VisualElement>
-            <ui:VisualElement class="bs bs-box" style="width: 20%;">
-                <ui:Instance template="MapTile" name="MapTile" class="bs bs-cell" />
-            </ui:VisualElement>
-            <ui:VisualElement class="bs bs-box" style="width: 20%;">
-                <ui:Instance template="MapTile" name="MapTile" class="bs bs-cell" />
-            </ui:VisualElement>
-        </ui:ScrollView>
+        <ui:ScrollView class="bs bs-grid bs-spacer" />
         <ui:GroupBox class="bs bs-box">
             <ui:GroupBox class="bs bs-row">
                 <ui:Button text="Back" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ls-btn-back" class="bs bs-button" style="color: rgb(255, 191, 128);" />

@@ -1,4 +1,8 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Brutalsky;
 using Brutalsky.Joint;
 using Brutalsky.Object;
@@ -16,7 +20,11 @@ namespace Core
         public static MapSystem current;
         private void Awake() => current = this;
 
+        // Constants
+        public const string SaveFormat = "yaml";
+
         // Variables
+        public Dictionary<uint, string> rawMapList { get; private set; } = new();
         [CanBeNull] public BsMap activeMap { get; private set; }
         public bool mapLoaded { get; private set; }
 
@@ -30,6 +38,36 @@ namespace Core
         private GameObject mapParent;
 
         // Functions
+        public void GenerateMapList(bool local = false)
+        {
+            var pathBase = local ? EventSystem.ContentPath : EventSystem.dataPath;
+            var path = $"{pathBase}/{EventSystem.MapsFolder}";
+            foreach (var mapPath in Directory.GetFiles(path, $"*.{SaveFormat}"))
+            {
+                var mapFilename = Regex.Match(mapPath, $@"\w+(?=\.{SaveFormat})").Value;
+                var rawMap = Load(mapFilename, local);
+                var map = BsMap.Parse(rawMap);
+                rawMapList[map.id] = rawMap;
+            }
+        }
+
+        public static string Load(string filename, bool local = false)
+        {
+            var pathBase = local ? EventSystem.ContentPath : EventSystem.dataPath;
+            var path = $"{pathBase}/{EventSystem.MapsFolder}/{filename}.{SaveFormat}";
+            using var reader = new StreamReader(path);
+            return reader.ReadToEnd();
+        }
+
+        public static void Save(string raw, string filename, bool local = false)
+        {
+            var pathBase = local ? EventSystem.ContentPath : EventSystem.dataPath;
+            var path = $"{pathBase}/{EventSystem.MapsFolder}/{filename}.{SaveFormat}";
+            new FileInfo(path).Directory?.Create();
+            using var writer = new StreamWriter(path);
+            writer.Write(raw);
+        }
+
         public void Rebuild()
         {
             if (!mapLoaded) return;
@@ -295,6 +333,13 @@ namespace Core
             joint.instanceComponent = null;
             joint.active = false;
             return true;
+        }
+
+        // Events
+        private void Start()
+        {
+            GenerateMapList(true);
+            GenerateMapList();
         }
 
         // Utilities

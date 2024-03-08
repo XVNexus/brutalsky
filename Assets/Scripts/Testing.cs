@@ -8,7 +8,7 @@ public class Testing : MonoBehaviour
 {
     private void Start()
     {
-        var map = BsMap.Load("Brutalsky", true);
+        var map = BsMap.Parse(MapSystem.Load("Brutalsky", true));
         MapSystem.current.Build(map);
         PlayerSystem.current.Spawn(map, new[]
         {
@@ -63,6 +63,6 @@ public class Testing : MonoBehaviour
                 BsMaterial.Stone(), BsColor.Stone()));
         map.Add(new BsSpawn("spawn-left", new BsTransform(-1f, -size / 4f + 1.5f)));
         map.Add(new BsSpawn("spawn-right", new BsTransform(1f, -size / 4f + 1.5f)));
-        map.Save($"{title}{name}", true);
+        MapSystem.Save(map.Stringify(), $"{title}{name}", true);
     }
 }
