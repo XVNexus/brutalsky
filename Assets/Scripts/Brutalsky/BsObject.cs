@@ -6,17 +6,17 @@ namespace Brutalsky
 {
     public abstract class BsObject
     {
-        public string id { get; set; }
-        public BsTransform transform { get; set; }
+        public string Id { get; set; }
+        public BsTransform Transform { get; set; }
 
-        [CanBeNull] public GameObject instanceObject { get; set; }
-        [CanBeNull] public Component instanceComponent { get; set; }
-        public bool active { get; set; }
+        [CanBeNull] public GameObject InstanceObject { get; set; }
+        [CanBeNull] public Component InstanceComponent { get; set; }
+        public bool Active { get; set; }
 
         protected BsObject(string id, BsTransform transform)
         {
-            this.id = id;
-            this.transform = transform;
+            Id = id;
+            Transform = transform;
         }
     }
 }

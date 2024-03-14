@@ -19,13 +19,13 @@ namespace Serializable
         {
             return new SrzPool
             {
-                id = pool.id,
-                transform = pool.transform.ToString(),
-                size = $"{pool.size.x} {pool.size.y}",
-                chemical = pool.chemical.ToString(),
-                color = pool.color.ToString(),
-                layer = (int)pool.layer,
-                simulated = BoolExt.ToString(pool.simulated)
+                id = pool.Id,
+                transform = pool.Transform.ToString(),
+                size = $"{pool.Size.x} {pool.Size.y}",
+                chemical = pool.Chemical.ToString(),
+                color = pool.Color.ToString(),
+                layer = (int)pool.Layer,
+                simulated = BoolExt.ToString(pool.Simulated)
             };
         }
 

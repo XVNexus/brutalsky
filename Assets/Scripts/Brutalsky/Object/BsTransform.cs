@@ -4,24 +4,24 @@ namespace Brutalsky.Object
 {
     public class BsTransform
     {
-        public Vector2 position { get; set; }
-        public float rotation { get; set; }
+        public Vector2 Position { get; set; }
+        public float Rotation { get; set; }
 
         public BsTransform(Vector2 position, float rotation = 0f)
         {
-            this.position = position;
-            this.rotation = rotation;
+            Position = position;
+            Rotation = rotation;
         }
 
         public BsTransform(float x, float y, float rotation = 0f)
         {
-            position = new Vector2(x, y);
-            this.rotation = rotation;
+            Position = new Vector2(x, y);
+            Rotation = rotation;
         }
 
         public BsTransform(float rotation)
         {
-            this.rotation = rotation;
+            Rotation = rotation;
         }
 
         public BsTransform()
@@ -36,7 +36,7 @@ namespace Brutalsky.Object
 
         public override string ToString()
         {
-            return $"{position.x} {position.y} {rotation}";
+            return $"{Position.x} {Position.y} {Rotation}";
         }
     }
 }

@@ -1,86 +1,84 @@
 using UnityEngine;
 using Utils.Ext;
-using Random = Unity.Mathematics.Random;
 
 namespace Core
 {
     public class CameraSystem : MonoBehaviour
     {
-        public static CameraSystem current;
-        private void Awake() => current = this;
+        public static CameraSystem _ { get; private set; }
+        private void Awake() => _ = this;
 
         // Variables
         public Vector2 viewSize;
         public float dampening;
         public float shakeInterval;
         public float simSpeed;
-        private float offsetMultiplier;
-        private Vector2 offset;
-        private Vector2 velocity;
-        private float shake;
-        private float shakeTimer;
-        private float lastCameraAspect = 0f;
-        private Random random = Random.CreateFromIndex(0);
+        private float _offsetMultiplier;
+        private Vector2 _offset;
+        private Vector2 _velocity;
+        private float _shake;
+        private float _shakeTimer;
+        private float _lastCameraAspect;
 
         // References
-        private Camera cCamera;
+        private Camera _cCamera;
 
         // Functions
         public void ResizeView(Vector2 viewSize)
         {
             this.viewSize = viewSize;
-            offsetMultiplier = Mathf.Min(viewSize.x, viewSize.y);
-            cCamera.orthographicSize =
-                Mathf.Max(viewSize.y * .5f * (viewSize.x / viewSize.y) / cCamera.aspect, viewSize.y * .5f);
+            _offsetMultiplier = Mathf.Min(viewSize.x, viewSize.y);
+            _cCamera.orthographicSize =
+                Mathf.Max(viewSize.y * .5f * (viewSize.x / viewSize.y) / _cCamera.aspect, viewSize.y * .5f);
         }
 
         public void Shove(Vector2 force)
         {
-            velocity += force * .01f;
+            _velocity += force * .01f;
         }
 
         public void Shake(float force)
         {
-            shake += force;
-            shakeTimer = shakeInterval;
+            _shake += force;
+            _shakeTimer = shakeInterval;
         }
 
         // Events
         private void Start()
         {
-            cCamera = Camera.main;
+            _cCamera = Camera.main;
         }
 
         // Updates
         private void Update()
         {
             // Configure the viewport to fit the screen
-            if (!Mathf.Approximately(cCamera.aspect, lastCameraAspect))
+            if (!Mathf.Approximately(_cCamera.aspect, _lastCameraAspect))
             {
                 ResizeView(viewSize);
-                lastCameraAspect = cCamera.aspect;
+                _lastCameraAspect = _cCamera.aspect;
             }
 
             // Simulate camera spring mount
-            var velocityFromSpring = velocity + -offset * (simSpeed * Time.deltaTime);
-            var velocityFromDampening = -offset;
-            velocity = MathfExt.Lerp(velocityFromSpring, velocityFromDampening, dampening);
-            offset += velocity * (simSpeed * Time.deltaTime);
+            var velocityFromSpring = _velocity + -_offset * (simSpeed * Time.deltaTime);
+            var velocityFromDampening = -_offset;
+            _velocity = MathfExt.Lerp(velocityFromSpring, velocityFromDampening, dampening);
+            _offset += _velocity * (simSpeed * Time.deltaTime);
 
             // Apply shake offset
-            var cameraTransform = cCamera.transform;
-            var scaledOffset = offset * offsetMultiplier;
+            var cameraTransform = _cCamera.transform;
+            var scaledOffset = _offset * _offsetMultiplier;
             cameraTransform.position = new Vector3(scaledOffset.x, scaledOffset.y, cameraTransform.position.z);
         }
 
         private void FixedUpdate()
         {
             // Convert shake to shove
-            shakeTimer += Time.fixedDeltaTime;
-            if (shakeTimer < shakeInterval) return;
-            Shove(random.NextFloat2Direction() * shake);
-            shake -= shake * simSpeed * 2f * Time.fixedDeltaTime;
-            shakeTimer -= shakeInterval;
+            _shakeTimer += Time.fixedDeltaTime;
+            if (_shakeTimer < shakeInterval) return;
+            Shove(EventSystem.Random.NextFloat2Direction() * _shake);
+            _shake -= _shake * simSpeed * 2f * Time.fixedDeltaTime;
+            _shakeTimer -= shakeInterval;
         }
     }
 }

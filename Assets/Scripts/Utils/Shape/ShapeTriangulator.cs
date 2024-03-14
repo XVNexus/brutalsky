@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Controllers.Shape
+namespace Utils.Shape
 {
     // This class can be used to split a 2D polygon into triangles.
     // The algorithm supports concave polygons, but not polygons with holes, or multiple polygons at once.

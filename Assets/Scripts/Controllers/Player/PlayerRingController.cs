@@ -6,19 +6,19 @@ namespace Controllers.Player
     public class PlayerRingController : MonoBehaviour
     {
         // Variables
-        private float ringAlpha;
-        private float ringThickness;
-        private float ringSpin;
+        private float _ringAlpha;
+        private float _ringThickness;
+        private float _ringSpin;
 
         // References
         public SpriteRenderer cSpriteRenderer;
         public SpriteMask cSpriteMask;
-        private PlayerController cPlayerController;
+        private PlayerController _cPlayerController;
 
         // Events
         private void Start()
         {
-            cPlayerController = GetComponent<PlayerController>();
+            _cPlayerController = GetComponent<PlayerController>();
         }
 
         // Updates
@@ -26,33 +26,33 @@ namespace Controllers.Player
         {
             // Calculate target ring properties
             var targetRingAlpha = .25f;
-            var targetRingThickness = cPlayerController.health / cPlayerController.maxHealth;
+            var targetRingThickness = _cPlayerController.health / _cPlayerController.maxHealth;
             var targetRingSpin = 40f;
-            if (cPlayerController.boostCharge > 0f)
+            if (_cPlayerController.boostCharge > 0f)
             {
-                targetRingAlpha = .25f + cPlayerController.boostCharge * .25f;
-                targetRingSpin = (Mathf.Pow(cPlayerController.boostCharge, 1.5f) + 1.5f) * 360f;
+                targetRingAlpha = .25f + _cPlayerController.boostCharge * .25f;
+                targetRingSpin = (Mathf.Pow(_cPlayerController.boostCharge, 1.5f) + 1.5f) * 360f;
             }
-            else if (cPlayerController.boostCooldown > 0f)
+            else if (_cPlayerController.boostCooldown > 0f)
             {
                 targetRingAlpha = .05f;
                 targetRingSpin = 10f;
             }
 
             // Transition current ring properties to calculated target properties
-            ringAlpha = MathfExt.MoveTo(ringAlpha, targetRingAlpha, Time.deltaTime);
-            ringThickness = MathfExt.MoveTo(ringThickness, targetRingThickness, Time.deltaTime);
-            ringSpin = MathfExt.MoveTo(ringSpin, targetRingSpin, 1440f * Time.deltaTime);
+            _ringAlpha = MathfExt.MoveTo(_ringAlpha, targetRingAlpha, Time.deltaTime);
+            _ringThickness = MathfExt.MoveTo(_ringThickness, targetRingThickness, Time.deltaTime);
+            _ringSpin = MathfExt.MoveTo(_ringSpin, targetRingSpin, 1440f * Time.deltaTime);
 
             // Apply current ring properties
             var ringColor = cSpriteRenderer.color;
-            ringColor.a = ringAlpha;
+            ringColor.a = _ringAlpha;
             cSpriteRenderer.color = ringColor;
             var ringTransform = cSpriteRenderer.transform;
             var ringAngles = ringTransform.localEulerAngles;
-            ringAngles.z -= ringSpin * Time.deltaTime;
+            ringAngles.z -= _ringSpin * Time.deltaTime;
             ringTransform.localEulerAngles = ringAngles;
-            var ringMaskScale = 1.8f - ringThickness * .6f;
+            var ringMaskScale = 1.8f - _ringThickness * .6f;
             cSpriteMask.transform.localScale = new Vector3(ringMaskScale, ringMaskScale, 1f);
         }
     }

@@ -7,26 +7,26 @@ using Brutalsky;
 using Brutalsky.Joint;
 using Brutalsky.Object;
 using Controllers;
-using Controllers.Shape;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using Utils;
+using Utils.Shape;
 
 namespace Core
 {
     public class MapSystem : MonoBehaviour
     {
-        public static MapSystem current;
-        private void Awake() => current = this;
+        public static MapSystem _ { get; private set; }
+        private void Awake() => _ = this;
 
         // Constants
         public const string SaveFormat = "yaml";
 
         // Variables
-        public Dictionary<uint, string> rawMapList { get; private set; } = new();
-        [CanBeNull] public BsMap activeMap { get; private set; }
-        public bool mapLoaded { get; private set; }
+        public Dictionary<uint, string> RawMapList { get; private set; } = new();
+        [CanBeNull] public BsMap ActiveMap { get; private set; }
+        public bool IsMapLoaded { get; private set; }
 
         // References
         public GameObject mapMargins;
@@ -35,23 +35,23 @@ namespace Core
         public GameObject poolPrefab;
         public Material litMaterial;
         public Material unlitMaterial;
-        private GameObject mapParent;
+        private GameObject _mapParent;
 
         // Functions
         public void GenerateMapList()
         {
-            rawMapList.Clear();
+            RawMapList.Clear();
             var defaultRawMap = LoadInternal("Brutalsky");
             var defaultMap = BsMap.Parse(defaultRawMap);
-            rawMapList[defaultMap.id] = defaultRawMap;
-            var path = $"{EventSystem.dataPath}/Maps";
+            RawMapList[defaultMap.Id] = defaultRawMap;
+            var path = $"{EventSystem.DataPath}/Maps";
             if (!Directory.Exists(path)) return;
             foreach (var mapPath in Directory.GetFiles(path, $"*.{SaveFormat}"))
             {
                 var mapFilename = Regex.Match(mapPath, $@"\w+(?=\.{SaveFormat})").Value;
                 var rawMap = Load(mapFilename);
                 var map = BsMap.Parse(rawMap);
-                rawMapList[map.id] = rawMap;
+                RawMapList[map.Id] = rawMap;
             }
         }
 
@@ -62,14 +62,14 @@ namespace Core
 
         public static string Load(string filename)
         {
-            var path = $"{EventSystem.dataPath}/Maps/{filename}.{SaveFormat}";
+            var path = $"{EventSystem.DataPath}/Maps/{filename}.{SaveFormat}";
             using var reader = new StreamReader(path);
             return reader.ReadToEnd();
         }
 
         public static void Save(string raw, string filename)
         {
-            var path = $"{EventSystem.dataPath}/Maps/{filename}.{SaveFormat}";
+            var path = $"{EventSystem.DataPath}/Maps/{filename}.{SaveFormat}";
             new FileInfo(path).Directory?.Create();
             using var writer = new StreamWriter(path);
             writer.Write(raw);
@@ -77,8 +77,8 @@ namespace Core
 
         public void Rebuild()
         {
-            if (!mapLoaded) return;
-            var map = activeMap;
+            if (!IsMapLoaded) return;
+            var map = ActiveMap;
             Unbuild();
             Build(map);
         }
@@ -86,29 +86,29 @@ namespace Core
         public void Build(BsMap map)
         {
             // Make sure there is not already an active map
-            if (mapLoaded) return;
+            if (IsMapLoaded) return;
 
             // Note map as active
-            activeMap = map;
-            mapLoaded = true;
+            ActiveMap = map;
+            IsMapLoaded = true;
 
             // Set camera and lighting config
-            CameraSystem.current.ResizeView(map.size);
-            mapMargins.transform.localScale = map.size;
-            cMapLight2D.color = map.lighting.tint;
-            cMapLight2D.intensity = map.lighting.alpha;
+            CameraSystem._.ResizeView(map.Size);
+            mapMargins.transform.localScale = map.Size;
+            cMapLight2D.color = map.Lighting.Tint;
+            cMapLight2D.intensity = map.Lighting.Alpha;
 
             // Instantiate the map container and create all objects
-            mapParent = new GameObject();
-            foreach (var shape in map.shapes.Values)
+            _mapParent = new GameObject();
+            foreach (var shape in map.Shapes.Values)
             {
                 Create(shape);
             }
-            foreach (var pool in map.pools.Values)
+            foreach (var pool in map.Pools.Values)
             {
                 Create(pool);
             }
-            foreach (var joint in map.joints.Values)
+            foreach (var joint in map.Joints.Values)
             {
                 Create(joint);
             }
@@ -117,41 +117,41 @@ namespace Core
         public void Unbuild()
         {
             // Make sure there is an active map to unbuild
-            if (!mapLoaded) return;
+            if (!IsMapLoaded) return;
 
             // Delete all objects and destroy the map container
-            foreach (var joint in activeMap.joints.Values)
+            foreach (var joint in ActiveMap.Joints.Values)
             {
                 Delete(joint);
             }
-            foreach (var pool in activeMap.pools.Values)
+            foreach (var pool in ActiveMap.Pools.Values)
             {
                 Delete(pool);
             }
-            foreach (var shape in activeMap.shapes.Values)
+            foreach (var shape in ActiveMap.Shapes.Values)
             {
                 Delete(shape);
             }
-            Destroy(mapParent);
-            mapParent = null;
+            Destroy(_mapParent);
+            _mapParent = null;
 
             // Note map as inactive
-            activeMap = null;
-            mapLoaded = false;
+            ActiveMap = null;
+            IsMapLoaded = false;
         }
 
         public bool Create(BsShape shape)
         {
             // Make sure the shape is not already created
-            if (shape.active) return false;
+            if (shape.Active) return false;
 
             // Create new object
-            var shapeObject = Instantiate(shapePrefab, mapParent.transform);
+            var shapeObject = Instantiate(shapePrefab, _mapParent.transform);
             var shapeController = shapeObject.GetComponent<ShapeController>();
-            shapeController.bsObject = shape;
+            shapeController.BsObject = shape;
 
             // Convert path to mesh
-            var points = shape.path.ToPoints();
+            var points = shape.Path.ToPoints();
             var vertices = points.Select(point => (Vector3)point).ToArray();
             var mesh = new Mesh
             {
@@ -168,25 +168,25 @@ namespace Core
 
             // Apply color and layer
             var meshRenderer = shapeObject.GetComponent<MeshRenderer>();
-            meshRenderer.material = shape.color.glow ? unlitMaterial : litMaterial;
-            meshRenderer.material.color = shape.color.tint;
-            meshRenderer.sortingOrder = Layer2Order(shape.layer);
+            meshRenderer.material = shape.Color.Glow ? unlitMaterial : litMaterial;
+            meshRenderer.material.color = shape.Color.Tint;
+            meshRenderer.sortingOrder = Layer2Order(shape.Layer);
 
             // Apply material
             var rigidbody = shapeObject.GetComponent<Rigidbody2D>();
-            if (shape.simulated)
+            if (shape.Simulated)
             {
                 var physicsMaterial = new PhysicsMaterial2D
                 {
-                    friction = shape.material.friction,
-                    bounciness = shape.material.restitution
+                    friction = shape.Material.Friction,
+                    bounciness = shape.Material.Restitution
                 };
                 polygonCollider.sharedMaterial = physicsMaterial;
                 rigidbody.sharedMaterial = physicsMaterial;
-                if (shape.material.dynamic)
+                if (shape.Material.Dynamic)
                 {
                     rigidbody.bodyType = RigidbodyType2D.Dynamic;
-                    polygonCollider.density = shape.material.density;
+                    polygonCollider.density = shape.Material.Density;
                 }
             }
             else
@@ -195,74 +195,74 @@ namespace Core
             }
 
             // Apply position and rotation
-            shapeObject.transform.position = shape.transform.position;
-            shapeObject.transform.rotation = Quaternion.Euler(0f, 0f, shape.transform.rotation);
+            shapeObject.transform.position = shape.Transform.Position;
+            shapeObject.transform.rotation = Quaternion.Euler(0f, 0f, shape.Transform.Rotation);
 
             // Note shape as active
-            shape.instanceObject = shapeObject;
-            shape.instanceComponent = shapeController;
-            shape.active = true;
+            shape.InstanceObject = shapeObject;
+            shape.InstanceComponent = shapeController;
+            shape.Active = true;
             return true;
         }
 
         public bool Create(BsPool pool)
         {
             // Make sure the pool is not already created
-            if (pool.active) return false;
+            if (pool.Active) return false;
 
             // Create new object
-            var poolObject = Instantiate(poolPrefab, mapParent.transform);
+            var poolObject = Instantiate(poolPrefab, _mapParent.transform);
             var poolController = poolObject.GetComponent<PoolController>();
-            poolController.bsObject = pool;
+            poolController.BsObject = pool;
 
             // Apply size
-            poolObject.transform.localScale = pool.size;
+            poolObject.transform.localScale = pool.Size;
 
             // Apply color and layer
             var spriteRenderer = poolObject.GetComponent<SpriteRenderer>();
-            spriteRenderer.material = pool.color.glow ? unlitMaterial : litMaterial;
-            spriteRenderer.material.color = pool.color.tint;
-            spriteRenderer.sortingOrder = Layer2Order(pool.layer);
+            spriteRenderer.material = pool.Color.Glow ? unlitMaterial : litMaterial;
+            spriteRenderer.material.color = pool.Color.Tint;
+            spriteRenderer.sortingOrder = Layer2Order(pool.Layer);
 
             // Apply chemical
-            if (!pool.simulated)
+            if (!pool.Simulated)
             {
                 poolObject.GetComponent<BoxCollider2D>().enabled = false;
                 poolController.enabled = false;
             }
 
             // Apply position and rotation
-            poolObject.transform.position = pool.transform.position;
-            poolObject.transform.rotation = Quaternion.Euler(0f, 0f, pool.transform.rotation);
+            poolObject.transform.position = pool.Transform.Position;
+            poolObject.transform.rotation = Quaternion.Euler(0f, 0f, pool.Transform.Rotation);
 
             // Note pool as active
-            pool.instanceObject = poolObject;
-            pool.instanceComponent = poolController;
-            pool.active = true;
+            pool.InstanceObject = poolObject;
+            pool.InstanceComponent = poolController;
+            pool.Active = true;
             return true;
         }
 
         public bool Create(BsJoint joint)
         {
             // Make sure the joint is not already created
-            if (joint.active) return false;
+            if (joint.Active) return false;
 
             // Create new component
             AnchoredJoint2D jointComponent;
-            var targetShape = activeMap.GetShape(joint.targetShapeId);
-            var mountShape = joint.mountShapeId.Length > 0 ? activeMap.GetShape(joint.mountShapeId) : null;
+            var targetShape = ActiveMap.GetShape(joint.TargetShapeId);
+            var mountShape = joint.MountShapeId.Length > 0 ? ActiveMap.GetShape(joint.MountShapeId) : null;
             if (targetShape == null)
             {
                 throw Errors.NoTargetShape(joint);
             }
-            var targetGameObject = targetShape.instanceObject;
+            var targetGameObject = targetShape.InstanceObject;
             if (targetGameObject == null)
             {
                 throw Errors.TargetShapeUnbuilt(joint);
             }
 
             // Apply joint config
-            switch (joint.jointType)
+            switch (joint.JointType)
             {
                 case BsJointType.Fixed:
                     jointComponent = targetGameObject.AddComponent<FixedJoint2D>();
@@ -290,55 +290,55 @@ namespace Core
                     break;
                 case BsJointType.None:
                 default:
-                    throw Errors.InvalidJointType(joint.jointType);
+                    throw Errors.InvalidJointType(joint.JointType);
             }
             joint.ApplyConfigToInstance(jointComponent);
 
             // Note joint as active
-            joint.instanceComponent = jointComponent;
-            joint.active = true;
+            joint.InstanceComponent = jointComponent;
+            joint.Active = true;
             return true;
         }
 
         public bool Delete(BsShape shape)
         {
             // Make sure the shape is not already deleted
-            if (!shape.active) return false;
+            if (!shape.Active) return false;
 
             // Destroy the shape object
-            Destroy(shape.instanceObject);
+            Destroy(shape.InstanceObject);
             
             // Note shape as inactive
-            shape.instanceObject = null;
-            shape.active = false;
+            shape.InstanceObject = null;
+            shape.Active = false;
             return true;
         }
 
         public bool Delete(BsPool pool)
         {
             // Make sure the pool is not already deleted
-            if (!pool.active) return false;
+            if (!pool.Active) return false;
 
             // Destroy the pool object
-            Destroy(pool.instanceObject);
+            Destroy(pool.InstanceObject);
             
             // Note pool as inactive
-            pool.instanceObject = null;
-            pool.active = false;
+            pool.InstanceObject = null;
+            pool.Active = false;
             return true;
         }
 
         public bool Delete(BsJoint joint)
         {
             // Make sure the joint is not already deleted
-            if (!joint.active) return false;
+            if (!joint.Active) return false;
 
             // Destroy the joint component
-            Destroy(joint.instanceComponent);
+            Destroy(joint.InstanceComponent);
             
             // Note joint as inactive
-            joint.instanceComponent = null;
-            joint.active = false;
+            joint.InstanceComponent = null;
+            joint.Active = false;
             return true;
         }
 

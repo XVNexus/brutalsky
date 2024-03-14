@@ -11,21 +11,21 @@ namespace Brutalsky
 {
     public class BsMap
     {
-        public uint id { get; private set; }
-        public string title { get; set; }
-        public string author { get; set; }
-        public Vector2 size { get; set; }
-        public BsColor lighting { get; set; }
-        public Dictionary<string, BsSpawn> spawns { get; } = new();
-        public Dictionary<string, BsShape> shapes { get; } = new();
-        public Dictionary<string, BsPool> pools { get; } = new();
-        public Dictionary<string, BsJoint> joints { get; } = new();
+        public uint Id { get; private set; }
+        public string Title { get; set; }
+        public string Author { get; set; }
+        public Vector2 Size { get; set; }
+        public BsColor Lighting { get; set; }
+        public Dictionary<string, BsSpawn> Spawns { get; } = new();
+        public Dictionary<string, BsShape> Shapes { get; } = new();
+        public Dictionary<string, BsPool> Pools { get; } = new();
+        public Dictionary<string, BsJoint> Joints { get; } = new();
 
         public BsMap(string title = "Untitled Map", string author = "Anonymous Marble")
         {
-            this.title = title;
-            this.author = author;
-            id = CalculateId(title, author);
+            Title = title;
+            Author = author;
+            Id = CalculateId(title, author);
         }
 
         public static uint CalculateId(string title, string author)
@@ -37,65 +37,65 @@ namespace Brutalsky
 
         public BsSpawn GetSpawn(string id)
         {
-            return ContainsSpawn(id) ? spawns[id] : null;
+            return ContainsSpawn(id) ? Spawns[id] : null;
         }
 
         public BsShape GetShape(string id)
         {
-            return ContainsShape(id) ? shapes[id] : null;
+            return ContainsShape(id) ? Shapes[id] : null;
         }
 
         public BsPool GetPool(string id)
         {
-            return ContainsPool(id) ? pools[id] : null;
+            return ContainsPool(id) ? Pools[id] : null;
         }
 
         public BsJoint GetJoint(string id)
         {
-            return ContainsJoint(id) ? joints[id] : null;
+            return ContainsJoint(id) ? Joints[id] : null;
         }
 
         public bool Add(BsSpawn spawn)
         {
             if (Contains(spawn)) return false;
-            spawns[spawn.id] = spawn;
+            Spawns[spawn.Id] = spawn;
             return true;
         }
 
         public bool Add(BsShape shape)
         {
             if (Contains(shape)) return false;
-            shapes[shape.id] = shape;
+            Shapes[shape.Id] = shape;
             return true;
         }
 
         public bool Add(BsPool pool)
         {
             if (Contains(pool)) return false;
-            pools[pool.id] = pool;
+            Pools[pool.Id] = pool;
             return true;
         }
 
         public bool Add(BsJoint joint)
         {
             if (Contains(joint)) return false;
-            joints[joint.id] = joint;
+            Joints[joint.Id] = joint;
             return true;
         }
 
         public bool Remove(BsObject obj)
         {
-            return Remove(obj.id);
+            return Remove(obj.Id);
         }
 
         public bool Remove(string id)
         {
-            return spawns.Remove(id) || shapes.Remove(id) || pools.Remove(id) || joints.Remove(id);
+            return Spawns.Remove(id) || Shapes.Remove(id) || Pools.Remove(id) || Joints.Remove(id);
         }
 
         public bool Contains(BsObject obj)
         {
-            return Contains(obj.id);
+            return Contains(obj.Id);
         }
 
         public bool Contains(string id)
@@ -105,38 +105,38 @@ namespace Brutalsky
 
         public bool ContainsSpawn(string id)
         {
-            return spawns.ContainsKey(id);
+            return Spawns.ContainsKey(id);
         }
 
         public bool ContainsShape(string id)
         {
-            return shapes.ContainsKey(id);
+            return Shapes.ContainsKey(id);
         }
 
         public bool ContainsPool(string id)
         {
-            return pools.ContainsKey(id);
+            return Pools.ContainsKey(id);
         }
 
         public bool ContainsJoint(string id)
         {
-            return joints.ContainsKey(id);
+            return Joints.ContainsKey(id);
         }
 
         public Vector2 SelectSpawn()
         {
-            var leastUsages = spawns.Values.Select(spawn => spawn.usages).Prepend(int.MaxValue).Min();
-            var possibleSpawns = spawns.Values.Where(spawn => spawn.usages == leastUsages).ToList();
-            possibleSpawns.Sort((a, b) => a.priority - b.priority);
-            var lowestPriority = possibleSpawns[0].priority;
-            possibleSpawns.RemoveAll(spawn => spawn.priority > lowestPriority);
-            var spawnChoice = possibleSpawns[EventSystem.random.NextInt(possibleSpawns.Count)];
+            var leastUsages = Spawns.Values.Select(spawn => spawn.Usages).Prepend(int.MaxValue).Min();
+            var possibleSpawns = Spawns.Values.Where(spawn => spawn.Usages == leastUsages).ToList();
+            possibleSpawns.Sort((a, b) => a.Priority - b.Priority);
+            var lowestPriority = possibleSpawns[0].Priority;
+            possibleSpawns.RemoveAll(spawn => spawn.Priority > lowestPriority);
+            var spawnChoice = possibleSpawns[EventSystem.Random.NextInt(possibleSpawns.Count)];
             return spawnChoice.Use();
         }
 
         public void ResetSpawns()
         {
-            foreach (var spawn in spawns.Values)
+            foreach (var spawn in Spawns.Values)
             {
                 spawn.Reset();
             }

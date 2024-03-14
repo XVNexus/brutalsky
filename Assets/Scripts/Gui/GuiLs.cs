@@ -2,16 +2,14 @@ using Brutalsky;
 using Core;
 using UnityEngine;
 using UnityEngine.UIElements;
+using Utils.Gui;
 
-namespace Controllers.Gui
+namespace Gui
 {
-    public class GuiLsController : MonoBehaviour
+    public class GuiLs : MonoBehaviour
     {
         // Constants
         public const string PaneId = "ls";
-
-        // References
-        private GuiController cGuiController;
 
         // Functions
         private void AddMapTile(BsMap map)
@@ -24,30 +22,28 @@ namespace Controllers.Gui
             var mapTileCell = resource.Instantiate();
             mapTileCell.AddToClassList("bs");
             mapTileCell.AddToClassList("bs-cell");
-            cGuiController.RegisterButton(mapTileCell.Q<Button>("button"), PaneId, $"load-{map.id}");
-            mapTileCell.Q<Label>("title").text = $"<b>{map.title}</b>\n{map.author}";
+            GuiSystem._.RegisterButton(mapTileCell.Q<Button>("button"), PaneId, $"load-{map.Id}");
+            mapTileCell.Q<Label>("title").text = $"<b>{map.Title}</b>\n{map.Author}";
             // mapTileCell.Q<VisualElement>("preview").style.backgroundImage = new StyleBackground(preview);
 
             mapTileBox.Add(mapTileCell);
-            var container = cGuiController.GetPane(PaneId).element.Q<VisualElement>("unity-content-container");
+            var container = GuiSystem._.GetPane(PaneId).Element.Q<VisualElement>("unity-content-container");
             container.Add(mapTileBox);
         }
 
         // Events
         private void Start()
         {
-            EventSystem.current.OnGuiLoad += OnGuiLoad;
-            EventSystem.current.OnGuiAction += OnGuiAction;
-
-            cGuiController = GetComponent<GuiController>();
+            EventSystem._.OnLoad += OnLoad;
+            EventSystem._.OnGuiAction += OnGuiAction;
         }
 
-        private void OnGuiLoad()
+        private void OnLoad()
         {
-            cGuiController.RegisterPane(PaneId, this, GuiPmController.PaneId);
-            cGuiController.RegisterButton(PaneId, "back");
+            GuiSystem._.RegisterPane(PaneId, this, GuiPm.PaneId);
+            GuiSystem._.RegisterButton(PaneId, "back");
 
-            foreach (var rawMap in MapSystem.current.rawMapList.Values)
+            foreach (var rawMap in MapSystem._.RawMapList.Values)
             {
                 AddMapTile(BsMap.Parse(rawMap));
             }
@@ -63,17 +59,17 @@ namespace Controllers.Gui
                     break;
                 case "load":
                     var mapId = uint.Parse(itemId[5..]);
-                    var map = BsMap.Parse(MapSystem.current.rawMapList[mapId]);
-                    MapSystem.current.Unbuild();
-                    MapSystem.current.Build(map);
-                    PlayerSystem.current.Spawn(map);
+                    var map = BsMap.Parse(MapSystem._.RawMapList[mapId]);
+                    MapSystem._.Unbuild();
+                    MapSystem._.Build(map);
+                    PlayerSystem._.Spawn(map);
                     break;
             }
         }
 
         private void OnButtonPressBack()
         {
-            cGuiController.DeactivatePane(PaneId);
+            GuiSystem._.DeactivatePane(PaneId);
         }
     }
 }

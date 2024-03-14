@@ -4,26 +4,26 @@ namespace Core
 {
     public class TimeSystem : MonoBehaviour
     {
-        public static TimeSystem current;
-        private void Awake() => current = this;
+        public static TimeSystem _ { get; private set; }
+        private void Awake() => _ = this;
 
         // Variables
-        private bool paused;
+        private bool _paused;
 
         // Functions
         public bool Pause()
         {
-            if (paused) return false;
+            if (_paused) return false;
             Time.timeScale = 0f;
-            paused = true;
+            _paused = true;
             return true;
         }
 
         public bool Unpause()
         {
-            if (!paused) return false;
+            if (!_paused) return false;
             Time.timeScale = 1f;
-            paused = false;
+            _paused = false;
             return true;
         }
     }

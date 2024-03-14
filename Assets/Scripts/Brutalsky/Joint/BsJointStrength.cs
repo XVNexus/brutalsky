@@ -2,24 +2,18 @@ namespace Brutalsky.Joint
 {
     public struct BsJointStrength
     {
-        public float breakForce { get; set; }
-        public float breakTorque { get; set; }
+        public float BreakForce { get; set; }
+        public float BreakTorque { get; set; }
 
         private BsJointStrength(float breakForce, float breakTorque)
         {
-            this.breakForce = breakForce;
-            this.breakTorque = breakTorque;
+            BreakForce = breakForce;
+            BreakTorque = breakTorque;
         }
 
-        public static BsJointStrength Breakable(float breakForce, float breakTorque = float.PositiveInfinity)
-        {
-            return new BsJointStrength(breakForce, breakTorque);
-        }
+        public static BsJointStrength Breakable(float breakForce, float breakTorque = float.PositiveInfinity) => new(breakForce, breakTorque);
 
-        public static BsJointStrength Unbreakable()
-        {
-            return new BsJointStrength(float.PositiveInfinity, float.PositiveInfinity);
-        }
+        public static BsJointStrength Unbreakable() => new(float.PositiveInfinity, float.PositiveInfinity);
 
         public static BsJointStrength Parse(string raw)
         {
@@ -30,8 +24,8 @@ namespace Brutalsky.Joint
 
         public override string ToString()
         {
-            var breakable = !float.IsPositiveInfinity(breakForce) || !float.IsPositiveInfinity(breakTorque);
-            return breakable ? $"{breakForce} {breakTorque}" : "x";
+            var breakable = !float.IsPositiveInfinity(BreakForce) || !float.IsPositiveInfinity(BreakTorque);
+            return breakable ? $"{BreakForce} {BreakTorque}" : "x";
         }
     }
 }

@@ -1,29 +1,25 @@
 using Core;
 using UnityEngine;
+using Utils.Gui;
 
-namespace Controllers.Gui
+namespace Gui
 {
-    public class GuiCfController : MonoBehaviour
+    public class GuiCf : MonoBehaviour
     {
         // Constants
         public const string PaneId = "cf";
 
-        // References
-        private GuiController cGuiController;
-
         // Events
         private void Start()
         {
-            EventSystem.current.OnGuiLoad += OnGuiLoad;
-            EventSystem.current.OnGuiAction += OnGuiAction;
-
-            cGuiController = GetComponent<GuiController>();
+            EventSystem._.OnLoad += OnLoad;
+            EventSystem._.OnGuiAction += OnGuiAction;
         }
 
-        private void OnGuiLoad()
+        private void OnLoad()
         {
-            cGuiController.RegisterPane(PaneId, this, GuiPmController.PaneId);
-            cGuiController.RegisterButton(PaneId, "back");
+            GuiSystem._.RegisterPane(PaneId, this, GuiPm.PaneId);
+            GuiSystem._.RegisterButton(PaneId, "back");
         }
 
         private void OnGuiAction(GuiAction action, string paneId, string itemId)
@@ -39,7 +35,7 @@ namespace Controllers.Gui
 
         private void OnButtonPressBack()
         {
-            cGuiController.DeactivatePane(PaneId);
+            GuiSystem._.DeactivatePane(PaneId);
         }
     }
 }

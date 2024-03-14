@@ -2,24 +2,18 @@ namespace Brutalsky.Joint
 {
     public struct BsJointDamping
     {
-        public float ratio { get; set; }
-        public float frequency { get; set; }
+        public float Ratio { get; set; }
+        public float Frequency { get; set; }
 
         private BsJointDamping(float ratio, float frequency)
         {
-            this.ratio = ratio;
-            this.frequency = frequency;
+            Ratio = ratio;
+            Frequency = frequency;
         }
 
-        public static BsJointDamping Damped(float ratio, float frequency = 1f)
-        {
-            return new BsJointDamping(ratio, frequency);
-        }
+        public static BsJointDamping Damped(float ratio, float frequency = 1f) => new(ratio, frequency);
 
-        public static BsJointDamping Free(float frequency = 1f)
-        {
-            return new BsJointDamping(0f, frequency);
-        }
+        public static BsJointDamping Free(float frequency = 1f) => new(0f, frequency);
 
         public static BsJointDamping Parse(string raw)
         {
@@ -29,7 +23,7 @@ namespace Brutalsky.Joint
 
         public override string ToString()
         {
-            return $"{ratio} {frequency}";
+            return $"{Ratio} {Frequency}";
         }
     }
 }

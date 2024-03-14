@@ -1,30 +1,26 @@
 using System;
 using Core;
 using UnityEngine;
+using Utils.Gui;
 
-namespace Controllers.Gui
+namespace Gui
 {
-    public class GuiPmController : MonoBehaviour
+    public class GuiPm : MonoBehaviour
     {
         // Constants
         public const string PaneId = "pm";
 
-        // References
-        private GuiController cGuiController;
-
         // Events
         private void Start()
         {
-            EventSystem.current.OnGuiLoad += OnGuiLoad;
-            EventSystem.current.OnGuiAction += OnGuiAction;
-
-            cGuiController = GetComponent<GuiController>();
+            EventSystem._.OnLoad += OnLoad;
+            EventSystem._.OnGuiAction += OnGuiAction;
         }
 
-        private void OnGuiLoad()
+        private void OnLoad()
         {
-            cGuiController.RegisterPane(PaneId, this);
-            cGuiController.RegisterButtons(PaneId, new[]
+            GuiSystem._.RegisterPane(PaneId, this);
+            GuiSystem._.RegisterButtons(PaneId, new[]
             {
                 "cont", "lvls", "rest", "cnfg", "help", "menu", "exit"
             });
@@ -67,12 +63,12 @@ namespace Controllers.Gui
 
         private void OnButtonPressCont()
         {
-            cGuiController.Escape();
+            GuiSystem._.Escape();
         }
 
         private void OnButtonPressLvls()
         {
-            cGuiController.ActivatePane(GuiLsController.PaneId);
+            GuiSystem._.ActivatePane(GuiLs.PaneId);
         }
 
         private void OnButtonPressPrev()
@@ -82,8 +78,8 @@ namespace Controllers.Gui
 
         private void OnButtonPressRest()
         {
-            MapSystem.current.Rebuild();
-            PlayerSystem.current.Spawn(MapSystem.current.activeMap);
+            MapSystem._.Rebuild();
+            PlayerSystem._.Spawn(MapSystem._.ActiveMap);
         }
 
         private void OnButtonPressNext()
@@ -93,12 +89,12 @@ namespace Controllers.Gui
 
         private void OnButtonPressCnfg()
         {
-            cGuiController.ActivatePane(GuiCfController.PaneId);
+            GuiSystem._.ActivatePane(GuiCf.PaneId);
         }
 
         private void OnButtonPressHelp()
         {
-            cGuiController.ActivatePane(GuiHeController.PaneId);
+            GuiSystem._.ActivatePane(GuiHe.PaneId);
         }
 
         private void OnButtonPressMenu()

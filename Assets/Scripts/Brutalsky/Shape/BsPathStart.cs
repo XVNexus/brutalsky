@@ -4,21 +4,21 @@ namespace Brutalsky.Shape
 {
     public class BsPathStart : BsPathNode
     {
-        public override int detailLevel => 0;
+        public override int DetailLevel => 0;
 
         public BsPathStart(Vector2 point)
         {
-            endpoint = point;
+            EndPoint = point;
         }
 
         public BsPathStart(float x, float y)
         {
-            endpoint = new Vector2(x, y);
+            EndPoint = new Vector2(x, y);
         }
 
         public override Vector2 SamplePoint(float t)
         {
-            return endpoint;
+            return EndPoint;
         }
     }
 }

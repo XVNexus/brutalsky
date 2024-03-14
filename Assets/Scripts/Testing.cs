@@ -9,10 +9,10 @@ public class Testing : MonoBehaviour
     private void Start()
     {
         GenerateDefaultMaps();
-        MapSystem.current.GenerateMapList();
+        MapSystem._.GenerateMapList();
         var map = BsMap.Parse(MapSystem.LoadInternal("Brutalsky"));
-        MapSystem.current.Build(map);
-        PlayerSystem.current.Spawn(map, new[]
+        MapSystem._.Build(map);
+        PlayerSystem._.Spawn(map, new[]
         {
             new BsPlayer("player-1", "Player 1", 100f, new BsColor(1f, .5f, 0f)),
             new BsPlayer("player-2", "Player 2", 100f, new BsColor(0f, .5f, 1f), true)
@@ -36,8 +36,8 @@ public class Testing : MonoBehaviour
     {
         var map = new BsMap($"{name} {title}", "Brutalsky")
         {
-            size = new Vector2(size, size / 2f),
-            lighting = new BsColor(1f, 1f, 1f, .8f)
+            Size = new Vector2(size, size / 2f),
+            Lighting = new BsColor(1f, 1f, 1f, .8f)
         };
         if (bottom)
             map.Add(new BsShape("wall-bottom", new BsTransform(0f, -size / 4f + .5f), BsPath.Rectangle(size, 1f),

@@ -5,20 +5,20 @@ namespace Brutalsky
 {
     public class BsShape : BsObject
     {
-        public BsPath path { get; set; }
-        public BsMaterial material { get; set; }
-        public BsColor color { get; set; }
-        public BsLayer layer { get; set; }
-        public bool simulated { get; set; }
+        public BsPath Path { get; set; }
+        public BsMaterial Material { get; set; }
+        public BsColor Color { get; set; }
+        public BsLayer Layer { get; set; }
+        public bool Simulated { get; set; }
 
         public BsShape(string id, BsTransform transform, BsPath path, BsMaterial material, BsColor color,
             BsLayer layer = BsLayer.Midground, bool simulated = true) : base(id, transform)
         {
-            this.path = path;
-            this.material = material;
-            this.color = color;
-            this.layer = layer;
-            this.simulated = simulated;
+            Path = path;
+            Material = material;
+            Color = color;
+            Layer = layer;
+            Simulated = simulated;
         }
     }
 }

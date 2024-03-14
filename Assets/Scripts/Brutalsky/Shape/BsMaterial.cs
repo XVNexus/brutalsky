@@ -4,21 +4,21 @@ namespace Brutalsky.Shape
 {
     public class BsMaterial
     {
-        public float friction { get; private set; }
-        public float restitution { get; private set; }
-        public float adhesion { get; private set; }
-        public float density { get; private set; }
-        public float damage { get; private set; }
-        public bool dynamic { get; private set; }
+        public float Friction { get; private set; }
+        public float Restitution { get; private set; }
+        public float Adhesion { get; private set; }
+        public float Density { get; private set; }
+        public float Damage { get; private set; }
+        public bool Dynamic { get; private set; }
 
         public BsMaterial(float friction, float restitution, float adhesion, float density, float damage = 0f, bool dynamic = false)
         {
-            this.friction = friction;
-            this.restitution = restitution;
-            this.adhesion = adhesion;
-            this.density = density;
-            this.damage = damage;
-            this.dynamic = dynamic;
+            Friction = friction;
+            Restitution = restitution;
+            Adhesion = adhesion;
+            Density = density;
+            Damage = damage;
+            Dynamic = dynamic;
         }
 
         public BsMaterial()
@@ -30,46 +30,38 @@ namespace Brutalsky.Shape
         {
             return new BsMaterial
             (
-                friction ?? this.friction,
-                restitution ?? this.restitution,
-                adhesion ?? this.adhesion,
-                density ?? this.density,
-                damage ?? this.damage,
-                dynamic
+                friction ?? Friction,
+                restitution ?? Restitution,
+                adhesion ?? Adhesion,
+                density ?? Density,
+                damage ?? Damage,
+                Dynamic
             );
         }
 
         // Lightweight
-        public static BsMaterial Wood(bool dynamic = false)
-            => new BsMaterial(2f, 0f, 0f, .1f, 0f, dynamic);
+        public static BsMaterial Wood(bool dynamic = false) => new(2f, 0f, 0f, .1f, 0f, dynamic);
 
         // Midweight
-        public static BsMaterial Metal(bool dynamic = false)
-            => new BsMaterial(2f, 0f, 0f, 1f, 0f, dynamic);
+        public static BsMaterial Metal(bool dynamic = false) => new(2f, 0f, 0f, 1f, 0f, dynamic);
 
         // Heavyweight
-        public static BsMaterial Stone(bool dynamic = false)
-            => new BsMaterial(2f, 0f, 0f, 10f, 0f, dynamic);
+        public static BsMaterial Stone(bool dynamic = false) => new(2f, 0f, 0f, 10f, 0f, dynamic);
 
         // Slippery
-        public static BsMaterial Ice(bool dynamic = false)
-            => new BsMaterial(0f, 0f, 0f, 1f, 0f, dynamic);
+        public static BsMaterial Ice(bool dynamic = false) => new(0f, 0f, 0f, 1f, 0f, dynamic);
 
         // Bouncy
-        public static BsMaterial Rubber(bool dynamic = false)
-            => new BsMaterial(0f, 1f, 0f, 1f, 0f, dynamic);
+        public static BsMaterial Rubber(bool dynamic = false) => new(0f, 1f, 0f, 1f, 0f, dynamic);
 
         // Sticky
-        public static BsMaterial Glue(bool dynamic = false)
-            => new BsMaterial(5f, 0f, 2f, 1f, 0f, dynamic);
+        public static BsMaterial Glue(bool dynamic = false) => new(5f, 0f, 2f, 1f, 0f, dynamic);
 
         // Healing
-        public static BsMaterial Medkit(bool dynamic = false)
-            => new BsMaterial(2f, 0f, 0f, 1f, 25f, dynamic);
+        public static BsMaterial Medkit(bool dynamic = false) => new(2f, 0f, 0f, 1f, 25f, dynamic);
 
         // Harmful
-        public static BsMaterial Electric(bool dynamic = false)
-            => new BsMaterial(2f, 0f, 0f, 1f, -25f, dynamic);
+        public static BsMaterial Electric(bool dynamic = false) => new(2f, 0f, 0f, 1f, -25f, dynamic);
 
         public static BsMaterial Parse(string raw)
         {
@@ -81,7 +73,7 @@ namespace Brutalsky.Shape
 
         public override string ToString()
         {
-            return $"{friction} {restitution} {adhesion} {density} {damage} {BoolExt.ToString(dynamic)}";
+            return $"{Friction} {Restitution} {Adhesion} {Density} {Damage} {BoolExt.ToString(Dynamic)}";
         }
     }
 }

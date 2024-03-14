@@ -5,17 +5,17 @@ namespace Brutalsky
 {
     public class BsPlayer : BsObject
     {
-        public string name { get; set; }
-        public float health { get; set; }
-        public BsColor color { get; set; }
-        public bool dummy { get; set; }
+        public string Name { get; set; }
+        public float Health { get; set; }
+        public BsColor Color { get; set; }
+        public bool Dummy { get; set; }
 
         public BsPlayer(string id, string name, float health, BsColor color, bool dummy = false) : base(id, new BsTransform())
         {
-            this.name = name;
-            this.health = health;
-            this.color = color;
-            this.dummy = dummy;
+            Name = name;
+            Health = health;
+            Color = color;
+            Dummy = dummy;
         }
 
         public static float CalculateDamage(float impactForce)

@@ -13,9 +13,9 @@ namespace Serializable
         {
             return new SrzSpawn
             {
-                id = spawn.id,
-                transform = spawn.transform.ToString(),
-                priority = spawn.priority
+                id = spawn.Id,
+                transform = spawn.Transform.ToString(),
+                priority = spawn.Priority
             };
         }
 

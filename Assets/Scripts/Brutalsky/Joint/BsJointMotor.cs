@@ -2,26 +2,20 @@ namespace Brutalsky.Joint
 {
     public struct BsJointMotor
     {
-        public bool use { get; set; }
-        public float speed { get; set; }
-        public float maxForce { get; set; }
+        public bool Use { get; set; }
+        public float Speed { get; set; }
+        public float MaxForce { get; set; }
 
         private BsJointMotor(bool use, float speed, float maxForce)
         {
-            this.use = use;
-            this.speed = speed;
-            this.maxForce = maxForce;
+            Use = use;
+            Speed = speed;
+            MaxForce = maxForce;
         }
 
-        public static BsJointMotor Powered(float speed, float maxForce = 10000f)
-        {
-            return new BsJointMotor(true, speed, maxForce);
-        }
+        public static BsJointMotor Powered(float speed, float maxForce = 10000f) => new(true, speed, maxForce);
 
-        public static BsJointMotor Unpowered()
-        {
-            return new BsJointMotor(false, 0f, 0f);
-        }
+        public static BsJointMotor Unpowered() => new(false, 0f, 0f);
 
         public static BsJointMotor Parse(string raw)
         {
@@ -32,7 +26,7 @@ namespace Brutalsky.Joint
 
         public override string ToString()
         {
-            return use ? $"{speed} {maxForce}" : "x";
+            return Use ? $"{Speed} {MaxForce}" : "x";
         }
     }
 }

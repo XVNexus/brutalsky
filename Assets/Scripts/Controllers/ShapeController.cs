@@ -9,18 +9,18 @@ namespace Controllers
         public const string Tag = "Shape";
 
         // Source
-        public BsShape bsObject;
+        public BsShape BsObject;
 
         // References
-        private Rigidbody2D cRigidbody2D;
+        private Rigidbody2D _cRigidbody2D;
 
         // Events
         private void OnCollisionEnter2D(Collision2D other)
         {
-            cRigidbody2D = GetComponent<Rigidbody2D>();
+            _cRigidbody2D = GetComponent<Rigidbody2D>();
 
             // Apply damage to player
-            var damage = bsObject.material.damage;
+            var damage = BsObject.Material.Damage;
             if (!other.gameObject.CompareTag(PlayerController.Tag) || damage == 0f) return;
             var playerController = other.gameObject.GetComponent<PlayerController>();
             if (damage > 0f)
@@ -35,21 +35,21 @@ namespace Controllers
 
         private void OnCollisionStay2D(Collision2D other)
         {
-            if (bsObject.material.adhesion == 0f) return;
+            if (BsObject.Material.Adhesion == 0f) return;
 
             // Get collision info
             var otherRigidbody = other.rigidbody;
-            var thisDynamic = bsObject.material.dynamic;
+            var thisDynamic = BsObject.Material.Dynamic;
             var otherDynamic = other.gameObject.CompareTag(PlayerController.Tag)
                 || (other.gameObject.CompareTag(Tag)
-                    && other.gameObject.GetComponent<ShapeController>().bsObject.material.dynamic);
+                    && other.gameObject.GetComponent<ShapeController>().BsObject.Material.Dynamic);
 
             // Apply adhesion force
             var contact = other.GetContact(0);
-            var adhesionForce = bsObject.material.adhesion * contact.normal;
+            var adhesionForce = BsObject.Material.Adhesion * contact.normal;
             if (thisDynamic)
             {
-                cRigidbody2D.AddForceAtPosition(-adhesionForce, contact.point, ForceMode2D.Impulse);
+                _cRigidbody2D.AddForceAtPosition(-adhesionForce, contact.point, ForceMode2D.Impulse);
             }
             if (otherDynamic)
             {

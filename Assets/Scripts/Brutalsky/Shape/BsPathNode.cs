@@ -4,7 +4,7 @@ namespace Brutalsky.Shape
 {
     public abstract class BsPathNode
     {
-        public BsPathNode previous
+        public BsPathNode Previous
         {
             get => _previous;
             set {
@@ -13,7 +13,7 @@ namespace Brutalsky.Shape
             }
         }
         private BsPathNode _previous;
-        public BsPathNode next
+        public BsPathNode Next
         {
             get => _next;
             set {
@@ -23,9 +23,9 @@ namespace Brutalsky.Shape
         }
         private BsPathNode _next;
 
-        public Vector2 startpoint => previous.endpoint;
-        public Vector2 endpoint { get; set; }
-        public abstract int detailLevel { get; }
+        public Vector2 StartPoint => Previous.EndPoint;
+        public Vector2 EndPoint { get; set; }
+        public abstract int DetailLevel { get; }
 
         public abstract Vector2 SamplePoint(float t);
     }

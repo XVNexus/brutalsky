@@ -16,11 +16,11 @@ namespace Serializable
         {
             return new SrzPlayer
             {
-                id = player.id,
-                name = player.name,
-                health = player.health,
-                color = player.color.ToString(),
-                dummy = BoolExt.ToString(player.dummy)
+                id = player.Id,
+                name = player.Name,
+                health = player.Health,
+                color = player.Color.ToString(),
+                dummy = BoolExt.ToString(player.Dummy)
             };
         }
 

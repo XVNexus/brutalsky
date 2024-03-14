@@ -14,7 +14,7 @@ namespace Controllers
         public const int MaxOnGroundFrames = 5;
 
         // Source
-        public BsPlayer bsObject;
+        public BsPlayer BsObject;
 
         // Variables
         public float maxHealth;
@@ -24,16 +24,16 @@ namespace Controllers
         public float boostCharge;
         public float boostCooldown;
         public bool onGround;
-        private int onGroundFrames;
-        private float lastPositionY;
+        private int _onGroundFrames;
+        private float _lastPositionY;
 
         // References
         public Light2D cLight2D;
         public SpriteRenderer cRingSpriteRenderer;
         public ParticleSystem[] cParticleSystems;
-        private SpriteRenderer cPlayerSpriteRenderer;
-        private Rigidbody2D cRigidbody2D;
-        private CircleCollider2D cCircleCollider2D;
+        private SpriteRenderer _cPlayerSpriteRenderer;
+        private Rigidbody2D _cRigidbody2D;
+        private CircleCollider2D _cCircleCollider2D;
 
         // Controls
         public InputAction iMovement;
@@ -60,7 +60,7 @@ namespace Controllers
             {
                 Revive();
             }
-            cRigidbody2D.velocity = Vector2.zero;
+            _cRigidbody2D.velocity = Vector2.zero;
             boostCharge = 0f;
             boostCooldown = 0f;
         }
@@ -87,33 +87,33 @@ namespace Controllers
 
         public void Freeze()
         {
-            cRigidbody2D.simulated = false;
-            cCircleCollider2D.enabled = false;
+            _cRigidbody2D.simulated = false;
+            _cCircleCollider2D.enabled = false;
         }
 
         public void Unfreeze()
         {
-            cRigidbody2D.simulated = true;
-            cCircleCollider2D.enabled = true;
+            _cRigidbody2D.simulated = true;
+            _cCircleCollider2D.enabled = true;
         }
 
         // Events
         private void Start()
         {
-            cPlayerSpriteRenderer = GetComponent<SpriteRenderer>();
-            cRigidbody2D = GetComponent<Rigidbody2D>();
-            cCircleCollider2D = GetComponent<CircleCollider2D>();
+            _cPlayerSpriteRenderer = GetComponent<SpriteRenderer>();
+            _cRigidbody2D = GetComponent<Rigidbody2D>();
+            _cCircleCollider2D = GetComponent<CircleCollider2D>();
 
-            iMovement = EventSystem.current.inputActionAsset.FindAction("Movement");
+            iMovement = EventSystem._.inputActionAsset.FindAction("Movement");
             iMovement.Enable();
-            iBoost = EventSystem.current.inputActionAsset.FindAction("Boost");
+            iBoost = EventSystem._.inputActionAsset.FindAction("Boost");
             iBoost.Enable();
 
             // Sync health with max health
             health = maxHealth;
 
             // Set all colored items to match the player color
-            cPlayerSpriteRenderer.color = color;
+            _cPlayerSpriteRenderer.color = color;
             cLight2D.color = color;
             cRingSpriteRenderer.color = color;
             foreach (var cParticleSystem in cParticleSystems)
@@ -137,8 +137,8 @@ namespace Controllers
         {
             // Update ground status
             if (!other.gameObject.CompareTag(ShapeController.Tag) && !other.gameObject.CompareTag(Tag)) return;
-            if (other.GetContact(0).point.y > lastPositionY - .25f) return;
-            onGroundFrames = MaxOnGroundFrames;
+            if (other.GetContact(0).point.y > _lastPositionY - .25f) return;
+            _onGroundFrames = MaxOnGroundFrames;
             onGround = true;
         }
 
@@ -146,9 +146,9 @@ namespace Controllers
         private void FixedUpdate()
         {
             // Update ground status
-            onGround = onGroundFrames > 0;
-            onGroundFrames = Mathf.Max(onGroundFrames - 1, 0);
-            lastPositionY = transform.position.y;
+            onGround = _onGroundFrames > 0;
+            _onGroundFrames = Mathf.Max(_onGroundFrames - 1, 0);
+            _lastPositionY = transform.position.y;
 
             // Kill the player if health reaches zero
             if (alive && health == 0)

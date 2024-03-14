@@ -11,11 +11,11 @@ namespace Core
 {
     public class PlayerSystem : MonoBehaviour
     {
-        public static PlayerSystem current;
-        private void Awake() => current = this;
+        public static PlayerSystem _ { get; private set; }
+        private void Awake() => _ = this;
 
         // Variables
-        public Dictionary<string, BsPlayer> activePlayers { get; private set; } = new();
+        public Dictionary<string, BsPlayer> ActivePlayers { get; private set; } = new();
 
         // References
         public GameObject playerPrefab;
@@ -23,26 +23,26 @@ namespace Core
         // Functions
         public void FreezeAll()
         {
-            foreach (var player in activePlayers.Values)
+            foreach (var player in ActivePlayers.Values)
             {
-                ((PlayerController)player.instanceComponent).Freeze();
+                ((PlayerController)player.InstanceComponent)?.Freeze();
             }
         }
 
         public void UnfreezeAll()
         {
-            foreach (var player in activePlayers.Values)
+            foreach (var player in ActivePlayers.Values)
             {
-                ((PlayerController)player.instanceComponent).Unfreeze();
+                ((PlayerController)player.InstanceComponent)?.Unfreeze();
             }
         }
 
         public void Spawn(BsMap map, [CanBeNull] IEnumerable<BsPlayer> players = null)
         {
-            var playerList = (players ?? activePlayers.Values).ToList();
+            var playerList = (players ?? ActivePlayers.Values).ToList();
             while (playerList.Count > 0)
             {
-                var index = EventSystem.random.NextInt(playerList.Count);
+                var index = EventSystem.Random.NextInt(playerList.Count);
                 Spawn(map, playerList[index]);
                 playerList.RemoveAt(index);
             }
@@ -52,20 +52,20 @@ namespace Core
         {
             GameObject playerObject;
             PlayerController playerController;
-            if (!player.active)
+            if (!player.Active)
             {
                 // Create new object and apply config
                 playerObject = Instantiate(playerPrefab);
                 playerController = playerObject.GetComponent<PlayerController>();
-                playerController.bsObject = player;
-                playerController.maxHealth = player.health;
-                playerController.color = player.color.tint;
-                playerObject.GetComponent<PlayerMovementController>().dummy = player.dummy;
+                playerController.BsObject = player;
+                playerController.maxHealth = player.Health;
+                playerController.color = player.Color.Tint;
+                playerObject.GetComponent<PlayerMovementController>().dummy = player.Dummy;
             }
             else
             {
                 // Get reference to existing object and ensure player is reset to full health
-                playerObject = player.instanceObject;
+                playerObject = player.InstanceObject;
                 playerController = playerObject.GetComponent<PlayerController>();
                 playerController.Refresh();
             }
@@ -75,16 +75,16 @@ namespace Core
             playerObject.transform.position = spawnPos;
 
             // Note player as active and add it to the active player list
-            if (player.active) return;
-            player.instanceObject = playerObject;
-            player.instanceComponent = playerController;
-            player.active = true;
-            activePlayers[player.id] = player;
+            if (player.Active) return;
+            player.InstanceObject = playerObject;
+            player.InstanceComponent = playerController;
+            player.Active = true;
+            ActivePlayers[player.Id] = player;
         }
 
         public void Despawn([CanBeNull] IEnumerable<BsPlayer> players = null)
         {
-            var playerList = (players ?? activePlayers.Values).ToList();
+            var playerList = (players ?? ActivePlayers.Values).ToList();
             foreach (var player in playerList)
             {
                 Despawn(player);
@@ -94,30 +94,30 @@ namespace Core
         public void Despawn(BsPlayer player)
         {
             // Make sure the player is not already despawned
-            if (!player.active) return;
+            if (!player.Active) return;
 
             // Destroy the player object
-            Destroy(player.instanceObject);
+            Destroy(player.InstanceObject);
 
             // Note player as inactive and remove it from the active player list
-            player.instanceObject = null;
-            player.active = false;
-            activePlayers.Remove(player.id);
+            player.InstanceObject = null;
+            player.Active = false;
+            ActivePlayers.Remove(player.Id);
         }
 
         // Updates
         private void FixedUpdate()
         {
-            if (!MapSystem.current.mapLoaded) return;
-            var mapSize = MapSystem.current.activeMap.size;
-            foreach (var player in activePlayers.Values)
+            if (!MapSystem._.IsMapLoaded || MapSystem._.ActiveMap == null) return;
+            var mapSize = MapSystem._.ActiveMap.Size;
+            foreach (var player in ActivePlayers.Values)
             {
-                var position = player.instanceObject.transform.position;
+                var position = player.InstanceObject.transform.position;
                 var x = Mathf.Abs(position.x);
                 var y = Mathf.Abs(position.y);
                 if (x > mapSize.x / 2f + 3f || y > mapSize.y / 2f + 3f)
                 {
-                    ((PlayerController)player.instanceComponent).Kill();
+                    ((PlayerController)player.InstanceComponent)?.Kill();
                 }
             }
         }

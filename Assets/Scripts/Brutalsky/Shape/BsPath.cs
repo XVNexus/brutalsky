@@ -8,16 +8,16 @@ namespace Brutalsky.Shape
 {
     public class BsPath
     {
-        public BsPathNode startNode { get; set; }
-        public string pathString { get; private set; } = "";
+        public BsPathNode StartNode { get; set; }
+        public string PathString { get; private set; } = "";
 
-        public BsPath(Vector2 startpoint, IEnumerable<BsPathNode> nodes)
+        public BsPath(Vector2 startPoint, IEnumerable<BsPathNode> nodes)
         {
-            startNode = new BsPathStart(startpoint);
-            var currentNode = startNode;
+            StartNode = new BsPathStart(startPoint);
+            var currentNode = StartNode;
             foreach (var node in nodes)
             {
-                node.previous = currentNode;
+                node.Previous = currentNode;
                 currentNode = node;
             }
         }
@@ -30,7 +30,7 @@ namespace Brutalsky.Shape
                 throw Errors.MissingPathParams("path", 3);
             }
             var startValues = parts[0].Split(' ');
-            var startpoint = new Vector2(float.Parse(startValues[0]), float.Parse(startValues[1]));
+            var startPoint = new Vector2(float.Parse(startValues[0]), float.Parse(startValues[1]));
             var nodes = new List<BsPathNode>();
             for (var i = 1; i < parts.Length; i++)
             {
@@ -56,8 +56,8 @@ namespace Brutalsky.Shape
                 }
             }
 
-            var result = new BsPath(startpoint, nodes);
-            result.pathString = $"X {pathString.ToUpper()}";
+            var result = new BsPath(startPoint, nodes);
+            result.PathString = $"X {pathString.ToUpper()}";
             return result;
         }
 
@@ -67,22 +67,22 @@ namespace Brutalsky.Shape
             {
                 throw Errors.MissingPathParams("polygon", 3);
             }
-            var startpoint = points[0];
+            var startPoint = points[0];
             var nodes = new BsPathLine[points.Length - 1];
             for (var i = 1; i < points.Length; i++)
             {
                 nodes[i - 1] = new BsPathLine(points[i]);
             }
 
-            var result = new BsPath(startpoint, nodes);
-            result.pathString = points.Aggregate("Y", (current, point) => current + $" {point.x} {point.y}");
+            var result = new BsPath(startPoint, nodes);
+            result.PathString = points.Aggregate("Y", (current, point) => current + $" {point.x} {point.y}");
             return result;
         }
 
         public static BsPath Square(float diameter)
         {
             var result = Rectangle(diameter, diameter);
-            result.pathString = $"S {diameter}";
+            result.PathString = $"S {diameter}";
             return result;
         }
 
@@ -95,14 +95,14 @@ namespace Brutalsky.Shape
                 new(width / 2f, -height / 2f),
                 new(-width / 2f, -height / 2f)
             });
-            result.pathString = $"R {width} {height}";
+            result.PathString = $"R {width} {height}";
             return result;
         }
 
         public static BsPath Circle(float diameter)
         {
             var result = Ellipse(diameter, diameter);
-            result.pathString = $"C {diameter}";
+            result.PathString = $"C {diameter}";
             return result;
         }
 
@@ -115,7 +115,7 @@ namespace Brutalsky.Shape
                 new BsPathCurve(-width / 2f, -height / 2f, -width / 2f, 0f),
                 new BsPathCurve(-width / 2f, height / 2f, 0f, height / 2f)
             });
-            result.pathString = $"E {width} {height}";
+            result.PathString = $"E {width} {height}";
             return result;
         }
 
@@ -129,7 +129,7 @@ namespace Brutalsky.Shape
             }
 
             var result = Polygon(vertices);
-            result.pathString = $"N {sides} {diameter}";
+            result.PathString = $"N {sides} {diameter}";
             return result;
         }
 
@@ -144,21 +144,21 @@ namespace Brutalsky.Shape
             }
 
             var result = Polygon(vertices);
-            result.pathString = $"T {points} {outerDiameter} {innerDiameter}";
+            result.PathString = $"T {points} {outerDiameter} {innerDiameter}";
             return result;
         }
 
         public Vector2[] ToPoints()
         {
-            var result = new List<Vector2>{startNode.endpoint};
-            var currentNode = startNode.next;
+            var result = new List<Vector2>{StartNode.EndPoint};
+            var currentNode = StartNode.Next;
             while (currentNode != null)
             {
-                for (var i = 1; i <= currentNode.detailLevel; i++)
+                for (var i = 1; i <= currentNode.DetailLevel; i++)
                 {
-                    result.Add(currentNode.SamplePoint(i / (float)currentNode.detailLevel));
+                    result.Add(currentNode.SamplePoint(i / (float)currentNode.DetailLevel));
                 }
-                currentNode = currentNode.next;
+                currentNode = currentNode.Next;
             }
             if (result[^1] == result[0]) result.RemoveAt(result.Count - 1);
 
@@ -211,7 +211,7 @@ namespace Brutalsky.Shape
 
         public override string ToString()
         {
-            return pathString;
+            return PathString;
         }
 
         /*

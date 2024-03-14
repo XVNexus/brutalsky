@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using Utils.Pool;
 
 namespace Controllers.Pool
 {
@@ -9,25 +10,25 @@ namespace Controllers.Pool
         public const float WavePointDensity = 2f;
 
         // Variables
-        private float waveHeight;
-        private int wavePointCount;
-        private float[] wavePointOffsets;
-        private List<PoolWaveEffect> waveEffects = new();
+        private float _waveHeight;
+        private int _wavePointCount;
+        private float[] _wavePointOffsets;
+        private readonly List<PoolWaveEffect> _waveEffects = new();
 
         // References
         public LineRenderer cLineRenderer;
-        private PoolController cPoolController;
-        private SpriteRenderer cSpriteRenderer;
+        private PoolController _cPoolController;
+        private SpriteRenderer _cSpriteRenderer;
 
         // Events
         private void Start()
         {
-            cPoolController = GetComponent<PoolController>();
-            cSpriteRenderer = GetComponent<SpriteRenderer>();
+            _cPoolController = GetComponent<PoolController>();
+            _cSpriteRenderer = GetComponent<SpriteRenderer>();
 
             // Set wave color to match the pool color
-            cLineRenderer.material = cSpriteRenderer.material;
-            cLineRenderer.sortingOrder = cSpriteRenderer.sortingOrder;
+            cLineRenderer.material = _cSpriteRenderer.material;
+            cLineRenderer.sortingOrder = _cSpriteRenderer.sortingOrder;
 
             // Set up wave renderer
             var lineWidth = cLineRenderer.widthMultiplier;
@@ -35,21 +36,21 @@ namespace Controllers.Pool
             var poolScale = poolTransform.localScale;
             cLineRenderer.positionCount = Mathf.RoundToInt(poolScale.x * WavePointDensity) + 3;
             var posCount = cLineRenderer.positionCount;
-            wavePointCount = posCount - 4;
-            wavePointOffsets = new float[wavePointCount];
+            _wavePointCount = posCount - 4;
+            _wavePointOffsets = new float[_wavePointCount];
             var surfaceOffset = lineWidth * 2f / poolScale.y;
             var edgeOffset = lineWidth * .5f / poolScale.x;
             var wavePointInterval = 1f / WavePointDensity / poolScale.x;
-            waveHeight = lineWidth * .5f / poolScale.y;
+            _waveHeight = lineWidth * .5f / poolScale.y;
             cLineRenderer.SetPosition(0, new Vector2(-.5f + edgeOffset, -surfaceOffset));
             cLineRenderer.SetPosition(1, new Vector2(-.5f + edgeOffset, 0f));
             cLineRenderer.SetPosition(posCount - 2, new Vector2(.5f - edgeOffset, 0f));
             cLineRenderer.SetPosition(posCount - 1, new Vector2(.5f - edgeOffset, -surfaceOffset));
-            for (var i = 0; i < wavePointCount; i++)
+            for (var i = 0; i < _wavePointCount; i++)
             {
                 var offset = -.5f + wavePointInterval * (i + 1);
                 cLineRenderer.SetPosition(i + 2, new Vector2(offset, 0f));
-                wavePointOffsets[i] = offset * poolScale.x;
+                _wavePointOffsets[i] = offset * poolScale.x;
             }
         }
 
@@ -66,37 +67,37 @@ namespace Controllers.Pool
         private void OnTrigger2D(Component other)
         {
             // Trigger wave splash effect
-            var splashPoint = transform.InverseTransformPoint(other.transform.position).x * cPoolController.bsObject.size.x;
-            waveEffects.Add(new PoolWaveEffect(splashPoint, 25f, 2f, 3f));
+            var splashPoint = transform.InverseTransformPoint(other.transform.position).x * _cPoolController.BsObject.Size.x;
+            _waveEffects.Add(new PoolWaveEffect(splashPoint, 25f, 2f, 3f));
         }
 
         // Updates
         private void Update()
         {
             // Update wave effects
-            if (waveEffects.Count == 0) return;
-            var wavePointHeights = new float[wavePointCount];
-            for (var i = waveEffects.Count - 1; i >= 0; i--)
+            if (_waveEffects.Count == 0) return;
+            var wavePointHeights = new float[_wavePointCount];
+            for (var i = _waveEffects.Count - 1; i >= 0; i--)
             {
-                var waveEffect = waveEffects[i];
+                var waveEffect = _waveEffects[i];
                 waveEffect.Update(Time.deltaTime);
-                if (waveEffect.idle)
+                if (waveEffect.Idle)
                 {
-                    waveEffects.RemoveAt(i);
+                    _waveEffects.RemoveAt(i);
                     continue;
                 }
-                for (var j = 0; j < wavePointCount; j++)
+                for (var j = 0; j < _wavePointCount; j++)
                 {
-                    wavePointHeights[j] += waveEffect.SamplePoint(wavePointOffsets[j]);
+                    wavePointHeights[j] += waveEffect.SamplePoint(_wavePointOffsets[j]);
                 }
             }
 
             // Apply wave heightmap to line renderer
-            for (var i = 0; i < wavePointCount; i++)
+            for (var i = 0; i < _wavePointCount; i++)
             {
                 cLineRenderer.SetPosition(i + 2,
                     new Vector3(cLineRenderer.GetPosition(i + 2).x,
-                        Mathf.Clamp(wavePointHeights[i], -1f, 1f) * waveHeight));
+                        Mathf.Clamp(wavePointHeights[i], -1f, 1f) * _waveHeight));
             }
         }
     }

@@ -2,26 +2,20 @@ namespace Brutalsky.Joint
 {
     public struct BsJointLimits
     {
-        public bool use { get; set; }
-        public float min { get; set; }
-        public float max { get; set; }
+        public bool Use { get; set; }
+        public float Min { get; set; }
+        public float Max { get; set; }
 
         private BsJointLimits(bool use, float min, float max)
         {
-            this.use = use;
-            this.min = min;
-            this.max = max;
+            Use = use;
+            Min = min;
+            Max = max;
         }
 
-        public static BsJointLimits Limited(float min, float max)
-        {
-            return new BsJointLimits(true, min, max);
-        }
+        public static BsJointLimits Limited(float min, float max) => new(true, min, max);
 
-        public static BsJointLimits Unlimited()
-        {
-            return new BsJointLimits(false, 0f, 0f);
-        }
+        public static BsJointLimits Unlimited() => new(false, 0f, 0f);
 
         public static BsJointLimits Parse(string raw)
         {
@@ -32,7 +26,7 @@ namespace Brutalsky.Joint
 
         public override string ToString()
         {
-            return use ? $"{min} {max}" : "x";
+            return Use ? $"{Min} {Max}" : "x";
         }
     }
 }

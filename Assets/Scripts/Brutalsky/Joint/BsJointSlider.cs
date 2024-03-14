@@ -5,38 +5,38 @@ namespace Brutalsky.Joint
 {
     public class BsJointSlider : BsJoint
     {
-        public BsJointConfig angle { get; set; }
-        public BsJointMotor motor { get; set; }
-        public BsJointLimits limits { get; set; }
+        public BsJointConfig Angle { get; set; }
+        public BsJointMotor Motor { get; set; }
+        public BsJointLimits Limits { get; set; }
 
         public BsJointSlider(string id, BsTransform transform, string targetShapeId, string mountShapeId,
             bool collision, BsJointStrength strength, BsJointConfig angle, BsJointMotor motor, BsJointLimits limits)
             : base(BsJointType.Slider, id, transform, targetShapeId, mountShapeId, collision, strength)
         {
-            this.angle = angle;
-            this.motor = motor;
-            this.limits = limits;
+            Angle = angle;
+            Motor = motor;
+            Limits = limits;
         }
 
         public override void ApplyConfigToInstance(AnchoredJoint2D jointComponent)
         {
             var sliderJointComponent = (SliderJoint2D)jointComponent;
-            sliderJointComponent.angle = angle.value;
-            sliderJointComponent.autoConfigureAngle = angle.autoConfig;
-            if (motor.use)
+            sliderJointComponent.angle = Angle.Value;
+            sliderJointComponent.autoConfigureAngle = Angle.Auto;
+            if (Motor.Use)
             {
                 sliderJointComponent.useMotor = true;
                 var sliderJointMotor = sliderJointComponent.motor;
-                sliderJointMotor.motorSpeed = motor.speed;
-                sliderJointMotor.maxMotorTorque = motor.maxForce;
+                sliderJointMotor.motorSpeed = Motor.Speed;
+                sliderJointMotor.maxMotorTorque = Motor.MaxForce;
                 sliderJointComponent.motor = sliderJointMotor;
             }
-            if (limits.use)
+            if (Limits.Use)
             {
                 sliderJointComponent.useLimits = true;
                 var sliderJointLimits = sliderJointComponent.limits;
-                sliderJointLimits.min = limits.min;
-                sliderJointLimits.max = limits.max;
+                sliderJointLimits.min = Limits.Min;
+                sliderJointLimits.max = Limits.Max;
                 sliderJointComponent.limits = sliderJointLimits;
             }
         }

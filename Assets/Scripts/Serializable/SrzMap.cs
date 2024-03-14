@@ -20,24 +20,24 @@ namespace Serializable
         {
             var result = new SrzMap
             {
-                title = map.title,
-                author = map.author,
-                size = $"{map.size.x} {map.size.y}",
-                lighting = map.lighting.ToString()
+                title = map.Title,
+                author = map.Author,
+                size = $"{map.Size.x} {map.Size.y}",
+                lighting = map.Lighting.ToString()
             };
-            foreach (var spawn in map.spawns.Values)
+            foreach (var spawn in map.Spawns.Values)
             {
                 result.spawns.Add(SrzSpawn.Simplify(spawn));
             }
-            foreach (var shape in map.shapes.Values)
+            foreach (var shape in map.Shapes.Values)
             {
                 result.shapes.Add(SrzShape.Simplify(shape));
             }
-            foreach (var pool in map.pools.Values)
+            foreach (var pool in map.Pools.Values)
             {
                 result.pools.Add(SrzPool.Simplify(pool));
             }
-            foreach (var joint in map.joints.Values)
+            foreach (var joint in map.Joints.Values)
             {
                 result.joints.Add(SrzJoint.Simplify(joint));
             }
@@ -48,8 +48,8 @@ namespace Serializable
         {
             var result = new BsMap(title, author)
             {
-                size = Vector2Ext.Parse(size),
-                lighting = BsColor.Parse(lighting)
+                Size = Vector2Ext.Parse(size),
+                Lighting = BsColor.Parse(lighting)
             };
             foreach (var spawn in spawns)
             {

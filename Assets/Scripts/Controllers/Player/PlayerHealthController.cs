@@ -7,17 +7,17 @@ namespace Controllers.Player
     public class PlayerHealthController : MonoBehaviour
     {
         // Variables
-        private float lastSpeed;
+        private float _lastSpeed;
 
         // References
-        private PlayerController cPlayerController;
-        private Rigidbody2D cRigidbody2D;
+        private PlayerController _cPlayerController;
+        private Rigidbody2D _cRigidbody2D;
 
         // Events
         private void Start()
         {
-            cPlayerController = GetComponent<PlayerController>();
-            cRigidbody2D = GetComponent<Rigidbody2D>();
+            _cPlayerController = GetComponent<PlayerController>();
+            _cRigidbody2D = GetComponent<Rigidbody2D>();
         }
 
         private void OnCollisionEnter2D(Collision2D other) => OnCollision(other);
@@ -26,24 +26,24 @@ namespace Controllers.Player
 
         private void OnCollision(Collision2D other)
         {
-            if (!cPlayerController.alive) return;
+            if (!_cPlayerController.alive) return;
 
             // Get collision info
             var impactForce = other.TotalNormalImpulse() * (other.gameObject.CompareTag(PlayerController.Tag) ? 2f : 1f);
             if (impactForce < 25f) return;
-            var impactSpeed = lastSpeed;
+            var impactSpeed = _lastSpeed;
 
             // Apply damage to player
             var damageApplied = BsPlayer.CalculateDamage(impactForce);
             var damageMultiplier = Mathf.Min(1f / (impactSpeed * .2f), 1f);
-            cPlayerController.Hurt(damageApplied * damageMultiplier);
+            _cPlayerController.Hurt(damageApplied * damageMultiplier);
         }
 
         // Updates
         private void FixedUpdate()
         {
             // Save the current speed for future reference
-            lastSpeed = cRigidbody2D.velocity.magnitude;
+            _lastSpeed = _cRigidbody2D.velocity.magnitude;
         }
     }
 }

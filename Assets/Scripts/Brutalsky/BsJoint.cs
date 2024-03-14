@@ -8,41 +8,39 @@ namespace Brutalsky
 {
     public abstract class BsJoint : BsObject
     {
-        public BsJointType jointType { get; }
+        public BsJointType JointType { get; }
 
-        public string targetShapeId { get; set; }
-        public string mountShapeId { get; set; }
+        public string TargetShapeId { get; set; }
+        public string MountShapeId { get; set; }
 
-        public bool collision { get; set; }
-        public BsJointStrength strength { get; set; }
+        public bool Collision { get; set; }
+        public BsJointStrength Strength { get; set; }
 
         public BsJoint(BsJointType jointType, string id, BsTransform transform, string targetShapeId,
             string mountShapeId, bool collision, BsJointStrength strength) : base(id, transform)
         {
-            this.jointType = jointType;
-
-            this.targetShapeId = targetShapeId;
-            this.mountShapeId = mountShapeId;
-
-            this.collision = collision;
-            this.strength = strength;
+            JointType = jointType;
+            TargetShapeId = targetShapeId;
+            MountShapeId = mountShapeId;
+            Collision = collision;
+            Strength = strength;
         }
 
         public void ApplyBaseConfigToInstance(AnchoredJoint2D jointComponent, [CanBeNull] BsShape mountShape)
         {
             // Apply joint config
-            jointComponent.anchor = transform.position;
-            jointComponent.enableCollision = collision;
-            jointComponent.breakForce = strength.breakForce;
-            jointComponent.breakTorque = strength.breakTorque;
+            jointComponent.anchor = Transform.Position;
+            jointComponent.enableCollision = Collision;
+            jointComponent.breakForce = Strength.BreakForce;
+            jointComponent.breakTorque = Strength.BreakTorque;
 
             // Set up connected rigidbody
             if (mountShape == null) return;
-            if (mountShape.instanceObject == null)
+            if (mountShape.InstanceObject == null)
             {
                 throw Errors.MountShapeUnbuilt(this);
             }
-            jointComponent.connectedBody = mountShape.instanceObject.GetComponent<Rigidbody2D>();
+            jointComponent.connectedBody = mountShape.InstanceObject.GetComponent<Rigidbody2D>();
             jointComponent.autoConfigureConnectedAnchor = true;
         }
 

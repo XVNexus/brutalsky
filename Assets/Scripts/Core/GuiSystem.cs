@@ -1,27 +1,30 @@
 using System.Collections.Generic;
 using System.Linq;
-using Controllers.Gui;
-using Core;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 using Utils;
+using Utils.Gui;
 
-namespace Controllers
+namespace Core
 {
-    public class GuiController : MonoBehaviour
+    public class GuiSystem : MonoBehaviour
     {
+        public static GuiSystem _ { get; private set; }
+        private void Awake() => _ = this;
+
         // Constants
         public const string DisabledClass = "bs-disabled";
         public const string PauseMenuId = "pm";
 
         // Variables
-        private Dictionary<string, GuiPane> panes = new();
-        private Dictionary<string, string> parentRegistrationHold = new();
+        private readonly Dictionary<string, GuiPane> _panes = new();
+        private readonly Dictionary<string, string> _parentRegistrationHold = new();
 
         // References
-        public VisualElement root;
+        public UIDocument cUIDocument;
+        private VisualElement _root;
 
         // Controls
         public InputAction iEscape;
@@ -33,30 +36,30 @@ namespace Controllers
             {
                 if (!ContainsVisiblePane())
                 {
-                    TimeSystem.current.Unpause();
+                    TimeSystem._.Unpause();
                 }
             }
             else if (GetPane(PauseMenuId)?.Activate() ?? false)
             {
-                TimeSystem.current.Pause();
+                TimeSystem._.Pause();
             }
         }
 
         [CanBeNull]
         public GuiPane GetVisiblePane()
         {
-            return panes.Values.FirstOrDefault(pane => pane.visible && !pane.dummy);
+            return _panes.Values.FirstOrDefault(pane => pane.Visible && !pane.Dummy);
         }
 
         public bool ContainsVisiblePane()
         {
-            return panes.Values.Any(pane => pane.visible && !pane.dummy);
+            return _panes.Values.Any(pane => pane.Visible && !pane.Dummy);
         }
 
         [CanBeNull]
         public GuiPane GetPane(string id)
         {
-            return panes.GetValueOrDefault(id, null);
+            return _panes.GetValueOrDefault(id, null);
         }
 
         public bool RegisterPane(string id, MonoBehaviour controller, string parentId = "")
@@ -64,23 +67,23 @@ namespace Controllers
             if (ContainsPane(id)) return false;
 
             var pane = new GuiPane(id, GetPaneElement(id), controller);
-            panes[id] = pane;
+            _panes[id] = pane;
             if (ContainsPane(parentId))
             {
                 pane.SetParent(GetPane(parentId));
             }
             else
             {
-                parentRegistrationHold[id] = parentId;
+                _parentRegistrationHold[id] = parentId;
             }
 
-            var childrenToRegister = (from childId in parentRegistrationHold.Keys
-                where parentRegistrationHold[childId] == id select GetPane(childId)).ToList();
+            var childrenToRegister = (from childId in _parentRegistrationHold.Keys
+                where _parentRegistrationHold[childId] == id select GetPane(childId)).ToList();
             for (var i = 0; i < childrenToRegister.Count; i++)
             {
                 var childToRegister = childrenToRegister[i];
                 childToRegister.SetParent(pane);
-                parentRegistrationHold.Remove(childToRegister.id);
+                _parentRegistrationHold.Remove(childToRegister.Id);
             }
 
             return true;
@@ -89,13 +92,13 @@ namespace Controllers
         public bool UnregisterPane(string id)
         {
             if (!ContainsPane(id)) return false;
-            panes.Remove(id);
+            _panes.Remove(id);
             return true;
         }
 
         public bool ContainsPane(string id)
         {
-            return panes.ContainsKey(id);
+            return _panes.ContainsKey(id);
         }
 
         public bool ActivatePane(string id)
@@ -125,13 +128,13 @@ namespace Controllers
         {
             button.clicked += () =>
             {
-                EventSystem.current.EmitGuiAction(GuiAction.ButtonPress, paneId, itemId);
+                EventSystem._.EmitGuiAction(GuiAction.ButtonPress, paneId, itemId);
             };
         }
 
         public VisualElement GetPaneElement(string paneId)
         {
-            return root.Q<VisualElement>($"pane-{paneId}");
+            return _root.Q<VisualElement>($"pane-{paneId}");
         }
 
         public T GetInputElement<T>(string paneId, string itemId) where T : VisualElement
@@ -139,11 +142,11 @@ namespace Controllers
             var type = typeof(T);
             return type switch
             {
-                not null when type == typeof(Button) => root.Q<T>($"{paneId}-btn-{itemId}"),
-                not null when type == typeof(Toggle) => root.Q<T>($"{paneId}-tgl-{itemId}"),
-                not null when type == typeof(TextField) => root.Q<T>($"{paneId}-txt-{itemId}"),
-                not null when type == typeof(IntegerField) => root.Q<T>($"{paneId}-int-{itemId}"),
-                not null when type == typeof(FloatField) => root.Q<T>($"{paneId}-flt-{itemId}"),
+                not null when type == typeof(Button) => _root.Q<T>($"{paneId}-btn-{itemId}"),
+                not null when type == typeof(Toggle) => _root.Q<T>($"{paneId}-tgl-{itemId}"),
+                not null when type == typeof(TextField) => _root.Q<T>($"{paneId}-txt-{itemId}"),
+                not null when type == typeof(IntegerField) => _root.Q<T>($"{paneId}-int-{itemId}"),
+                not null when type == typeof(FloatField) => _root.Q<T>($"{paneId}-flt-{itemId}"),
                 _ => throw Errors.InvalidGuiElement()
             };
         }
@@ -151,20 +154,13 @@ namespace Controllers
         // Events
         private void Start()
         {
-            root = GetComponent<UIDocument>().rootVisualElement;
-            panes[""] = new GuiPane("", root, this, true);
+            _root = cUIDocument.rootVisualElement;
+            _panes[""] = new GuiPane("", _root, this, true);
 
-            iEscape = EventSystem.current.inputActionAsset.FindAction("Escape");
+            iEscape = EventSystem._.inputActionAsset.FindAction("Escape");
             iEscape.Enable();
 
             iEscape.performed += OnIEscape;
-
-            Invoke(nameof(LoadGui), .1f);
-        }
-
-        private void LoadGui()
-        {
-            EventSystem.current.EmitGuiLoad();
         }
 
         private void OnIEscape(InputAction.CallbackContext context)

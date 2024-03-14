@@ -11,8 +11,8 @@ namespace Controllers.Player
         public const float ParticleMultiplier = 3f;
 
         // Variables
-        private float lastSpeed;
-        private int lastHealth = -1;
+        private float _lastSpeed;
+        private int _lastHealth = -1;
 
         // References
         public ParticleSystem cTouchParticleSystem;
@@ -22,8 +22,8 @@ namespace Controllers.Player
         public ParticleSystem cHealParticleSystem;
         public ParticleSystem cHurtParticleSystem;
         public ParticleSystem cDeathParticleSystem;
-        private PlayerController cPlayerController;
-        private Rigidbody2D cRigidbody2D;
+        private PlayerController _cPlayerController;
+        private Rigidbody2D _cRigidbody2D;
 
         // Functions
         public void DisplayTouchParticles(float contactAngle, Material shapeMaterial)
@@ -44,10 +44,10 @@ namespace Controllers.Player
         {
             switch (speed)
             {
-                case >= BoostThreshold when lastSpeed < BoostThreshold:
+                case >= BoostThreshold when _lastSpeed < BoostThreshold:
                     cBoostParticleSystem.Play();
                     break;
-                case < BoostThreshold when lastSpeed >= BoostThreshold:
+                case < BoostThreshold when _lastSpeed >= BoostThreshold:
                     cBoostParticleSystem.Stop();
                     break;
             }
@@ -81,8 +81,8 @@ namespace Controllers.Player
         // Events
         private void Start()
         {
-            cPlayerController = GetComponent<PlayerController>();
-            cRigidbody2D = GetComponent<Rigidbody2D>();
+            _cPlayerController = GetComponent<PlayerController>();
+            _cRigidbody2D = GetComponent<Rigidbody2D>();
 
             // Offset death particle system by the opposite amount the player is moved on death
             // This ensures that death particles will play where the player was before dying
@@ -110,19 +110,19 @@ namespace Controllers.Player
         // Updates
         private void FixedUpdate()
         {
-            var speed = cRigidbody2D.velocity.magnitude;
+            var speed = _cRigidbody2D.velocity.magnitude;
             DisplayBoostParticles(speed);
-            lastSpeed = speed;
+            _lastSpeed = speed;
 
-            var health = Mathf.CeilToInt(cPlayerController.health * ParticleMultiplier);
-            var deltaHealth = health - lastHealth;
+            var health = Mathf.CeilToInt(_cPlayerController.health * ParticleMultiplier);
+            var deltaHealth = health - _lastHealth;
             if (deltaHealth == 0) return;
             DisplayHealHurtParticles(deltaHealth);
-            if (health == 0 && lastHealth > 0)
+            if (health == 0 && _lastHealth > 0)
             {
                 DisplayDeathParticles();
             }
-            lastHealth = health;
+            _lastHealth = health;
         }
     }
 }

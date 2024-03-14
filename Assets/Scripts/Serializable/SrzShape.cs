@@ -19,13 +19,13 @@ namespace Serializable
         {
             return new SrzShape
             {
-                id = shape.id,
-                transform = shape.transform.ToString(),
-                path = shape.path.ToString(),
-                material = shape.material.ToString(),
-                color = shape.color.ToString(),
-                layer = (int)shape.layer,
-                simulated = BoolExt.ToString(shape.simulated)
+                id = shape.Id,
+                transform = shape.Transform.ToString(),
+                path = shape.Path.ToString(),
+                material = shape.Material.ToString(),
+                color = shape.Color.ToString(),
+                layer = (int)shape.Layer,
+                simulated = BoolExt.ToString(shape.Simulated)
             };
         }
 

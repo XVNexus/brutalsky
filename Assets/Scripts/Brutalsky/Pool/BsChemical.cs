@@ -2,15 +2,15 @@ namespace Brutalsky.Pool
 {
     public class BsChemical
     {
-        public float buoyancy { get; private set; }
-        public float viscosity { get; private set; }
-        public float damage { get; private set; }
+        public float Buoyancy { get; private set; }
+        public float Viscosity { get; private set; }
+        public float Damage { get; private set; }
 
         public BsChemical(float buoyancy, float viscosity, float damage = 0f)
         {
-            this.buoyancy = buoyancy;
-            this.viscosity = viscosity;
-            this.damage = damage;
+            Buoyancy = buoyancy;
+            Viscosity = viscosity;
+            Damage = damage;
         }
 
         public BsChemical()
@@ -21,31 +21,26 @@ namespace Brutalsky.Pool
         {
             return new BsChemical
             (
-                buoyancy ?? this.buoyancy,
-                viscosity ?? this.viscosity,
-                damage ?? this.damage
+                buoyancy ?? Buoyancy,
+                viscosity ?? Viscosity,
+                damage ?? Damage
             );
         }
 
         // Thin
-        public static BsChemical Oil()
-            => new BsChemical(2.5f, 1f);
+        public static BsChemical Oil() => new(2.5f, 1f);
 
         // Medium
-        public static BsChemical Water()
-            => new BsChemical(25f, 1f);
+        public static BsChemical Water() => new(25f, 1f);
 
         // Thick
-        public static BsChemical Honey()
-            => new BsChemical(25f, 10f);
+        public static BsChemical Honey() => new(25f, 10f);
 
         // Healing
-        public static BsChemical Medicine()
-            => new BsChemical(25f, 1f, 25f);
+        public static BsChemical Medicine() => new(25f, 1f, 25f);
 
         // Harmful
-        public static BsChemical Lava()
-            => new BsChemical(25f, 1f, -25f);
+        public static BsChemical Lava() => new(25f, 1f, -25f);
 
         public static BsChemical Parse(string raw)
         {
@@ -56,7 +51,7 @@ namespace Brutalsky.Pool
 
         public override string ToString()
         {
-            return $"{buoyancy} {viscosity} {damage}";
+            return $"{Buoyancy} {Viscosity} {Damage}";
         }
     }
 }

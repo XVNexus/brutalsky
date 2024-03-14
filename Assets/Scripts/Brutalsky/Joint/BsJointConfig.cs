@@ -2,33 +2,27 @@ namespace Brutalsky.Joint
 {
     public struct BsJointConfig
     {
-        public float value { get; set; }
-        public bool autoConfig { get; set; }
+        public float Value { get; set; }
+        public bool Auto { get; set; }
 
-        private BsJointConfig(float value, bool autoConfig)
+        private BsJointConfig(float value, bool auto)
         {
-            this.value = value;
-            this.autoConfig = autoConfig;
+            Value = value;
+            Auto = auto;
         }
 
-        public static BsJointConfig Value(float value)
-        {
-            return new BsJointConfig(value, false);
-        }
+        public static BsJointConfig SetValue(float value) => new(value, false);
 
-        public static BsJointConfig Auto()
-        {
-            return new BsJointConfig(0f, true);
-        }
+        public static BsJointConfig AutoValue() => new(0f, true);
 
         public static BsJointConfig Parse(string raw)
         {
-            return raw == "x" ? Auto() : Value(float.Parse(raw));
+            return raw == "x" ? AutoValue() : SetValue(float.Parse(raw));
         }
 
         public override string ToString()
         {
-            return autoConfig ? "x" : value.ToString();
+            return Auto ? "x" : Value.ToString();
         }
     }
 }

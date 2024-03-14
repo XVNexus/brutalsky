@@ -1,4 +1,4 @@
-namespace Controllers.Gui
+namespace Utils.Gui
 {
     public enum GuiAction
     {

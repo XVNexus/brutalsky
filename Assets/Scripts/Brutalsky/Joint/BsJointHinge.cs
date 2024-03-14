@@ -5,34 +5,34 @@ namespace Brutalsky.Joint
 {
     public class BsJointHinge : BsJoint
     {
-        public BsJointMotor motor { get; set; }
-        public BsJointLimits limits { get; set; }
+        public BsJointMotor Motor { get; set; }
+        public BsJointLimits Limits { get; set; }
 
         public BsJointHinge(string id, BsTransform transform, string targetShapeId, string mountShapeId,
             bool collision, BsJointStrength strength, BsJointMotor motor, BsJointLimits limits)
             : base(BsJointType.Hinge, id, transform, targetShapeId, mountShapeId, collision, strength)
         {
-            this.motor = motor;
-            this.limits = limits;
+            Motor = motor;
+            Limits = limits;
         }
 
         public override void ApplyConfigToInstance(AnchoredJoint2D jointComponent)
         {
             var hingeJointComponent = (HingeJoint2D)jointComponent;
-            if (motor.use)
+            if (Motor.Use)
             {
                 hingeJointComponent.useMotor = true;
                 var hingeJointMotor = hingeJointComponent.motor;
-                hingeJointMotor.motorSpeed = motor.speed;
-                hingeJointMotor.maxMotorTorque = motor.maxForce;
+                hingeJointMotor.motorSpeed = Motor.Speed;
+                hingeJointMotor.maxMotorTorque = Motor.MaxForce;
                 hingeJointComponent.motor = hingeJointMotor;
             }
-            if (limits.use)
+            if (Limits.Use)
             {
                 hingeJointComponent.useLimits = true;
                 var hingeJointLimits = hingeJointComponent.limits;
-                hingeJointLimits.min = limits.min;
-                hingeJointLimits.max = limits.max;
+                hingeJointLimits.min = Limits.Min;
+                hingeJointLimits.max = Limits.Max;
                 hingeJointComponent.limits = hingeJointLimits;
             }
         }

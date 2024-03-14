@@ -307,6 +307,7 @@ GameObject:
   m_Component:
   - component: {fileID: 581734016}
   - component: {fileID: 581734015}
+  - component: {fileID: 581734022}
   - component: {fileID: 581734021}
   - component: {fileID: 581734017}
   - component: {fileID: 581734019}
@@ -406,6 +407,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8542157c84b4a99a48df8f8fa37683b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &581734022
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 581734014}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1db1e7a376054c39b47305fce91ef979, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cUIDocument: {fileID: 2021743624}
+  iEscape:
+    m_Name: I Escape
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 4bfbeae9-e5e6-4074-8779-2b356d1263b1
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
 --- !u!1 &601674925
 GameObject:
   m_ObjectHideFlags: 0
@@ -1011,7 +1034,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2021743625}
   - component: {fileID: 2021743624}
-  - component: {fileID: 2021743626}
   - component: {fileID: 2021743627}
   - component: {fileID: 2021743628}
   - component: {fileID: 2021743630}
@@ -1054,27 +1076,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2021743626
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2021743623}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1db1e7a376054c39b47305fce91ef979, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  iEscape:
-    m_Name: I Escape
-    m_Type: 0
-    m_ExpectedControlType: 
-    m_Id: 12b47409-54ed-4593-b90d-58d1c862e03a
-    m_Processors: 
-    m_Interactions: 
-    m_SingletonActionBindings: []
-    m_Flags: 0
 --- !u!114 &2021743627
 MonoBehaviour:
   m_ObjectHideFlags: 0

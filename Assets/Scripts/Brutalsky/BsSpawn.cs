@@ -5,23 +5,23 @@ namespace Brutalsky
 {
     public class BsSpawn : BsObject
     {
-        public int priority { get; set; }
-        public int usages { get; private set; }
+        public int Priority { get; set; }
+        public int Usages { get; private set; }
 
         public BsSpawn(string id, BsTransform transform, int priority = 0) : base(id, transform)
         {
-            this.priority = priority;
+            Priority = priority;
         }
 
         public Vector2 Use()
         {
-            usages++;
-            return transform.position;
+            Usages++;
+            return Transform.Position;
         }
 
         public void Reset()
         {
-            usages = 0;
+            Usages = 0;
         }
     }
 }

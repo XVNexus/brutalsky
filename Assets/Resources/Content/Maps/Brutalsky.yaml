@@ -253,8 +253,8 @@ joints:
   - jointType: Hinge
     id: spinner-left-motor
     transform: 0 0 0
-    targetShapeId: spinner-left
-    mountShapeId: ''
+    targetShape: spinner-left
+    mountShape: ''
     properties:
       collision: 0
       strength: x
@@ -263,8 +263,8 @@ joints:
   - jointType: Hinge
     id: spinner-right-motor
     transform: 0 0 0
-    targetShapeId: spinner-right
-    mountShapeId: ''
+    targetShape: spinner-right
+    mountShape: ''
     properties:
       collision: 0
       strength: x
