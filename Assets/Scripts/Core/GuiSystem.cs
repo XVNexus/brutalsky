@@ -9,27 +9,38 @@ using Utils.Gui;
 
 namespace Core
 {
-    public class GuiSystem : MonoBehaviour
+    public class GuiSystem : BsBehavior
     {
         public static GuiSystem _ { get; private set; }
         private void Awake() => _ = this;
 
-        // Constants
         public const string DisabledClass = "bs-disabled";
         public const string PauseMenuId = "pm";
 
-        // Variables
         private readonly Dictionary<string, GuiPane> _panes = new();
         private readonly Dictionary<string, string> _parentRegistrationHold = new();
 
-        // References
         public UIDocument cUIDocument;
         private VisualElement _root;
 
-        // Controls
         public InputAction iEscape;
 
-        // Functions
+        protected override void OnStart()
+        {
+            _root = cUIDocument.rootVisualElement;
+            _panes[""] = new GuiPane("", _root, this, true);
+
+            iEscape = EventSystem._.inputActionAsset.FindAction("Escape");
+            iEscape.Enable();
+
+            iEscape.performed += OnIEscape;
+        }
+
+        private void OnIEscape(InputAction.CallbackContext context)
+        {
+            Escape();
+        }
+
         public void Escape()
         {
             if (GetVisiblePane()?.Deactivate() ?? false)
@@ -149,23 +160,6 @@ namespace Core
                 not null when type == typeof(FloatField) => _root.Q<T>($"{paneId}-flt-{itemId}"),
                 _ => throw Errors.InvalidGuiElement()
             };
-        }
-
-        // Events
-        private void Start()
-        {
-            _root = cUIDocument.rootVisualElement;
-            _panes[""] = new GuiPane("", _root, this, true);
-
-            iEscape = EventSystem._.inputActionAsset.FindAction("Escape");
-            iEscape.Enable();
-
-            iEscape.performed += OnIEscape;
-        }
-
-        private void OnIEscape(InputAction.CallbackContext context)
-        {
-            Escape();
         }
     }
 }

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Brutalsky;
@@ -9,18 +8,15 @@ using UnityEngine;
 
 namespace Core
 {
-    public class PlayerSystem : MonoBehaviour
+    public class PlayerSystem : BsBehavior
     {
         public static PlayerSystem _ { get; private set; }
         private void Awake() => _ = this;
 
-        // Variables
         public Dictionary<string, BsPlayer> ActivePlayers { get; private set; } = new();
 
-        // References
         public GameObject playerPrefab;
 
-        // Functions
         public void FreezeAll()
         {
             foreach (var player in ActivePlayers.Values)
@@ -105,7 +101,6 @@ namespace Core
             ActivePlayers.Remove(player.Id);
         }
 
-        // Updates
         private void FixedUpdate()
         {
             if (!MapSystem._.IsMapLoaded || MapSystem._.ActiveMap == null) return;

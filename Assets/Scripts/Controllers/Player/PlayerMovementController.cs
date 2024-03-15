@@ -1,4 +1,5 @@
 using UnityEngine;
+using Utils;
 using Utils.Ext;
 
 namespace Controllers.Player
@@ -29,7 +30,7 @@ namespace Controllers.Player
         private void OnCollisionEnter2D(Collision2D other)
         {
             // Get collision info
-            if (!other.gameObject.CompareTag(PlayerController.Tag)) return;
+            if (!other.gameObject.CompareTag(Tags.Player)) return;
             var impactSpeed = _lastSpeed * other.DirectnessFactor();
 
             // Reduce velocity based on collision force

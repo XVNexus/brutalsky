@@ -19,17 +19,7 @@ namespace Core
             DataPath = Application.persistentDataPath;
         }
 
-        // References
         public InputActionAsset inputActionAsset;
-
-        // Events
-        private void Start()
-        {
-            Invoke(nameof(EmitLoad), .1f);
-        }
-
-        public void EmitLoad() => OnLoad?.Invoke();
-        public event Action OnLoad;
 
         public void EmitGuiAction(GuiAction action, string paneId, string itemId) => OnGuiAction?.Invoke(action, paneId, itemId);
         public event Action<GuiAction, string, string> OnGuiAction;

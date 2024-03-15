@@ -1,22 +1,18 @@
 using Core;
-using UnityEngine;
 using Utils.Gui;
 
 namespace Gui
 {
-    public class GuiCf : MonoBehaviour
+    public class GuiCf : BsBehavior
     {
-        // Constants
         public const string PaneId = "cf";
 
-        // Events
-        private void Start()
+        protected override void OnStart()
         {
-            EventSystem._.OnLoad += OnLoad;
             EventSystem._.OnGuiAction += OnGuiAction;
         }
 
-        private void OnLoad()
+        protected override void OnLoad()
         {
             GuiSystem._.RegisterPane(PaneId, this, GuiPm.PaneId);
             GuiSystem._.RegisterButton(PaneId, "back");

@@ -2,15 +2,13 @@ using UnityEngine;
 
 namespace Core
 {
-    public class TimeSystem : MonoBehaviour
+    public class TimeSystem : BsBehavior
     {
         public static TimeSystem _ { get; private set; }
         private void Awake() => _ = this;
 
-        // Variables
         private bool _paused;
 
-        // Functions
         public bool Pause()
         {
             if (_paused) return false;

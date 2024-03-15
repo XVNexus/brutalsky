@@ -8,16 +8,16 @@ namespace Brutalsky.Shape
         public float Restitution { get; private set; }
         public float Adhesion { get; private set; }
         public float Density { get; private set; }
-        public float Damage { get; private set; }
+        public float Health { get; private set; }
         public bool Dynamic { get; private set; }
 
-        public BsMaterial(float friction, float restitution, float adhesion, float density, float damage = 0f, bool dynamic = false)
+        public BsMaterial(float friction, float restitution, float adhesion, float density, float health = 0f, bool dynamic = false)
         {
             Friction = friction;
             Restitution = restitution;
             Adhesion = adhesion;
             Density = density;
-            Damage = damage;
+            Health = health;
             Dynamic = dynamic;
         }
 
@@ -26,7 +26,7 @@ namespace Brutalsky.Shape
         }
 
         public BsMaterial Modify(float? friction = null, float? restitution = null, float? adhesion = null,
-            float? density = null, float? damage = null)
+            float? density = null, float? health = null)
         {
             return new BsMaterial
             (
@@ -34,7 +34,7 @@ namespace Brutalsky.Shape
                 restitution ?? Restitution,
                 adhesion ?? Adhesion,
                 density ?? Density,
-                damage ?? Damage,
+                health ?? Health,
                 Dynamic
             );
         }
@@ -73,7 +73,7 @@ namespace Brutalsky.Shape
 
         public override string ToString()
         {
-            return $"{Friction} {Restitution} {Adhesion} {Density} {Damage} {BoolExt.ToString(Dynamic)}";
+            return $"{Friction} {Restitution} {Adhesion} {Density} {Health} {BoolExt.ToString(Dynamic)}";
         }
     }
 }

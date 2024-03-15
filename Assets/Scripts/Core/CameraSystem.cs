@@ -3,12 +3,11 @@ using Utils.Ext;
 
 namespace Core
 {
-    public class CameraSystem : MonoBehaviour
+    public class CameraSystem : BsBehavior
     {
         public static CameraSystem _ { get; private set; }
         private void Awake() => _ = this;
 
-        // Variables
         public Vector2 viewSize;
         public float dampening;
         public float shakeInterval;
@@ -20,10 +19,13 @@ namespace Core
         private float _shakeTimer;
         private float _lastCameraAspect;
 
-        // References
         private Camera _cCamera;
 
-        // Functions
+        protected override void OnStart()
+        {
+            _cCamera = Camera.main;
+        }
+
         public void ResizeView(Vector2 viewSize)
         {
             this.viewSize = viewSize;
@@ -43,13 +45,6 @@ namespace Core
             _shakeTimer = shakeInterval;
         }
 
-        // Events
-        private void Start()
-        {
-            _cCamera = Camera.main;
-        }
-
-        // Updates
         private void Update()
         {
             // Configure the viewport to fit the screen

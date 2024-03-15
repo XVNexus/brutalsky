@@ -6,39 +6,16 @@ using Utils.Gui;
 
 namespace Gui
 {
-    public class GuiLs : MonoBehaviour
+    public class GuiLs : BsBehavior
     {
-        // Constants
         public const string PaneId = "ls";
 
-        // Functions
-        private void AddMapTile(BsMap map)
+        protected override void OnStart()
         {
-            var mapTileBox = new VisualElement();
-            mapTileBox.AddToClassList("bs");
-            mapTileBox.AddToClassList("bs-box");
-
-            var resource = Resources.Load<VisualTreeAsset>($"Gui/Elements/MapTile");
-            var mapTileCell = resource.Instantiate();
-            mapTileCell.AddToClassList("bs");
-            mapTileCell.AddToClassList("bs-cell");
-            GuiSystem._.RegisterButton(mapTileCell.Q<Button>("button"), PaneId, $"load-{map.Id}");
-            mapTileCell.Q<Label>("title").text = $"<b>{map.Title}</b>\n{map.Author}";
-            // mapTileCell.Q<VisualElement>("preview").style.backgroundImage = new StyleBackground(preview);
-
-            mapTileBox.Add(mapTileCell);
-            var container = GuiSystem._.GetPane(PaneId).Element.Q<VisualElement>("unity-content-container");
-            container.Add(mapTileBox);
-        }
-
-        // Events
-        private void Start()
-        {
-            EventSystem._.OnLoad += OnLoad;
             EventSystem._.OnGuiAction += OnGuiAction;
         }
 
-        private void OnLoad()
+        protected override void OnLoad()
         {
             GuiSystem._.RegisterPane(PaneId, this, GuiPm.PaneId);
             GuiSystem._.RegisterButton(PaneId, "back");
@@ -70,6 +47,25 @@ namespace Gui
         private void OnButtonPressBack()
         {
             GuiSystem._.DeactivatePane(PaneId);
+        }
+
+        private void AddMapTile(BsMap map)
+        {
+            var mapTileBox = new VisualElement();
+            mapTileBox.AddToClassList("bs");
+            mapTileBox.AddToClassList("bs-box");
+
+            var resource = Resources.Load<VisualTreeAsset>($"Gui/Elements/MapTile");
+            var mapTileCell = resource.Instantiate();
+            mapTileCell.AddToClassList("bs");
+            mapTileCell.AddToClassList("bs-cell");
+            GuiSystem._.RegisterButton(mapTileCell.Q<Button>("button"), PaneId, $"load-{map.Id}");
+            mapTileCell.Q<Label>("title").text = $"<b>{map.Title}</b>\n{map.Author}";
+            // mapTileCell.Q<VisualElement>("preview").style.backgroundImage = new StyleBackground(preview);
+
+            mapTileBox.Add(mapTileCell);
+            var container = GuiSystem._.GetPane(PaneId).Element.Q<VisualElement>("unity-content-container");
+            container.Add(mapTileBox);
         }
     }
 }

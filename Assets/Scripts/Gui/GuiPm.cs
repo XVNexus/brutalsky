@@ -5,19 +5,16 @@ using Utils.Gui;
 
 namespace Gui
 {
-    public class GuiPm : MonoBehaviour
+    public class GuiPm : BsBehavior
     {
-        // Constants
         public const string PaneId = "pm";
 
-        // Events
-        private void Start()
+        protected override void OnStart()
         {
-            EventSystem._.OnLoad += OnLoad;
             EventSystem._.OnGuiAction += OnGuiAction;
         }
 
-        private void OnLoad()
+        protected override void OnLoad()
         {
             GuiSystem._.RegisterPane(PaneId, this);
             GuiSystem._.RegisterButtons(PaneId, new[]

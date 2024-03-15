@@ -1,5 +1,6 @@
 using Brutalsky;
 using UnityEngine;
+using Utils;
 using Utils.Ext;
 
 namespace Controllers.Player
@@ -29,7 +30,7 @@ namespace Controllers.Player
             if (!_cPlayerController.alive) return;
 
             // Get collision info
-            var impactForce = other.TotalNormalImpulse() * (other.gameObject.CompareTag(PlayerController.Tag) ? 2f : 1f);
+            var impactForce = other.TotalNormalImpulse() * (other.gameObject.CompareTag(Tags.Player) ? 2f : 1f);
             if (impactForce < 25f) return;
             var impactSpeed = _lastSpeed;
 

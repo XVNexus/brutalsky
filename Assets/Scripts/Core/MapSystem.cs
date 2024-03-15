@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -15,20 +14,17 @@ using Utils.Shape;
 
 namespace Core
 {
-    public class MapSystem : MonoBehaviour
+    public class MapSystem : BsBehavior
     {
         public static MapSystem _ { get; private set; }
         private void Awake() => _ = this;
 
-        // Constants
         public const string SaveFormat = "yaml";
 
-        // Variables
         public Dictionary<uint, string> RawMapList { get; private set; } = new();
         [CanBeNull] public BsMap ActiveMap { get; private set; }
         public bool IsMapLoaded { get; private set; }
 
-        // References
         public GameObject mapMargins;
         public Light2D cMapLight2D;
         public GameObject shapePrefab;
@@ -37,7 +33,12 @@ namespace Core
         public Material unlitMaterial;
         private GameObject _mapParent;
 
-        // Functions
+        protected override void OnStart()
+        {
+            // TODO: DONT GENERATE A BUNCH OF SHIT ON EVERY GAME LAUNCH
+            // GenerateMapList();
+        }
+
         public void GenerateMapList()
         {
             RawMapList.Clear();
@@ -148,7 +149,7 @@ namespace Core
             // Create new object
             var shapeObject = Instantiate(shapePrefab, _mapParent.transform);
             var shapeController = shapeObject.GetComponent<ShapeController>();
-            shapeController.BsObject = shape;
+            shapeController.Object = shape;
 
             // Convert path to mesh
             var points = shape.Path.ToPoints();
@@ -213,7 +214,7 @@ namespace Core
             // Create new object
             var poolObject = Instantiate(poolPrefab, _mapParent.transform);
             var poolController = poolObject.GetComponent<PoolController>();
-            poolController.BsObject = pool;
+            poolController.Object = pool;
 
             // Apply size
             poolObject.transform.localScale = pool.Size;
@@ -342,13 +343,6 @@ namespace Core
             return true;
         }
 
-        // Events
-        private void Start()
-        {
-            GenerateMapList();
-        }
-
-        // Utilities
         public static int Layer2Order(BsLayer layer)
         {
             return layer switch

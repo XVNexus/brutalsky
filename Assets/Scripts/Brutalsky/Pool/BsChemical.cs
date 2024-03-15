@@ -4,26 +4,26 @@ namespace Brutalsky.Pool
     {
         public float Buoyancy { get; private set; }
         public float Viscosity { get; private set; }
-        public float Damage { get; private set; }
+        public float Health { get; private set; }
 
-        public BsChemical(float buoyancy, float viscosity, float damage = 0f)
+        public BsChemical(float buoyancy, float viscosity, float health = 0f)
         {
             Buoyancy = buoyancy;
             Viscosity = viscosity;
-            Damage = damage;
+            Health = health;
         }
 
         public BsChemical()
         {
         }
 
-        public BsChemical Modify(float? buoyancy = null, float? viscosity = null, float? damage = null)
+        public BsChemical Modify(float? buoyancy = null, float? viscosity = null, float? health = null)
         {
             return new BsChemical
             (
                 buoyancy ?? Buoyancy,
                 viscosity ?? Viscosity,
-                damage ?? Damage
+                health ?? Health
             );
         }
 
@@ -51,7 +51,7 @@ namespace Brutalsky.Pool
 
         public override string ToString()
         {
-            return $"{Buoyancy} {Viscosity} {Damage}";
+            return $"{Buoyancy} {Viscosity} {Health}";
         }
     }
 }

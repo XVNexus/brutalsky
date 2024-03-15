@@ -1,5 +1,6 @@
 using Brutalsky;
 using UnityEngine;
+using Utils;
 using Utils.Ext;
 
 namespace Controllers.Player
@@ -93,7 +94,7 @@ namespace Controllers.Player
         private void OnCollisionEnter2D(Collision2D other)
         {
             DisplayImpactParticles(other.TotalNormalImpulse());
-            if (!other.gameObject.CompareTag(ShapeController.Tag) || other.DirectnessFactor() < .5f) return;
+            if (!other.gameObject.CompareTag(Tags.Shape) || other.DirectnessFactor() < .5f) return;
             DisplayTouchParticles(MathfExt.Atan2(
                 other.GetContact(0).point - (Vector2)transform.position) * Mathf.Rad2Deg,
                 other.gameObject.GetComponent<MeshRenderer>().material);
@@ -101,7 +102,7 @@ namespace Controllers.Player
 
         private void OnCollisionStay2D(Collision2D other)
         {
-            if (!other.gameObject.CompareTag(ShapeController.Tag) || other.relativeVelocity.magnitude < 3f) return;
+            if (!other.gameObject.CompareTag(Tags.Shape) || other.relativeVelocity.magnitude < 3f) return;
             DisplaySlideParticles(MathfExt.Atan2(
                 other.GetContact(0).point - (Vector2)transform.position) * Mathf.Rad2Deg,
                 other.gameObject.GetComponent<MeshRenderer>().material);

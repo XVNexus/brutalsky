@@ -1,29 +1,25 @@
 using System.Collections.Generic;
+using Brutalsky;
 using UnityEngine;
 using Utils.Pool;
 
 namespace Controllers.Pool
 {
-    public class PoolWaveController : MonoBehaviour
+    public class PoolWaveController : SubControllerBase<PoolController, BsPool>
     {
-        // Constants
         public const float WavePointDensity = 2f;
 
-        // Variables
+        public override bool IsUnused => false;
+
+        public LineRenderer cLineRenderer;
         private float _waveHeight;
         private int _wavePointCount;
         private float[] _wavePointOffsets;
-        private readonly List<PoolWaveEffect> _waveEffects = new();
-
-        // References
-        public LineRenderer cLineRenderer;
-        private PoolController _cPoolController;
+        private readonly List<PoolWave> _waves = new();
         private SpriteRenderer _cSpriteRenderer;
 
-        // Events
-        private void Start()
+        protected override void OnInit()
         {
-            _cPoolController = GetComponent<PoolController>();
             _cSpriteRenderer = GetComponent<SpriteRenderer>();
 
             // Set wave color to match the pool color
@@ -67,28 +63,27 @@ namespace Controllers.Pool
         private void OnTrigger2D(Component other)
         {
             // Trigger wave splash effect
-            var splashPoint = transform.InverseTransformPoint(other.transform.position).x * _cPoolController.BsObject.Size.x;
-            _waveEffects.Add(new PoolWaveEffect(splashPoint, 25f, 2f, 3f));
+            var splashPoint = transform.InverseTransformPoint(other.transform.position).x * Master.Object.Size.x;
+            _waves.Add(new PoolWave(splashPoint, 25f, 2f, 3f));
         }
 
-        // Updates
         private void Update()
         {
             // Update wave effects
-            if (_waveEffects.Count == 0) return;
+            if (_waves.Count == 0) return;
             var wavePointHeights = new float[_wavePointCount];
-            for (var i = _waveEffects.Count - 1; i >= 0; i--)
+            for (var i = _waves.Count - 1; i >= 0; i--)
             {
-                var waveEffect = _waveEffects[i];
-                waveEffect.Update(Time.deltaTime);
-                if (waveEffect.Idle)
+                var wave = _waves[i];
+                wave.Update(Time.deltaTime);
+                if (wave.Idle)
                 {
-                    _waveEffects.RemoveAt(i);
+                    _waves.RemoveAt(i);
                     continue;
                 }
                 for (var j = 0; j < _wavePointCount; j++)
                 {
-                    wavePointHeights[j] += waveEffect.SamplePoint(_wavePointOffsets[j]);
+                    wavePointHeights[j] += wave.SamplePoint(_wavePointOffsets[j]);
                 }
             }
 

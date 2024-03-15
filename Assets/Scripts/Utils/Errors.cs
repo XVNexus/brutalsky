@@ -6,6 +6,9 @@ namespace Utils
 {
     public static class Errors
     {
+        public static IndexOutOfRangeException NoDataFound(string id)
+            => new($"No controller data registered with id '{id}'");
+
         public static ArgumentOutOfRangeException InvalidGuiElement()
             => new("", $"Invalid gui element query");
 

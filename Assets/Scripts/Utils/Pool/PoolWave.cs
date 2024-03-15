@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Utils.Pool
 {
-    public class PoolWaveEffect
+    public class PoolWave
     {
         public float Origin { get; private set; }
         public float Spread { get; private set; }
@@ -15,7 +15,7 @@ namespace Utils.Pool
         private float _width;
         private float _height;
 
-        public PoolWaveEffect(float origin, float spread, float frequency, float lifespan)
+        public PoolWave(float origin, float spread, float frequency, float lifespan)
         {
             Origin = origin;
             Spread = spread;
