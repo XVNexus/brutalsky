@@ -2,15 +2,18 @@ using Brutalsky;
 
 namespace Controllers
 {
-    public abstract class SubControllerBase<TC, TO> : BsBehavior where TC : ControllerBase<TO> where TO : BsObject
+    public abstract class SubControllerBase<TO> : BsBehavior where TO : BsObject
     {
-        public TC Master { get; set; }
-        protected bool IsInitialized { get; private set; }
+        public abstract string Id { get; }
         public abstract bool IsUnused { get; }
+
+        public ControllerBase<TO> Master { get; set; }
+        protected bool IsInitialized { get; private set; }
 
         protected override void OnStart()
         {
-            Master = GetComponent<TC>();
+            Master = GetComponent<ControllerBase<TO>>();
+            Master.AddSub(this);
             OnInit();
             IsInitialized = true;
         }
@@ -21,6 +24,7 @@ namespace Controllers
         {
             if (IsUnused)
             {
+                Master.RemoveSub(this);
                 Destroy(this);
             }
         }

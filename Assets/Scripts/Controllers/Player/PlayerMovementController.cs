@@ -7,8 +7,9 @@ using Utils.Ext;
 
 namespace Controllers.Player
 {
-    public class PlayerMovementController : SubControllerBase<PlayerController, BsPlayer>
+    public class PlayerMovementController : SubControllerBase<BsPlayer>
     {
+        public override string Id => "movement";
         public override bool IsUnused => false;
 
         public const int MaxOnGroundFrames = 5;
@@ -27,38 +28,21 @@ namespace Controllers.Player
         private int _onGroundFrames;
         private float _lastPositionY;
 
-        private PlayerController _cPlayerController;
         private Rigidbody2D _cRigidbody2D;
+        private CircleCollider2D _cCircleCollider2D;
 
         public InputAction iMovement;
         public InputAction iBoost;
     
         protected override void OnInit()
         {
-            _cPlayerController = GetComponent<PlayerController>();
             _cRigidbody2D = GetComponent<Rigidbody2D>();
+            _cCircleCollider2D = GetComponent<CircleCollider2D>();
 
             iMovement = EventSystem._.inputActionAsset.FindAction("Movement");
             iMovement.Enable();
             iBoost = EventSystem._.inputActionAsset.FindAction("Boost");
             iBoost.Enable();
-        }
-
-        private void Start()
-        {
-            _cPlayerSpriteRenderer = GetComponent<SpriteRenderer>();
-            _cRigidbody2D = GetComponent<Rigidbody2D>();
-            _cCircleCollider2D = GetComponent<CircleCollider2D>();
-
-            // Set all colored items to match the player color
-            _cPlayerSpriteRenderer.color = color;
-            cLight2D.color = color;
-            cRingSpriteRenderer.color = color;
-            foreach (var cParticleSystem in cParticleSystems)
-            {
-                var psMain = cParticleSystem.main;
-                psMain.startColor = color;
-            }
         }
 
         private void OnCollisionEnter2D(Collision2D other)
@@ -99,7 +83,7 @@ namespace Controllers.Player
             _cRigidbody2D.simulated = true;
             _cCircleCollider2D.enabled = true;
         }
-        
+
         private void FixedUpdate()
         {
             if (dummy) return;

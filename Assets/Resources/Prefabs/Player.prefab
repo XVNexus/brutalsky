@@ -176,39 +176,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2aa817db9dc24dec81a884d953c1711c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 100
-  health: -1
-  alive: 1
-  color: {r: 0, g: 0, b: 0, a: 0}
-  boostCharge: 0
-  boostCooldown: 0
-  onGround: 0
-  cLight2D: {fileID: 5161598684334631783}
-  cRingSpriteRenderer: {fileID: 1062589161020571729}
-  cParticleSystems:
-  - {fileID: 5750454859715637797}
-  - {fileID: 8208163698263707477}
-  - {fileID: 6890176935596459009}
-  - {fileID: 6733936032522987168}
-  - {fileID: 7700580177397742090}
-  iMovement:
-    m_Name: I Movement
-    m_Type: 0
-    m_ExpectedControlType: 
-    m_Id: 9cf20e42-96ba-4f42-ae74-83cfa25a1fc7
-    m_Processors: 
-    m_Interactions: 
-    m_SingletonActionBindings: []
-    m_Flags: 0
-  iBoost:
-    m_Name: I Boost
-    m_Type: 0
-    m_ExpectedControlType: 
-    m_Id: 5ab72d8a-8d6b-4f10-a948-c1df44cd2b38
-    m_Processors: 
-    m_Interactions: 
-    m_SingletonActionBindings: []
-    m_Flags: 0
 --- !u!114 &6636566231499246727
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -224,6 +191,27 @@ MonoBehaviour:
   movementForce: 20
   jumpForce: 12
   dummy: 0
+  onGround: 0
+  boostCharge: 0
+  boostCooldown: 0
+  iMovement:
+    m_Name: I Movement
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 05382d9b-cc64-44fe-9d16-c34de1cff443
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
+  iBoost:
+    m_Name: I Boost
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 71f8071c-293c-463f-a18c-f489ecab0220
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
 --- !u!114 &328550718412262110
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -236,6 +224,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02c7aa6a8c3ef4415b68365f601c54bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxHealth: 0
+  health: -1
+  alive: 1
 --- !u!114 &3399184115846437671
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -248,7 +239,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 134e47056a1bb0ceda9707681dd4a12d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cSpriteRenderer: {fileID: 1062589161020571729}
+  cRingSpriteRenderer: {fileID: 1062589161020571729}
   cSpriteMask: {fileID: 1309106731501733001}
 --- !u!114 &7684857053292564534
 MonoBehaviour:

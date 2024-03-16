@@ -4,12 +4,11 @@ using Utils.Ext;
 
 namespace Controllers.Pool
 {
-    public class PoolFloatController : SubControllerBase<PoolController, BsPool>
+    public class PoolFloatController : SubControllerBase<BsPool>
     {
+        public override string Id => "float";
         public override bool IsUnused =>
             Master.Object.Chemical.Buoyancy == 0f && Master.Object.Chemical.Viscosity == 0f;
-
-        public LineRenderer cLineRenderer;
 
         private Vector2 _buoyancyForce;
         private float _surfaceAngle;

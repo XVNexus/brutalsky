@@ -1,11 +1,13 @@
 using Brutalsky;
+using Controllers.Player;
 using UnityEngine;
 using Utils;
 
 namespace Controllers.Shape
 {
-    public class ShapeHealthController : SubControllerBase<ShapeController, BsShape>
+    public class ShapeHealthController : SubControllerBase<BsShape>
     {
+        public override string Id => "health";
         public override bool IsUnused => Master.Object.Material.Health == 0f;
 
         protected override void OnInit()
@@ -18,15 +20,15 @@ namespace Controllers.Shape
 
             // Apply health to player
             if (!other.gameObject.CompareTag(Tags.Player)) return;
-            var damage = Master.Object.Material.Health;
+            var health = Master.Object.Material.Health;
             var playerController = other.gameObject.GetComponent<PlayerController>();
-            if (damage > 0f)
+            if (health > 0f)
             {
-                playerController.Heal(damage);
+                playerController.GetSub<PlayerHealthController>("health")?.Heal(health);
             }
             else
             {
-                playerController.Hurt(-damage);
+                playerController.GetSub<PlayerHealthController>("health")?.Hurt(-health);
             }
         }
     }

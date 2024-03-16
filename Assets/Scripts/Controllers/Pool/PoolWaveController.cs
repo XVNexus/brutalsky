@@ -6,8 +6,9 @@ using Utils.Pool;
 
 namespace Controllers.Pool
 {
-    public class PoolWaveController : SubControllerBase<PoolController, BsPool>
+    public class PoolWaveController : SubControllerBase<BsPool>
     {
+        public override string Id => "wave";
         public override bool IsUnused => false;
 
         public const float WavePointDensity = 2f;

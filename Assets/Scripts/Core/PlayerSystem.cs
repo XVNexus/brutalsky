@@ -21,7 +21,7 @@ namespace Core
         {
             foreach (var player in ActivePlayers.Values)
             {
-                ((PlayerController)player.InstanceComponent)?.Freeze();
+                ((PlayerController)player.InstanceComponent)?.GetSub<PlayerMovementController>("movement")?.Freeze();
             }
         }
 
@@ -29,7 +29,7 @@ namespace Core
         {
             foreach (var player in ActivePlayers.Values)
             {
-                ((PlayerController)player.InstanceComponent)?.Unfreeze();
+                ((PlayerController)player.InstanceComponent)?.GetSub<PlayerMovementController>("movement")?.Unfreeze();
             }
         }
 
@@ -54,16 +54,20 @@ namespace Core
                 playerObject = Instantiate(playerPrefab);
                 playerController = playerObject.GetComponent<PlayerController>();
                 playerController.Object = player;
-                playerController.maxHealth = player.Health;
-                playerController.color = player.Color.Tint;
-                playerObject.GetComponent<PlayerMovementController>().dummy = player.Dummy;
+
+                // Apply config and color
+                if (playerController.ContainsSub("health"))
+                    playerController.GetSub<PlayerHealthController>("health").maxHealth = player.Health;
+                if (playerController.ContainsSub("movement"))
+                    playerController.GetSub<PlayerMovementController>("movement").dummy = player.Dummy;
+                playerController.GetComponent<SpriteRenderer>().color = player.Color.Tint;
             }
             else
             {
                 // Get reference to existing object and ensure player is reset to full health
                 playerObject = player.InstanceObject;
                 playerController = playerObject.GetComponent<PlayerController>();
-                playerController.Refresh();
+                playerController.GetSub<PlayerHealthController>("health")?.Refresh();
             }
 
             // Select a spawnpoint and move the new player object to it
@@ -112,7 +116,8 @@ namespace Core
                 var y = Mathf.Abs(position.y);
                 if (x > mapSize.x / 2f + 3f || y > mapSize.y / 2f + 3f)
                 {
-                    ((PlayerController)player.InstanceComponent)?.Kill();
+                    Debug.Log("owie 2");
+                    ((PlayerController)player.InstanceComponent)?.GetSub<PlayerHealthController>("health")?.Kill();
                 }
             }
         }

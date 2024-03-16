@@ -1,12 +1,14 @@
 using Brutalsky;
+using JetBrains.Annotations;
 using UnityEngine;
 using Utils;
 using Utils.Ext;
 
 namespace Controllers.Player
 {
-    public class PlayerParticleController : SubControllerBase<PlayerController, BsPlayer>
+    public class PlayerParticleController : SubControllerBase<BsPlayer>
     {
+        public override string Id => "particle";
         public override bool IsUnused => false;
 
         public const float BoostThreshold = 30f;
@@ -22,16 +24,31 @@ namespace Controllers.Player
         public ParticleSystem cHealParticleSystem;
         public ParticleSystem cHurtParticleSystem;
         public ParticleSystem cDeathParticleSystem;
-        private PlayerController _cPlayerController;
         private Rigidbody2D _cRigidbody2D;
+        private SpriteRenderer _cSpriteRenderer;
+
+        [CanBeNull] private PlayerHealthController _mHealth;
 
         protected override void OnInit()
         {
-            _cPlayerController = GetComponent<PlayerController>();
             _cRigidbody2D = GetComponent<Rigidbody2D>();
+            _cSpriteRenderer = GetComponent<SpriteRenderer>();
 
+            // Sync particle system colors with player color
+            foreach (var coloredParticleSystem in new[] { cBoostParticleSystem, cImpactParticleSystem,
+                cHealParticleSystem, cHurtParticleSystem, cDeathParticleSystem })
+            {
+                coloredParticleSystem.GetComponent<Renderer>().material.color = _cSpriteRenderer.color;
+            }
+
+            // Shift death particle system to ensure death particles play where the player originally was
             cDeathParticleSystem.transform.localPosition =
                 new Vector3(-PlayerHealthController.DeathOffset, -PlayerHealthController.DeathOffset);
+        }
+
+        protected override void OnLink()
+        {
+            _mHealth = Master.GetSub<PlayerHealthController>("health");
         }
 
         private void OnCollisionEnter2D(Collision2D other)
@@ -105,11 +122,14 @@ namespace Controllers.Player
 
         private void FixedUpdate()
         {
+            // Display boost particles
             var speed = _cRigidbody2D.velocity.magnitude;
             DisplayBoostParticles(speed);
             _lastSpeed = speed;
 
-            var health = Mathf.CeilToInt(_cPlayerController.health * ParticleMultiplier);
+            // Display heal/hurt particles
+            if (!_mHealth) return;
+            var health = Mathf.CeilToInt(_mHealth.health * ParticleMultiplier);
             var deltaHealth = health - _lastHealth;
             if (deltaHealth == 0) return;
             DisplayHealHurtParticles(deltaHealth);

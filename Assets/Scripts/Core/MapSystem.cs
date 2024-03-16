@@ -308,7 +308,7 @@ namespace Core
 
             // Destroy the shape object
             Destroy(shape.InstanceObject);
-            
+
             // Note shape as inactive
             shape.InstanceObject = null;
             shape.Active = false;
@@ -322,7 +322,7 @@ namespace Core
 
             // Destroy the pool object
             Destroy(pool.InstanceObject);
-            
+
             // Note pool as inactive
             pool.InstanceObject = null;
             pool.Active = false;
@@ -336,7 +336,7 @@ namespace Core
 
             // Destroy the joint component
             Destroy(joint.InstanceComponent);
-            
+
             // Note joint as inactive
             joint.InstanceComponent = null;
             joint.Active = false;

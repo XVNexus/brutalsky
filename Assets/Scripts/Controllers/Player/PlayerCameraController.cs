@@ -1,22 +1,28 @@
 using Brutalsky;
 using Core;
+using JetBrains.Annotations;
 using UnityEngine;
 using Utils;
 using Utils.Ext;
 
 namespace Controllers.Player
 {
-    public class PlayerCameraController : SubControllerBase<PlayerController, BsPlayer>
+    public class PlayerCameraController : SubControllerBase<BsPlayer>
     {
+        public override string Id => "camera";
         public override bool IsUnused => false;
 
         private float _lastHealth = -1f;
 
-        private PlayerController _cPlayerController;
+        [CanBeNull] private PlayerHealthController _mHealth;
 
         protected override void OnInit()
         {
-            _cPlayerController = GetComponent<PlayerController>();
+        }
+
+        protected override void OnLink()
+        {
+            
         }
 
         private void OnCollisionEnter2D(Collision2D other)
@@ -34,7 +40,8 @@ namespace Controllers.Player
         private void FixedUpdate()
         {
             // Apply camera shake after taking damage
-            var health = _cPlayerController.health;
+            if (!_mHealth) return;
+            var health = _mHealth.health;
             var deltaHealth = health - _lastHealth;
             if (deltaHealth < 0f)
             {
