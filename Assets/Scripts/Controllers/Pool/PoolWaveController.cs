@@ -1,35 +1,43 @@
 using System.Collections.Generic;
 using Brutalsky;
 using UnityEngine;
+using Utils.Ext;
 using Utils.Pool;
 
 namespace Controllers.Pool
 {
     public class PoolWaveController : SubControllerBase<PoolController, BsPool>
     {
-        public const float WavePointDensity = 2f;
-
         public override bool IsUnused => false;
 
+        public const float WavePointDensity = 2f;
+
         public LineRenderer cLineRenderer;
+        private SpriteRenderer _cSpriteRenderer;
+
         private float _waveHeight;
         private int _wavePointCount;
         private float[] _wavePointOffsets;
         private readonly List<PoolWave> _waves = new();
-        private SpriteRenderer _cSpriteRenderer;
 
         protected override void OnInit()
         {
             _cSpriteRenderer = GetComponent<SpriteRenderer>();
 
-            // Set wave color to match the pool color
-            cLineRenderer.material = _cSpriteRenderer.material;
-            cLineRenderer.sortingOrder = _cSpriteRenderer.sortingOrder;
-
-            // Set up wave renderer
+            // Adjust pool size to make room for waves
             var lineWidth = cLineRenderer.widthMultiplier;
             var poolTransform = transform;
             var poolScale = poolTransform.localScale;
+            poolScale.y -= lineWidth * .5f;
+            poolTransform.localScale = poolScale;
+            var surfaceAngle = (poolTransform.rotation.eulerAngles.z + 90f) * Mathf.Deg2Rad;
+            var poolPosition = poolTransform.position;
+            poolPosition -= (Vector3)MathfExt.RotateVector(new Vector2(lineWidth * .25f, 0f), surfaceAngle);
+            poolTransform.position = poolPosition;
+
+            // Set up wave renderer
+            cLineRenderer.material = _cSpriteRenderer.material;
+            cLineRenderer.sortingOrder = _cSpriteRenderer.sortingOrder;
             cLineRenderer.positionCount = Mathf.RoundToInt(poolScale.x * WavePointDensity) + 3;
             var posCount = cLineRenderer.positionCount;
             _wavePointCount = posCount - 4;

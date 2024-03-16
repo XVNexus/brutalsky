@@ -5,20 +5,27 @@ using Utils.Ext;
 
 namespace Controllers.Player
 {
-    public class PlayerHealthController : MonoBehaviour
+    public class PlayerHealthController : SubControllerBase<PlayerController, BsPlayer>
     {
-        // Variables
+        public override bool IsUnused => false;
+
+        public const float DeathOffset = 1000f;
+
+        public float maxHealth;
+        public float health = -1f;
+        public bool alive = true;
         private float _lastSpeed;
 
-        // References
         private PlayerController _cPlayerController;
         private Rigidbody2D _cRigidbody2D;
 
-        // Events
-        private void Start()
+        protected override void OnInit()
         {
             _cPlayerController = GetComponent<PlayerController>();
             _cRigidbody2D = GetComponent<Rigidbody2D>();
+
+            // Sync health with max health
+            health = maxHealth;
         }
 
         private void OnCollisionEnter2D(Collision2D other) => OnCollision(other);
@@ -27,7 +34,7 @@ namespace Controllers.Player
 
         private void OnCollision(Collision2D other)
         {
-            if (!_cPlayerController.alive) return;
+            if (!alive) return;
 
             // Get collision info
             var impactForce = other.TotalNormalImpulse() * (other.gameObject.CompareTag(Tags.Player) ? 2f : 1f);
@@ -37,12 +44,62 @@ namespace Controllers.Player
             // Apply damage to player
             var damageApplied = BsPlayer.CalculateDamage(impactForce);
             var damageMultiplier = Mathf.Min(1f / (impactSpeed * .2f), 1f);
-            _cPlayerController.Hurt(damageApplied * damageMultiplier);
+            Hurt(damageApplied * damageMultiplier);
         }
 
-        // Updates
+        public void Heal(float amount)
+        {
+            health = Mathf.Min(health + amount, maxHealth);
+        }
+
+        public void Hurt(float amount)
+        {
+            health = Mathf.Max(health - amount, 0f);
+        }
+
+        public void Refresh()
+        {
+            if (alive)
+            {
+                health = maxHealth;
+            }
+            else
+            {
+                Revive();
+            }
+            _cRigidbody2D.velocity = Vector2.zero;
+            boostCharge = 0f;
+            boostCooldown = 0f;
+        }
+
+        public bool Revive()
+        {
+            if (alive) return false;
+            transform.position -= new Vector3(DeathOffset, DeathOffset);
+            Unfreeze();
+            health = maxHealth;
+            alive = true;
+            return true;
+        }
+
+        public bool Kill()
+        {
+            if (!alive) return false;
+            transform.position += new Vector3(DeathOffset, DeathOffset);
+            Freeze();
+            health = 0f;
+            alive = false;
+            return true;
+        }
+
         private void FixedUpdate()
         {
+            // Kill the player if health reaches zero
+            if (alive && health == 0)
+            {
+                Kill();
+            }
+
             // Save the current speed for future reference
             _lastSpeed = _cRigidbody2D.velocity.magnitude;
         }

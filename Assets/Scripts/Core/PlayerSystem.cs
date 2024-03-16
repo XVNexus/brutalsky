@@ -53,7 +53,7 @@ namespace Core
                 // Create new object and apply config
                 playerObject = Instantiate(playerPrefab);
                 playerController = playerObject.GetComponent<PlayerController>();
-                playerController.BsObject = player;
+                playerController.Object = player;
                 playerController.maxHealth = player.Health;
                 playerController.color = player.Color.Tint;
                 playerObject.GetComponent<PlayerMovementController>().dummy = player.Dummy;

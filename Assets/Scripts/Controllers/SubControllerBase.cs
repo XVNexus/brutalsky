@@ -16,5 +16,13 @@ namespace Controllers
         }
 
         protected abstract void OnInit();
+
+        protected override void OnLoad()
+        {
+            if (IsUnused)
+            {
+                Destroy(this);
+            }
+        }
     }
 }

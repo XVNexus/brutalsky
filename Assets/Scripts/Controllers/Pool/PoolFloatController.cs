@@ -10,6 +10,7 @@ namespace Controllers.Pool
             Master.Object.Chemical.Buoyancy == 0f && Master.Object.Chemical.Viscosity == 0f;
 
         public LineRenderer cLineRenderer;
+
         private Vector2 _buoyancyForce;
         private float _surfaceAngle;
         private float _surfacePosition;
@@ -17,15 +18,7 @@ namespace Controllers.Pool
         protected override void OnInit()
         {
             // Set up fluid properties
-            var lineWidth = cLineRenderer.widthMultiplier;
-            var poolTransform = transform;
-            var poolScale = poolTransform.localScale;
-            poolScale.y -= lineWidth * .5f;
-            poolTransform.localScale = poolScale;
-            _surfaceAngle = (poolTransform.rotation.eulerAngles.z + 90f) * Mathf.Deg2Rad;
-            var poolPosition = poolTransform.position;
-            poolPosition -= (Vector3)MathfExt.RotateVector(new Vector2(lineWidth * .25f, 0f), _surfaceAngle);
-            poolTransform.position = poolPosition;
+            _surfaceAngle = (transform.rotation.eulerAngles.z + 90f) * Mathf.Deg2Rad;
             _surfacePosition = Master.Object.Size.y * .5f;
             _buoyancyForce = new Vector2(Mathf.Cos(_surfaceAngle), Mathf.Sin(_surfaceAngle)) * Master.Object.Chemical.Buoyancy;
         }

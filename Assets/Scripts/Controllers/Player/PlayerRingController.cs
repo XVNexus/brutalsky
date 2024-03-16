@@ -1,27 +1,26 @@
+using Brutalsky;
 using UnityEngine;
 using Utils.Ext;
 
 namespace Controllers.Player
 {
-    public class PlayerRingController : MonoBehaviour
+    public class PlayerRingController : SubControllerBase<PlayerController, BsPlayer>
     {
-        // Variables
+        public override bool IsUnused => false;
+
         private float _ringAlpha;
         private float _ringThickness;
         private float _ringSpin;
 
-        // References
         public SpriteRenderer cSpriteRenderer;
         public SpriteMask cSpriteMask;
         private PlayerController _cPlayerController;
 
-        // Events
-        private void Start()
+        protected override void OnInit()
         {
             _cPlayerController = GetComponent<PlayerController>();
         }
 
-        // Updates
         private void Update()
         {
             // Calculate target ring properties

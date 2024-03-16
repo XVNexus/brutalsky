@@ -5,17 +5,16 @@ using Utils.Ext;
 
 namespace Controllers.Player
 {
-    public class PlayerParticleController : MonoBehaviour
+    public class PlayerParticleController : SubControllerBase<PlayerController, BsPlayer>
     {
-        // Constants
+        public override bool IsUnused => false;
+
         public const float BoostThreshold = 30f;
         public const float ParticleMultiplier = 3f;
 
-        // Variables
         private float _lastSpeed;
         private int _lastHealth = -1;
 
-        // References
         public ParticleSystem cTouchParticleSystem;
         public ParticleSystem cSlideParticleSystem;
         public ParticleSystem cBoostParticleSystem;
@@ -26,7 +25,32 @@ namespace Controllers.Player
         private PlayerController _cPlayerController;
         private Rigidbody2D _cRigidbody2D;
 
-        // Functions
+        protected override void OnInit()
+        {
+            _cPlayerController = GetComponent<PlayerController>();
+            _cRigidbody2D = GetComponent<Rigidbody2D>();
+
+            cDeathParticleSystem.transform.localPosition =
+                new Vector3(-PlayerHealthController.DeathOffset, -PlayerHealthController.DeathOffset);
+        }
+
+        private void OnCollisionEnter2D(Collision2D other)
+        {
+            DisplayImpactParticles(other.TotalNormalImpulse());
+            if (!other.gameObject.CompareTag(Tags.Shape) || other.DirectnessFactor() < .5f) return;
+            DisplayTouchParticles(MathfExt.Atan2(
+                other.GetContact(0).point - (Vector2)transform.position) * Mathf.Rad2Deg,
+                other.gameObject.GetComponent<MeshRenderer>().material);
+        }
+
+        private void OnCollisionStay2D(Collision2D other)
+        {
+            if (!other.gameObject.CompareTag(Tags.Shape) || other.relativeVelocity.magnitude < 3f) return;
+            DisplaySlideParticles(MathfExt.Atan2(
+                other.GetContact(0).point - (Vector2)transform.position) * Mathf.Rad2Deg,
+                other.gameObject.GetComponent<MeshRenderer>().material);
+        }
+
         public void DisplayTouchParticles(float contactAngle, Material shapeMaterial)
         {
             cTouchParticleSystem.GetComponent<Renderer>().material = shapeMaterial;
@@ -79,36 +103,6 @@ namespace Controllers.Player
             cDeathParticleSystem.Play();
         }
 
-        // Events
-        private void Start()
-        {
-            _cPlayerController = GetComponent<PlayerController>();
-            _cRigidbody2D = GetComponent<Rigidbody2D>();
-
-            // Offset death particle system by the opposite amount the player is moved on death
-            // This ensures that death particles will play where the player was before dying
-            cDeathParticleSystem.transform.localPosition =
-                new Vector3(-PlayerController.DeathOffset, -PlayerController.DeathOffset);
-        }
-
-        private void OnCollisionEnter2D(Collision2D other)
-        {
-            DisplayImpactParticles(other.TotalNormalImpulse());
-            if (!other.gameObject.CompareTag(Tags.Shape) || other.DirectnessFactor() < .5f) return;
-            DisplayTouchParticles(MathfExt.Atan2(
-                other.GetContact(0).point - (Vector2)transform.position) * Mathf.Rad2Deg,
-                other.gameObject.GetComponent<MeshRenderer>().material);
-        }
-
-        private void OnCollisionStay2D(Collision2D other)
-        {
-            if (!other.gameObject.CompareTag(Tags.Shape) || other.relativeVelocity.magnitude < 3f) return;
-            DisplaySlideParticles(MathfExt.Atan2(
-                other.GetContact(0).point - (Vector2)transform.position) * Mathf.Rad2Deg,
-                other.gameObject.GetComponent<MeshRenderer>().material);
-        }
-
-        // Updates
         private void FixedUpdate()
         {
             var speed = _cRigidbody2D.velocity.magnitude;

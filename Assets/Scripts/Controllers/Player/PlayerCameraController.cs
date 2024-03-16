@@ -6,16 +6,15 @@ using Utils.Ext;
 
 namespace Controllers.Player
 {
-    public class PlayerCameraController : MonoBehaviour
+    public class PlayerCameraController : SubControllerBase<PlayerController, BsPlayer>
     {
-        // Variables
+        public override bool IsUnused => false;
+
         private float _lastHealth = -1f;
 
-        // References
         private PlayerController _cPlayerController;
 
-        // Events
-        private void Start()
+        protected override void OnInit()
         {
             _cPlayerController = GetComponent<PlayerController>();
         }
@@ -32,7 +31,6 @@ namespace Controllers.Player
             CameraSystem._.Shove(shakeForce * impactDirection);
         }
 
-        // Updates
         private void FixedUpdate()
         {
             // Apply camera shake after taking damage

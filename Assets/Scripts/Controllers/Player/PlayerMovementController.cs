@@ -1,34 +1,70 @@
+using Brutalsky;
+using Core;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using Utils;
 using Utils.Ext;
 
 namespace Controllers.Player
 {
-    public class PlayerMovementController : MonoBehaviour
+    public class PlayerMovementController : SubControllerBase<PlayerController, BsPlayer>
     {
-        // Variables
+        public override bool IsUnused => false;
+
+        public const int MaxOnGroundFrames = 5;
+
         public float movementForce;
         public float jumpForce;
         public bool dummy;
+        public bool onGround;
+        public float boostCharge;
+        public float boostCooldown;
         private float _movementPush;
         private int _jumpCooldown;
         private bool _lastBoostInput;
         private Vector2 _lastPosition;
         private float _lastSpeed;
+        private int _onGroundFrames;
+        private float _lastPositionY;
 
-        // References
         private PlayerController _cPlayerController;
         private Rigidbody2D _cRigidbody2D;
+
+        public InputAction iMovement;
+        public InputAction iBoost;
     
-        // Events
-        private void Start()
+        protected override void OnInit()
         {
             _cPlayerController = GetComponent<PlayerController>();
             _cRigidbody2D = GetComponent<Rigidbody2D>();
+
+            iMovement = EventSystem._.inputActionAsset.FindAction("Movement");
+            iMovement.Enable();
+            iBoost = EventSystem._.inputActionAsset.FindAction("Boost");
+            iBoost.Enable();
+        }
+
+        private void Start()
+        {
+            _cPlayerSpriteRenderer = GetComponent<SpriteRenderer>();
+            _cRigidbody2D = GetComponent<Rigidbody2D>();
+            _cCircleCollider2D = GetComponent<CircleCollider2D>();
+
+            // Set all colored items to match the player color
+            _cPlayerSpriteRenderer.color = color;
+            cLight2D.color = color;
+            cRingSpriteRenderer.color = color;
+            foreach (var cParticleSystem in cParticleSystems)
+            {
+                var psMain = cParticleSystem.main;
+                psMain.startColor = color;
+            }
         }
 
         private void OnCollisionEnter2D(Collision2D other)
         {
+            OnCollision(other);
+
             // Get collision info
             if (!other.gameObject.CompareTag(Tags.Player)) return;
             var impactSpeed = _lastSpeed * other.DirectnessFactor();
@@ -38,23 +74,51 @@ namespace Controllers.Player
             _cRigidbody2D.velocity *= velocityFactor;
         }
 
-        // Updates
+        private void OnCollisionStay2D(Collision2D other)
+        {
+            OnCollision(other);
+        }
+
+        private void OnCollision(Collision2D other)
+        {
+            // Update ground status
+            if (!other.gameObject.CompareTag(Tags.Shape) && !other.gameObject.CompareTag(Tags.Player)) return;
+            if (other.GetContact(0).point.y > _lastPositionY - .25f) return;
+            _onGroundFrames = MaxOnGroundFrames;
+            onGround = true;
+        }
+
+        public void Freeze()
+        {
+            _cRigidbody2D.simulated = false;
+            _cCircleCollider2D.enabled = false;
+        }
+
+        public void Unfreeze()
+        {
+            _cRigidbody2D.simulated = true;
+            _cCircleCollider2D.enabled = true;
+        }
+        
         private void FixedUpdate()
         {
             if (dummy) return;
 
+            // Update ground status
+            onGround = _onGroundFrames > 0;
+            _onGroundFrames = Mathf.Max(_onGroundFrames - 1, 0);
+            _lastPositionY = transform.position.y;
+
             // Get movement data
             var position = (Vector2)transform.position;
-            //// This works because glue causes rapid vibration,
-            //// resulting in actual velocity being much higher than derived velocity.
             var derivedVelocity = (position - _lastPosition) / Time.fixedDeltaTime;
             var playerStuck = derivedVelocity.magnitude < .1f && _cRigidbody2D.velocity.magnitude > .1f;
             var velocity = !playerStuck ? _cRigidbody2D.velocity : Vector2.zero;
             var speed = velocity.magnitude;
 
             // Apply directional movement
-            var movementInput = _cPlayerController.iMovement.ReadValue<Vector2>();
-            var jumpInput = _cPlayerController.onGround && movementInput.y > 0f && _jumpCooldown == 0;
+            var movementInput = iMovement.ReadValue<Vector2>();
+            var jumpInput = onGround && movementInput.y > 0f && _jumpCooldown == 0;
             _movementPush = playerStuck && movementInput.magnitude > 0f
                 ? _movementPush + Time.fixedDeltaTime
                 : Mathf.Max(_movementPush - speed * Time.fixedDeltaTime, 1f);
@@ -63,26 +127,26 @@ namespace Controllers.Player
             if (jumpInput)
             {
                 _cRigidbody2D.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
-                _jumpCooldown = PlayerController.MaxOnGroundFrames + 1;
+                _jumpCooldown = MaxOnGroundFrames + 1;
             }
 
             // Apply boost movement
-            var boostInput = _cPlayerController.iBoost.IsPressed() && _cPlayerController.boostCooldown == 0f;
+            var boostInput = iBoost.IsPressed() && boostCooldown == 0f;
             if (boostInput)
             {
-                _cPlayerController.boostCharge = Mathf.Min(_cPlayerController.boostCharge + Time.fixedDeltaTime, 3f);
+                boostCharge = Mathf.Min(boostCharge + Time.fixedDeltaTime, 3f);
             }
             else if (_lastBoostInput)
             {
-                var boost = Mathf.Pow(_cPlayerController.boostCharge, 1.5f) + 1.5f;
+                var boost = Mathf.Pow(boostCharge, 1.5f) + 1.5f;
                 velocity *= boost;
                 _cRigidbody2D.velocity = velocity;
-                _cPlayerController.boostCharge = 0f;
-                _cPlayerController.boostCooldown = Mathf.Min(boost, speed);
+                boostCharge = 0f;
+                boostCooldown = Mathf.Min(boost, speed);
             }
-            if (_cPlayerController.boostCooldown > 0f)
+            if (boostCooldown > 0f)
             {
-                _cPlayerController.boostCooldown = Mathf.Max(_cPlayerController.boostCooldown - Time.fixedDeltaTime, 0f);
+                boostCooldown = Mathf.Max(boostCooldown - Time.fixedDeltaTime, 0f);
             }
             _lastBoostInput = boostInput;
 
