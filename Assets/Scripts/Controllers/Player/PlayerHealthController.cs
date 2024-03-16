@@ -1,4 +1,5 @@
 using Brutalsky;
+using Core;
 using JetBrains.Annotations;
 using UnityEngine;
 using Utils;
@@ -27,6 +28,7 @@ namespace Controllers.Player
             _cRigidbody2D = GetComponent<Rigidbody2D>();
 
             // Sync health with max health
+            maxHealth = Master.Object.Health;
             health = maxHealth;
         }
 
@@ -104,10 +106,22 @@ namespace Controllers.Player
 
         private void FixedUpdate()
         {
-            // Kill the player if health reaches zero
-            if (alive && health == 0)
+            if (!alive) return;
+
+            // Kill the player if out of map bounds
+            if (MapSystem._.IsMapLoaded)
             {
-                Debug.Log("owie 1");
+                var position = transform.position;
+                var mapSize = MapSystem._.ActiveMap.Size;
+                if (Mathf.Abs(position.x) > mapSize.x / 2f + 3f || Mathf.Abs(position.y) > mapSize.y / 2f + 3f)
+                {
+                    Kill();
+                }
+            }
+
+            // Kill the player if health reaches zero
+            if (health == 0)
+            {
                 Kill();
             }
 

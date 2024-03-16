@@ -8,7 +8,7 @@ namespace Controllers.Pool
     {
         public override string Id => "float";
         public override bool IsUnused =>
-            Master.Object.Chemical.Buoyancy == 0f && Master.Object.Chemical.Viscosity == 0f;
+            Master.Object.Chemical.Buoyancy == 0f && Master.Object.Chemical.Viscosity == 0f || !Master.Object.Simulated;
 
         private Vector2 _buoyancyForce;
         private float _surfaceAngle;

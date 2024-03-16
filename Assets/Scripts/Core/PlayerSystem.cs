@@ -56,10 +56,6 @@ namespace Core
                 playerController.Object = player;
 
                 // Apply config and color
-                if (playerController.ContainsSub("health"))
-                    playerController.GetSub<PlayerHealthController>("health").maxHealth = player.Health;
-                if (playerController.ContainsSub("movement"))
-                    playerController.GetSub<PlayerMovementController>("movement").dummy = player.Dummy;
                 playerController.GetComponent<SpriteRenderer>().color = player.Color.Tint;
             }
             else
@@ -103,23 +99,6 @@ namespace Core
             player.InstanceObject = null;
             player.Active = false;
             ActivePlayers.Remove(player.Id);
-        }
-
-        private void FixedUpdate()
-        {
-            if (!MapSystem._.IsMapLoaded || MapSystem._.ActiveMap == null) return;
-            var mapSize = MapSystem._.ActiveMap.Size;
-            foreach (var player in ActivePlayers.Values)
-            {
-                var position = player.InstanceObject.transform.position;
-                var x = Mathf.Abs(position.x);
-                var y = Mathf.Abs(position.y);
-                if (x > mapSize.x / 2f + 3f || y > mapSize.y / 2f + 3f)
-                {
-                    Debug.Log("owie 2");
-                    ((PlayerController)player.InstanceComponent)?.GetSub<PlayerHealthController>("health")?.Kill();
-                }
-            }
         }
     }
 }

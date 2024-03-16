@@ -1,6 +1,7 @@
 using Brutalsky;
 using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 using Utils.Ext;
 
 namespace Controllers.Player
@@ -14,6 +15,7 @@ namespace Controllers.Player
         private float _ringThickness;
         private float _ringSpin;
 
+        public Light2D cLight2D;
         public SpriteRenderer cRingSpriteRenderer;
         public SpriteMask cSpriteMask;
         private SpriteRenderer _cPlayerSpriteRenderer;
@@ -26,6 +28,7 @@ namespace Controllers.Player
             _cPlayerSpriteRenderer = GetComponent<SpriteRenderer>();
 
             // Sync ring color with player color
+            cLight2D.color = _cPlayerSpriteRenderer.color;
             cRingSpriteRenderer.color = _cPlayerSpriteRenderer.color;
         }
 

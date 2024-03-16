@@ -7,7 +7,7 @@ namespace Controllers.Shape
     public class ShapeAdhesionController : SubControllerBase<BsShape>
     {
         public override string Id => "adhesion";
-        public override bool IsUnused => Master.Object.Material.Adhesion == 0f;
+        public override bool IsUnused => Master.Object.Material.Adhesion == 0f || !Master.Object.Simulated;
 
         private Rigidbody2D _cRigidbody2D;
 

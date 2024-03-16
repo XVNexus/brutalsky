@@ -18,7 +18,9 @@ namespace Controllers
             IsInitialized = true;
         }
 
-        protected abstract void OnInit();
+        protected virtual void OnInit()
+        {
+        }
 
         protected override void OnLoad()
         {

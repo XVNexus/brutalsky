@@ -9,7 +9,7 @@ namespace Controllers.Pool
     public class PoolWaveController : SubControllerBase<BsPool>
     {
         public override string Id => "wave";
-        public override bool IsUnused => false;
+        public override bool IsUnused => !Master.Object.Simulated;
 
         public const float WavePointDensity = 2f;
 

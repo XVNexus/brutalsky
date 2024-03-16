@@ -43,6 +43,9 @@ namespace Controllers.Player
             iMovement.Enable();
             iBoost = EventSystem._.inputActionAsset.FindAction("Boost");
             iBoost.Enable();
+
+            // Disable movement if dummy is set to true
+            dummy = Master.Object.Dummy;
         }
 
         private void OnCollisionEnter2D(Collision2D other)

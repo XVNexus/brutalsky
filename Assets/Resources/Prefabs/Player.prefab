@@ -239,6 +239,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 134e47056a1bb0ceda9707681dd4a12d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cLight2D: {fileID: 5161598684334631783}
   cRingSpriteRenderer: {fileID: 1062589161020571729}
   cSpriteMask: {fileID: 1309106731501733001}
 --- !u!114 &7684857053292564534

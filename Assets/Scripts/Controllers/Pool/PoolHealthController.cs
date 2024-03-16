@@ -8,11 +8,7 @@ namespace Controllers.Pool
     public class PoolHealthController : SubControllerBase<BsPool>
     {
         public override string Id => "health";
-        public override bool IsUnused => Master.Object.Chemical.Health == 0f;
-
-        protected override void OnInit()
-        {
-        }
+        public override bool IsUnused => Master.Object.Chemical.Health == 0f || !Master.Object.Simulated;
 
         private void OnTriggerStay2D(Collider2D other)
         {

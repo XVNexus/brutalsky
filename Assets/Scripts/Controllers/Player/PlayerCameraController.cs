@@ -16,13 +16,9 @@ namespace Controllers.Player
 
         [CanBeNull] private PlayerHealthController _mHealth;
 
-        protected override void OnInit()
-        {
-        }
-
         protected override void OnLink()
         {
-            
+            _mHealth = Master.GetSub<PlayerHealthController>("health");
         }
 
         private void OnCollisionEnter2D(Collision2D other)
