@@ -35,8 +35,9 @@ namespace Controllers.Player
             _cSpriteRenderer = GetComponent<SpriteRenderer>();
 
             // Sync particle system colors with player color
-            foreach (var coloredParticleSystem in new[] { cBoostParticleSystem, cImpactParticleSystem,
-                cHealParticleSystem, cHurtParticleSystem, cDeathParticleSystem })
+            foreach (var coloredParticleSystem in new[] { cTouchParticleSystem, cSlideParticleSystem,
+                 cBoostParticleSystem, cImpactParticleSystem, cHealParticleSystem, cHurtParticleSystem,
+                 cDeathParticleSystem })
             {
                 coloredParticleSystem.GetComponent<Renderer>().material.color = _cSpriteRenderer.color;
             }
@@ -56,28 +57,24 @@ namespace Controllers.Player
             DisplayImpactParticles(other.TotalNormalImpulse());
             if (!other.gameObject.CompareTag(Tags.Shape) || other.DirectnessFactor() < .5f) return;
             DisplayTouchParticles(MathfExt.Atan2(
-                other.GetContact(0).point - (Vector2)transform.position) * Mathf.Rad2Deg,
-                other.gameObject.GetComponent<MeshRenderer>().material);
+                other.GetContact(0).point - (Vector2)transform.position) * Mathf.Rad2Deg);
         }
 
         private void OnCollisionStay2D(Collision2D other)
         {
             if (!other.gameObject.CompareTag(Tags.Shape) || other.relativeVelocity.magnitude < 3f) return;
             DisplaySlideParticles(MathfExt.Atan2(
-                other.GetContact(0).point - (Vector2)transform.position) * Mathf.Rad2Deg,
-                other.gameObject.GetComponent<MeshRenderer>().material);
+                other.GetContact(0).point - (Vector2)transform.position) * Mathf.Rad2Deg);
         }
 
-        public void DisplayTouchParticles(float contactAngle, Material shapeMaterial)
+        public void DisplayTouchParticles(float contactAngle)
         {
-            cTouchParticleSystem.GetComponent<Renderer>().material = shapeMaterial;
             cTouchParticleSystem.transform.localRotation = Quaternion.Euler(0f, 0f, contactAngle);
             cTouchParticleSystem.Play();
         }
 
-        public void DisplaySlideParticles(float contactAngle, Material shapeMaterial)
+        public void DisplaySlideParticles(float contactAngle)
         {
-            cSlideParticleSystem.GetComponent<Renderer>().material = shapeMaterial;
             cSlideParticleSystem.transform.localRotation = Quaternion.Euler(0f, 0f, contactAngle);
             cSlideParticleSystem.Play();
         }

@@ -97,19 +97,12 @@ namespace Controllers.Player
             _lastPositionY = transform.position.y;
 
             // Get movement data
-            var position = (Vector2)transform.position;
-            var derivedVelocity = (position - _lastPosition) / Time.fixedDeltaTime;
-            var playerStuck = derivedVelocity.magnitude < .1f && _cRigidbody2D.velocity.magnitude > .1f;
-            var velocity = !playerStuck ? _cRigidbody2D.velocity : Vector2.zero;
+            var velocity = _cRigidbody2D.velocity;
             var speed = velocity.magnitude;
 
             // Apply directional movement
             var movementInput = iMovement.ReadValue<Vector2>();
             var jumpInput = onGround && movementInput.y > 0f && _jumpCooldown == 0;
-            _movementPush = playerStuck && movementInput.magnitude > 0f
-                ? _movementPush + Time.fixedDeltaTime
-                : Mathf.Max(_movementPush - speed * Time.fixedDeltaTime, 1f);
-            movementInput *= _movementPush;
             _cRigidbody2D.AddForce(movementInput * new Vector2(movementForce, Physics2D.gravity.magnitude * .5f));
             if (jumpInput)
             {
