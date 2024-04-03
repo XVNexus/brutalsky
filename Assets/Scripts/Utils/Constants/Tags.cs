@@ -1,4 +1,4 @@
-namespace Utils
+namespace Utils.Constants
 {
     public static class Tags
     {

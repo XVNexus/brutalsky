@@ -3,6 +3,7 @@ using Core;
 using JetBrains.Annotations;
 using UnityEngine;
 using Utils;
+using Utils.Constants;
 using Utils.Ext;
 
 namespace Controllers.Player

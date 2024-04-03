@@ -56,5 +56,36 @@ namespace Utils.Ext
             return new Vector2(WeightedMean(a.x, aWeight, b.x, bWeight),
                 WeightedMean(a.y, aWeight, b.y, bWeight));
         }
+
+        public static string ToBaseX(string charset, int numberBase10)
+        {
+            var result = "";
+
+            int radix = charset.Length;
+            var quotient = numberBase10;
+            while (quotient != 0)
+            {
+                var remainder = quotient % radix;
+                quotient /= radix;
+                result = charset[remainder] + result;
+            }
+
+            return numberBase10 > 0 ? result : charset[0].ToString();
+        }
+
+        public static int ToBase10(string charset, string numberBaseX)
+        {
+            var result = 0;
+
+            int radix = charset.Length;
+            for (var i = 0; i < numberBaseX.Length; i++)
+            {
+                var power = (int)Mathf.Pow(radix, i);
+                var digit = numberBaseX[numberBaseX.Length - 1 - i];
+                result += charset.IndexOf(digit) * power;
+            }
+
+            return result;
+        }
     }
 }

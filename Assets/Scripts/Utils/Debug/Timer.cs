@@ -1,7 +1,6 @@
 using System;
-using UnityEngine;
 
-namespace Utils
+namespace Utils.Debug
 {
     public class Timer
     {
@@ -19,7 +18,7 @@ namespace Utils
         {
             end = DateTime.Now.Ticks;
             var duration = TimeSpan.FromTicks(end - start);
-            Debug.Log($"Operation '{name}' took {duration.Milliseconds} ms");
+            UnityEngine.Debug.Log($"Operation '{name}' took {duration.Milliseconds} ms");
         }
     }
 }

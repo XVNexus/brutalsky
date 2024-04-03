@@ -2,7 +2,7 @@ using System;
 using Brutalsky;
 using Brutalsky.Joint;
 
-namespace Utils
+namespace Utils.Constants
 {
     public static class Errors
     {
