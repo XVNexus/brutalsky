@@ -7,63 +7,63 @@ namespace Serializable
 {
     public class SrzMap
     {
-        public string title { get; set; }
-        public string author { get; set; }
-        public string size { get; set; }
-        public string lighting { get; set; }
-        public List<SrzSpawn> spawns { get; set; } = new();
-        public List<SrzShape> shapes { get; set; } = new();
-        public List<SrzPool> pools { get; set; } = new();
-        public List<SrzJoint> joints { get; set; } = new();
+        public string tt { get; set; }
+        public string at { get; set; }
+        public string sz { get; set; }
+        public string lg { get; set; }
+        public List<SrzSpawn> sp { get; set; } = new();
+        public List<SrzShape> sh { get; set; } = new();
+        public List<SrzPool> pl { get; set; } = new();
+        public List<SrzJoint> jn { get; set; } = new();
 
         public static SrzMap Simplify(BsMap map)
         {
             var result = new SrzMap
             {
-                title = map.Title,
-                author = map.Author,
-                size = $"{map.Size.x} {map.Size.y}",
-                lighting = map.Lighting.ToString()
+                tt = map.Title,
+                at = map.Author,
+                sz = $"{map.Size.x} {map.Size.y}",
+                lg = map.Lighting.ToString()
             };
             foreach (var spawn in map.Spawns.Values)
             {
-                result.spawns.Add(SrzSpawn.Simplify(spawn));
+                result.sp.Add(SrzSpawn.Simplify(spawn));
             }
             foreach (var shape in map.Shapes.Values)
             {
-                result.shapes.Add(SrzShape.Simplify(shape));
+                result.sh.Add(SrzShape.Simplify(shape));
             }
             foreach (var pool in map.Pools.Values)
             {
-                result.pools.Add(SrzPool.Simplify(pool));
+                result.pl.Add(SrzPool.Simplify(pool));
             }
             foreach (var joint in map.Joints.Values)
             {
-                result.joints.Add(SrzJoint.Simplify(joint));
+                result.jn.Add(SrzJoint.Simplify(joint));
             }
             return result;
         }
 
         public BsMap Expand()
         {
-            var result = new BsMap(title, author)
+            var result = new BsMap(tt, at)
             {
-                Size = Vector2Ext.Parse(size),
-                Lighting = BsColor.Parse(lighting)
+                Size = Vector2Ext.Parse(sz),
+                Lighting = BsColor.Parse(lg)
             };
-            foreach (var spawn in spawns)
+            foreach (var spawn in sp)
             {
                 result.Add(spawn.Expand());
             }
-            foreach (var shape in shapes)
+            foreach (var shape in sh)
             {
                 result.Add(shape.Expand());
             }
-            foreach (var pool in pools)
+            foreach (var pool in pl)
             {
                 result.Add(pool.Expand());
             }
-            foreach (var joint in joints)
+            foreach (var joint in jn)
             {
                 result.Add(joint.Expand());
             }

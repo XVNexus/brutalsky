@@ -8,24 +8,24 @@ namespace Serializable
     public class SrzShape
     {
         public string id { get; set; }
-        public string transform { get; set; }
-        public string path { get; set; }
-        public string material { get; set; }
-        public string color { get; set; }
-        public int layer { get; set; }
-        public string simulated { get; set; }
+        public string tr { get; set; }
+        public string pt { get; set; }
+        public string mt { get; set; }
+        public string cl { get; set; }
+        public int ly { get; set; }
+        public string sm { get; set; }
 
         public static SrzShape Simplify(BsShape shape)
         {
             return new SrzShape
             {
                 id = shape.Id,
-                transform = shape.Transform.ToString(),
-                path = shape.Path.ToString(),
-                material = shape.Material.ToString(),
-                color = shape.Color.ToString(),
-                layer = (int)shape.Layer,
-                simulated = BoolExt.ToString(shape.Simulated)
+                tr = shape.Transform.ToString(),
+                pt = shape.Path.ToString(),
+                mt = shape.Material.ToString(),
+                cl = shape.Color.ToString(),
+                ly = (int)shape.Layer,
+                sm = BoolExt.ToString(shape.Simulated)
             };
         }
 
@@ -34,12 +34,12 @@ namespace Serializable
             return new BsShape
             (
                 id,
-                BsTransform.Parse(transform), 
-                BsPath.Parse(path),
-                BsMaterial.Parse(material), 
-                BsColor.Parse(color),
-                (BsLayer)layer,
-                BoolExt.Parse(simulated)
+                BsTransform.Parse(tr), 
+                BsPath.Parse(pt),
+                BsMaterial.Parse(mt), 
+                BsColor.Parse(cl),
+                (BsLayer)ly,
+                BoolExt.Parse(sm)
             );
         }
     }

@@ -7,20 +7,20 @@ namespace Serializable
     public class SrzPlayer
     {
         public string id { get; set; }
-        public string name { get; set; }
-        public float health { get; set; }
-        public string color { get; set; }
-        public string dummy { get; set; }
+        public string nm { get; set; }
+        public float hl { get; set; }
+        public string cl { get; set; }
+        public string dm { get; set; }
 
         public static SrzPlayer Simplify(BsPlayer player)
         {
             return new SrzPlayer
             {
                 id = player.Id,
-                name = player.Name,
-                health = player.Health,
-                color = player.Color.ToString(),
-                dummy = BoolExt.ToString(player.Dummy)
+                nm = player.Name,
+                hl = player.Health,
+                cl = player.Color.ToString(),
+                dm = BoolExt.ToString(player.Dummy)
             };
         }
 
@@ -29,10 +29,10 @@ namespace Serializable
             return new BsPlayer
             (
                 id,
-                name,
-                health,
-                BsColor.Parse(color),
-                BoolExt.Parse(dummy)
+                nm,
+                hl,
+                BsColor.Parse(cl),
+                BoolExt.Parse(dm)
             );
         }
     }

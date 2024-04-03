@@ -40,8 +40,7 @@ namespace Core
         // Init functions
         protected override void OnStart()
         {
-            // TODO: DONT GENERATE A BUNCH OF SHIT ON EVERY GAME LAUNCH
-            // GenerateMapList();
+            GenerateMapList();
         }
 
         public void GenerateMapList()

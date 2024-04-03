@@ -6,16 +6,16 @@ namespace Serializable
     public class SrzSpawn
     {
         public string id { get; set; }
-        public string transform { get; set; }
-        public int priority { get; set; }
+        public string tr { get; set; }
+        public int pr { get; set; }
 
         public static SrzSpawn Simplify(BsSpawn spawn)
         {
             return new SrzSpawn
             {
                 id = spawn.Id,
-                transform = spawn.Transform.ToString(),
-                priority = spawn.Priority
+                tr = spawn.Transform.ToString(),
+                pr = spawn.Priority
             };
         }
 
@@ -24,8 +24,8 @@ namespace Serializable
             return new BsSpawn
             (
                 id,
-                BsTransform.Parse(transform),
-                priority
+                BsTransform.Parse(tr),
+                pr
             );
         }
     }

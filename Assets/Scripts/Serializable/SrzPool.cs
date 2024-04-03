@@ -8,24 +8,24 @@ namespace Serializable
     public class SrzPool
     {
         public string id { get; set; }
-        public string transform { get; set; }
-        public string size { get; set; }
-        public string chemical { get; set; }
-        public string color { get; set; }
-        public int layer { get; set; }
-        public string simulated { get; set; }
+        public string tr { get; set; }
+        public string sz { get; set; }
+        public string ch { get; set; }
+        public string cl { get; set; }
+        public int ly { get; set; }
+        public string sm { get; set; }
 
         public static SrzPool Simplify(BsPool pool)
         {
             return new SrzPool
             {
                 id = pool.Id,
-                transform = pool.Transform.ToString(),
-                size = $"{pool.Size.x} {pool.Size.y}",
-                chemical = pool.Chemical.ToString(),
-                color = pool.Color.ToString(),
-                layer = (int)pool.Layer,
-                simulated = BoolExt.ToString(pool.Simulated)
+                tr = pool.Transform.ToString(),
+                sz = $"{pool.Size.x} {pool.Size.y}",
+                ch = pool.Chemical.ToString(),
+                cl = pool.Color.ToString(),
+                ly = (int)pool.Layer,
+                sm = BoolExt.ToString(pool.Simulated)
             };
         }
 
@@ -34,12 +34,12 @@ namespace Serializable
             return new BsPool
             (
                 id,
-                BsTransform.Parse(transform),
-                Vector2Ext.Parse(size),
-                BsChemical.Parse(chemical), 
-                BsColor.Parse(color),
-                (BsLayer)layer,
-                BoolExt.Parse(simulated)
+                BsTransform.Parse(tr),
+                Vector2Ext.Parse(sz),
+                BsChemical.Parse(ch), 
+                BsColor.Parse(cl),
+                (BsLayer)ly,
+                BoolExt.Parse(sm)
             );
         }
     }

@@ -9,7 +9,6 @@ public class Testing : MonoBehaviour
     private void Start()
     {
         GenerateDefaultMaps();
-        MapSystem._.GenerateMapList();
         var map = BsMap.Parse(MapSystem.LoadInternal("Brutalsky"));
         MapSystem._.Build(map);
         PlayerSystem._.Spawn(map, new[]
