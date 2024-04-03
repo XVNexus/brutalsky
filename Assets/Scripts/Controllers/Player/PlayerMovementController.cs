@@ -2,7 +2,6 @@ using Brutalsky;
 using Core;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using Utils;
 using Utils.Constants;
 using Utils.Ext;
 

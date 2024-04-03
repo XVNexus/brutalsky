@@ -9,7 +9,6 @@ using Controllers;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
-using Utils;
 using Utils.Constants;
 using Utils.Shape;
 
@@ -44,13 +43,14 @@ namespace Core
             GenerateMapList();
         }
 
+        // System functions
         public void GenerateMapList()
         {
             RawMapList.Clear();
             var defaultRawMap = LoadInternal("Brutalsky");
             var defaultMap = BsMap.Parse(defaultRawMap);
             RawMapList[defaultMap.Id] = defaultRawMap;
-            var path = $"{EventSystem.DataPath}/Maps";
+            var path = $"{EventSystem.DataPath}/{Paths.Maps}";
             if (!Directory.Exists(path)) return;
             foreach (var mapPath in Directory.GetFiles(path, $"*.{SaveFormat}"))
             {
@@ -63,19 +63,19 @@ namespace Core
 
         public static string LoadInternal(string filename)
         {
-            return Resources.Load<TextAsset>($"Content/Maps/{filename}").text;
+            return Resources.Load<TextAsset>($"{Paths.Content}/{Paths.Maps}/{filename}").text;
         }
 
         public static string Load(string filename)
         {
-            var path = $"{EventSystem.DataPath}/Maps/{filename}.{SaveFormat}";
+            var path = $"{EventSystem.DataPath}/{Paths.Maps}/{filename}.{SaveFormat}";
             using var reader = new StreamReader(path);
             return reader.ReadToEnd();
         }
 
         public static void Save(string raw, string filename)
         {
-            var path = $"{EventSystem.DataPath}/Maps/{filename}.{SaveFormat}";
+            var path = $"{EventSystem.DataPath}/{Paths.Maps}/{filename}.{SaveFormat}";
             new FileInfo(path).Directory?.Create();
             using var writer = new StreamWriter(path);
             writer.Write(raw);

@@ -4,7 +4,6 @@ using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
-using Utils;
 using Utils.Constants;
 using Utils.Gui;
 
