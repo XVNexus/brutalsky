@@ -9,11 +9,14 @@ namespace Controllers.Player
 {
     public class PlayerMovementController : SubControllerBase<BsPlayer>
     {
+        // Controller metadata
         public override string Id => "movement";
         public override bool IsUnused => false;
 
+        // Local constants
         public const int MaxOnGroundFrames = 5;
 
+        // Local variables
         public float movementForce;
         public float jumpForce;
         public bool dummy;
@@ -23,17 +26,19 @@ namespace Controllers.Player
         private float _movementPush;
         private int _jumpCooldown;
         private bool _lastBoostInput;
-        private Vector2 _lastPosition;
         private float _lastSpeed;
         private int _onGroundFrames;
         private float _lastPositionY;
 
+        // Component references
         private Rigidbody2D _cRigidbody2D;
         private CircleCollider2D _cCircleCollider2D;
 
+        // Player input
         public InputAction iMovement;
         public InputAction iBoost;
-    
+
+        // Init functions
         protected override void OnInit()
         {
             _cRigidbody2D = GetComponent<Rigidbody2D>();
@@ -48,6 +53,20 @@ namespace Controllers.Player
             dummy = Master.Object.Dummy;
         }
 
+        // Module functions
+        public void Freeze()
+        {
+            _cRigidbody2D.simulated = false;
+            _cCircleCollider2D.enabled = false;
+        }
+
+        public void Unfreeze()
+        {
+            _cRigidbody2D.simulated = true;
+            _cCircleCollider2D.enabled = true;
+        }
+
+        // Event functions
         private void OnCollisionEnter2D(Collision2D other)
         {
             OnCollision(other);
@@ -73,18 +92,6 @@ namespace Controllers.Player
             if (other.GetContact(0).point.y > _lastPositionY - .25f) return;
             _onGroundFrames = MaxOnGroundFrames;
             onGround = true;
-        }
-
-        public void Freeze()
-        {
-            _cRigidbody2D.simulated = false;
-            _cCircleCollider2D.enabled = false;
-        }
-
-        public void Unfreeze()
-        {
-            _cRigidbody2D.simulated = true;
-            _cCircleCollider2D.enabled = true;
         }
 
         private void FixedUpdate()
@@ -130,8 +137,7 @@ namespace Controllers.Player
             }
             _lastBoostInput = boostInput;
 
-            // Save the current position and speed for future reference and update jump cooldown
-            _lastPosition = transform.position;
+            // Save the current speed for future reference and update jump cooldown
             _lastSpeed = _cRigidbody2D.velocity.magnitude;
             if (_jumpCooldown > 0)
             {

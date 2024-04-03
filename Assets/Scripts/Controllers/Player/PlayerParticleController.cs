@@ -8,15 +8,19 @@ namespace Controllers.Player
 {
     public class PlayerParticleController : SubControllerBase<BsPlayer>
     {
+        // Controller metadata
         public override string Id => "particle";
         public override bool IsUnused => false;
 
+        // Local constants
         public const float BoostThreshold = 30f;
         public const float ParticleMultiplier = 3f;
 
+        // Local variables
         private float _lastSpeed;
         private int _lastHealth = -1;
 
+        // Component references
         public ParticleSystem cTouchParticleSystem;
         public ParticleSystem cSlideParticleSystem;
         public ParticleSystem cBoostParticleSystem;
@@ -27,8 +31,10 @@ namespace Controllers.Player
         private Rigidbody2D _cRigidbody2D;
         private SpriteRenderer _cSpriteRenderer;
 
+        // Linked modules
         [CanBeNull] private PlayerHealthController _mHealth;
 
+        // Init functions
         protected override void OnInit()
         {
             _cRigidbody2D = GetComponent<Rigidbody2D>();
@@ -52,21 +58,7 @@ namespace Controllers.Player
             _mHealth = Master.GetSub<PlayerHealthController>("health");
         }
 
-        private void OnCollisionEnter2D(Collision2D other)
-        {
-            DisplayImpactParticles(other.TotalNormalImpulse());
-            if (!other.gameObject.CompareTag(Tags.Shape) || other.DirectnessFactor() < .5f) return;
-            DisplayTouchParticles(MathfExt.Atan2(
-                other.GetContact(0).point - (Vector2)transform.position) * Mathf.Rad2Deg);
-        }
-
-        private void OnCollisionStay2D(Collision2D other)
-        {
-            if (!other.gameObject.CompareTag(Tags.Shape) || other.relativeVelocity.magnitude < 3f) return;
-            DisplaySlideParticles(MathfExt.Atan2(
-                other.GetContact(0).point - (Vector2)transform.position) * Mathf.Rad2Deg);
-        }
-
+        // Module functions
         public void DisplayTouchParticles(float contactAngle)
         {
             cTouchParticleSystem.transform.localRotation = Quaternion.Euler(0f, 0f, contactAngle);
@@ -115,6 +107,22 @@ namespace Controllers.Player
         public void DisplayDeathParticles()
         {
             cDeathParticleSystem.Play();
+        }
+
+        // Event functions
+        private void OnCollisionEnter2D(Collision2D other)
+        {
+            DisplayImpactParticles(other.TotalNormalImpulse());
+            if (!other.gameObject.CompareTag(Tags.Shape) || other.DirectnessFactor() < .5f) return;
+            DisplayTouchParticles(MathfExt.Atan2(
+                other.GetContact(0).point - (Vector2)transform.position) * Mathf.Rad2Deg);
+        }
+
+        private void OnCollisionStay2D(Collision2D other)
+        {
+            if (!other.gameObject.CompareTag(Tags.Shape) || other.relativeVelocity.magnitude < 3f) return;
+            DisplaySlideParticles(MathfExt.Atan2(
+                other.GetContact(0).point - (Vector2)transform.position) * Mathf.Rad2Deg);
         }
 
         private void FixedUpdate()

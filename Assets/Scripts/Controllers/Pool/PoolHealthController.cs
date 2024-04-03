@@ -7,9 +7,11 @@ namespace Controllers.Pool
 {
     public class PoolHealthController : SubControllerBase<BsPool>
     {
+        // Controller metadata
         public override string Id => "health";
         public override bool IsUnused => Master.Object.Chemical.Health == 0f || !Master.Object.Simulated;
 
+        // Event functions
         private void OnTriggerStay2D(Collider2D other)
         {
             // Apply damage to player

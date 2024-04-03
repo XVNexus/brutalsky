@@ -4,11 +4,14 @@ namespace Core
 {
     public class TimeSystem : BsBehavior
     {
+        // Static instance
         public static TimeSystem _ { get; private set; }
         private void Awake() => _ = this;
 
+        // Local variables
         private bool _paused;
 
+        // System functions
         public bool Pause()
         {
             if (_paused) return false;

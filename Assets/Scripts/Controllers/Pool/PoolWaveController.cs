@@ -8,19 +8,24 @@ namespace Controllers.Pool
 {
     public class PoolWaveController : SubControllerBase<BsPool>
     {
+        // Controller metadata
         public override string Id => "wave";
         public override bool IsUnused => !Master.Object.Simulated;
 
+        // Local constants
         public const float WavePointDensity = 2f;
 
-        public LineRenderer cLineRenderer;
-        private SpriteRenderer _cSpriteRenderer;
-
+        // Local variables
         private float _waveHeight;
         private int _wavePointCount;
         private float[] _wavePointOffsets;
         private readonly List<PoolWave> _waves = new();
 
+        // Component references
+        public LineRenderer cLineRenderer;
+        private SpriteRenderer _cSpriteRenderer;
+
+        // Init functions
         protected override void OnInit()
         {
             _cSpriteRenderer = GetComponent<SpriteRenderer>();
@@ -59,6 +64,7 @@ namespace Controllers.Pool
             }
         }
 
+        // Event functions
         private void OnTriggerEnter2D(Collider2D other)
         {
             OnTrigger2D(other);

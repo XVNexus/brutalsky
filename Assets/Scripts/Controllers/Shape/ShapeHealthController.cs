@@ -7,9 +7,11 @@ namespace Controllers.Shape
 {
     public class ShapeHealthController : SubControllerBase<BsShape>
     {
+        // Controller metadata
         public override string Id => "health";
         public override bool IsUnused => Master.Object.Material.Health == 0f || !Master.Object.Simulated;
 
+        // Event functions
         private void OnCollisionEnter2D(Collision2D other)
         {
             if (!IsInitialized) return;

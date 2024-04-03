@@ -16,15 +16,19 @@ namespace Core
 {
     public class MapSystem : BsBehavior
     {
+        // Static instance
         public static MapSystem _ { get; private set; }
         private void Awake() => _ = this;
 
+        // Local constants
         public const string SaveFormat = "yaml";
 
+        // Local variables
         public Dictionary<uint, string> RawMapList { get; private set; } = new();
         [CanBeNull] public BsMap ActiveMap { get; private set; }
         public bool IsMapLoaded { get; private set; }
 
+        // External references
         public GameObject mapMargins;
         public Light2D cMapLight2D;
         public GameObject shapePrefab;
@@ -33,6 +37,7 @@ namespace Core
         public Material unlitMaterial;
         private GameObject _mapParent;
 
+        // Init functions
         protected override void OnStart()
         {
             // TODO: DONT GENERATE A BUNCH OF SHIT ON EVERY GAME LAUNCH

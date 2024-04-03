@@ -5,8 +5,10 @@ namespace Gui
 {
     public class GuiCf : BsBehavior
     {
+        // Gui metadata
         public const string PaneId = "cf";
 
+        // Init functions
         protected override void OnStart()
         {
             EventSystem._.OnGuiAction += OnGuiAction;
@@ -18,6 +20,7 @@ namespace Gui
             GuiSystem._.RegisterButton(PaneId, "back");
         }
 
+        // Event functions
         private void OnGuiAction(GuiAction action, string paneId, string itemId)
         {
             if (paneId != PaneId) return;

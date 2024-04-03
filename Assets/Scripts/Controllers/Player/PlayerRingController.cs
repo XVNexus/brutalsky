@@ -8,21 +8,26 @@ namespace Controllers.Player
 {
     public class PlayerRingController : SubControllerBase<BsPlayer>
     {
+        // Controller metadata
         public override string Id => "ring";
         public override bool IsUnused => false;
 
+        // Local variables
         private float _ringAlpha;
         private float _ringThickness;
         private float _ringSpin;
 
+        // Component references
         public Light2D cLight2D;
         public SpriteRenderer cRingSpriteRenderer;
         public SpriteMask cSpriteMask;
         private SpriteRenderer _cPlayerSpriteRenderer;
 
+        // Linked modules
         [CanBeNull] private PlayerMovementController _mMovement;
         [CanBeNull] private PlayerHealthController _mHealth;
 
+        // Init functions
         protected override void OnInit()
         {
             _cPlayerSpriteRenderer = GetComponent<SpriteRenderer>();
@@ -38,6 +43,7 @@ namespace Controllers.Player
             _mHealth = Master.GetSub<PlayerHealthController>("health");
         }
 
+        // Event functions
         private void Update()
         {
             // Calculate target ring properties

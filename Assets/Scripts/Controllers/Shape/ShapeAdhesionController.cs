@@ -6,16 +6,20 @@ namespace Controllers.Shape
 {
     public class ShapeAdhesionController : SubControllerBase<BsShape>
     {
+        // Controller metadata
         public override string Id => "adhesion";
         public override bool IsUnused => Master.Object.Material.Adhesion == 0f || !Master.Object.Simulated;
 
+        // Component references
         private Rigidbody2D _cRigidbody2D;
 
+        // Init functions
         protected override void OnInit()
         {
             _cRigidbody2D = GetComponent<Rigidbody2D>();
         }
 
+        // Event functions
         private void OnCollisionStay2D(Collision2D other)
         {
             // Get collision info

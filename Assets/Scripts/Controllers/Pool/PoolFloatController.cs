@@ -6,14 +6,17 @@ namespace Controllers.Pool
 {
     public class PoolFloatController : SubControllerBase<BsPool>
     {
+        // Controller metadata
         public override string Id => "float";
         public override bool IsUnused =>
             Master.Object.Chemical.Buoyancy == 0f && Master.Object.Chemical.Viscosity == 0f || !Master.Object.Simulated;
 
+        // Local variables
         private Vector2 _buoyancyForce;
         private float _surfaceAngle;
         private float _surfacePosition;
 
+        // Init functions
         protected override void OnInit()
         {
             // Set up fluid properties
@@ -22,6 +25,7 @@ namespace Controllers.Pool
             _buoyancyForce = new Vector2(Mathf.Cos(_surfaceAngle), Mathf.Sin(_surfaceAngle)) * Master.Object.Chemical.Buoyancy;
         }
 
+        // Event functions
         private void OnTriggerStay2D(Collider2D other)
         {
             // Get collision info

@@ -5,9 +5,11 @@ namespace Core
 {
     public class CameraSystem : BsBehavior
     {
+        // Static instance
         public static CameraSystem _ { get; private set; }
         private void Awake() => _ = this;
 
+        // Local variables
         public Vector2 viewSize;
         public float dampening;
         public float shakeInterval;
@@ -19,13 +21,16 @@ namespace Core
         private float _shakeTimer;
         private float _lastCameraAspect;
 
+        // External references
         private Camera _cCamera;
 
+        // Init functions
         protected override void OnStart()
         {
             _cCamera = Camera.main;
         }
 
+        // System functions
         public void ResizeView(Vector2 viewSize)
         {
             this.viewSize = viewSize;
@@ -45,6 +50,7 @@ namespace Core
             _shakeTimer = shakeInterval;
         }
 
+        // Event functions
         private void Update()
         {
             // Configure the viewport to fit the screen

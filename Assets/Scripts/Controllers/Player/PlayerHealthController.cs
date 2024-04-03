@@ -9,20 +9,26 @@ namespace Controllers.Player
 {
     public class PlayerHealthController : SubControllerBase<BsPlayer>
     {
+        // Controller metadata
         public override string Id => "health";
         public override bool IsUnused => false;
 
+        // Local constants
         public const float DeathOffset = 1000f;
 
+        // Local variables
         public float maxHealth;
         public float health = -1f;
         public bool alive = true;
         private float _lastSpeed;
 
+        // Component references
         private Rigidbody2D _cRigidbody2D;
 
+        // Linked modules
         [CanBeNull] private PlayerMovementController _mMovement;
 
+        // Init functions
         protected override void OnInit()
         {
             _cRigidbody2D = GetComponent<Rigidbody2D>();
@@ -37,25 +43,7 @@ namespace Controllers.Player
             _mMovement = Master.GetSub<PlayerMovementController>("movement");
         }
 
-        private void OnCollisionEnter2D(Collision2D other) => OnCollision(other);
-
-        private void OnCollisionStay2D(Collision2D other) => OnCollision(other);
-
-        private void OnCollision(Collision2D other)
-        {
-            if (!alive) return;
-
-            // Get collision info
-            var impactForce = other.TotalNormalImpulse() * (other.gameObject.CompareTag(Tags.Player) ? 2f : 1f);
-            if (impactForce < 25f) return;
-            var impactSpeed = _lastSpeed;
-
-            // Apply damage to player
-            var damageApplied = BsPlayer.CalculateDamage(impactForce);
-            var damageMultiplier = Mathf.Min(1f / (impactSpeed * .2f), 1f);
-            Hurt(damageApplied * damageMultiplier);
-        }
-
+        // Module functions
         public void Heal(float amount)
         {
             health = Mathf.Min(health + amount, maxHealth);
@@ -102,6 +90,26 @@ namespace Controllers.Player
             health = 0f;
             alive = false;
             return true;
+        }
+
+        // Event functions
+        private void OnCollisionEnter2D(Collision2D other) => OnCollision(other);
+
+        private void OnCollisionStay2D(Collision2D other) => OnCollision(other);
+
+        private void OnCollision(Collision2D other)
+        {
+            if (!alive) return;
+
+            // Get collision info
+            var impactForce = other.TotalNormalImpulse() * (other.gameObject.CompareTag(Tags.Player) ? 2f : 1f);
+            if (impactForce < 25f) return;
+            var impactSpeed = _lastSpeed;
+
+            // Apply damage to player
+            var damageApplied = BsPlayer.CalculateDamage(impactForce);
+            var damageMultiplier = Mathf.Min(1f / (impactSpeed * .2f), 1f);
+            Hurt(damageApplied * damageMultiplier);
         }
 
         private void FixedUpdate()

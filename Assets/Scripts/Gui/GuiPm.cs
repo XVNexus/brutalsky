@@ -7,8 +7,10 @@ namespace Gui
 {
     public class GuiPm : BsBehavior
     {
+        // Gui metadata
         public const string PaneId = "pm";
 
+        // Init functions
         protected override void OnStart()
         {
             EventSystem._.OnGuiAction += OnGuiAction;
@@ -23,6 +25,7 @@ namespace Gui
             });
         }
 
+        // Event functions
         private void OnGuiAction(GuiAction action, string paneId, string itemId)
         {
             if (paneId != PaneId) return;

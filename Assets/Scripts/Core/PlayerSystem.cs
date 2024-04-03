@@ -10,13 +10,17 @@ namespace Core
 {
     public class PlayerSystem : BsBehavior
     {
+        // Static instance
         public static PlayerSystem _ { get; private set; }
         private void Awake() => _ = this;
 
+        // Local variables
         public Dictionary<string, BsPlayer> ActivePlayers { get; private set; } = new();
 
+        // External references
         public GameObject playerPrefab;
 
+        // System functions
         public void FreezeAll()
         {
             foreach (var player in ActivePlayers.Values)

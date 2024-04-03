@@ -8,6 +8,7 @@ namespace Core
 {
     public class EventSystem : MonoBehaviour
     {
+        // Static instance
         public static EventSystem _ { get; private set; }
         public static Random Random;
         public static string DataPath;
@@ -19,8 +20,10 @@ namespace Core
             DataPath = Application.persistentDataPath;
         }
 
+        // External references
         public InputActionAsset inputActionAsset;
 
+        // Event functions
         public void EmitGuiAction(GuiAction action, string paneId, string itemId) => OnGuiAction?.Invoke(action, paneId, itemId);
         public event Action<GuiAction, string, string> OnGuiAction;
     }

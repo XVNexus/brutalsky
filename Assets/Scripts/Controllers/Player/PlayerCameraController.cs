@@ -9,18 +9,23 @@ namespace Controllers.Player
 {
     public class PlayerCameraController : SubControllerBase<BsPlayer>
     {
+        // Controller metadata
         public override string Id => "camera";
         public override bool IsUnused => false;
 
+        // Local variables
         private float _lastHealth = -1f;
 
+        // Linked modules
         [CanBeNull] private PlayerHealthController _mHealth;
 
+        // Init functions
         protected override void OnLink()
         {
             _mHealth = Master.GetSub<PlayerHealthController>("health");
         }
 
+        // Event functions
         private void OnCollisionEnter2D(Collision2D other)
         {
             // Get collision info

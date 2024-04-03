@@ -11,20 +11,26 @@ namespace Core
 {
     public class GuiSystem : BsBehavior
     {
+        // Static instance
         public static GuiSystem _ { get; private set; }
         private void Awake() => _ = this;
 
+        // Local constants
         public const string DisabledClass = "bs-disabled";
         public const string PauseMenuId = "pm";
 
+        // Local variables
         private readonly Dictionary<string, GuiPane> _panes = new();
         private readonly Dictionary<string, string> _parentRegistrationHold = new();
 
+        // External references
         public UIDocument cUIDocument;
         private VisualElement _root;
 
+        // Player input
         public InputAction iEscape;
 
+        // Init functions
         protected override void OnStart()
         {
             _root = cUIDocument.rootVisualElement;
@@ -36,11 +42,7 @@ namespace Core
             iEscape.performed += OnIEscape;
         }
 
-        private void OnIEscape(InputAction.CallbackContext context)
-        {
-            Escape();
-        }
-
+        // System functions
         public void Escape()
         {
             if (GetVisiblePane()?.Deactivate() ?? false)
@@ -160,6 +162,12 @@ namespace Core
                 not null when type == typeof(FloatField) => _root.Q<T>($"{paneId}-flt-{itemId}"),
                 _ => throw Errors.InvalidGuiElement()
             };
+        }
+
+        // Event functions
+        private void OnIEscape(InputAction.CallbackContext context)
+        {
+            Escape();
         }
     }
 }
