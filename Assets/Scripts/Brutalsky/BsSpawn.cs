@@ -3,20 +3,22 @@ using UnityEngine;
 
 namespace Brutalsky
 {
-    public class BsSpawn : BsObject
+    public class BsSpawn
     {
+        public Vector2 Position { get; set; }
         public int Priority { get; set; }
         public int Usages { get; private set; }
 
-        public BsSpawn(string id, BsTransform transform, int priority = 0) : base(id, transform)
+        public BsSpawn(Vector2 position, int priority = 0)
         {
+            Position = position;
             Priority = priority;
         }
 
         public Vector2 Use()
         {
             Usages++;
-            return Transform.Position;
+            return Position;
         }
 
         public void Reset()

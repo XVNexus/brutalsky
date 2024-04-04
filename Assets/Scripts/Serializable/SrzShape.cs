@@ -7,7 +7,6 @@ namespace Serializable
 {
     public class SrzShape
     {
-        public string id { get; set; }
         public string tr { get; set; }
         public string pt { get; set; }
         public string mt { get; set; }
@@ -19,7 +18,6 @@ namespace Serializable
         {
             return new SrzShape
             {
-                id = shape.Id,
                 tr = shape.Transform.ToString(),
                 pt = shape.Path.ToString(),
                 mt = shape.Material.ToString(),
@@ -29,7 +27,7 @@ namespace Serializable
             };
         }
 
-        public BsShape Expand()
+        public BsShape Expand(string id)
         {
             return new BsShape
             (

@@ -12,9 +12,9 @@ namespace Serializable
         public string sz { get; set; }
         public string lg { get; set; }
         public List<SrzSpawn> sp { get; set; } = new();
-        public List<SrzShape> sh { get; set; } = new();
-        public List<SrzPool> pl { get; set; } = new();
-        public List<SrzJoint> jn { get; set; } = new();
+        public Dictionary<string, SrzShape> sh { get; set; } = new();
+        public Dictionary<string, SrzJoint> jn { get; set; } = new();
+        public Dictionary<string, SrzPool> pl { get; set; } = new();
 
         public static SrzMap Simplify(BsMap map)
         {
@@ -22,24 +22,24 @@ namespace Serializable
             {
                 tt = map.Title,
                 at = map.Author,
-                sz = $"{map.Size.x} {map.Size.y}",
+                sz = Vector2Ext.ToString(map.Size),
                 lg = map.Lighting.ToString()
             };
-            foreach (var spawn in map.Spawns.Values)
+            foreach (var spawn in map.Spawns)
             {
                 result.sp.Add(SrzSpawn.Simplify(spawn));
             }
             foreach (var shape in map.Shapes.Values)
             {
-                result.sh.Add(SrzShape.Simplify(shape));
-            }
-            foreach (var pool in map.Pools.Values)
-            {
-                result.pl.Add(SrzPool.Simplify(pool));
+                result.sh[shape.Id] = SrzShape.Simplify(shape);
             }
             foreach (var joint in map.Joints.Values)
             {
-                result.jn.Add(SrzJoint.Simplify(joint));
+                result.jn[joint.Id] = SrzJoint.Simplify(joint);
+            }
+            foreach (var pool in map.Pools.Values)
+            {
+                result.pl[pool.Id] = SrzPool.Simplify(pool);
             }
             return result;
         }
@@ -53,19 +53,19 @@ namespace Serializable
             };
             foreach (var spawn in sp)
             {
-                result.Add(spawn.Expand());
+                result.AddSpawn(spawn.Expand());
             }
-            foreach (var shape in sh)
+            foreach (var shapeId in sh.Keys)
             {
-                result.Add(shape.Expand());
+                result.AddObject(sh[shapeId].Expand(shapeId));
             }
-            foreach (var pool in pl)
+            foreach (var jointId in jn.Keys)
             {
-                result.Add(pool.Expand());
+                result.AddObject(jn[jointId].Expand(jointId));
             }
-            foreach (var joint in jn)
+            foreach (var poolId in pl.Keys)
             {
-                result.Add(joint.Expand());
+                result.AddObject(pl[poolId].Expand(poolId));
             }
             return result;
         }

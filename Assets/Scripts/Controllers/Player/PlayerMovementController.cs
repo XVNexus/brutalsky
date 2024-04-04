@@ -23,7 +23,6 @@ namespace Controllers.Player
         public bool onGround;
         public float boostCharge;
         public float boostCooldown;
-        private float _movementPush;
         private int _jumpCooldown;
         private bool _lastBoostInput;
         private float _lastSpeed;

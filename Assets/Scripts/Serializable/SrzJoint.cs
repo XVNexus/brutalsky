@@ -10,7 +10,6 @@ namespace Serializable
     public class SrzJoint
     {
         public BsJointType jt { get; set; }
-        public string id { get; set; }
         public string tr { get; set; }
         public string ts { get; set; }
         public string ms { get; set; }
@@ -63,7 +62,6 @@ namespace Serializable
             return new SrzJoint
             {
                 jt = joint.JointType,
-                id = joint.Id,
                 tr = joint.Transform.ToString(),
                 ts = joint.TargetShapeId,
                 ms = joint.MountShapeId,
@@ -71,7 +69,7 @@ namespace Serializable
             };
         }
 
-        public BsJoint Expand()
+        public BsJoint Expand(string id)
         {
             var transformParsed = BsTransform.Parse(tr);
             var collision = BoolExt.Parse(pr["cl"]);

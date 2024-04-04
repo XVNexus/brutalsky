@@ -7,7 +7,6 @@ namespace Serializable
 {
     public class SrzPool
     {
-        public string id { get; set; }
         public string tr { get; set; }
         public string sz { get; set; }
         public string ch { get; set; }
@@ -19,9 +18,8 @@ namespace Serializable
         {
             return new SrzPool
             {
-                id = pool.Id,
                 tr = pool.Transform.ToString(),
-                sz = $"{pool.Size.x} {pool.Size.y}",
+                sz = Vector2Ext.ToString(pool.Size),
                 ch = pool.Chemical.ToString(),
                 cl = pool.Color.ToString(),
                 ly = (int)pool.Layer,
@@ -29,7 +27,7 @@ namespace Serializable
             };
         }
 
-        public BsPool Expand()
+        public BsPool Expand(string id)
         {
             return new BsPool
             (

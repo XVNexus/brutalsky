@@ -3,255 +3,224 @@ at: Xveon
 sz: 40 20
 lg: 1 1 1 0.8 0
 sp:
-  - id: spawn-left
-    tr: -15 1 0
+  - ps: -15 1
     pr: 0
-  - id: spawn-right
-    tr: 15 1 0
+  - ps: 15 1
     pr: 0
 sh:
-  - id: spinner-left-bg
+  spinner-left-bg:
     tr: -2 0 0
     pt: C 5
     mt: 2 0 0 10 0 0
     cl: 0.3 0.3 0.3 1 0
     ly: 0
     sm: 0
-  - id: spinner-right-bg
+  spinner-right-bg:
     tr: 2 0 0
     pt: C 5
     mt: 2 0 0 10 0 0
     cl: 0.3 0.3 0.3 1 0
     ly: 0
     sm: 0
-  - id: wall-left
+  wall-left:
     tr: -20 0 0
     pt: R 2 22
     mt: 2 0 0 10 0 0
     cl: 0.7 0.7 0.7 1 0
     ly: 1
     sm: 1
-  - id: wall-right
+  wall-right:
     tr: 20 0 0
     pt: R 2 22
     mt: 2 0 0 10 0 0
     cl: 0.7 0.7 0.7 1 0
     ly: 1
     sm: 1
-  - id: wall-top
+  wall-top:
     tr: 0 10 0
     pt: X -15 1 L 15 1 L 15 0 L 14 -.5 L -14 -.5 L -15 0
     mt: 2 0 0 10 0 0
     cl: 0.7 0.7 0.7 1 0
     ly: 1
     sm: 1
-  - id: wall-bottom
+  wall-bottom:
     tr: 0 -10 0
     pt: X -7 -1 L -7 .5 L 0 3 L 7 .5 L 7 -1
     mt: 2 0 0 10 0 0
     cl: 0.7 0.7 0.7 1 0
     ly: 1
     sm: 1
-  - id: platform-left
+  platform-left:
     tr: -19 0 0
     pt: X -1 2.5 L 0 2.5 C 0 .5 2 .5 L 8 .5 L 7.5 0 L 8 -.5 L 2 -.5 C 0 -.5 0 -2.5 L -1 -2.5
     mt: 2 0 0 10 0 0
     cl: 0.7 0.7 0.7 1 0
     ly: 1
     sm: 1
-  - id: platform-right
+  platform-right:
     tr: 19 0 0
     pt: X 1 2.5 L 0 2.5 C 0 .5 -2 .5 L -8 .5 L -7.5 0 L -8 -.5 L -2 -.5 C 0 -.5 0 -2.5 L 1 -2.5
     mt: 2 0 0 10 0 0
     cl: 0.7 0.7 0.7 1 0
     ly: 1
     sm: 1
-  - id: pool-tl-wall-top
+  pool-tl-wall-top:
     tr: -17 13.25 0
     pt: R 5 0.5
     mt: 2 0 0 10 0 0
     cl: 0.7 0.7 0.7 1 0
     ly: 1
     sm: 1
-  - id: pool-tl-wall-left
+  pool-tl-wall-left:
     tr: -19.25 12 0
     pt: R 0.5 2
     mt: 2 0 0 10 0 0
     cl: 0.7 0.7 0.7 1 0
     ly: 1
     sm: 1
-  - id: pool-tl-wall-right
+  pool-tl-wall-right:
     tr: -14.75 12 0
     pt: R 0.5 2
     mt: 2 0 0 10 0 0
     cl: 0.7 0.7 0.7 1 0
     ly: 1
     sm: 1
-  - id: pool-tr-wall-top
+  pool-tr-wall-top:
     tr: 17 13.25 0
     pt: R 5 0.5
     mt: 2 0 0 10 0 0
     cl: 0.7 0.7 0.7 1 0
     ly: 1
     sm: 1
-  - id: pool-tr-wall-left
+  pool-tr-wall-left:
     tr: 14.75 12 0
     pt: R 0.5 2
     mt: 2 0 0 10 0 0
     cl: 0.7 0.7 0.7 1 0
     ly: 1
     sm: 1
-  - id: pool-tr-wall-right
+  pool-tr-wall-right:
     tr: 19.25 12 0
     pt: R 0.5 2
     mt: 2 0 0 10 0 0
     cl: 0.7 0.7 0.7 1 0
     ly: 1
     sm: 1
-  - id: pool-bl-wall-bottom
+  pool-bl-wall-bottom:
     tr: -13 -13.25 0
     pt: R 13 0.5
     mt: 2 0 0 10 0 0
     cl: 0.7 0.7 0.7 1 0
     ly: 1
     sm: 1
-  - id: pool-bl-wall-left
+  pool-bl-wall-left:
     tr: -19.25 -12 0
     pt: R 0.5 2
     mt: 2 0 0 10 0 0
     cl: 0.7 0.7 0.7 1 0
     ly: 1
     sm: 1
-  - id: pool-bl-wall-right
+  pool-bl-wall-right:
     tr: -6.75 -12 0
     pt: R 0.5 2
     mt: 2 0 0 10 0 0
     cl: 0.7 0.7 0.7 1 0
     ly: 1
     sm: 1
-  - id: pool-br-wall-bottom
+  pool-br-wall-bottom:
     tr: 13 -13.25 0
     pt: R 13 0.5
     mt: 2 0 0 10 0 0
     cl: 0.7 0.7 0.7 1 0
     ly: 1
     sm: 1
-  - id: pool-br-wall-left
+  pool-br-wall-left:
     tr: 6.75 -12 0
     pt: R 0.5 2
     mt: 2 0 0 10 0 0
     cl: 0.7 0.7 0.7 1 0
     ly: 1
     sm: 1
-  - id: pool-br-wall-right
+  pool-br-wall-right:
     tr: 19.25 -12 0
     pt: R 0.5 2
     mt: 2 0 0 10 0 0
     cl: 0.7 0.7 0.7 1 0
     ly: 1
     sm: 1
-  - id: glue-left
+  glue-left:
     tr: -9 9.25 0
     pt: R 10 0.5
     mt: 5 0 2 1 0 0
     cl: 0.7 0.9 0.4 1 0
     ly: 1
     sm: 1
-  - id: glue-right
+  glue-right:
     tr: 9 9.25 0
     pt: R 10 0.5
     mt: 5 0 2 1 0 0
     cl: 0.7 0.9 0.4 1 0
     ly: 1
     sm: 1
-  - id: ice-left
+  ice-left:
     tr: -14.5 9.5 0
     pt: X -.5 .5 L .5 0 L .5 -.5 L -.5 0
     mt: 0 0 0 1 0 0
     cl: 0.5 0.8 1 1 0
     ly: 1
     sm: 1
-  - id: ice-right
+  ice-right:
     tr: 14.5 9.5 0
     pt: X .5 .5 L -.5 0 L -.5 -.5 L .5 0
     mt: 0 0 0 1 0 0
     cl: 0.5 0.8 1 1 0
     ly: 1
     sm: 1
-  - id: ice-bottom
+  ice-bottom:
     tr: 0 -9.5 0
     pt: X -7 0 L -7 .5 L 0 3 L 7 .5 L 7 0 L 0 2.5
     mt: 0 0 0 1 0 0
     cl: 0.5 0.8 1 1 0
     ly: 1
     sm: 1
-  - id: rubber-top
+  rubber-top:
     tr: 0 9.25 0
     pt: X 4 .25 L 4 -.25 L 0 -1.25 L -4 -.25 L -4 .25
     mt: 0 1 0 1 0 0
     cl: 0.7 0.4 0.9 1 0
     ly: 1
     sm: 1
-  - id: electric-left
+  electric-left:
     tr: -11 0 45
     pt: S 0.7
     mt: 2 0 0 1 -25 0
     cl: 1 1 0.2 1 1
     ly: 1
     sm: 1
-  - id: electric-right
+  electric-right:
     tr: 11 0 45
     pt: S 0.7
     mt: 2 0 0 1 -25 0
     cl: 1 1 0.2 1 1
     ly: 1
     sm: 1
-  - id: spinner-left
+  spinner-left:
     tr: -2 0 0
     pt: T 6 4.9 2.9
     mt: 2 0 0 1 0 1
     cl: 0.9 0.9 1 1 0
     ly: 1
     sm: 1
-  - id: spinner-right
+  spinner-right:
     tr: 2 0 30
     pt: T 6 4.9 2.9
     mt: 2 0 0 1 0 1
     cl: 0.9 0.9 1 1 0
     ly: 1
     sm: 1
-pl:
-  - id: water-left
-    tr: -17 11.25 180
-    sz: 4 3.5
-    ch: 25 1 0
-    cl: 0.4 0.4 1 1 0
-    ly: 2
-    sm: 1
-  - id: water-right
-    tr: 17 11.25 180
-    sz: 4 3.5
-    ch: 25 1 0
-    cl: 0.4 0.4 1 1 0
-    ly: 2
-    sm: 1
-  - id: lava-left
-    tr: -13 -11 0
-    sz: 12 4
-    ch: 25 1 -25
-    cl: 1 0.3 0.2 1 1
-    ly: 2
-    sm: 1
-  - id: lava-right
-    tr: 13 -11 0
-    sz: 12 4
-    ch: 25 1 -25
-    cl: 1 0.3 0.2 1 1
-    ly: 2
-    sm: 1
 jn:
-  - jt: Hinge
-    id: spinner-left-motor
+  spinner-left-motor:
+    jt: Hinge
     tr: 0 0 0
     ts: spinner-left
     ms: ''
@@ -260,8 +229,8 @@ jn:
       st: x
       mt: 100 10000
       lm: x
-  - jt: Hinge
-    id: spinner-right-motor
+  spinner-right-motor:
+    jt: Hinge
     tr: 0 0 0
     ts: spinner-right
     ms: ''
@@ -270,3 +239,32 @@ jn:
       st: x
       mt: -100 10000
       lm: x
+pl:
+  water-left:
+    tr: -17 11.25 180
+    sz: 4 3.5
+    ch: 25 1 0
+    cl: 0.4 0.4 1 1 0
+    ly: 2
+    sm: 1
+  water-right:
+    tr: 17 11.25 180
+    sz: 4 3.5
+    ch: 25 1 0
+    cl: 0.4 0.4 1 1 0
+    ly: 2
+    sm: 1
+  lava-left:
+    tr: -13 -11 0
+    sz: 12 4
+    ch: 25 1 -25
+    cl: 1 0.3 0.2 1 1
+    ly: 2
+    sm: 1
+  lava-right:
+    tr: 13 -11 0
+    sz: 12 4
+    ch: 25 1 -25
+    cl: 1 0.3 0.2 1 1
+    ly: 2
+    sm: 1
