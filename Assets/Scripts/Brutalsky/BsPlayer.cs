@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Brutalsky.Base;
 using Core;
 using UnityEngine;
@@ -9,8 +10,9 @@ namespace Brutalsky
 {
     public class BsPlayer : BsObject
     {
-        public override GameObject Prefab => PlayerSystem._.playerPrefab;
+        public override GameObject Prefab => ResourceSystem._.playerPrefab;
         public override string Tag => Tags.Player;
+
         public string Name { get; set; }
         public float Health { get; set; }
         public ObjectColor Color { get; set; }
@@ -28,9 +30,19 @@ namespace Brutalsky
         {
         }
 
-        public static float CalculateDamage(float impactForce)
+        protected override Component _Init(GameObject gameObject, BsMap map)
         {
-            return MathfExt.TMP(impactForce, 20f, .5f);
+            throw new System.NotImplementedException();
+        }
+
+        protected override Dictionary<string, string> _ToSrz()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        protected override void _FromSrz(Dictionary<string, string> properties)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

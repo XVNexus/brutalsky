@@ -69,7 +69,7 @@ namespace Utils.Object
 
         public override string ToString()
         {
-            return $"{Tint.r} {Tint.g} {Tint.b} {Tint.a} {BoolExt.ToString(Glow)}";
+            return $"{Tint.r} {Tint.g} {Tint.b} {Tint.a} {BoolExt.Stringify(Glow)}";
         }
     }
 }

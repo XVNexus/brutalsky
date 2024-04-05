@@ -3,6 +3,7 @@ using Controllers.Base;
 using Core;
 using JetBrains.Annotations;
 using UnityEngine;
+using Utils;
 using Utils.Constants;
 using Utils.Ext;
 
@@ -35,7 +36,7 @@ namespace Controllers.Player
             var impactDirection = ((Vector2)transform.position - other.contacts[0].point).normalized;
 
             // Apply camera shake
-            var shakeForce = Mathf.Min(BsPlayer.CalculateDamage(impactForce) * .15f, 15f);
+            var shakeForce = Mathf.Min(BsUtils.CalculateDamage(impactForce) * .15f, 15f);
             CameraSystem._.Shove(shakeForce * impactDirection);
         }
 

@@ -19,11 +19,11 @@ namespace Serializable
             return new SrzPool
             {
                 tr = pool.Transform.ToString(),
-                sz = Vector2Ext.ToString(pool.Size),
+                sz = Vector2Ext.Stringify(pool.Size),
                 ch = pool.Chemical.ToString(),
                 cl = pool.Color.ToString(),
                 ly = (int)pool.Layer,
-                sm = BoolExt.ToString(pool.Simulated)
+                sm = BoolExt.Stringify(pool.Simulated)
             };
         }
 

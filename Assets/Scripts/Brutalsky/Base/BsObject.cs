@@ -1,6 +1,10 @@
 using System.Collections.Generic;
+using Core;
 using JetBrains.Annotations;
+using Serializable;
+using Unity.VisualScripting;
 using UnityEngine;
+using Utils;
 using Utils.Object;
 
 namespace Brutalsky.Base
@@ -27,33 +31,63 @@ namespace Brutalsky.Base
         {
         }
 
-        public void Init(GameObject gameObject, BsMap map)
+        protected abstract Component _Init(GameObject gameObject, BsMap map);
+
+        protected abstract Dictionary<string, string> _ToSrz();
+
+        protected abstract void _FromSrz(Dictionary<string, string> properties);
+
+        public Component Init(GameObject gameObject, BsMap map)
         {
-            _Init(gameObject);
+            var instanceController = _Init(gameObject, map);
             foreach (var addon in Addons)
             {
-                addon.Init(gameObject, this, map);
+                var instanceComponent = addon.Init(gameObject, this, map);
+                addon.Activate(instanceComponent);
+            }
+            return instanceController;
+        }
+
+        public SrzObject ToSrz()
+        {
+            var srzAddons = new List<SrzAddon>();
+            foreach (var addon in Addons)
+            {
+                srzAddons.Add(addon.ToSrz());
+            }
+            return new SrzObject(Tag, Id, _ToSrz(), srzAddons);
+        }
+
+        public void FromSrz(string id, SrzObject srzObject)
+        {
+            _FromSrz(srzObject.pr);
+            foreach (var srzAddon in srzObject.ad)
+            {
+                var addonIdParts = BsUtils.SplitFullId(srzAddon.id);
+                var addonTag = addonIdParts[0];
+                var addonId = addonIdParts[1];
+                var addon = ResourceSystem._.GetTemplateAddon(addonTag);
+                addon.FromSrz(addonId, srzAddon);
+                Addons.Add(addon);
             }
         }
 
-        protected abstract void _Init(GameObject gameObject);
-
-        public bool Activate(GameObject instanceObject, Component instanceController)
+        public void Activate(GameObject instanceObject, Component instanceController)
         {
-            if (Active) return false;
             InstanceObject = instanceObject;
             InstanceController = instanceController;
             Active = true;
-            return true;
         }
 
-        public bool Deactivate()
+        public void Deactivate()
         {
-            if (!Active) return false;
+            foreach (var addon in Addons)
+            {
+                addon.Deactivate();
+            }
             InstanceObject = null;
             InstanceController = null;
             Active = false;
-            return true;
         }
     }
 }

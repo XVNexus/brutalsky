@@ -3,10 +3,12 @@ using System.Linq;
 using Brutalsky.Base;
 using Core;
 using Serializable;
+using Unity.VisualScripting;
 using UnityEngine;
+using Utils;
+using Utils.Ext;
 using Utils.Object;
 using YamlDotNet.Serialization;
-using Random = Unity.Mathematics.Random;
 
 namespace Brutalsky
 {
@@ -18,22 +20,54 @@ namespace Brutalsky
         public Vector2 Size { get; set; }
         public ObjectColor Lighting { get; set; }
         public List<BsSpawn> Spawns { get; } = new();
-        public Dictionary<string, BsShape> Shapes { get; } = new();
-        public Dictionary<string, BsJoint> Joints { get; } = new();
-        public Dictionary<string, BsPool> Pools { get; } = new();
+        public Dictionary<string, BsObject> Objects { get; } = new();
 
         public BsMap(string title = "Untitled Map", string author = "Anonymous Marble")
         {
             Title = title;
             Author = author;
-            Id = CalculateId(title, author);
+            Id = BsUtils.GenerateId(title, author);
         }
 
-        public static uint CalculateId(string title, string author)
+        public BsMap()
         {
-            var idSeed = author.Aggregate<char, uint>(1, (current, letter) => current * letter)
-                         + title.Aggregate<char, uint>(0, (current, letter) => current + letter);
-            return Random.CreateFromIndex(idSeed).NextUInt();
+        }
+
+        public SrzMap ToSrz()
+        {
+            var srzSpawns = new List<SrzSpawn>();
+            foreach (var spawn in Spawns)
+            {
+                srzSpawns.Add(spawn.ToSrz());
+            }
+            var srzObjects = new List<SrzObject>();
+            foreach (var obj in Objects.Values)
+            {
+                srzObjects.Add(obj.ToSrz());
+            }
+            return new SrzMap(Title, Author, Vector2Ext.Stringify(Size), Lighting.ToString(), srzSpawns, srzObjects);
+        }
+
+        public void FromSrz(SrzMap srzMap)
+        {
+            Title = srzMap.tt;
+            Author = srzMap.at;
+            Size = Vector2Ext.Parse(srzMap.sz);
+            Lighting = ObjectColor.Parse(srzMap.lg);
+            foreach (var srzSpawn in srzMap.sp)
+            {
+                var spawn = new BsSpawn();
+                spawn.FromSrz(srzSpawn);
+            }
+            foreach (var srzObject in srzMap.ob)
+            {
+                var objIdParts = BsUtils.SplitFullId(srzObject.id);
+                var objTag = objIdParts[0];
+                var objId = objIdParts[1];
+                var obj = ResourceSystem._.GetTemplateObject(objTag);
+                obj.FromSrz(objId, srzObject);
+                AddObject(obj);
+            }
         }
 
         public Vector2 SelectSpawn()
@@ -43,7 +77,7 @@ namespace Brutalsky
             possibleSpawns.Sort((a, b) => a.Priority - b.Priority);
             var lowestPriority = possibleSpawns[0].Priority;
             possibleSpawns.RemoveAll(spawn => spawn.Priority > lowestPriority);
-            var spawnChoice = possibleSpawns[EventSystem.Random.NextInt(possibleSpawns.Count)];
+            var spawnChoice = possibleSpawns[ResourceSystem.Random.NextInt(possibleSpawns.Count)];
             return spawnChoice.Use();
         }
 
@@ -77,85 +111,48 @@ namespace Brutalsky
             return index >= 0 && index < Spawns.Count;
         }
 
-        public BsShape GetShape(string id)
+        public T GetObject<T>(string tag, string id) where T : BsObject
         {
-            return ContainsShape(id) ? Shapes[id] : null;
+            return ContainsObject(tag, id) ? (T)Objects[BsUtils.GenerateFullId(tag, id)] : null;
         }
 
-        public BsJoint GetJoint(string id)
+        public bool AddObject(BsObject obj)
         {
-            return ContainsJoint(id) ? Joints[id] : null;
-        }
-
-        public BsPool GetPool(string id)
-        {
-            return ContainsPool(id) ? Pools[id] : null;
-        }
-
-        public bool AddObject(BsShape shape)
-        {
-            if (ContainsObject(shape)) return false;
-            Shapes[shape.Id] = shape;
-            return true;
-        }
-
-        public bool AddObject(BsJoint joint)
-        {
-            if (ContainsObject(joint)) return false;
-            Joints[joint.Id] = joint;
-            return true;
-        }
-
-        public bool AddObject(BsPool pool)
-        {
-            if (ContainsObject(pool)) return false;
-            Pools[pool.Id] = pool;
+            if (ContainsObject(obj)) return false;
+            Objects[BsUtils.GenerateFullId(obj.Tag, obj.Id)] = obj;
             return true;
         }
 
         public bool RemoveObject(BsObject obj)
         {
-            return RemoveObject(obj.Id);
+            return RemoveObject(obj.Tag, obj.Id);
         }
 
-        public bool RemoveObject(string id)
+        public bool RemoveObject(string tag, string id)
         {
-            return Shapes.Remove(id) || Pools.Remove(id) || Joints.Remove(id);
+            return Objects.Remove(BsUtils.GenerateFullId(tag, id));
         }
 
         public bool ContainsObject(BsObject obj)
         {
-            return ContainsObject(obj.Id);
+            return ContainsObject(obj.Tag, obj.Id);
         }
 
-        public bool ContainsObject(string id)
+        public bool ContainsObject(string tag, string id)
         {
-            return ContainsShape(id) || ContainsPool(id) || ContainsJoint(id);
-        }
-
-        public bool ContainsShape(string id)
-        {
-            return Shapes.ContainsKey(id);
-        }
-
-        public bool ContainsJoint(string id)
-        {
-            return Joints.ContainsKey(id);
-        }
-
-        public bool ContainsPool(string id)
-        {
-            return Pools.ContainsKey(id);
+            return Objects.ContainsKey(BsUtils.GenerateFullId(tag, id));
         }
 
         public static BsMap Parse(string yaml)
         {
-            return new Deserializer().Deserialize<SrzMap>(yaml).Expand();
+            var result = new BsMap();
+            result.FromSrz(new Deserializer().Deserialize<SrzMap>(yaml));
+            return result;
         }
 
         public string Stringify()
         {
-            return new Serializer().Serialize(SrzMap.Simplify(this));
+            return new Serializer().Serialize(ToSrz());
         }
     }
 }

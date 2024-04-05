@@ -1,6 +1,3 @@
-using Brutalsky;
-using Utils.Ext;
-
 namespace Serializable
 {
     public class SrzSpawn
@@ -8,22 +5,10 @@ namespace Serializable
         public string ps { get; set; }
         public int pr { get; set; }
 
-        public static SrzSpawn Simplify(BsSpawn spawn)
+        public SrzSpawn(string position, int priority)
         {
-            return new SrzSpawn
-            {
-                ps = Vector2Ext.ToString(spawn.Position),
-                pr = spawn.Priority
-            };
-        }
-
-        public BsSpawn Expand()
-        {
-            return new BsSpawn
-            (
-                Vector2Ext.Parse(ps),
-                pr
-            );
+            ps = position;
+            pr = priority;
         }
     }
 }

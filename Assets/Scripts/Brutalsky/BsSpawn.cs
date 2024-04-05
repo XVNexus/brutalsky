@@ -1,4 +1,6 @@
+using Serializable;
 using UnityEngine;
+using Utils.Ext;
 
 namespace Brutalsky
 {
@@ -12,6 +14,21 @@ namespace Brutalsky
         {
             Position = position;
             Priority = priority;
+        }
+
+        public BsSpawn()
+        {
+        }
+
+        public SrzSpawn ToSrz()
+        {
+            return new SrzSpawn(Vector2Ext.Stringify(Position), Priority);
+        }
+
+        public void FromSrz(SrzSpawn srzSpawn)
+        {
+            Position = Vector2Ext.Parse(srzSpawn.ps);
+            Priority = srzSpawn.pr;
         }
 
         public Vector2 Use()

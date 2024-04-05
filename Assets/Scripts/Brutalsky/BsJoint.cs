@@ -1,5 +1,5 @@
+using System.Collections.Generic;
 using Brutalsky.Base;
-using JetBrains.Annotations;
 using UnityEngine;
 using Utils.Constants;
 using Utils.Joint;
@@ -38,35 +38,52 @@ namespace Brutalsky
         {
         }
 
-        public override void Init(GameObject gameObject)
+        protected override Component _Init(GameObject gameObject, BsObject parentObject, BsMap map)
         {
-            AnchoredJoint2D jointComponent;
-            BsShape mountShape;
+            // Get references to linked objects
+            var targetShape = (BsShape)parentObject;
+            var targetGameObject = targetShape.InstanceObject;
+            if (targetGameObject == null)
+            {
+                throw Errors.TargetShapeUnbuilt(this);
+            }
+
+            // Create joint component
+            AnchoredJoint2D component = JointType switch
+            {
+                JointType.Fixed => targetGameObject.AddComponent<FixedJoint2D>(),
+                JointType.Distance => targetGameObject.AddComponent<DistanceJoint2D>(),
+                JointType.Spring => targetGameObject.AddComponent<SpringJoint2D>(),
+                JointType.Hinge => targetGameObject.AddComponent<HingeJoint2D>(),
+                JointType.Slider => targetGameObject.AddComponent<SliderJoint2D>(),
+                JointType.Wheel => targetGameObject.AddComponent<WheelJoint2D>(),
+                _ => throw Errors.InvalidJointType(JointType)
+            };
 
             // Apply universal joint config
-            jointComponent.anchor = Transform.Position;
-            jointComponent.enableCollision = Collision;
-            jointComponent.breakForce = Strength.BreakForce;
-            jointComponent.breakTorque = Strength.BreakTorque;
+            component.anchor = Transform.Position;
+            component.enableCollision = Collision;
+            component.breakForce = Strength.BreakForce;
+            component.breakTorque = Strength.BreakTorque;
 
             // Apply specific joint config
             switch (JointType)
             {
                 case JointType.Fixed:
-                    var fixedJointComponent = (FixedJoint2D)jointComponent;
+                    var fixedJointComponent = (FixedJoint2D)component;
                     fixedJointComponent.dampingRatio = Damping.Ratio;
                     fixedJointComponent.frequency = Damping.Frequency;
                     break;
 
                 case JointType.Distance:
-                    var distanceJointComponent = (DistanceJoint2D)jointComponent;
+                    var distanceJointComponent = (DistanceJoint2D)component;
                     distanceJointComponent.distance = Distance.Value;
                     distanceJointComponent.autoConfigureDistance = Distance.Auto;
                     distanceJointComponent.maxDistanceOnly = MaxDistanceOnly;
                     break;
 
                 case JointType.Spring:
-                    var springJointComponent = (SpringJoint2D)jointComponent;
+                    var springJointComponent = (SpringJoint2D)component;
                     springJointComponent.distance = Distance.Value;
                     springJointComponent.autoConfigureDistance = Distance.Auto;
                     springJointComponent.dampingRatio = Damping.Ratio;
@@ -74,7 +91,7 @@ namespace Brutalsky
                     break;
 
                 case JointType.Hinge:
-                    var hingeJointComponent = (HingeJoint2D)jointComponent;
+                    var hingeJointComponent = (HingeJoint2D)component;
                     if (Motor.Use)
                     {
                         hingeJointComponent.useMotor = true;
@@ -94,7 +111,7 @@ namespace Brutalsky
                     break;
 
                 case JointType.Slider:
-                    var sliderJointComponent = (SliderJoint2D)jointComponent;
+                    var sliderJointComponent = (SliderJoint2D)component;
                     sliderJointComponent.angle = Angle.Value;
                     sliderJointComponent.autoConfigureAngle = Angle.Auto;
                     if (Motor.Use)
@@ -116,7 +133,7 @@ namespace Brutalsky
                     break;
 
                 case JointType.Wheel:
-                    var wheelJointComponent = (WheelJoint2D)jointComponent;
+                    var wheelJointComponent = (WheelJoint2D)component;
                     var wheelJointSuspension = wheelJointComponent.suspension;
                     wheelJointSuspension.dampingRatio = Damping.Ratio;
                     wheelJointSuspension.frequency = Damping.Frequency;
@@ -137,13 +154,26 @@ namespace Brutalsky
             }
 
             // Set up connected rigidbody
-            if (mountShape == null) return;
+            var mountShape = MountShapeId.Length > 0 ? map.GetObject<BsShape>(Tags.Shape, MountShapeId) : null;
+            if (mountShape == null) return null;
             if (mountShape.InstanceObject == null)
             {
                 throw Errors.MountShapeUnbuilt(this);
             }
-            jointComponent.connectedBody = mountShape.InstanceObject.GetComponent<Rigidbody2D>();
-            jointComponent.autoConfigureConnectedAnchor = true;
+            component.connectedBody = mountShape.InstanceObject.GetComponent<Rigidbody2D>();
+            component.autoConfigureConnectedAnchor = true;
+
+            return component;
+        }
+
+        protected override Dictionary<string, string> _ToSrz()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        protected override void _FromSrz(Dictionary<string, string> properties)
+        {
+            throw new System.NotImplementedException();
         }
 
         public BsJoint FixedJoint(JointDamping damping)

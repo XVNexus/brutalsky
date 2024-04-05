@@ -19,7 +19,7 @@ namespace Serializable
         {
             var properties = new Dictionary<string, string>
             {
-                ["cl"] = BoolExt.ToString(joint.Collision),
+                ["cl"] = BoolExt.Stringify(joint.Collision),
                 ["st"] = joint.Strength.ToString()
             };
             switch (joint.JointType)
@@ -29,7 +29,7 @@ namespace Serializable
                     break;
                 case JointType.Distance:
                     properties["ds"] = joint.Distance.ToString();
-                    properties["md"] = BoolExt.ToString(joint.MaxDistanceOnly);
+                    properties["md"] = BoolExt.Stringify(joint.MaxDistanceOnly);
                     break;
                 case JointType.Spring:
                     properties["ds"] = joint.Distance.ToString();

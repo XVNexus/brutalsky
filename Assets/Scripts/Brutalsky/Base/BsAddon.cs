@@ -1,5 +1,8 @@
+using System.Collections.Generic;
 using JetBrains.Annotations;
+using Serializable;
 using UnityEngine;
+using Utils;
 using Utils.Object;
 
 namespace Brutalsky.Base
@@ -23,22 +26,38 @@ namespace Brutalsky.Base
         {
         }
 
-        public abstract void Init(GameObject gameObject, BsObject parentObject, BsMap map);
+        protected abstract Component _Init(GameObject gameObject, BsObject parentObject, BsMap map);
 
-        public bool Activate(Component instanceComponent)
+        protected abstract Dictionary<string, string> _ToSrz();
+
+        protected abstract void _FromSrz(Dictionary<string, string> properties);
+
+        public Component Init(GameObject gameObject, BsObject parentObject, BsMap map)
         {
-            if (Active) return false;
-            InstanceComponent = instanceComponent;
-            Active = true;
-            return true;
+            return _Init(gameObject, parentObject, map);
         }
 
-        public bool Deactivate()
+        public SrzAddon ToSrz()
         {
-            if (!Active) return false;
+            return new SrzAddon(Tag, Id, _ToSrz());
+        }
+
+        public void FromSrz(string id, SrzAddon srzAddon)
+        {
+            Id = id;
+            _FromSrz(srzAddon.pr);
+        }
+
+        public void Activate(Component instanceComponent)
+        {
+            InstanceComponent = instanceComponent;
+            Active = true;
+        }
+
+        public void Deactivate()
+        {
             InstanceComponent = null;
             Active = false;
-            return true;
         }
     }
 }

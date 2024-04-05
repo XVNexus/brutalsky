@@ -73,7 +73,7 @@ namespace Utils.Shape
 
         public override string ToString()
         {
-            return $"{Friction} {Restitution} {Adhesion} {Density} {Health} {BoolExt.ToString(Dynamic)}";
+            return $"{Friction} {Restitution} {Adhesion} {Density} {Health} {BoolExt.Stringify(Dynamic)}";
         }
     }
 }

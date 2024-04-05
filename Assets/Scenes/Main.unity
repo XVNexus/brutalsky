@@ -306,6 +306,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 581734016}
+  - component: {fileID: 581734023}
   - component: {fileID: 581734015}
   - component: {fileID: 581734022}
   - component: {fileID: 581734021}
@@ -378,10 +379,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mapMargins: {fileID: 253857810}
   cMapLight2D: {fileID: 619394801}
-  shapePrefab: {fileID: 3486895176260509872, guid: 8015059a29a18574584e3375fa2053cc, type: 3}
-  poolPrefab: {fileID: 916318484910277029, guid: 03ad247d5d92f3916986acd6db4520cb, type: 3}
-  litMaterial: {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
-  unlitMaterial: {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
 --- !u!114 &581734020
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -394,7 +391,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d78461a03ff14e76bf151f7ec7466a3e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerPrefab: {fileID: 333419446728189740, guid: 375f78b96aebf21d19b4d456bb0d980e, type: 3}
 --- !u!114 &581734021
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -429,6 +425,23 @@ MonoBehaviour:
     m_Interactions: 
     m_SingletonActionBindings: []
     m_Flags: 0
+--- !u!114 &581734023
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 581734014}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d71a0ac960534727bc1877f962295022, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerPrefab: {fileID: 0}
+  shapePrefab: {fileID: 0}
+  poolPrefab: {fileID: 0}
+  litMaterial: {fileID: 0}
+  unlitMaterial: {fileID: 0}
 --- !u!1 &601674925
 GameObject:
   m_ObjectHideFlags: 0

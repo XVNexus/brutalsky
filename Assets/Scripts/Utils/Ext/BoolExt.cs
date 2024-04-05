@@ -7,7 +7,7 @@ namespace Utils.Ext
             return raw == "1";
         }
 
-        public static string ToString(bool value)
+        public static string Stringify(bool value)
         {
             return value ? "1" : "0";
         }

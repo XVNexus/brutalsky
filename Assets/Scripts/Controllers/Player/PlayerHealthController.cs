@@ -3,6 +3,7 @@ using Controllers.Base;
 using Core;
 using JetBrains.Annotations;
 using UnityEngine;
+using Utils;
 using Utils.Constants;
 using Utils.Ext;
 
@@ -108,7 +109,7 @@ namespace Controllers.Player
             var impactSpeed = _lastSpeed;
 
             // Apply damage to player
-            var damageApplied = BsPlayer.CalculateDamage(impactForce);
+            var damageApplied = BsUtils.CalculateDamage(impactForce);
             var damageMultiplier = Mathf.Min(1f / (impactSpeed * .2f), 1f);
             Hurt(damageApplied * damageMultiplier);
         }

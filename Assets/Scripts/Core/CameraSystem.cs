@@ -77,7 +77,7 @@ namespace Core
             // Convert shake to shove
             _shakeTimer += Time.fixedDeltaTime;
             if (_shakeTimer < shakeInterval) return;
-            Shove(EventSystem.Random.NextFloat2Direction() * _shake);
+            Shove(ResourceSystem.Random.NextFloat2Direction() * _shake);
             _shake -= _shake * simSpeed * 2f * Time.fixedDeltaTime;
             _shakeTimer -= shakeInterval;
         }

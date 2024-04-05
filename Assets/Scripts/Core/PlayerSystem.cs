@@ -17,9 +17,6 @@ namespace Core
         // Local variables
         public Dictionary<string, BsPlayer> ActivePlayers { get; private set; } = new();
 
-        // External references
-        public GameObject playerPrefab;
-
         // System functions
         public void FreezeAll()
         {
@@ -42,7 +39,7 @@ namespace Core
             var playerList = (players ?? ActivePlayers.Values).ToList();
             while (playerList.Count > 0)
             {
-                var index = EventSystem.Random.NextInt(playerList.Count);
+                var index = ResourceSystem.Random.NextInt(playerList.Count);
                 Spawn(map, playerList[index]);
                 playerList.RemoveAt(index);
             }
@@ -55,7 +52,7 @@ namespace Core
             if (!player.Active)
             {
                 // Create new object and apply config
-                playerObject = Instantiate(playerPrefab);
+                playerObject = Instantiate(ResourceSystem._.playerPrefab);
                 playerController = playerObject.GetComponent<PlayerController>();
                 playerController.Object = player;
 

@@ -24,7 +24,7 @@ namespace Serializable
                 mt = shape.Material.ToString(),
                 cl = shape.Color.ToString(),
                 ly = (int)shape.Layer,
-                sm = BoolExt.ToString(shape.Simulated)
+                sm = BoolExt.Stringify(shape.Simulated)
             };
         }
 

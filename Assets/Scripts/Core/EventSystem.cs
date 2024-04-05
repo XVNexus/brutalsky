@@ -2,7 +2,6 @@ using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Utils.Gui;
-using Random = Unity.Mathematics.Random;
 
 namespace Core
 {
@@ -10,15 +9,7 @@ namespace Core
     {
         // Static instance
         public static EventSystem _ { get; private set; }
-        public static Random Random;
-        public static string DataPath;
-
-        private void Awake()
-        {
-            _ = this;
-            Random = Random.CreateFromIndex((uint)DateTime.UtcNow.Ticks);
-            DataPath = Application.persistentDataPath;
-        }
+        private void Awake() => _ = this;
 
         // External references
         public InputActionAsset inputActionAsset;

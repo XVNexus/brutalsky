@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Utils;
 
 namespace Serializable
 {
@@ -9,7 +10,7 @@ namespace Serializable
 
         public SrzAddon(string tag, string id, Dictionary<string, string> properties)
         {
-            this.id = $"{tag}:{id}";
+            this.id = BsUtils.GenerateFullId(tag, id);
             pr = properties;
         }
     }

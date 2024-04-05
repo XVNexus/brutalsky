@@ -9,8 +9,11 @@ namespace Utils.Constants
         public static IndexOutOfRangeException NoDataFound(string id)
             => new($"No controller data registered with id '{id}'");
 
+        public static ArgumentOutOfRangeException InvalidTag(string type, string tag)
+            => new("", $"{tag} is not a valid {type} tag");
+
         public static ArgumentOutOfRangeException InvalidGuiElement()
-            => new("", $"Invalid gui element query");
+            => new("", "Invalid gui element query");
 
         public static ArgumentOutOfRangeException InvalidJointType(JointType jointType)
             => new(nameof(jointType), $"{jointType} is not a valid joint type");

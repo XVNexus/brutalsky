@@ -2,6 +2,7 @@ using Brutalsky;
 using Controllers.Base;
 using JetBrains.Annotations;
 using UnityEngine;
+using Utils;
 using Utils.Constants;
 using Utils.Ext;
 
@@ -87,7 +88,7 @@ namespace Controllers.Player
 
         public void DisplayImpactParticles(float impactForce)
         {
-            var effectIntensity = Mathf.Min(BsPlayer.CalculateDamage(impactForce) * .2f, 10f);
+            var effectIntensity = Mathf.Min(BsUtils.CalculateDamage(impactForce) * .2f, 10f);
             if (effectIntensity < 3f) return;
             var psMain = cImpactParticleSystem.main;
             psMain.startSize = effectIntensity;
