@@ -9,8 +9,9 @@ using JointMotor = Utils.Joint.JointMotor;
 
 namespace Brutalsky
 {
-    public class BsJoint : BsObject
+    public class BsJoint : BsAddon
     {
+        public override string Tag => Tags.Joint;
         public JointType JointType { get; private set; }
         public string TargetShapeId { get; set; }
         public string MountShapeId { get; set; }
@@ -33,57 +34,15 @@ namespace Brutalsky
             Strength = strength;
         }
 
-        public BsJoint FixedJoint(JointDamping damping)
+        public BsJoint()
         {
-            JointType = JointType.Fixed;
-            Damping = damping;
-            return this;
         }
 
-        public BsJoint DistanceJoint(JointConfig distance, bool maxDistanceOnly)
+        public override void Init(GameObject gameObject)
         {
-            JointType = JointType.Distance;
-            Distance = distance;
-            MaxDistanceOnly = maxDistanceOnly;
-            return this;
-        }
+            AnchoredJoint2D jointComponent;
+            BsShape mountShape;
 
-        public BsJoint SpringJoint(JointConfig distance, JointDamping damping)
-        {
-            JointType = JointType.Spring;
-            Distance = distance;
-            Damping = damping;
-            return this;
-        }
-
-        public BsJoint HingeJoint(JointMotor motor, JointLimits limits)
-        {
-            JointType = JointType.Hinge;
-            Motor = motor;
-            Limits = limits;
-            return this;
-        }
-
-        public BsJoint SliderJoint(JointConfig angle, JointMotor motor, JointLimits limits)
-        {
-            JointType = JointType.Slider;
-            Angle = angle;
-            Motor = motor;
-            Limits = limits;
-            return this;
-        }
-
-        public BsJoint WheelJoint(JointDamping damping, JointConfig angle, JointMotor motor)
-        {
-            JointType = JointType.Wheel;
-            Damping = damping;
-            Angle = angle;
-            Motor = motor;
-            return this;
-        }
-
-        public void ApplyConfigToInstance(AnchoredJoint2D jointComponent, [CanBeNull] BsShape mountShape)
-        {
             // Apply universal joint config
             jointComponent.anchor = Transform.Position;
             jointComponent.enableCollision = Collision;
@@ -185,6 +144,55 @@ namespace Brutalsky
             }
             jointComponent.connectedBody = mountShape.InstanceObject.GetComponent<Rigidbody2D>();
             jointComponent.autoConfigureConnectedAnchor = true;
+        }
+
+        public BsJoint FixedJoint(JointDamping damping)
+        {
+            JointType = JointType.Fixed;
+            Damping = damping;
+            return this;
+        }
+
+        public BsJoint DistanceJoint(JointConfig distance, bool maxDistanceOnly)
+        {
+            JointType = JointType.Distance;
+            Distance = distance;
+            MaxDistanceOnly = maxDistanceOnly;
+            return this;
+        }
+
+        public BsJoint SpringJoint(JointConfig distance, JointDamping damping)
+        {
+            JointType = JointType.Spring;
+            Distance = distance;
+            Damping = damping;
+            return this;
+        }
+
+        public BsJoint HingeJoint(JointMotor motor, JointLimits limits)
+        {
+            JointType = JointType.Hinge;
+            Motor = motor;
+            Limits = limits;
+            return this;
+        }
+
+        public BsJoint SliderJoint(JointConfig angle, JointMotor motor, JointLimits limits)
+        {
+            JointType = JointType.Slider;
+            Angle = angle;
+            Motor = motor;
+            Limits = limits;
+            return this;
+        }
+
+        public BsJoint WheelJoint(JointDamping damping, JointConfig angle, JointMotor motor)
+        {
+            JointType = JointType.Wheel;
+            Damping = damping;
+            Angle = angle;
+            Motor = motor;
+            return this;
         }
     }
 }

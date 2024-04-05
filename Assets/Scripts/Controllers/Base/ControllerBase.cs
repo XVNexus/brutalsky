@@ -6,7 +6,7 @@ namespace Controllers.Base
 {
     public abstract class ControllerBase<TO> : BsBehavior where TO : BsObject
     {
-        public abstract string Id { get; }
+        public abstract string Tag { get; }
 
         public TO Object { get; set; }
         public Dictionary<string, SubControllerBase<TO>> Subs = new();

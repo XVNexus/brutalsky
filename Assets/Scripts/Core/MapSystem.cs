@@ -207,7 +207,7 @@ namespace Core
 
             // Note shape as active
             shape.InstanceObject = shapeObject;
-            shape.InstanceComponent = shapeController;
+            shape.InstanceController = shapeController;
             shape.Active = true;
             return true;
         }
@@ -244,7 +244,7 @@ namespace Core
 
             // Note pool as active
             pool.InstanceObject = poolObject;
-            pool.InstanceComponent = poolController;
+            pool.InstanceController = poolController;
             pool.Active = true;
             return true;
         }
@@ -282,7 +282,7 @@ namespace Core
             joint.ApplyConfigToInstance(jointComponent, mountShape);
 
             // Note joint as active
-            joint.InstanceComponent = jointComponent;
+            joint.InstanceController = jointComponent;
             joint.Active = true;
             return true;
         }
@@ -321,10 +321,10 @@ namespace Core
             if (!joint.Active) return false;
 
             // Destroy the joint component
-            Destroy(joint.InstanceComponent);
+            Destroy(joint.InstanceController);
 
             // Note joint as inactive
-            joint.InstanceComponent = null;
+            joint.InstanceController = null;
             joint.Active = false;
             return true;
         }

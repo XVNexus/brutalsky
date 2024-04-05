@@ -25,7 +25,7 @@ namespace Core
         {
             foreach (var player in ActivePlayers.Values)
             {
-                ((PlayerController)player.InstanceComponent)?.GetSub<PlayerMovementController>("movement")?.Freeze();
+                ((PlayerController)player.InstanceController)?.GetSub<PlayerMovementController>("movement")?.Freeze();
             }
         }
 
@@ -33,7 +33,7 @@ namespace Core
         {
             foreach (var player in ActivePlayers.Values)
             {
-                ((PlayerController)player.InstanceComponent)?.GetSub<PlayerMovementController>("movement")?.Unfreeze();
+                ((PlayerController)player.InstanceController)?.GetSub<PlayerMovementController>("movement")?.Unfreeze();
             }
         }
 
@@ -77,7 +77,7 @@ namespace Core
             // Note player as active and add it to the active player list
             if (player.Active) return;
             player.InstanceObject = playerObject;
-            player.InstanceComponent = playerController;
+            player.InstanceController = playerController;
             player.Active = true;
             ActivePlayers[player.Id] = player;
         }

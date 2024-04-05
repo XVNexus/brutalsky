@@ -1,4 +1,7 @@
 using Brutalsky.Base;
+using Core;
+using UnityEngine;
+using Utils.Constants;
 using Utils.Ext;
 using Utils.Object;
 
@@ -6,6 +9,8 @@ namespace Brutalsky
 {
     public class BsPlayer : BsObject
     {
+        public override GameObject Prefab => PlayerSystem._.playerPrefab;
+        public override string Tag => Tags.Player;
         public string Name { get; set; }
         public float Health { get; set; }
         public ObjectColor Color { get; set; }
@@ -17,6 +22,10 @@ namespace Brutalsky
             Health = health;
             Color = color;
             Dummy = dummy;
+        }
+
+        public BsPlayer()
+        {
         }
 
         public static float CalculateDamage(float impactForce)

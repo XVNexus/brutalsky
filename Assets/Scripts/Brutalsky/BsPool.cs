@@ -1,5 +1,7 @@
 using Brutalsky.Base;
+using Core;
 using UnityEngine;
+using Utils.Constants;
 using Utils.Object;
 using Utils.Pool;
 
@@ -7,6 +9,8 @@ namespace Brutalsky
 {
     public class BsPool : BsObject
     {
+        public override GameObject Prefab => MapSystem._.poolPrefab;
+        public override string Tag => Tags.Pool;
         public Vector2 Size { get; set; }
         public PoolChemical Chemical { get; set; }
         public ObjectColor Color { get; set; }
@@ -21,6 +25,10 @@ namespace Brutalsky
             Color = color;
             Layer = layer;
             Simulated = simulated;
+        }
+
+        public BsPool()
+        {
         }
     }
 }
