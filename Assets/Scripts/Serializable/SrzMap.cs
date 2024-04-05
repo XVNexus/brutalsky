@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Brutalsky;
-using Brutalsky.Object;
 using Utils.Ext;
+using Utils.Object;
 
 namespace Serializable
 {
@@ -49,7 +49,7 @@ namespace Serializable
             var result = new BsMap(tt, at)
             {
                 Size = Vector2Ext.Parse(sz),
-                Lighting = BsColor.Parse(lg)
+                Lighting = ObjectColor.Parse(lg)
             };
             foreach (var spawn in sp)
             {

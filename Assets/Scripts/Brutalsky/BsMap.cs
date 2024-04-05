@@ -1,9 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
-using Brutalsky.Object;
+using Brutalsky.Base;
 using Core;
 using Serializable;
 using UnityEngine;
+using Utils.Object;
 using YamlDotNet.Serialization;
 using Random = Unity.Mathematics.Random;
 
@@ -15,7 +16,7 @@ namespace Brutalsky
         public string Title { get; set; }
         public string Author { get; set; }
         public Vector2 Size { get; set; }
-        public BsColor Lighting { get; set; }
+        public ObjectColor Lighting { get; set; }
         public List<BsSpawn> Spawns { get; } = new();
         public Dictionary<string, BsShape> Shapes { get; } = new();
         public Dictionary<string, BsJoint> Joints { get; } = new();

@@ -1,7 +1,8 @@
 using Brutalsky;
-using Brutalsky.Object;
-using Brutalsky.Shape;
 using Utils.Ext;
+using Utils.Object;
+using Utils.Path;
+using Utils.Shape;
 
 namespace Serializable
 {
@@ -32,11 +33,11 @@ namespace Serializable
             return new BsShape
             (
                 id,
-                BsTransform.Parse(tr), 
-                BsPath.Parse(pt),
-                BsMaterial.Parse(mt), 
-                BsColor.Parse(cl),
-                (BsLayer)ly,
+                ObjectTransform.Parse(tr), 
+                Path.Parse(pt),
+                ShapeMaterial.Parse(mt), 
+                ObjectColor.Parse(cl),
+                (ObjectLayer)ly,
                 BoolExt.Parse(sm)
             );
         }

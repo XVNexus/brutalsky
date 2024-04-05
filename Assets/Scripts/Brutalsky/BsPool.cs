@@ -1,19 +1,20 @@
-using Brutalsky.Object;
-using Brutalsky.Pool;
+using Brutalsky.Base;
 using UnityEngine;
+using Utils.Object;
+using Utils.Pool;
 
 namespace Brutalsky
 {
     public class BsPool : BsObject
     {
         public Vector2 Size { get; set; }
-        public BsChemical Chemical { get; set; }
-        public BsColor Color { get; set; }
-        public BsLayer Layer { get; set; }
+        public PoolChemical Chemical { get; set; }
+        public ObjectColor Color { get; set; }
+        public ObjectLayer Layer { get; set; }
         public bool Simulated { get; set; }
 
-        public BsPool(string id, BsTransform transform, Vector2 size, BsChemical chemical, BsColor color,
-            BsLayer layer = BsLayer.Midground, bool simulated = true) : base(id, transform)
+        public BsPool(string id, ObjectTransform transform, Vector2 size, PoolChemical chemical, ObjectColor color,
+            ObjectLayer layer = ObjectLayer.Midground, bool simulated = true) : base(id, transform)
         {
             Size = size;
             Chemical = chemical;

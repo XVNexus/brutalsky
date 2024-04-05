@@ -1,15 +1,15 @@
 using System.Collections.Generic;
 using Brutalsky;
-using Brutalsky.Joint;
-using Brutalsky.Object;
 using Utils.Constants;
 using Utils.Ext;
+using Utils.Joint;
+using Utils.Object;
 
 namespace Serializable
 {
     public class SrzJoint
     {
-        public BsJointType jt { get; set; }
+        public JointType jt { get; set; }
         public string tr { get; set; }
         public string ts { get; set; }
         public string ms { get; set; }
@@ -24,38 +24,32 @@ namespace Serializable
             };
             switch (joint.JointType)
             {
-                case BsJointType.Fixed:
-                    var fixedJoint = (BsJointFixed)joint;
-                    properties["dm"] = fixedJoint.Damping.ToString();
+                case JointType.Fixed:
+                    properties["dm"] = joint.Damping.ToString();
                     break;
-                case BsJointType.Distance:
-                    var distanceJoint = (BsJointDistance)joint;
-                    properties["ds"] = distanceJoint.Distance.ToString();
-                    properties["md"] = BoolExt.ToString(distanceJoint.MaxDistanceOnly);
+                case JointType.Distance:
+                    properties["ds"] = joint.Distance.ToString();
+                    properties["md"] = BoolExt.ToString(joint.MaxDistanceOnly);
                     break;
-                case BsJointType.Spring:
-                    var springJoint = (BsJointSpring)joint;
-                    properties["ds"] = springJoint.Distance.ToString();
-                    properties["dm"] = springJoint.Damping.ToString();
+                case JointType.Spring:
+                    properties["ds"] = joint.Distance.ToString();
+                    properties["dm"] = joint.Damping.ToString();
                     break;
-                case BsJointType.Hinge:
-                    var hingeJoint = (BsJointHinge)joint;
-                    properties["mt"] = hingeJoint.Motor.ToString();
-                    properties["lm"] = hingeJoint.Limits.ToString();
+                case JointType.Hinge:
+                    properties["mt"] = joint.Motor.ToString();
+                    properties["lm"] = joint.Limits.ToString();
                     break;
-                case BsJointType.Slider:
-                    var sliderJoint = (BsJointSlider)joint;
-                    properties["an"] = sliderJoint.Angle.ToString();
-                    properties["mt"] = sliderJoint.Motor.ToString();
-                    properties["lm"] = sliderJoint.Limits.ToString();
+                case JointType.Slider:
+                    properties["an"] = joint.Angle.ToString();
+                    properties["mt"] = joint.Motor.ToString();
+                    properties["lm"] = joint.Limits.ToString();
                     break;
-                case BsJointType.Wheel:
-                    var wheelJoint = (BsJointWheel)joint;
-                    properties["sd"] = wheelJoint.SuspensionDamping.ToString();
-                    properties["sa"] = wheelJoint.SuspensionAngle.ToString();
-                    properties["mt"] = wheelJoint.Motor.ToString();
+                case JointType.Wheel:
+                    properties["dm"] = joint.Damping.ToString();
+                    properties["an"] = joint.Angle.ToString();
+                    properties["mt"] = joint.Motor.ToString();
                     break;
-                case BsJointType.None:
+                case JointType.None:
                 default:
                     throw Errors.InvalidJointType(joint.JointType);
             }
@@ -71,55 +65,50 @@ namespace Serializable
 
         public BsJoint Expand(string id)
         {
-            var transformParsed = BsTransform.Parse(tr);
+            var transformParsed = ObjectTransform.Parse(tr);
             var collision = BoolExt.Parse(pr["cl"]);
-            var strength = BsJointStrength.Parse(pr["st"]);
+            var strength = JointStrength.Parse(pr["st"]);
+            var result = new BsJoint(id, transformParsed, ts, ms, collision, strength);
             switch (jt)
             {
-                case BsJointType.Fixed:
-                    return new BsJointFixed
+                case JointType.Fixed:
+                    return result.FixedJoint
                     (
-                        id, transformParsed, ts, ms, collision, strength,
-                        BsJointDamping.Parse(pr["dm"])
+                        JointDamping.Parse(pr["dm"])
                     );
-                case BsJointType.Distance:
-                    return new BsJointDistance
+                case JointType.Distance:
+                    return result.DistanceJoint
                     (
-                        id, transformParsed, ts, ms, collision, strength,
-                        BsJointConfig.Parse(pr["ds"]),
+                        JointConfig.Parse(pr["ds"]),
                         BoolExt.Parse(pr["md"])
                     );
-                case BsJointType.Spring:
-                    return new BsJointSpring
+                case JointType.Spring:
+                    return result.SpringJoint
                     (
-                        id, transformParsed, ts, ms, collision, strength,
-                        BsJointConfig.Parse(pr["ds"]),
-                        BsJointDamping.Parse(pr["dm"])
+                        JointConfig.Parse(pr["ds"]),
+                        JointDamping.Parse(pr["dm"])
                     );
-                case BsJointType.Hinge:
-                    return new BsJointHinge
+                case JointType.Hinge:
+                    return result.HingeJoint
                     (
-                        id, transformParsed, ts, ms, collision, strength,
-                        BsJointMotor.Parse(pr["mt"]),
-                        BsJointLimits.Parse(pr["lm"])
+                        JointMotor.Parse(pr["mt"]),
+                        JointLimits.Parse(pr["lm"])
                     );
-                case BsJointType.Slider:
-                    return new BsJointSlider
+                case JointType.Slider:
+                    return result.SliderJoint
                     (
-                        id, transformParsed, ts, ms, collision, strength,
-                        BsJointConfig.Parse(pr["an"]),
-                        BsJointMotor.Parse(pr["mt"]),
-                        BsJointLimits.Parse(pr["lm"])
+                        JointConfig.Parse(pr["an"]),
+                        JointMotor.Parse(pr["mt"]),
+                        JointLimits.Parse(pr["lm"])
                     );
-                case BsJointType.Wheel:
-                    return new BsJointWheel
+                case JointType.Wheel:
+                    return result.WheelJoint
                     (
-                        id, transformParsed, ts, ms, collision, strength,
-                        BsJointDamping.Parse(pr["sd"]),
-                        float.Parse(pr["sa"]),
-                        BsJointMotor.Parse(pr["mt"])
+                        JointDamping.Parse(pr["dm"]),
+                        JointConfig.Parse(pr["an"]),
+                        JointMotor.Parse(pr["mt"])
                     );
-                case BsJointType.None:
+                case JointType.None:
                 default:
                     throw Errors.InvalidJointType(jt);
             }

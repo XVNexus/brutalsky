@@ -1,5 +1,6 @@
-using Brutalsky.Object;
+using Brutalsky.Base;
 using Utils.Ext;
+using Utils.Object;
 
 namespace Brutalsky
 {
@@ -7,10 +8,10 @@ namespace Brutalsky
     {
         public string Name { get; set; }
         public float Health { get; set; }
-        public BsColor Color { get; set; }
+        public ObjectColor Color { get; set; }
         public bool Dummy { get; set; }
 
-        public BsPlayer(string id, string name, float health, BsColor color, bool dummy = false) : base(id, new BsTransform())
+        public BsPlayer(string id, string name, float health, ObjectColor color, bool dummy = false) : base(id, new ObjectTransform())
         {
             Name = name;
             Health = health;

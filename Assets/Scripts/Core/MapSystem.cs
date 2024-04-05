@@ -1,15 +1,16 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Brutalsky;
-using Brutalsky.Joint;
-using Brutalsky.Object;
 using Controllers;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using Utils.Constants;
+using Utils.Joint;
+using Utils.Object;
 using Utils.Shape;
 
 namespace Core
@@ -268,37 +269,17 @@ namespace Core
             }
 
             // Apply joint config
-            switch (joint.JointType)
+            jointComponent = joint.JointType switch
             {
-                case BsJointType.Fixed:
-                    jointComponent = targetGameObject.AddComponent<FixedJoint2D>();
-                    ((BsJointFixed)joint).ApplyBaseConfigToInstance(jointComponent, mountShape);
-                    break;
-                case BsJointType.Distance:
-                    jointComponent = targetGameObject.AddComponent<DistanceJoint2D>();
-                    ((BsJointDistance)joint).ApplyBaseConfigToInstance(jointComponent, mountShape);
-                    break;
-                case BsJointType.Spring:
-                    jointComponent = targetGameObject.AddComponent<SpringJoint2D>();
-                    ((BsJointSpring)joint).ApplyBaseConfigToInstance(jointComponent, mountShape);
-                    break;
-                case BsJointType.Hinge:
-                    jointComponent = targetGameObject.AddComponent<HingeJoint2D>();
-                    ((BsJointHinge)joint).ApplyBaseConfigToInstance(jointComponent, mountShape);
-                    break;
-                case BsJointType.Slider:
-                    jointComponent = targetGameObject.AddComponent<SliderJoint2D>();
-                    ((BsJointSlider)joint).ApplyBaseConfigToInstance(jointComponent, mountShape);
-                    break;
-                case BsJointType.Wheel:
-                    jointComponent = targetGameObject.AddComponent<WheelJoint2D>();
-                    ((BsJointWheel)joint).ApplyBaseConfigToInstance(jointComponent, mountShape);
-                    break;
-                case BsJointType.None:
-                default:
-                    throw Errors.InvalidJointType(joint.JointType);
-            }
-            joint.ApplyConfigToInstance(jointComponent);
+                JointType.Fixed => targetGameObject.AddComponent<FixedJoint2D>(),
+                JointType.Distance => targetGameObject.AddComponent<DistanceJoint2D>(),
+                JointType.Spring => targetGameObject.AddComponent<SpringJoint2D>(),
+                JointType.Hinge => targetGameObject.AddComponent<HingeJoint2D>(),
+                JointType.Slider => targetGameObject.AddComponent<SliderJoint2D>(),
+                JointType.Wheel => targetGameObject.AddComponent<WheelJoint2D>(),
+                _ => throw Errors.InvalidJointType(joint.JointType)
+            };
+            joint.ApplyConfigToInstance(jointComponent, mountShape);
 
             // Note joint as active
             joint.InstanceComponent = jointComponent;
@@ -348,12 +329,12 @@ namespace Core
             return true;
         }
 
-        public static int Layer2Order(BsLayer layer)
+        public static int Layer2Order(ObjectLayer layer)
         {
             return layer switch
             {
-                BsLayer.Background => -2,
-                BsLayer.Foreground => 2,
+                ObjectLayer.Background => -2,
+                ObjectLayer.Foreground => 2,
                 _ => 0
             };
         }

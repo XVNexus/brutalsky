@@ -1,7 +1,7 @@
 using Brutalsky;
-using Brutalsky.Object;
-using Brutalsky.Pool;
 using Utils.Ext;
+using Utils.Object;
+using Utils.Pool;
 
 namespace Serializable
 {
@@ -32,11 +32,11 @@ namespace Serializable
             return new BsPool
             (
                 id,
-                BsTransform.Parse(tr),
+                ObjectTransform.Parse(tr),
                 Vector2Ext.Parse(sz),
-                BsChemical.Parse(ch), 
-                BsColor.Parse(cl),
-                (BsLayer)ly,
+                PoolChemical.Parse(ch), 
+                ObjectColor.Parse(cl),
+                (ObjectLayer)ly,
                 BoolExt.Parse(sm)
             );
         }

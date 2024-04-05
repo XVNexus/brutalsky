@@ -1,18 +1,20 @@
-using Brutalsky.Object;
-using Brutalsky.Shape;
+using Brutalsky.Base;
+using Utils.Object;
+using Utils.Path;
+using Utils.Shape;
 
 namespace Brutalsky
 {
     public class BsShape : BsObject
     {
-        public BsPath Path { get; set; }
-        public BsMaterial Material { get; set; }
-        public BsColor Color { get; set; }
-        public BsLayer Layer { get; set; }
+        public Path Path { get; set; }
+        public ShapeMaterial Material { get; set; }
+        public ObjectColor Color { get; set; }
+        public ObjectLayer Layer { get; set; }
         public bool Simulated { get; set; }
 
-        public BsShape(string id, BsTransform transform, BsPath path, BsMaterial material, BsColor color,
-            BsLayer layer = BsLayer.Midground, bool simulated = true) : base(id, transform)
+        public BsShape(string id, ObjectTransform transform, Path path, ShapeMaterial material, ObjectColor color,
+            ObjectLayer layer = ObjectLayer.Midground, bool simulated = true) : base(id, transform)
         {
             Path = path;
             Material = material;

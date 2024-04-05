@@ -1,6 +1,6 @@
 using Brutalsky;
-using Brutalsky.Object;
 using Utils.Ext;
+using Utils.Object;
 
 namespace Serializable
 {
@@ -31,7 +31,7 @@ namespace Serializable
                 id,
                 nm,
                 hl,
-                BsColor.Parse(cl),
+                ObjectColor.Parse(cl),
                 BoolExt.Parse(dm)
             );
         }

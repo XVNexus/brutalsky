@@ -1,6 +1,6 @@
 using System;
 using Brutalsky;
-using Brutalsky.Joint;
+using Utils.Joint;
 
 namespace Utils.Constants
 {
@@ -12,7 +12,7 @@ namespace Utils.Constants
         public static ArgumentOutOfRangeException InvalidGuiElement()
             => new("", $"Invalid gui element query");
 
-        public static ArgumentOutOfRangeException InvalidJointType(BsJointType jointType)
+        public static ArgumentOutOfRangeException InvalidJointType(JointType jointType)
             => new(nameof(jointType), $"{jointType} is not a valid joint type");
 
         public static ArgumentOutOfRangeException MissingPathParams(string elementName, int requiredParams)
