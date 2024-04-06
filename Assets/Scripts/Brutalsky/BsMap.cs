@@ -3,7 +3,6 @@ using System.Linq;
 using Brutalsky.Base;
 using Core;
 using Serializable;
-using Unity.VisualScripting;
 using UnityEngine;
 using Utils;
 using Utils.Ext;
@@ -52,6 +51,7 @@ namespace Brutalsky
         {
             Title = srzMap.tt;
             Author = srzMap.at;
+            Id = BsUtils.GenerateId(Title, Author);
             Size = Vector2Ext.Parse(srzMap.sz);
             Lighting = ObjectColor.Parse(srzMap.lg);
             foreach (var srzSpawn in srzMap.sp)
