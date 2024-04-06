@@ -6,6 +6,7 @@ using Core;
 using UnityEngine;
 using Utils;
 using Utils.Constants;
+using Utils.Ext;
 using Utils.Object;
 using Utils.Path;
 using Utils.Shape;
@@ -16,6 +17,7 @@ namespace Brutalsky
     {
         public override GameObject Prefab => ResourceSystem._.shapePrefab;
         public override string Tag => Tags.Shape;
+
         public Path Path { get; set; }
         public ShapeMaterial Material { get; set; }
         public ObjectColor Color { get; set; }
@@ -38,7 +40,7 @@ namespace Brutalsky
 
         protected override Component _Init(GameObject gameObject, BsMap map)
         {
-            // Create new object
+            // Link object to controller
             var controller = gameObject.GetComponent<ShapeController>();
             controller.Object = this;
 
@@ -95,12 +97,25 @@ namespace Brutalsky
 
         protected override Dictionary<string, string> _ToSrz()
         {
-            throw new System.NotImplementedException();
+            return new Dictionary<string, string>
+            {
+                ["tr"] = Transform.ToString(),
+                ["pt"] = Path.ToString(),
+                ["mt"] = Material.ToString(),
+                ["cl"] = Color.ToString(),
+                ["ly"] = ((int)Layer).ToString(),
+                ["sm"] = BoolExt.Stringify(Simulated)
+            };
         }
 
         protected override void _FromSrz(Dictionary<string, string> properties)
         {
-            throw new System.NotImplementedException();
+            Transform = ObjectTransform.Parse(properties["tr"]);
+            Path = Path.Parse(properties["pt"]);
+            Material = ShapeMaterial.Parse(properties["mt"]);
+            Color = ObjectColor.Parse(properties["cl"]);
+            Layer = (ObjectLayer)int.Parse(properties["ly"]);
+            Simulated = BoolExt.Parse(properties["sm"]);
         }
     }
 }

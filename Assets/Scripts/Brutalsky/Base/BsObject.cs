@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using Core;
 using JetBrains.Annotations;
 using Serializable;
-using Unity.VisualScripting;
 using UnityEngine;
 using Utils;
 using Utils.Object;
@@ -60,6 +59,7 @@ namespace Brutalsky.Base
 
         public void FromSrz(string id, SrzObject srzObject)
         {
+            Id = id;
             _FromSrz(srzObject.pr);
             foreach (var srzAddon in srzObject.ad)
             {

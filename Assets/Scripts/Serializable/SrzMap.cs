@@ -9,7 +9,7 @@ namespace Serializable
         public string sz { get; set; }
         public string lg { get; set; }
         public List<SrzSpawn> sp { get; set; } = new();
-        public List<SrzObject> ob { get; } = new();
+        public List<SrzObject> ob { get; set; } = new();
 
         public SrzMap(string title, string author, string size, string lighting, List<SrzSpawn> spawns, List<SrzObject> objects)
         {
@@ -19,6 +19,10 @@ namespace Serializable
             lg = lighting;
             sp = spawns;
             ob = objects;
+        }
+
+        public SrzMap()
+        {
         }
     }
 }

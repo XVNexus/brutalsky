@@ -10,5 +10,9 @@ namespace Serializable
             ps = position;
             pr = priority;
         }
+
+        public SrzSpawn()
+        {
+        }
     }
 }

@@ -437,11 +437,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d71a0ac960534727bc1877f962295022, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerPrefab: {fileID: 0}
-  shapePrefab: {fileID: 0}
-  poolPrefab: {fileID: 0}
-  litMaterial: {fileID: 0}
-  unlitMaterial: {fileID: 0}
+  playerPrefab: {fileID: 333419446728189740, guid: 375f78b96aebf21d19b4d456bb0d980e, type: 3}
+  shapePrefab: {fileID: 3486895176260509872, guid: 8015059a29a18574584e3375fa2053cc, type: 3}
+  poolPrefab: {fileID: 916318484910277029, guid: 03ad247d5d92f3916986acd6db4520cb, type: 3}
+  litMaterial: {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  unlitMaterial: {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
 --- !u!1 &601674925
 GameObject:
   m_ObjectHideFlags: 0

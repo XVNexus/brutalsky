@@ -58,6 +58,7 @@ namespace Brutalsky
             {
                 var spawn = new BsSpawn();
                 spawn.FromSrz(srzSpawn);
+                AddSpawn(spawn);
             }
             foreach (var srzObject in srzMap.ob)
             {

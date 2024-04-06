@@ -3,265 +3,328 @@ at: Xveon
 sz: 40 20
 lg: 1 1 1 0.8 0
 sp:
-  - ps: -15 1
-    pr: 0
-  - ps: 15 1
-    pr: 0
-sh:
-  spinner-left-bg:
+- ps: -15 1
+  pr: 0
+- ps: 15 1
+  pr: 0
+ob:
+- id: Shape:spinner-left-bg
+  pr:
     tr: -2 0 0
     pt: C 5
     mt: 2 0 0 10 0 0
     cl: 0.3 0.3 0.3 1 0
     ly: 0
     sm: 0
-  spinner-right-bg:
+  ad: []
+- id: Shape:spinner-right-bg
+  pr:
     tr: 2 0 0
     pt: C 5
     mt: 2 0 0 10 0 0
     cl: 0.3 0.3 0.3 1 0
     ly: 0
     sm: 0
-  wall-left:
+  ad: []
+- id: Shape:wall-left
+  pr:
     tr: -20 0 0
     pt: R 2 22
     mt: 2 0 0 10 0 0
     cl: 0.7 0.7 0.7 1 0
     ly: 1
     sm: 1
-  wall-right:
+  ad: []
+- id: Shape:wall-right
+  pr:
     tr: 20 0 0
     pt: R 2 22
     mt: 2 0 0 10 0 0
     cl: 0.7 0.7 0.7 1 0
     ly: 1
     sm: 1
-  wall-top:
+  ad: []
+- id: Shape:wall-top
+  pr:
     tr: 0 10 0
     pt: X -15 1 L 15 1 L 15 0 L 14 -.5 L -14 -.5 L -15 0
     mt: 2 0 0 10 0 0
     cl: 0.7 0.7 0.7 1 0
     ly: 1
     sm: 1
-  wall-bottom:
+  ad: []
+- id: Shape:wall-bottom
+  pr:
     tr: 0 -10 0
     pt: X -7 -1 L -7 .5 L 0 3 L 7 .5 L 7 -1
     mt: 2 0 0 10 0 0
     cl: 0.7 0.7 0.7 1 0
     ly: 1
     sm: 1
-  platform-left:
+  ad: []
+- id: Shape:platform-left
+  pr:
     tr: -19 0 0
     pt: X -1 2.5 L 0 2.5 C 0 .5 2 .5 L 8 .5 L 7.5 0 L 8 -.5 L 2 -.5 C 0 -.5 0 -2.5 L -1 -2.5
     mt: 2 0 0 10 0 0
     cl: 0.7 0.7 0.7 1 0
     ly: 1
     sm: 1
-  platform-right:
+  ad: []
+- id: Shape:platform-right
+  pr:
     tr: 19 0 0
     pt: X 1 2.5 L 0 2.5 C 0 .5 -2 .5 L -8 .5 L -7.5 0 L -8 -.5 L -2 -.5 C 0 -.5 0 -2.5 L 1 -2.5
     mt: 2 0 0 10 0 0
     cl: 0.7 0.7 0.7 1 0
     ly: 1
     sm: 1
-  pool-tl-wall-top:
+  ad: []
+- id: Shape:pool-tl-wall-top
+  pr:
     tr: -17 13.25 0
     pt: R 5 0.5
     mt: 2 0 0 10 0 0
     cl: 0.7 0.7 0.7 1 0
     ly: 1
     sm: 1
-  pool-tl-wall-left:
+  ad: []
+- id: Shape:pool-tl-wall-left
+  pr:
     tr: -19.25 12 0
     pt: R 0.5 2
     mt: 2 0 0 10 0 0
     cl: 0.7 0.7 0.7 1 0
     ly: 1
     sm: 1
-  pool-tl-wall-right:
+  ad: []
+- id: Shape:pool-tl-wall-right
+  pr:
     tr: -14.75 12 0
     pt: R 0.5 2
     mt: 2 0 0 10 0 0
     cl: 0.7 0.7 0.7 1 0
     ly: 1
     sm: 1
-  pool-tr-wall-top:
+  ad: []
+- id: Shape:pool-tr-wall-top
+  pr:
     tr: 17 13.25 0
     pt: R 5 0.5
     mt: 2 0 0 10 0 0
     cl: 0.7 0.7 0.7 1 0
     ly: 1
     sm: 1
-  pool-tr-wall-left:
+  ad: []
+- id: Shape:pool-tr-wall-left
+  pr:
     tr: 14.75 12 0
     pt: R 0.5 2
     mt: 2 0 0 10 0 0
     cl: 0.7 0.7 0.7 1 0
     ly: 1
     sm: 1
-  pool-tr-wall-right:
+  ad: []
+- id: Shape:pool-tr-wall-right
+  pr:
     tr: 19.25 12 0
     pt: R 0.5 2
     mt: 2 0 0 10 0 0
     cl: 0.7 0.7 0.7 1 0
     ly: 1
     sm: 1
-  pool-bl-wall-bottom:
+  ad: []
+- id: Shape:pool-bl-wall-bottom
+  pr:
     tr: -13 -13.25 0
     pt: R 13 0.5
     mt: 2 0 0 10 0 0
     cl: 0.7 0.7 0.7 1 0
     ly: 1
     sm: 1
-  pool-bl-wall-left:
+  ad: []
+- id: Shape:pool-bl-wall-left
+  pr:
     tr: -19.25 -12 0
     pt: R 0.5 2
     mt: 2 0 0 10 0 0
     cl: 0.7 0.7 0.7 1 0
     ly: 1
     sm: 1
-  pool-bl-wall-right:
+  ad: []
+- id: Shape:pool-bl-wall-right
+  pr:
     tr: -6.75 -12 0
     pt: R 0.5 2
     mt: 2 0 0 10 0 0
     cl: 0.7 0.7 0.7 1 0
     ly: 1
     sm: 1
-  pool-br-wall-bottom:
+  ad: []
+- id: Shape:pool-br-wall-bottom
+  pr:
     tr: 13 -13.25 0
     pt: R 13 0.5
     mt: 2 0 0 10 0 0
     cl: 0.7 0.7 0.7 1 0
     ly: 1
     sm: 1
-  pool-br-wall-left:
+  ad: []
+- id: Shape:pool-br-wall-left
+  pr:
     tr: 6.75 -12 0
     pt: R 0.5 2
     mt: 2 0 0 10 0 0
     cl: 0.7 0.7 0.7 1 0
     ly: 1
     sm: 1
-  pool-br-wall-right:
+  ad: []
+- id: Shape:pool-br-wall-right
+  pr:
     tr: 19.25 -12 0
     pt: R 0.5 2
     mt: 2 0 0 10 0 0
     cl: 0.7 0.7 0.7 1 0
     ly: 1
     sm: 1
-  glue-left:
+  ad: []
+- id: Shape:glue-left
+  pr:
     tr: -9 9.25 0
     pt: R 10 0.5
     mt: 5 0 2 1 0 0
     cl: 0.7 0.9 0.4 1 0
     ly: 1
     sm: 1
-  glue-right:
+  ad: []
+- id: Shape:glue-right
+  pr:
     tr: 9 9.25 0
     pt: R 10 0.5
     mt: 5 0 2 1 0 0
     cl: 0.7 0.9 0.4 1 0
     ly: 1
     sm: 1
-  ice-left:
+  ad: []
+- id: Shape:ice-left
+  pr:
     tr: -14.5 9.5 0
     pt: X -.5 .5 L .5 0 L .5 -.5 L -.5 0
     mt: 0 0 0 1 0 0
     cl: 0.5 0.8 1 1 0
     ly: 1
     sm: 1
-  ice-right:
+  ad: []
+- id: Shape:ice-right
+  pr:
     tr: 14.5 9.5 0
     pt: X .5 .5 L -.5 0 L -.5 -.5 L .5 0
     mt: 0 0 0 1 0 0
     cl: 0.5 0.8 1 1 0
     ly: 1
     sm: 1
-  ice-bottom:
+  ad: []
+- id: Shape:ice-bottom
+  pr:
     tr: 0 -9.5 0
     pt: X -7 0 L -7 .5 L 0 3 L 7 .5 L 7 0 L 0 2.5
     mt: 0 0 0 1 0 0
     cl: 0.5 0.8 1 1 0
     ly: 1
     sm: 1
-  rubber-top:
+  ad: []
+- id: Shape:rubber-top
+  pr:
     tr: 0 9.25 0
     pt: X 4 .25 L 4 -.25 L 0 -1.25 L -4 -.25 L -4 .25
     mt: 0 1 0 1 0 0
     cl: 0.7 0.4 0.9 1 0
     ly: 1
     sm: 1
-  electric-left:
+  ad: []
+- id: Shape:electric-left
+  pr:
     tr: -11 0 45
     pt: S 0.7
     mt: 2 0 0 1 -25 0
     cl: 1 1 0.2 1 1
     ly: 1
     sm: 1
-  electric-right:
+  ad: []
+- id: Shape:electric-right
+  pr:
     tr: 11 0 45
     pt: S 0.7
     mt: 2 0 0 1 -25 0
     cl: 1 1 0.2 1 1
     ly: 1
     sm: 1
-  spinner-left:
+  ad: []
+- id: Shape:spinner-left
+  pr:
     tr: -2 0 0
     pt: T 6 4.9 2.9
     mt: 2 0 0 1 0 1
     cl: 0.9 0.9 1 1 0
     ly: 1
     sm: 1
-  spinner-right:
+  ad:
+  - id: Joint:spinner-left-motor
+    pr:
+      jt: 3
+      tr: 0 0 0
+      ms: ''
+      cl: 0
+      st: x
+      mt: 100 10000
+      lm: x
+- id: Shape:spinner-right
+  pr:
     tr: 2 0 30
     pt: T 6 4.9 2.9
     mt: 2 0 0 1 0 1
     cl: 0.9 0.9 1 1 0
     ly: 1
     sm: 1
-jn:
-  spinner-left-motor:
-    jt: Hinge
-    tr: 0 0 0
-    ts: spinner-left
-    ms: ''
+  ad:
+  - id: Joint:spinner-right-motor
     pr:
-      cl: 0
-      st: x
-      mt: 100 10000
-      lm: x
-  spinner-right-motor:
-    jt: Hinge
-    tr: 0 0 0
-    ts: spinner-right
-    ms: ''
-    pr:
+      jt: 3
+      tr: 0 0 0
+      ms: ''
       cl: 0
       st: x
       mt: -100 10000
       lm: x
-pl:
-  water-left:
+- id: Pool:water-left
+  pr:
     tr: -17 11.25 180
     sz: 4 3.5
     ch: 25 1 0
     cl: 0.4 0.4 1 1 0
     ly: 2
     sm: 1
-  water-right:
+  ad: []
+- id: Pool:water-right
+  pr:
     tr: 17 11.25 180
     sz: 4 3.5
     ch: 25 1 0
     cl: 0.4 0.4 1 1 0
     ly: 2
     sm: 1
-  lava-left:
+  ad: []
+- id: Pool:lava-left
+  pr:
     tr: -13 -11 0
     sz: 12 4
     ch: 25 1 -25
     cl: 1 0.3 0.2 1 1
     ly: 2
     sm: 1
-  lava-right:
+  ad: []
+- id: Pool:lava-right
+  pr:
     tr: 13 -11 0
     sz: 12 4
     ch: 25 1 -25

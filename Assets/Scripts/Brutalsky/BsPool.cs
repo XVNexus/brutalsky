@@ -5,6 +5,7 @@ using Core;
 using UnityEngine;
 using Utils;
 using Utils.Constants;
+using Utils.Ext;
 using Utils.Object;
 using Utils.Pool;
 
@@ -14,6 +15,7 @@ namespace Brutalsky
     {
         public override GameObject Prefab => ResourceSystem._.poolPrefab;
         public override string Tag => Tags.Pool;
+
         public Vector2 Size { get; set; }
         public PoolChemical Chemical { get; set; }
         public ObjectColor Color { get; set; }
@@ -36,7 +38,7 @@ namespace Brutalsky
 
         protected override Component _Init(GameObject gameObject, BsMap map)
         {
-            // Create new object
+            // Link object to controller
             var controller = gameObject.GetComponent<PoolController>();
             controller.Object = this;
 
@@ -65,12 +67,25 @@ namespace Brutalsky
 
         protected override Dictionary<string, string> _ToSrz()
         {
-            throw new System.NotImplementedException();
+            return new Dictionary<string, string>
+            {
+                ["tr"] = Transform.ToString(),
+                ["sz"] = Vector2Ext.Stringify(Size),
+                ["ch"] = Chemical.ToString(),
+                ["cl"] = Color.ToString(),
+                ["ly"] = ((int)Layer).ToString(),
+                ["sm"] = BoolExt.Stringify(Simulated)
+            };
         }
 
         protected override void _FromSrz(Dictionary<string, string> properties)
         {
-            throw new System.NotImplementedException();
+            Transform = ObjectTransform.Parse(properties["tr"]);
+            Size = Vector2Ext.Parse(properties["sz"]);
+            Chemical = PoolChemical.Parse(properties["ch"]);
+            Color = ObjectColor.Parse(properties["cl"]);
+            Layer = (ObjectLayer)int.Parse(properties["ly"]);
+            Simulated = BoolExt.Parse(properties["sm"]);
         }
     }
 }

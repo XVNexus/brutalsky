@@ -37,12 +37,21 @@ namespace Brutalsky
 
         protected override Dictionary<string, string> _ToSrz()
         {
-            throw new System.NotImplementedException();
+            return new Dictionary<string, string>
+            {
+                ["nm"] = Name,
+                ["ht"] = Health.ToString(),
+                ["cl"] = Color.ToString(),
+                ["dm"] = BoolExt.Stringify(Dummy)
+            };
         }
 
         protected override void _FromSrz(Dictionary<string, string> properties)
         {
-            throw new System.NotImplementedException();
+            Name = properties["nm"];
+            Health = float.Parse(properties["ht"]);
+            Color = ObjectColor.Parse(properties["cl"]);
+            Dummy = BoolExt.Parse(properties["dm"]);
         }
     }
 }

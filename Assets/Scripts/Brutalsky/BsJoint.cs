@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Brutalsky.Base;
 using UnityEngine;
 using Utils.Constants;
+using Utils.Ext;
 using Utils.Joint;
 using Utils.Object;
 using JointLimits = Utils.Joint.JointLimits;
@@ -12,23 +13,21 @@ namespace Brutalsky
     public class BsJoint : BsAddon
     {
         public override string Tag => Tags.Joint;
-        public JointType JointType { get; private set; }
-        public string TargetShapeId { get; set; }
-        public string MountShapeId { get; set; }
 
+        public JointType JointType { get; private set; }
+        public string MountShapeId { get; set; }
         public bool Collision { get; set; } // Universal
         public JointStrength Strength { get; set; } // Universal
-        public JointConfig Distance { get; set; } // Distance, Spring
-        public bool MaxDistanceOnly { get; set; } // Distance
         public JointDamping Damping { get; set; } // Fixed, Spring, Wheel
-        public JointMotor Motor { get; set; } // Hinge, Slider, Wheel
+        public bool MaxDistanceOnly { get; set; } // Distance
+        public JointConfig Distance { get; set; } // Distance, Spring
         public JointLimits Limits { get; set; } // Hinge, Slider
+        public JointMotor Motor { get; set; } // Hinge, Slider, Wheel
         public JointConfig Angle { get; set; } // Slider, Wheel
 
-        public BsJoint(string id, ObjectTransform transform, string targetShapeId,
-            string mountShapeId, bool collision, JointStrength strength) : base(id, transform)
+        public BsJoint(string id, ObjectTransform transform, string mountShapeId, bool collision,
+            JointStrength strength) : base(id, transform)
         {
-            TargetShapeId = targetShapeId;
             MountShapeId = mountShapeId;
             Collision = collision;
             Strength = strength;
@@ -40,23 +39,15 @@ namespace Brutalsky
 
         protected override Component _Init(GameObject gameObject, BsObject parentObject, BsMap map)
         {
-            // Get references to linked objects
-            var targetShape = (BsShape)parentObject;
-            var targetGameObject = targetShape.InstanceObject;
-            if (targetGameObject == null)
-            {
-                throw Errors.TargetShapeUnbuilt(this);
-            }
-
             // Create joint component
             AnchoredJoint2D component = JointType switch
             {
-                JointType.Fixed => targetGameObject.AddComponent<FixedJoint2D>(),
-                JointType.Distance => targetGameObject.AddComponent<DistanceJoint2D>(),
-                JointType.Spring => targetGameObject.AddComponent<SpringJoint2D>(),
-                JointType.Hinge => targetGameObject.AddComponent<HingeJoint2D>(),
-                JointType.Slider => targetGameObject.AddComponent<SliderJoint2D>(),
-                JointType.Wheel => targetGameObject.AddComponent<WheelJoint2D>(),
+                JointType.Fixed => gameObject.AddComponent<FixedJoint2D>(),
+                JointType.Distance => gameObject.AddComponent<DistanceJoint2D>(),
+                JointType.Spring => gameObject.AddComponent<SpringJoint2D>(),
+                JointType.Hinge => gameObject.AddComponent<HingeJoint2D>(),
+                JointType.Slider => gameObject.AddComponent<SliderJoint2D>(),
+                JointType.Wheel => gameObject.AddComponent<WheelJoint2D>(),
                 _ => throw Errors.InvalidJointType(JointType)
             };
 
@@ -154,26 +145,101 @@ namespace Brutalsky
             }
 
             // Set up connected rigidbody
-            var mountShape = MountShapeId.Length > 0 ? map.GetObject<BsShape>(Tags.Shape, MountShapeId) : null;
-            if (mountShape == null) return null;
-            if (mountShape.InstanceObject == null)
+            if (MountShapeId.Length > 0)
             {
-                throw Errors.MountShapeUnbuilt(this);
+                var mountShape = map.GetObject<BsShape>(Tags.Shape, MountShapeId);
+                if (mountShape.InstanceObject == null)
+                {
+                    Debug.Log("BOB 2");
+                    throw Errors.MountShapeUnbuilt(this);
+                }
+                component.connectedBody = mountShape.InstanceObject.GetComponent<Rigidbody2D>();
+                component.autoConfigureConnectedAnchor = true;
             }
-            component.connectedBody = mountShape.InstanceObject.GetComponent<Rigidbody2D>();
-            component.autoConfigureConnectedAnchor = true;
 
             return component;
         }
 
         protected override Dictionary<string, string> _ToSrz()
         {
-            throw new System.NotImplementedException();
+            var result = new Dictionary<string, string>
+            {
+                ["tr"] = Transform.ToString(),
+                ["jt"] = ((int)JointType).ToString(),
+                ["ms"] = MountShapeId,
+                ["cl"] = BoolExt.Stringify(Collision),
+                ["st"] = Strength.ToString()
+            };
+            switch (JointType)
+            {
+                case JointType.Fixed:
+                    result["dm"] = Damping.ToString();
+                    break;
+                case JointType.Distance:
+                    result["ds"] = Distance.ToString();
+                    result["md"] = BoolExt.Stringify(MaxDistanceOnly);
+                    break;
+                case JointType.Spring:
+                    result["ds"] = Distance.ToString();
+                    result["dm"] = Damping.ToString();
+                    break;
+                case JointType.Hinge:
+                    result["mt"] = Motor.ToString();
+                    result["lm"] = Limits.ToString();
+                    break;
+                case JointType.Slider:
+                    result["an"] = Angle.ToString();
+                    result["mt"] = Motor.ToString();
+                    result["lm"] = Limits.ToString();
+                    break;
+                case JointType.Wheel:
+                    result["dm"] = Damping.ToString();
+                    result["an"] = Angle.ToString();
+                    result["mt"] = Motor.ToString();
+                    break;
+                default:
+                    throw Errors.InvalidJointType(JointType);
+            }
+            return result;
         }
 
         protected override void _FromSrz(Dictionary<string, string> properties)
         {
-            throw new System.NotImplementedException();
+            Transform = ObjectTransform.Parse(properties["tr"]);
+            JointType = (JointType)int.Parse(properties["jt"]);
+            MountShapeId = properties["ms"];
+            Collision = BoolExt.Parse(properties["cl"]);
+            Strength = JointStrength.Parse(properties["st"]);
+            switch (JointType)
+            {
+                case JointType.Fixed:
+                    Damping = JointDamping.Parse(properties["dm"]);
+                    break;
+                case JointType.Distance:
+                    Distance = JointConfig.Parse(properties["ds"]);
+                    MaxDistanceOnly = BoolExt.Parse(properties["md"]);
+                    break;
+                case JointType.Spring:
+                    Distance = JointConfig.Parse(properties["ds"]);
+                    Damping = JointDamping.Parse(properties["dm"]);
+                    break;
+                case JointType.Hinge:
+                    Motor = JointMotor.Parse(properties["mt"]);
+                    Limits = JointLimits.Parse(properties["lm"]);
+                    break;
+                case JointType.Slider:
+                    Angle = JointConfig.Parse(properties["an"]);
+                    Motor = JointMotor.Parse(properties["mt"]);
+                    Limits = JointLimits.Parse(properties["lm"]);
+                    break;
+                case JointType.Wheel:
+                    Damping = JointDamping.Parse(properties["dm"]);
+                    Angle = JointConfig.Parse(properties["an"]);
+                    Motor = JointMotor.Parse(properties["mt"]);
+                    break;
+                default:
+                    throw Errors.InvalidJointType(JointType);
+            }
         }
 
         public BsJoint FixedJoint(JointDamping damping)
