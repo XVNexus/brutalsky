@@ -147,6 +147,7 @@ namespace Brutalsky
             // Set up connected rigidbody
             if (MountShapeId.Length > 0)
             {
+                Debug.Log("CHECKPINT 1");
                 var mountShape = map.GetObject<BsShape>(Tags.Shape, MountShapeId);
                 if (mountShape.InstanceObject == null)
                 {
@@ -160,82 +161,82 @@ namespace Brutalsky
             return component;
         }
 
-        protected override Dictionary<string, string> _ToSrz()
+        protected override string[] _ToSrz()
         {
-            var result = new Dictionary<string, string>
+            var result = new List<string>
             {
-                ["tr"] = Transform.ToString(),
-                ["jt"] = ((int)JointType).ToString(),
-                ["ms"] = MountShapeId,
-                ["cl"] = BoolExt.Stringify(Collision),
-                ["st"] = Strength.ToString()
+                Transform.ToString(),
+                ((int)JointType).ToString(),
+                MountShapeId,
+                BoolExt.Stringify(Collision),
+                Strength.ToString()
             };
             switch (JointType)
             {
                 case JointType.Fixed:
-                    result["dm"] = Damping.ToString();
+                    result.Add(Damping.ToString());
                     break;
                 case JointType.Distance:
-                    result["ds"] = Distance.ToString();
-                    result["md"] = BoolExt.Stringify(MaxDistanceOnly);
+                    result.Add(Distance.ToString());
+                    result.Add(BoolExt.Stringify(MaxDistanceOnly));
                     break;
                 case JointType.Spring:
-                    result["ds"] = Distance.ToString();
-                    result["dm"] = Damping.ToString();
+                    result.Add(Distance.ToString());
+                    result.Add(Damping.ToString());
                     break;
                 case JointType.Hinge:
-                    result["mt"] = Motor.ToString();
-                    result["lm"] = Limits.ToString();
+                    result.Add(Motor.ToString());
+                    result.Add(Limits.ToString());
                     break;
                 case JointType.Slider:
-                    result["an"] = Angle.ToString();
-                    result["mt"] = Motor.ToString();
-                    result["lm"] = Limits.ToString();
+                    result.Add(Angle.ToString());
+                    result.Add(Motor.ToString());
+                    result.Add(Limits.ToString());
                     break;
                 case JointType.Wheel:
-                    result["dm"] = Damping.ToString();
-                    result["an"] = Angle.ToString();
-                    result["mt"] = Motor.ToString();
+                    result.Add(Damping.ToString());
+                    result.Add(Angle.ToString());
+                    result.Add(Motor.ToString());
                     break;
                 default:
                     throw Errors.InvalidJointType(JointType);
             }
-            return result;
+            return result.ToArray();
         }
 
-        protected override void _FromSrz(Dictionary<string, string> properties)
+        protected override void _FromSrz(string[] properties)
         {
-            Transform = ObjectTransform.Parse(properties["tr"]);
-            JointType = (JointType)int.Parse(properties["jt"]);
-            MountShapeId = properties["ms"];
-            Collision = BoolExt.Parse(properties["cl"]);
-            Strength = JointStrength.Parse(properties["st"]);
+            Transform = ObjectTransform.Parse(properties[0]);
+            JointType = (JointType)int.Parse(properties[1]);
+            MountShapeId = properties[2];
+            Collision = BoolExt.Parse(properties[3]);
+            Strength = JointStrength.Parse(properties[4]);
             switch (JointType)
             {
                 case JointType.Fixed:
-                    Damping = JointDamping.Parse(properties["dm"]);
+                    Damping = JointDamping.Parse(properties[5]);
                     break;
                 case JointType.Distance:
-                    Distance = JointConfig.Parse(properties["ds"]);
-                    MaxDistanceOnly = BoolExt.Parse(properties["md"]);
+                    Distance = JointConfig.Parse(properties[5]);
+                    MaxDistanceOnly = BoolExt.Parse(properties[6]);
                     break;
                 case JointType.Spring:
-                    Distance = JointConfig.Parse(properties["ds"]);
-                    Damping = JointDamping.Parse(properties["dm"]);
+                    Distance = JointConfig.Parse(properties[5]);
+                    Damping = JointDamping.Parse(properties[6]);
                     break;
                 case JointType.Hinge:
-                    Motor = JointMotor.Parse(properties["mt"]);
-                    Limits = JointLimits.Parse(properties["lm"]);
+                    Motor = JointMotor.Parse(properties[5]);
+                    Limits = JointLimits.Parse(properties[6]);
                     break;
                 case JointType.Slider:
-                    Angle = JointConfig.Parse(properties["an"]);
-                    Motor = JointMotor.Parse(properties["mt"]);
-                    Limits = JointLimits.Parse(properties["lm"]);
+                    Angle = JointConfig.Parse(properties[5]);
+                    Motor = JointMotor.Parse(properties[6]);
+                    Limits = JointLimits.Parse(properties[7]);
                     break;
                 case JointType.Wheel:
-                    Damping = JointDamping.Parse(properties["dm"]);
-                    Angle = JointConfig.Parse(properties["an"]);
-                    Motor = JointMotor.Parse(properties["mt"]);
+                    Damping = JointDamping.Parse(properties[5]);
+                    Angle = JointConfig.Parse(properties[6]);
+                    Motor = JointMotor.Parse(properties[7]);
                     break;
                 default:
                     throw Errors.InvalidJointType(JointType);

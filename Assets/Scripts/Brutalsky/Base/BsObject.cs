@@ -32,9 +32,9 @@ namespace Brutalsky.Base
 
         protected abstract Component _Init(GameObject gameObject, BsMap map);
 
-        protected abstract Dictionary<string, string> _ToSrz();
+        protected abstract string[] _ToSrz();
 
-        protected abstract void _FromSrz(Dictionary<string, string> properties);
+        protected abstract void _FromSrz(string[] properties);
 
         public Component Init(GameObject gameObject, BsMap map)
         {
@@ -60,7 +60,7 @@ namespace Brutalsky.Base
         public void FromSrz(string id, SrzObject srzObject)
         {
             Id = id;
-            _FromSrz(srzObject.pr);
+            _FromSrz(BsUtils.ExpandProperties(srzObject.pr));
             foreach (var srzAddon in srzObject.ad)
             {
                 var addonIdParts = BsUtils.SplitFullId(srzAddon.id);

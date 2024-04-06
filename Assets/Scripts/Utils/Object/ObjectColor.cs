@@ -1,5 +1,7 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using Utils.Ext;
+using ColorUtility = UnityEngine.ColorUtility;
 
 namespace Utils.Object
 {
@@ -62,14 +64,16 @@ namespace Utils.Object
 
         public static ObjectColor Parse(string raw)
         {
-            var parts = raw.Split(' ');
-            return new ObjectColor(float.Parse(parts[0]), float.Parse(parts[1]), float.Parse(parts[2]),
-                float.Parse(parts[3]), BoolExt.Parse(parts[4]));
+            var htmlColor = '#' + raw[..8];
+            var glow = BoolExt.Parse(raw[8..9]);
+            Color tint;
+            ColorUtility.TryParseHtmlString(htmlColor, out tint);
+            return new ObjectColor(tint, glow);
         }
 
         public override string ToString()
         {
-            return $"{Tint.r} {Tint.g} {Tint.b} {Tint.a} {BoolExt.Stringify(Glow)}";
+            return Tint.ToHexString() + BoolExt.Stringify(Glow);
         }
     }
 }

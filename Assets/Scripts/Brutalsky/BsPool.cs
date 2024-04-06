@@ -65,27 +65,27 @@ namespace Brutalsky
             return controller;
         }
 
-        protected override Dictionary<string, string> _ToSrz()
+        protected override string[] _ToSrz()
         {
-            return new Dictionary<string, string>
+            return new[]
             {
-                ["tr"] = Transform.ToString(),
-                ["sz"] = Vector2Ext.Stringify(Size),
-                ["ch"] = Chemical.ToString(),
-                ["cl"] = Color.ToString(),
-                ["ly"] = ((int)Layer).ToString(),
-                ["sm"] = BoolExt.Stringify(Simulated)
+                Transform.ToString(),
+                Vector2Ext.Stringify(Size),
+                Chemical.ToString(),
+                Color.ToString(),
+                ((int)Layer).ToString(),
+                BoolExt.Stringify(Simulated)
             };
         }
 
-        protected override void _FromSrz(Dictionary<string, string> properties)
+        protected override void _FromSrz(string[] properties)
         {
-            Transform = ObjectTransform.Parse(properties["tr"]);
-            Size = Vector2Ext.Parse(properties["sz"]);
-            Chemical = PoolChemical.Parse(properties["ch"]);
-            Color = ObjectColor.Parse(properties["cl"]);
-            Layer = (ObjectLayer)int.Parse(properties["ly"]);
-            Simulated = BoolExt.Parse(properties["sm"]);
+            Transform = ObjectTransform.Parse(properties[0]);
+            Size = Vector2Ext.Parse(properties[1]);
+            Chemical = PoolChemical.Parse(properties[2]);
+            Color = ObjectColor.Parse(properties[3]);
+            Layer = (ObjectLayer)int.Parse(properties[4]);
+            Simulated = BoolExt.Parse(properties[5]);
         }
     }
 }

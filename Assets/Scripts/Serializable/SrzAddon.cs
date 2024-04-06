@@ -6,12 +6,12 @@ namespace Serializable
     public class SrzAddon
     {
         public string id { get; set; }
-        public Dictionary<string, string> pr { get; set; } = new();
+        public string pr { get; set; }
 
-        public SrzAddon(string tag, string id, Dictionary<string, string> properties)
+        public SrzAddon(string tag, string id, string[] properties)
         {
             this.id = BsUtils.GenerateFullId(tag, id);
-            pr = properties;
+            pr = BsUtils.CompressProperties(properties);
         }
 
         public SrzAddon()

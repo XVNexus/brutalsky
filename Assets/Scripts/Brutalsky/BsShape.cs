@@ -95,27 +95,27 @@ namespace Brutalsky
             return controller;
         }
 
-        protected override Dictionary<string, string> _ToSrz()
+        protected override string[] _ToSrz()
         {
-            return new Dictionary<string, string>
+            return new[]
             {
-                ["tr"] = Transform.ToString(),
-                ["pt"] = Path.ToString(),
-                ["mt"] = Material.ToString(),
-                ["cl"] = Color.ToString(),
-                ["ly"] = ((int)Layer).ToString(),
-                ["sm"] = BoolExt.Stringify(Simulated)
+                Transform.ToString(),
+                Path.ToString(),
+                Material.ToString(),
+                Color.ToString(),
+                ((int)Layer).ToString(),
+                BoolExt.Stringify(Simulated)
             };
         }
 
-        protected override void _FromSrz(Dictionary<string, string> properties)
+        protected override void _FromSrz(string[] properties)
         {
-            Transform = ObjectTransform.Parse(properties["tr"]);
-            Path = Path.Parse(properties["pt"]);
-            Material = ShapeMaterial.Parse(properties["mt"]);
-            Color = ObjectColor.Parse(properties["cl"]);
-            Layer = (ObjectLayer)int.Parse(properties["ly"]);
-            Simulated = BoolExt.Parse(properties["sm"]);
+            Transform = ObjectTransform.Parse(properties[0]);
+            Path = Path.Parse(properties[1]);
+            Material = ShapeMaterial.Parse(properties[2]);
+            Color = ObjectColor.Parse(properties[3]);
+            Layer = (ObjectLayer)int.Parse(properties[4]);
+            Simulated = BoolExt.Parse(properties[5]);
         }
     }
 }

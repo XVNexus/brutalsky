@@ -50,23 +50,23 @@ namespace Brutalsky
             InstanceObject.GetComponent<PlayerController>().Refresh();
         }
 
-        protected override Dictionary<string, string> _ToSrz()
+        protected override string[] _ToSrz()
         {
-            return new Dictionary<string, string>
+            return new[]
             {
-                ["nm"] = Name,
-                ["ht"] = Health.ToString(),
-                ["cl"] = Color.ToString(),
-                ["dm"] = BoolExt.Stringify(Dummy)
+                Name,
+                Health.ToString(),
+                Color.ToString(),
+                BoolExt.Stringify(Dummy)
             };
         }
 
-        protected override void _FromSrz(Dictionary<string, string> properties)
+        protected override void _FromSrz(string[] properties)
         {
-            Name = properties["nm"];
-            Health = float.Parse(properties["ht"]);
-            Color = ObjectColor.Parse(properties["cl"]);
-            Dummy = BoolExt.Parse(properties["dm"]);
+            Name = properties[0];
+            Health = float.Parse(properties[1]);
+            Color = ObjectColor.Parse(properties[2]);
+            Dummy = BoolExt.Parse(properties[3]);
         }
     }
 }

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using JetBrains.Annotations;
 using Serializable;
 using UnityEngine;
+using Utils;
 using Utils.Object;
 
 namespace Brutalsky.Base
@@ -27,9 +28,9 @@ namespace Brutalsky.Base
 
         protected abstract Component _Init(GameObject gameObject, BsObject parentObject, BsMap map);
 
-        protected abstract Dictionary<string, string> _ToSrz();
+        protected abstract string[] _ToSrz();
 
-        protected abstract void _FromSrz(Dictionary<string, string> properties);
+        protected abstract void _FromSrz(string[] properties);
 
         public Component Init(GameObject gameObject, BsObject parentObject, BsMap map)
         {
@@ -44,7 +45,7 @@ namespace Brutalsky.Base
         public void FromSrz(string id, SrzAddon srzAddon)
         {
             Id = id;
-            _FromSrz(srzAddon.pr);
+            _FromSrz(BsUtils.ExpandProperties(srzAddon.pr));
         }
 
         public void Activate(Component instanceComponent)

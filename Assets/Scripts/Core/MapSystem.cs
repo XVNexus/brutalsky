@@ -6,6 +6,7 @@ using Brutalsky.Base;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
+using Utils;
 using Utils.Constants;
 
 namespace Core
@@ -17,7 +18,7 @@ namespace Core
         private void Awake() => _ = this;
 
         // Local constants
-        public const string SaveFormat = "yaml";
+        public const string SaveFormat = "txt";
 
         // Local variables
         public Dictionary<uint, string> RawMapList { get; private set; } = new();
@@ -55,14 +56,14 @@ namespace Core
 
         public static string LoadInternal(string filename)
         {
-            return Resources.Load<TextAsset>($"{Paths.Content}/{Paths.Maps}/{filename}").text;
+            return BsUtils.ExpandMapString(Resources.Load<TextAsset>($"{Paths.Content}/{Paths.Maps}/{filename}").text);
         }
 
         public static string Load(string filename)
         {
             var path = $"{ResourceSystem.DataPath}/{Paths.Maps}/{filename}.{SaveFormat}";
             using var reader = new StreamReader(path);
-            return reader.ReadToEnd();
+            return BsUtils.ExpandMapString(reader.ReadToEnd());
         }
 
         public static void Save(string raw, string filename)
@@ -70,7 +71,7 @@ namespace Core
             var path = $"{ResourceSystem.DataPath}/{Paths.Maps}/{filename}.{SaveFormat}";
             new FileInfo(path).Directory?.Create();
             using var writer = new StreamWriter(path);
-            writer.Write(raw);
+            writer.Write(BsUtils.CompressMapString(raw));
         }
 
         public void Rebuild()
