@@ -1,5 +1,4 @@
-using System.Linq;
-using Unity.Mathematics;
+using System;
 using Utils.Ext;
 using Utils.Object;
 
@@ -24,9 +23,7 @@ namespace Utils
 
         public static uint GenerateId(string title, string author)
         {
-            var idSeed = author.Aggregate<char, uint>(1, (current, letter) => current * letter)
-                         + title.Aggregate<char, uint>(0, (current, letter) => current + letter);
-            return Random.CreateFromIndex(idSeed).NextUInt();
+            return BitConverter.ToUInt32(BitConverter.GetBytes((title + author).GetHashCode()), 0);
         }
 
         public static string GenerateFullId(string tag, string id)

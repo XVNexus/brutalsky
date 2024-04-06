@@ -34,7 +34,7 @@ namespace Core
             }
         }
 
-        public void Spawn(BsMap map, [CanBeNull] IEnumerable<BsPlayer> players = null)
+        public void SpawnAll(BsMap map, [CanBeNull] IEnumerable<BsPlayer> players = null)
         {
             var playerList = (players ?? ActivePlayers.Values).ToList();
             while (playerList.Count > 0)
@@ -45,41 +45,7 @@ namespace Core
             }
         }
 
-        public void Spawn(BsMap map, BsPlayer player)
-        {
-            GameObject playerObject;
-            PlayerController playerController;
-            if (!player.Active)
-            {
-                // Create new object and apply config
-                playerObject = Instantiate(ResourceSystem._.playerPrefab);
-                playerController = playerObject.GetComponent<PlayerController>();
-                playerController.Object = player;
-
-                // Apply config and color
-                playerController.GetComponent<SpriteRenderer>().color = player.Color.Tint;
-            }
-            else
-            {
-                // Get reference to existing object and ensure player is reset to full health
-                playerObject = player.InstanceObject;
-                playerController = playerObject.GetComponent<PlayerController>();
-                playerController.GetSub<PlayerHealthController>("health")?.Refresh();
-            }
-
-            // Select a spawnpoint and move the new player object to it
-            var spawnPos = map.SelectSpawn();
-            playerObject.transform.position = spawnPos;
-
-            // Note player as active and add it to the active player list
-            if (player.Active) return;
-            player.InstanceObject = playerObject;
-            player.InstanceController = playerController;
-            player.Active = true;
-            ActivePlayers[player.Id] = player;
-        }
-
-        public void Despawn([CanBeNull] IEnumerable<BsPlayer> players = null)
+        public void DespawnAll([CanBeNull] IEnumerable<BsPlayer> players = null)
         {
             var playerList = (players ?? ActivePlayers.Values).ToList();
             foreach (var player in playerList)
@@ -88,18 +54,34 @@ namespace Core
             }
         }
 
-        public void Despawn(BsPlayer player)
+        public bool Spawn(BsMap map, BsPlayer player)
         {
-            // Make sure the player is not already despawned
-            if (!player.Active) return;
+            if (!MapSystem._.IsMapLoaded) return false;
+            if (!player.Active)
+            {
+                // Spawn new player
+                var instanceObject = Instantiate(player.Prefab);
+                var instanceController = player.Init(instanceObject, map);
+                player.Activate(instanceObject, instanceController);
+                ActivePlayers[player.Id] = player;
+                instanceObject.transform.position = map.SelectSpawn();
+            }
+            else
+            {
+                // Respawn existing player
+                player.Refresh(map);
+                player.InstanceObject.transform.position = map.SelectSpawn();
+            }
+            return true;
+        }
 
-            // Destroy the player object
+        public bool Despawn(BsPlayer player)
+        {
+            if (!player.Active || !MapSystem._.IsMapLoaded) return false;
             Destroy(player.InstanceObject);
-
-            // Note player as inactive and remove it from the active player list
-            player.InstanceObject = null;
-            player.Active = false;
+            player.Deactivate();
             ActivePlayers.Remove(player.Id);
+            return true;
         }
     }
 }

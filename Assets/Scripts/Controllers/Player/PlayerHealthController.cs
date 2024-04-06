@@ -56,24 +56,6 @@ namespace Controllers.Player
             health = Mathf.Max(health - amount, 0f);
         }
 
-        public void Refresh()
-        {
-            if (alive)
-            {
-                health = maxHealth;
-            }
-            else
-            {
-                Revive();
-            }
-            _cRigidbody2D.velocity = Vector2.zero;
-            if (_mMovement)
-            {
-                _mMovement.boostCharge = 0f;
-                _mMovement.boostCooldown = 0f;
-            }
-        }
-
         public bool Revive()
         {
             if (alive) return false;

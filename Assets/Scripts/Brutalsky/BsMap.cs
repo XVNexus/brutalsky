@@ -13,7 +13,7 @@ namespace Brutalsky
 {
     public class BsMap
     {
-        public uint Id { get; private set; }
+        public uint Id => BsUtils.GenerateId(Title, Author);
         public string Title { get; set; }
         public string Author { get; set; }
         public Vector2 Size { get; set; }
@@ -25,7 +25,6 @@ namespace Brutalsky
         {
             Title = title;
             Author = author;
-            Id = BsUtils.GenerateId(title, author);
         }
 
         public BsMap()
@@ -51,7 +50,6 @@ namespace Brutalsky
         {
             Title = srzMap.tt;
             Author = srzMap.at;
-            Id = BsUtils.GenerateId(Title, Author);
             Size = Vector2Ext.Parse(srzMap.sz);
             Lighting = ObjectColor.Parse(srzMap.lg);
             foreach (var srzSpawn in srzMap.sp)

@@ -6,6 +6,7 @@ namespace Controllers
 {
     public class PoolController : ControllerBase<BsPool>
     {
+        // Controller metadata
         public override string Tag => Tags.Pool;
     }
 }

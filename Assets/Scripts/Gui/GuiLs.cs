@@ -62,7 +62,7 @@ namespace Gui
                     var map = BsMap.Parse(MapSystem._.RawMapList[mapId]);
                     MapSystem._.Unbuild();
                     MapSystem._.Build(map);
-                    PlayerSystem._.Spawn(map);
+                    PlayerSystem._.SpawnAll(map);
                     break;
             }
         }

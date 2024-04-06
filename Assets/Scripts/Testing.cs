@@ -12,7 +12,7 @@ public class Testing : MonoBehaviour
         GenerateDefaultMaps();
         var map = BsMap.Parse(MapSystem.LoadInternal("Brutalsky"));
         MapSystem._.Build(map);
-        PlayerSystem._.Spawn(map, new[]
+        PlayerSystem._.SpawnAll(map, new[]
         {
             new BsPlayer("player-1", "Player 1", 100f, new ObjectColor(1f, .5f, 0f)),
             new BsPlayer("player-2", "Player 2", 100f, new ObjectColor(0f, .5f, 1f), true)

@@ -79,7 +79,7 @@ namespace Gui
         private void OnButtonPressRest()
         {
             MapSystem._.Rebuild();
-            PlayerSystem._.Spawn(MapSystem._.ActiveMap);
+            PlayerSystem._.SpawnAll(MapSystem._.ActiveMap);
         }
 
         private void OnButtonPressNext()
