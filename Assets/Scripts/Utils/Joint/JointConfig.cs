@@ -14,15 +14,5 @@ namespace Utils.Joint
         public static JointConfig SetValue(float value) => new(value, false);
 
         public static JointConfig AutoValue() => new(0f, true);
-
-        public static JointConfig Parse(string raw)
-        {
-            return raw == "x" ? AutoValue() : SetValue(float.Parse(raw));
-        }
-
-        public override string ToString()
-        {
-            return Auto ? "x" : Value.ToString();
-        }
     }
 }

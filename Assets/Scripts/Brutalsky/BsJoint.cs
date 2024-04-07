@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using Brutalsky.Base;
 using UnityEngine;
+using Utils;
 using Utils.Constants;
-using Utils.Ext;
 using Utils.Joint;
 using Utils.Object;
 using JointLimits = Utils.Joint.JointLimits;
@@ -147,11 +147,9 @@ namespace Brutalsky
             // Set up connected rigidbody
             if (MountShapeId.Length > 0)
             {
-                Debug.Log("CHECKPINT 1");
                 var mountShape = map.GetObject<BsShape>(Tags.Shape, MountShapeId);
                 if (mountShape.InstanceObject == null)
                 {
-                    Debug.Log("BOB 2");
                     throw Errors.MountShapeUnbuilt(this);
                 }
                 component.connectedBody = mountShape.InstanceObject.GetComponent<Rigidbody2D>();
@@ -165,38 +163,38 @@ namespace Brutalsky
         {
             var result = new List<string>
             {
-                Transform.ToString(),
-                ((int)JointType).ToString(),
-                MountShapeId,
-                BoolExt.Stringify(Collision),
-                Strength.ToString()
+                SrzUtils.Stringify(Transform),
+                SrzUtils.Stringify(JointType),
+                SrzUtils.Stringify(MountShapeId),
+                SrzUtils.Stringify(Collision),
+                SrzUtils.Stringify(Strength)
             };
             switch (JointType)
             {
                 case JointType.Fixed:
-                    result.Add(Damping.ToString());
+                    result.Add(SrzUtils.Stringify(Damping));
                     break;
                 case JointType.Distance:
-                    result.Add(Distance.ToString());
-                    result.Add(BoolExt.Stringify(MaxDistanceOnly));
+                    result.Add(SrzUtils.Stringify(Distance));
+                    result.Add(SrzUtils.Stringify(MaxDistanceOnly));
                     break;
                 case JointType.Spring:
-                    result.Add(Distance.ToString());
-                    result.Add(Damping.ToString());
+                    result.Add(SrzUtils.Stringify(Distance));
+                    result.Add(SrzUtils.Stringify(Damping));
                     break;
                 case JointType.Hinge:
-                    result.Add(Motor.ToString());
-                    result.Add(Limits.ToString());
+                    result.Add(SrzUtils.Stringify(Motor));
+                    result.Add(SrzUtils.Stringify(Limits));
                     break;
                 case JointType.Slider:
-                    result.Add(Angle.ToString());
-                    result.Add(Motor.ToString());
-                    result.Add(Limits.ToString());
+                    result.Add(SrzUtils.Stringify(Angle));
+                    result.Add(SrzUtils.Stringify(Motor));
+                    result.Add(SrzUtils.Stringify(Limits));
                     break;
                 case JointType.Wheel:
-                    result.Add(Damping.ToString());
-                    result.Add(Angle.ToString());
-                    result.Add(Motor.ToString());
+                    result.Add(SrzUtils.Stringify(Damping));
+                    result.Add(SrzUtils.Stringify(Angle));
+                    result.Add(SrzUtils.Stringify(Motor));
                     break;
                 default:
                     throw Errors.InvalidJointType(JointType);
@@ -206,37 +204,37 @@ namespace Brutalsky
 
         protected override void _FromSrz(string[] properties)
         {
-            Transform = ObjectTransform.Parse(properties[0]);
-            JointType = (JointType)int.Parse(properties[1]);
-            MountShapeId = properties[2];
-            Collision = BoolExt.Parse(properties[3]);
-            Strength = JointStrength.Parse(properties[4]);
+            Transform = SrzUtils.ParseTransform(properties[0]);
+            JointType = SrzUtils.ParseJointType(properties[1]);
+            MountShapeId = SrzUtils.ParseString(properties[2]);
+            Collision = SrzUtils.ParseBool(properties[3]);
+            Strength = SrzUtils.ParseJointStrength(properties[4]);
             switch (JointType)
             {
                 case JointType.Fixed:
-                    Damping = JointDamping.Parse(properties[5]);
+                    Damping = SrzUtils.ParseJointDamping(properties[5]);
                     break;
                 case JointType.Distance:
-                    Distance = JointConfig.Parse(properties[5]);
-                    MaxDistanceOnly = BoolExt.Parse(properties[6]);
+                    Distance = SrzUtils.ParseJointConfig(properties[5]);
+                    MaxDistanceOnly = SrzUtils.ParseBool(properties[6]);
                     break;
                 case JointType.Spring:
-                    Distance = JointConfig.Parse(properties[5]);
-                    Damping = JointDamping.Parse(properties[6]);
+                    Distance = SrzUtils.ParseJointConfig(properties[5]);
+                    Damping = SrzUtils.ParseJointDamping(properties[6]);
                     break;
                 case JointType.Hinge:
-                    Motor = JointMotor.Parse(properties[5]);
-                    Limits = JointLimits.Parse(properties[6]);
+                    Motor = SrzUtils.ParseJointMotor(properties[5]);
+                    Limits = SrzUtils.ParseJointLimits(properties[6]);
                     break;
                 case JointType.Slider:
-                    Angle = JointConfig.Parse(properties[5]);
-                    Motor = JointMotor.Parse(properties[6]);
-                    Limits = JointLimits.Parse(properties[7]);
+                    Angle = SrzUtils.ParseJointConfig(properties[5]);
+                    Motor = SrzUtils.ParseJointMotor(properties[6]);
+                    Limits = SrzUtils.ParseJointLimits(properties[7]);
                     break;
                 case JointType.Wheel:
-                    Damping = JointDamping.Parse(properties[5]);
-                    Angle = JointConfig.Parse(properties[6]);
-                    Motor = JointMotor.Parse(properties[7]);
+                    Damping = SrzUtils.ParseJointDamping(properties[5]);
+                    Angle = SrzUtils.ParseJointConfig(properties[6]);
+                    Motor = SrzUtils.ParseJointMotor(properties[7]);
                     break;
                 default:
                     throw Errors.InvalidJointType(JointType);

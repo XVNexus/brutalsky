@@ -2,13 +2,11 @@ namespace Serializable
 {
     public class SrzSpawn
     {
-        public string ps { get; set; }
-        public int pr { get; set; }
+        public string pr { get; set; }
 
-        public SrzSpawn(string position, int priority)
+        public SrzSpawn(string properties)
         {
-            ps = position;
-            pr = priority;
+            pr = properties;
         }
 
         public SrzSpawn()

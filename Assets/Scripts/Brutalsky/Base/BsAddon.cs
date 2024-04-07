@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using JetBrains.Annotations;
 using Serializable;
 using UnityEngine;
@@ -45,7 +44,7 @@ namespace Brutalsky.Base
         public void FromSrz(string id, SrzAddon srzAddon)
         {
             Id = id;
-            _FromSrz(BsUtils.ExpandProperties(srzAddon.pr));
+            _FromSrz(SrzUtils.ExpandProperties(srzAddon.pr));
         }
 
         public void Activate(Component instanceComponent)

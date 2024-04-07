@@ -1,11 +1,9 @@
-using System.Collections.Generic;
 using Brutalsky.Base;
 using Controllers;
-using Controllers.Player;
 using Core;
 using UnityEngine;
+using Utils;
 using Utils.Constants;
-using Utils.Ext;
 using Utils.Object;
 
 namespace Brutalsky
@@ -54,19 +52,19 @@ namespace Brutalsky
         {
             return new[]
             {
-                Name,
-                Health.ToString(),
-                Color.ToString(),
-                BoolExt.Stringify(Dummy)
+                SrzUtils.Stringify(Name),
+                SrzUtils.Stringify(Health),
+                SrzUtils.Stringify(Color),
+                SrzUtils.Stringify(Dummy)
             };
         }
 
         protected override void _FromSrz(string[] properties)
         {
-            Name = properties[0];
-            Health = float.Parse(properties[1]);
-            Color = ObjectColor.Parse(properties[2]);
-            Dummy = BoolExt.Parse(properties[3]);
+            Name = SrzUtils.ParseString(properties[0]);
+            Health = SrzUtils.ParseFloat(properties[1]);
+            Color = SrzUtils.ParseColor(properties[2]);
+            Dummy = SrzUtils.ParseBool(properties[3]);
         }
     }
 }

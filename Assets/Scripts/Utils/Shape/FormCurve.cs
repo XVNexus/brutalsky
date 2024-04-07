@@ -1,9 +1,9 @@
 using UnityEngine;
 using Utils.Ext;
 
-namespace Utils.Path
+namespace Utils.Shape
 {
-    public class PathCurve : PathNode
+    public class FormCurve : FormNode
     {
         public override int DetailLevel => Mathf.CeilToInt(Length * 2f * Mathf.PI);
         public Vector2 Handle { get; set; }
@@ -15,13 +15,13 @@ namespace Utils.Path
         private Vector2 P3 => EndPoint;
         private float Length => ((P3 - P0).magnitude + (P1 - P0).magnitude + (P2 - P1).magnitude + (P3 - P2).magnitude) / 2f;
 
-        public PathCurve(Vector2 handle, Vector2 point)
+        public FormCurve(Vector2 handle, Vector2 point)
         {
             Handle = handle;
             EndPoint = point;
         }
 
-        public PathCurve(float a, float b, float x, float y)
+        public FormCurve(float a, float b, float x, float y)
         {
             Handle = new Vector2(a, b);
             EndPoint = new Vector2(x, y);

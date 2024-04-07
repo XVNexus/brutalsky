@@ -27,16 +27,5 @@ namespace Utils.Object
         public ObjectTransform()
         {
         }
-
-        public static ObjectTransform Parse(string raw)
-        {
-            var parts = raw.Split(' ');
-            return new ObjectTransform(float.Parse(parts[0]), float.Parse(parts[1]), float.Parse(parts[2]));
-        }
-
-        public override string ToString()
-        {
-            return $"{Position.x} {Position.y} {Rotation}";
-        }
     }
 }

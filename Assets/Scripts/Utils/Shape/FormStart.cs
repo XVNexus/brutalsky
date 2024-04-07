@@ -1,17 +1,17 @@
 using UnityEngine;
 
-namespace Utils.Path
+namespace Utils.Shape
 {
-    public class PathStart : PathNode
+    public class FormStart : FormNode
     {
         public override int DetailLevel => 0;
 
-        public PathStart(Vector2 point)
+        public FormStart(Vector2 point)
         {
             EndPoint = point;
         }
 
-        public PathStart(float x, float y)
+        public FormStart(float x, float y)
         {
             EndPoint = new Vector2(x, y);
         }

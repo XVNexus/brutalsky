@@ -4,16 +4,16 @@ using System.Text.RegularExpressions;
 using UnityEngine;
 using Utils.Constants;
 
-namespace Utils.Path
+namespace Utils.Shape
 {
-    public class Path
+    public class Form
     {
-        public PathNode StartNode { get; set; }
-        public string PathString { get; private set; } = "";
+        public FormNode StartNode { get; set; }
+        public string VectorString { get; private set; } = "";
 
-        public Path(Vector2 startPoint, IEnumerable<PathNode> nodes)
+        public Form(Vector2 startPoint, IEnumerable<FormNode> nodes)
         {
-            StartNode = new PathStart(startPoint);
+            StartNode = new FormStart(startPoint);
             var currentNode = StartNode;
             foreach (var node in nodes)
             {
@@ -22,16 +22,16 @@ namespace Utils.Path
             }
         }
 
-        public static Path Vector(string pathString)
+        public static Form Vector(string path)
         {
-            var parts = new Regex(@" (?=[LC])").Split(pathString.ToUpper());
+            var parts = Regex.Split(path.ToUpper(), " (?=[LC])");
             if (parts.Length < 3)
             {
                 throw Errors.MissingPathParams("path", 3);
             }
             var startValues = parts[0].Split(' ');
             var startPoint = new Vector2(float.Parse(startValues[0]), float.Parse(startValues[1]));
-            var nodes = new List<PathNode>();
+            var nodes = new List<FormNode>();
             for (var i = 1; i < parts.Length; i++)
             {
                 var values = parts[i].Split(' ');
@@ -43,50 +43,50 @@ namespace Utils.Path
                         {
                             throw Errors.MissingPathParams("line node", 2);
                         }
-                        nodes.Add(new PathLine(float.Parse(values[1]), float.Parse(values[2])));
+                        nodes.Add(new FormLine(float.Parse(values[1]), float.Parse(values[2])));
                         break;
                     case "C":
                         if (values.Length < 5)
                         {
                             throw Errors.MissingPathParams("curve node", 4);
                         }
-                        nodes.Add(new PathCurve(float.Parse(values[1]), float.Parse(values[2]),
+                        nodes.Add(new FormCurve(float.Parse(values[1]), float.Parse(values[2]),
                             float.Parse(values[3]), float.Parse(values[4])));
                         break;
                 }
             }
 
-            var result = new Path(startPoint, nodes);
-            result.PathString = $"X {pathString.ToUpper()}";
+            var result = new Form(startPoint, nodes);
+            result.VectorString = $"X {path.ToUpper()}";
             return result;
         }
 
-        public static Path Polygon(Vector2[] points)
+        public static Form Polygon(Vector2[] points)
         {
             if (points.Length < 3)
             {
                 throw Errors.MissingPathParams("polygon", 3);
             }
             var startPoint = points[0];
-            var nodes = new PathLine[points.Length - 1];
+            var nodes = new FormLine[points.Length - 1];
             for (var i = 1; i < points.Length; i++)
             {
-                nodes[i - 1] = new PathLine(points[i]);
+                nodes[i - 1] = new FormLine(points[i]);
             }
 
-            var result = new Path(startPoint, nodes);
-            result.PathString = points.Aggregate("Y", (current, point) => current + $" {point.x} {point.y}");
+            var result = new Form(startPoint, nodes);
+            result.VectorString = points.Aggregate("Y", (current, point) => current + $" {point.x} {point.y}");
             return result;
         }
 
-        public static Path Square(float diameter)
+        public static Form Square(float diameter)
         {
             var result = Rectangle(diameter, diameter);
-            result.PathString = $"S {diameter}";
+            result.VectorString = $"S {diameter}";
             return result;
         }
 
-        public static Path Rectangle(float width, float height)
+        public static Form Rectangle(float width, float height)
         {
             var result = Polygon(new Vector2[]
             {
@@ -95,31 +95,31 @@ namespace Utils.Path
                 new(width / 2f, -height / 2f),
                 new(-width / 2f, -height / 2f)
             });
-            result.PathString = $"R {width} {height}";
+            result.VectorString = $"R {width} {height}";
             return result;
         }
 
-        public static Path Circle(float diameter)
+        public static Form Circle(float diameter)
         {
             var result = Ellipse(diameter, diameter);
-            result.PathString = $"C {diameter}";
+            result.VectorString = $"C {diameter}";
             return result;
         }
 
-        public static Path Ellipse(float width, float height)
+        public static Form Ellipse(float width, float height)
         {
-            var result = new Path(new Vector2(0f, height / 2f), new PathNode[]
+            var result = new Form(new Vector2(0f, height / 2f), new FormNode[]
             {
-                new PathCurve(width / 2f, height / 2f, width / 2f, 0f),
-                new PathCurve(width / 2f, -height / 2f, 0f, -height / 2f),
-                new PathCurve(-width / 2f, -height / 2f, -width / 2f, 0f),
-                new PathCurve(-width / 2f, height / 2f, 0f, height / 2f)
+                new FormCurve(width / 2f, height / 2f, width / 2f, 0f),
+                new FormCurve(width / 2f, -height / 2f, 0f, -height / 2f),
+                new FormCurve(-width / 2f, -height / 2f, -width / 2f, 0f),
+                new FormCurve(-width / 2f, height / 2f, 0f, height / 2f)
             });
-            result.PathString = $"E {width} {height}";
+            result.VectorString = $"E {width} {height}";
             return result;
         }
 
-        public static Path Ngon(int sides, float diameter)
+        public static Form Ngon(int sides, float diameter)
         {
             var vertices = new Vector2[sides];
             for (var i = 0; i < sides; i++)
@@ -129,11 +129,11 @@ namespace Utils.Path
             }
 
             var result = Polygon(vertices);
-            result.PathString = $"N {sides} {diameter}";
+            result.VectorString = $"N {sides} {diameter}";
             return result;
         }
 
-        public static Path Star(int points, float outerDiameter, float innerDiameter)
+        public static Form Star(int points, float outerDiameter, float innerDiameter)
         {
             var vertices = new Vector2[points * 2];
             for (var i = 0; i < points * 2; i++)
@@ -144,7 +144,7 @@ namespace Utils.Path
             }
 
             var result = Polygon(vertices);
-            result.PathString = $"T {points} {outerDiameter} {innerDiameter}";
+            result.VectorString = $"T {points} {outerDiameter} {innerDiameter}";
             return result;
         }
 
@@ -163,55 +163,6 @@ namespace Utils.Path
             if (result[^1] == result[0]) result.RemoveAt(result.Count - 1);
 
             return result.ToArray();
-        }
-
-        public static Path Parse(string raw)
-        {
-            Path result;
-            var pathType = raw[0];
-            var pathData = raw[2..];
-            var pathParts = pathData.Split(' ');
-            switch (pathType)
-            {
-                case 'X':
-                    result = Vector(pathData);
-                    break;
-                case 'Y':
-                    List<Vector2> polygonPoints = new();
-                    for (var i = 0; i < pathParts.Length; i += 2)
-                    {
-                        polygonPoints.Add(new Vector2(float.Parse(pathParts[i]), float.Parse(pathParts[i + 1])));
-                    }
-                    result = Polygon(polygonPoints.ToArray());
-                    break;
-                case 'S':
-                    result = Square(float.Parse(pathParts[0]));
-                    break;
-                case 'R':
-                    result = Rectangle(float.Parse(pathParts[0]), float.Parse(pathParts[1]));
-                    break;
-                case 'C':
-                    result = Circle(float.Parse(pathParts[0]));
-                    break;
-                case 'E':
-                    result = Ellipse(float.Parse(pathParts[0]), float.Parse(pathParts[1]));
-                    break;
-                case 'N':
-                    result = Ngon(int.Parse(pathParts[0]), float.Parse(pathParts[1]));
-                    break;
-                case 'T':
-                    result = Star(int.Parse(pathParts[0]), float.Parse(pathParts[1]), float.Parse(pathParts[2]));
-                    break;
-                default:
-                    result = Ngon(3, 1f);
-                    break;
-            }
-            return result;
-        }
-
-        public override string ToString()
-        {
-            return PathString;
         }
 
         /*

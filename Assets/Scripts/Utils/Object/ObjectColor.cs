@@ -1,7 +1,4 @@
-using Unity.VisualScripting;
 using UnityEngine;
-using Utils.Ext;
-using ColorUtility = UnityEngine.ColorUtility;
 
 namespace Utils.Object
 {
@@ -61,19 +58,5 @@ namespace Utils.Object
         public static ObjectColor Void(bool glow = false) => new(0f, 0f, 0f, 1f, glow);
 
         public static ObjectColor Ether(bool glow = false) => new(1f, 1f, 1f, 1f, glow);
-
-        public static ObjectColor Parse(string raw)
-        {
-            var htmlColor = '#' + raw[..8];
-            var glow = BoolExt.Parse(raw[8..9]);
-            Color tint;
-            ColorUtility.TryParseHtmlString(htmlColor, out tint);
-            return new ObjectColor(tint, glow);
-        }
-
-        public override string ToString()
-        {
-            return Tint.ToHexString() + BoolExt.Stringify(Glow);
-        }
     }
 }

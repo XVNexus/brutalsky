@@ -1,10 +1,10 @@
 using UnityEngine;
 
-namespace Utils.Path
+namespace Utils.Shape
 {
-    public abstract class PathNode
+    public abstract class FormNode
     {
-        public PathNode Previous
+        public FormNode Previous
         {
             get => _previous;
             set {
@@ -12,8 +12,8 @@ namespace Utils.Path
                 value._next = this;
             }
         }
-        private PathNode _previous;
-        public PathNode Next
+        private FormNode _previous;
+        public FormNode Next
         {
             get => _next;
             set {
@@ -21,7 +21,7 @@ namespace Utils.Path
                 value._previous = this;
             }
         }
-        private PathNode _next;
+        private FormNode _next;
 
         public Vector2 StartPoint => Previous.EndPoint;
         public Vector2 EndPoint { get; set; }

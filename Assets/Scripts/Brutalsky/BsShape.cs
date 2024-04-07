@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Linq;
 using Brutalsky.Base;
 using Controllers;
@@ -6,9 +5,7 @@ using Core;
 using UnityEngine;
 using Utils;
 using Utils.Constants;
-using Utils.Ext;
 using Utils.Object;
-using Utils.Path;
 using Utils.Shape;
 
 namespace Brutalsky
@@ -18,16 +15,16 @@ namespace Brutalsky
         public override GameObject Prefab => ResourceSystem._.shapePrefab;
         public override string Tag => Tags.Shape;
 
-        public Path Path { get; set; }
+        public Form Form { get; set; }
         public ShapeMaterial Material { get; set; }
         public ObjectColor Color { get; set; }
         public ObjectLayer Layer { get; set; }
         public bool Simulated { get; set; }
 
-        public BsShape(string id, ObjectTransform transform, Path path, ShapeMaterial material, ObjectColor color,
+        public BsShape(string id, ObjectTransform transform, Form form, ShapeMaterial material, ObjectColor color,
             ObjectLayer layer = ObjectLayer.Midground, bool simulated = true) : base(id, transform)
         {
-            Path = path;
+            Form = form;
             Material = material;
             Color = color;
             Layer = layer;
@@ -45,7 +42,7 @@ namespace Brutalsky
             controller.Object = this;
 
             // Convert path to mesh
-            var points = Path.ToPoints();
+            var points = Form.ToPoints();
             var vertices = points.Select(point => (Vector3)point).ToArray();
             var mesh = new Mesh
             {
@@ -99,23 +96,23 @@ namespace Brutalsky
         {
             return new[]
             {
-                Transform.ToString(),
-                Path.ToString(),
-                Material.ToString(),
-                Color.ToString(),
-                ((int)Layer).ToString(),
-                BoolExt.Stringify(Simulated)
+                SrzUtils.Stringify(Transform),
+                SrzUtils.Stringify(Form),
+                SrzUtils.Stringify(Material),
+                SrzUtils.Stringify(Color),
+                SrzUtils.Stringify(Layer),
+                SrzUtils.Stringify(Simulated)
             };
         }
 
         protected override void _FromSrz(string[] properties)
         {
-            Transform = ObjectTransform.Parse(properties[0]);
-            Path = Path.Parse(properties[1]);
-            Material = ShapeMaterial.Parse(properties[2]);
-            Color = ObjectColor.Parse(properties[3]);
-            Layer = (ObjectLayer)int.Parse(properties[4]);
-            Simulated = BoolExt.Parse(properties[5]);
+            Transform = SrzUtils.ParseTransform(properties[0]);
+            Form = SrzUtils.ParseForm(properties[1]);
+            Material = SrzUtils.ParseMaterial(properties[2]);
+            Color = SrzUtils.ParseColor(properties[3]);
+            Layer = SrzUtils.ParseLayer(properties[4]);
+            Simulated = SrzUtils.ParseBool(properties[5]);
         }
     }
 }

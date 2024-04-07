@@ -5,7 +5,6 @@ using Core;
 using Serializable;
 using UnityEngine;
 using Utils;
-using Utils.Ext;
 using Utils.Object;
 using YamlDotNet.Serialization;
 
@@ -33,25 +32,18 @@ namespace Brutalsky
 
         public SrzMap ToSrz()
         {
-            var srzSpawns = new List<SrzSpawn>();
-            foreach (var spawn in Spawns)
-            {
-                srzSpawns.Add(spawn.ToSrz());
-            }
-            var srzObjects = new List<SrzObject>();
-            foreach (var obj in Objects.Values)
-            {
-                srzObjects.Add(obj.ToSrz());
-            }
-            return new SrzMap(Title, Author, Vector2Ext.Stringify(Size), Lighting.ToString(), srzSpawns, srzObjects);
+            var srzSpawns = Spawns.Select(spawn => spawn.ToSrz()).ToList();
+            var srzObjects = Objects.Values.Select(obj => obj.ToSrz()).ToList();
+            return new SrzMap(SrzUtils.Stringify(Title), SrzUtils.Stringify(Author),
+                SrzUtils.Stringify(Size), SrzUtils.Stringify(Lighting), srzSpawns, srzObjects);
         }
 
         public void FromSrz(SrzMap srzMap)
         {
             Title = srzMap.tt;
             Author = srzMap.at;
-            Size = Vector2Ext.Parse(srzMap.sz);
-            Lighting = ObjectColor.Parse(srzMap.lg);
+            Size = SrzUtils.ParseVector2(srzMap.sz);
+            Lighting = SrzUtils.ParseColor(srzMap.lg);
             foreach (var srzSpawn in srzMap.sp)
             {
                 var spawn = new BsSpawn();

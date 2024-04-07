@@ -12,7 +12,7 @@ namespace Serializable
         public SrzObject(string tag, string id, string[] properties, List<SrzAddon> addons)
         {
             this.id = BsUtils.GenerateFullId(tag, id);
-            pr = BsUtils.CompressProperties(properties);
+            pr = SrzUtils.CompressProperties(properties);
             ad = addons;
         }
 

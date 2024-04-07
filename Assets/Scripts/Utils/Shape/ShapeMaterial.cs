@@ -62,18 +62,5 @@ namespace Utils.Shape
 
         // Harmful
         public static ShapeMaterial Electric(bool dynamic = false) => new(2f, 0f, 0f, 1f, -25f, dynamic);
-
-        public static ShapeMaterial Parse(string raw)
-        {
-            var parts = raw.Split(' ');
-            return new ShapeMaterial(float.Parse(parts[0]), float.Parse(parts[1]),
-                float.Parse(parts[2]), float.Parse(parts[3]), float.Parse(parts[4]),
-                BoolExt.Parse(parts[5]));
-        }
-
-        public override string ToString()
-        {
-            return $"{Friction} {Restitution} {Adhesion} {Density} {Health} {BoolExt.Stringify(Dynamic)}";
-        }
     }
 }

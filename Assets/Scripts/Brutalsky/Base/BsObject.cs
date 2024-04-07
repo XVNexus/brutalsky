@@ -60,7 +60,7 @@ namespace Brutalsky.Base
         public void FromSrz(string id, SrzObject srzObject)
         {
             Id = id;
-            _FromSrz(BsUtils.ExpandProperties(srzObject.pr));
+            _FromSrz(SrzUtils.ExpandProperties(srzObject.pr));
             foreach (var srzAddon in srzObject.ad)
             {
                 var addonIdParts = BsUtils.SplitFullId(srzAddon.id);

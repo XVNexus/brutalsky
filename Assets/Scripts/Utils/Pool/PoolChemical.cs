@@ -41,17 +41,5 @@ namespace Utils.Pool
 
         // Harmful
         public static PoolChemical Lava() => new(25f, 1f, -25f);
-
-        public static PoolChemical Parse(string raw)
-        {
-            var parts = raw.Split(' ');
-            return new PoolChemical(float.Parse(parts[0]), float.Parse(parts[1]),
-                float.Parse(parts[2]));
-        }
-
-        public override string ToString()
-        {
-            return $"{Buoyancy} {Viscosity} {Health}";
-        }
     }
 }

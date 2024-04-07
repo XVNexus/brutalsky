@@ -1,11 +1,9 @@
-using System.Collections.Generic;
 using Brutalsky.Base;
 using Controllers;
 using Core;
 using UnityEngine;
 using Utils;
 using Utils.Constants;
-using Utils.Ext;
 using Utils.Object;
 using Utils.Pool;
 
@@ -69,23 +67,23 @@ namespace Brutalsky
         {
             return new[]
             {
-                Transform.ToString(),
-                Vector2Ext.Stringify(Size),
-                Chemical.ToString(),
-                Color.ToString(),
-                ((int)Layer).ToString(),
-                BoolExt.Stringify(Simulated)
+                SrzUtils.Stringify(Transform),
+                SrzUtils.Stringify(Size),
+                SrzUtils.Stringify(Chemical),
+                SrzUtils.Stringify(Color),
+                SrzUtils.Stringify(Layer),
+                SrzUtils.Stringify(Simulated)
             };
         }
 
         protected override void _FromSrz(string[] properties)
         {
-            Transform = ObjectTransform.Parse(properties[0]);
-            Size = Vector2Ext.Parse(properties[1]);
-            Chemical = PoolChemical.Parse(properties[2]);
-            Color = ObjectColor.Parse(properties[3]);
-            Layer = (ObjectLayer)int.Parse(properties[4]);
-            Simulated = BoolExt.Parse(properties[5]);
+            Transform = SrzUtils.ParseTransform(properties[0]);
+            Size = SrzUtils.ParseVector2(properties[1]);
+            Chemical = SrzUtils.ParseChemical(properties[2]);
+            Color = SrzUtils.ParseColor(properties[3]);
+            Layer = SrzUtils.ParseLayer(properties[4]);
+            Simulated = SrzUtils.ParseBool(properties[5]);
         }
     }
 }
