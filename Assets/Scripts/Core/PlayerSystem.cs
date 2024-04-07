@@ -4,7 +4,6 @@ using Brutalsky;
 using Controllers;
 using Controllers.Player;
 using JetBrains.Annotations;
-using UnityEngine;
 
 namespace Core
 {

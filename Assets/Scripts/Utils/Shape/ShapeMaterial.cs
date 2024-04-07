@@ -1,5 +1,3 @@
-using Utils.Ext;
-
 namespace Utils.Shape
 {
     public class ShapeMaterial

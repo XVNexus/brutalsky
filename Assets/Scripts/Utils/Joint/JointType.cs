@@ -7,7 +7,6 @@ namespace Utils.Joint
         Spring,
         Hinge,
         Slider,
-        Wheel,
-        None
+        Wheel
     }
 }
