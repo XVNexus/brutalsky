@@ -79,16 +79,16 @@ namespace Utils
         // Object types
         public static ObjectColor ParseColor(string raw)
         {
-            var htmlColor = '#' + raw[..8];
-            var glow = raw.Length > 8 && ParseBool(raw[8..9]);
-            Color tint;
-            ColorUtility.TryParseHtmlString(htmlColor, out tint);
+            var htmlColor = raw.Length >= 8 ? raw[..8] : raw[..6];
+            var glow = raw.Length == 9 ? ParseBool(raw[8..9]) : raw.Length == 7 && ParseBool(raw[6..7]);
+            ColorUtility.TryParseHtmlString('#' + htmlColor, out var tint);
             return new ObjectColor(tint, glow);
         }
 
         public static string Stringify(ObjectColor color)
         {
-            return color.Tint.ToHexString() + Stringify(color.Glow);
+            var tintHex = color.Alpha < 1f ? color.Tint.ToHexString() : color.Tint.ToHexString()[..6];
+            return tintHex + Stringify(color.Glow);
         }
 
         public static ObjectLayer ParseLayer(string raw)
