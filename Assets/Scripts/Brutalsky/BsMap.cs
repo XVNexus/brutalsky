@@ -7,7 +7,6 @@ using Utils;
 using Utils.Constants;
 using Utils.Lcs;
 using Utils.Object;
-using YamlDotNet.Serialization;
 
 namespace Brutalsky
 {
@@ -29,6 +28,21 @@ namespace Brutalsky
 
         public BsMap()
         {
+        }
+
+        public string Stringify()
+        {
+            return ToLcs().Stringify();
+        }
+
+        public static BsMap Parse(string lcs)
+        {
+            var result = new BsMap();
+            result.FromLcs(LcsDocument.Parse(lcs, new Dictionary<char, int>
+            {
+                { '!', 0 }, { '$', 0 }, { '#', 0 }, { '@', 1 }
+            }));
+            return result;
         }
 
         public LcsDocument ToLcs()
@@ -67,42 +81,18 @@ namespace Brutalsky
                 switch (line.Prefix)
                 {
                     case '$':
+                        var spawn = new BsSpawn();
+                        spawn.FromLcs(line);
+                        AddSpawn(spawn);
                         break;
                     case '#':
-                        break;
-                    case '@':
+                        var obj = ResourceSystem._.GetTemplateObject(line.Header[0]);
+                        obj.FromLcs(line);
+                        AddObject(obj);
                         break;
                     default:
                         throw Errors.InvalidLcs(line, i);
                 }
-            }
-            _FromSrz(line.Properties);
-            foreach (var child in line.Children)
-            {
-                var addon = ResourceSystem._.GetTemplateAddon(child.Header[0]);
-                addon.FromLcs(child);
-                Addons.Add(addon);
-            }
-        }
-
-        public void FromSrz(SrzMap srzMap)
-        {
-            var parts = srzMap.Properties;
-            Title = SrzUtils.ParseString(parts[0]);
-            Author = SrzUtils.ParseString(parts[1]);
-            Size = SrzUtils.ParseVector2(parts[2]);
-            Lighting = SrzUtils.ParseColor(parts[3]);
-            foreach (var srzSpawn in srzMap.Spawns)
-            {
-                var spawn = new BsSpawn();
-                spawn.FromLcs(srzSpawn);
-                AddSpawn(spawn);
-            }
-            foreach (var srzObject in srzMap.Objects)
-            {
-                var obj = ResourceSystem._.GetTemplateObject(srzObject.Tag);
-                obj.FromSrz(srzObject.Id, srzObject);
-                AddObject(obj);
             }
         }
 
@@ -177,18 +167,6 @@ namespace Brutalsky
         public bool ContainsObject(string tag, string id)
         {
             return Objects.ContainsKey(BsUtils.GenerateFullId(tag, id));
-        }
-
-        public static BsMap Parse(string yaml)
-        {
-            var result = new BsMap();
-            result.FromSrz(new Deserializer().Deserialize<SrzMap>(yaml));
-            return result;
-        }
-
-        public string Stringify()
-        {
-            return new Serializer().Serialize(ToSrz());
         }
     }
 }

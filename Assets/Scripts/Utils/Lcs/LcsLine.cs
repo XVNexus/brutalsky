@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using JetBrains.Annotations;
 
 namespace Utils.Lcs
@@ -22,7 +23,7 @@ namespace Utils.Lcs
         public static LcsLine Parse(string raw)
         {
             var prefix = raw[0];
-            var parts = raw[1..].Split(SrzUtils.HeaderSeparator);
+            var parts = raw[1..].Trim().Split(SrzUtils.HeaderSeparator);
             var header = SrzUtils.ExpandProperties(parts[0]);
             var properties = SrzUtils.ExpandProperties(parts[1]);
             return new LcsLine(prefix, header, properties);
@@ -30,7 +31,9 @@ namespace Utils.Lcs
 
         public string Stringify()
         {
-            return $"{Prefix}{SrzUtils.CompressProperties(Header)}:{SrzUtils.CompressProperties(Properties)}";
+            var result = $"{Prefix}{SrzUtils.CompressProperties(Header)}:{SrzUtils.CompressProperties(Properties)}\n";
+            result = Children.Aggregate(result, (current, child) => current + child.Stringify());
+            return result;
         }
     }
 }

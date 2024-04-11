@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using Unity.VisualScripting;
 using UnityEngine;
 using Utils.Joint;
 using Utils.Object;
@@ -18,7 +17,6 @@ namespace Utils
         public const char HeaderSeparator = ':';
         public const char PropertySeperator = ';';
         public const char FieldSeperator = ',';
-        public const bool UseLcsFormat = false;
 
         // Basic types
         public static bool ParseBool(string raw)
@@ -80,16 +78,16 @@ namespace Utils
         // Object types
         public static ObjectColor ParseColor(string raw)
         {
-            var htmlColor = raw.Length >= 8 ? raw[..8] : raw[..6];
-            var glow = raw.Length == 9 ? ParseBool(raw[8..9]) : raw.Length == 7 && ParseBool(raw[6..7]);
-            ColorUtility.TryParseHtmlString('#' + htmlColor, out var tint);
+            var hexString = raw[..^(raw.Length % 2)];
+            ColorUtility.TryParseHtmlString('#' + raw[..^(raw.Length % 2)], out var tint);
+            var glow = ParseBool(raw[hexString.Length..]);
             return new ObjectColor(tint, glow);
         }
 
         public static string Stringify(ObjectColor color)
         {
-            var tintHex = color.Alpha < 1f ? color.Tint.ToHexString() : color.Tint.ToHexString()[..6];
-            return tintHex + Stringify(color.Glow);
+            return (color.Alpha < 1f ? ColorUtility.ToHtmlStringRGBA(color.Tint)
+                : ColorUtility.ToHtmlStringRGB(color.Tint)) + Stringify(color.Glow);
         }
 
         public static ObjectLayer ParseLayer(string raw)
@@ -330,40 +328,6 @@ namespace Utils
         public static string[] ExpandFields(string items)
         {
             return ExpandList(items, FieldSeperator);
-        }
-
-        public static string CompressMapString(string value)
-        {
-            return UseLcsFormat ? YamlToLcs(value) : value;
-        }
-
-        public static string ExpandMapString(string value)
-        {
-            return value.StartsWith('!') ? LcsToYaml(value) : value;
-        }
-
-        public static string YamlToLcs(string yaml)
-        {
-            var result = yaml.Replace("'", "");
-            result = Regex.Replace(result, @"tt: (.+)\nat: (.+)\nsz: (.+)\nlg: (.+)", "!$1;$2;$3;$4");
-            result = Regex.Replace(result, @"- pr: (.+)", "$$$1");
-            result = Regex.Replace(result, @"- id: (.+)\n  pr: (.+)\n  ad:( \[\])?", "#$1;$2");
-            result = Regex.Replace(result, @"  - id: (.+)\n    pr: (.+)", "@$1;$2");
-            result = Regex.Replace(result, @"(sp|ob):\n", "");
-            return result[..^1];
-        }
-
-        public static string LcsToYaml(string lcs)
-        {
-            var result = lcs + '\n';
-            result = Regex.Replace(result, @"(?<=!.+)\n", "\nsp:\n");
-            result = Regex.Replace(result, @"(?<=\$.+)\n(?=#)", "\nob:\n");
-            result = Regex.Replace(result, "@([^;]+);(.+)", "  - id: $1\n    pr: '$2'");
-            result = Regex.Replace(result, "#([^;]+);(.+)", "- id: $1\n  pr: '$2'\n  ad: []");
-            result = Regex.Replace(result, @"(?<=  ad:) \[\](?=\n )", "");
-            result = Regex.Replace(result, @"\$(.+)", "- pr: '$1'");
-            result = Regex.Replace(result, "!([^;]+);([^;]+);([^;]+);([^;]+)", "tt: $1\nat: $2\nsz: $3\nlg: $4");
-            return result;
         }
     }
 }

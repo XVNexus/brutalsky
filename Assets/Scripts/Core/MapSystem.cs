@@ -56,14 +56,14 @@ namespace Core
 
         public static string LoadInternal(string filename)
         {
-            return SrzUtils.ExpandMapString(Resources.Load<TextAsset>($"{Paths.Content}/{Paths.Maps}/{filename}").text);
+            return Resources.Load<TextAsset>($"{Paths.Content}/{Paths.Maps}/{filename}").text;
         }
 
         public static string Load(string filename)
         {
             var path = $"{ResourceSystem.DataPath}/{Paths.Maps}/{filename}.{SaveFormat}";
             using var reader = new StreamReader(path);
-            return SrzUtils.ExpandMapString(reader.ReadToEnd());
+            return reader.ReadToEnd();
         }
 
         public static void Save(string raw, string filename)
@@ -71,7 +71,7 @@ namespace Core
             var path = $"{ResourceSystem.DataPath}/{Paths.Maps}/{filename}.{SaveFormat}";
             new FileInfo(path).Directory?.Create();
             using var writer = new StreamWriter(path);
-            writer.Write(SrzUtils.CompressMapString(raw));
+            writer.Write(raw);
         }
 
         public void Rebuild()
