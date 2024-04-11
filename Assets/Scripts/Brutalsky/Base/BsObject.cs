@@ -1,9 +1,10 @@
 using System.Collections.Generic;
+using System.Linq;
 using Core;
 using JetBrains.Annotations;
-using Serializable;
 using UnityEngine;
 using Utils;
+using Utils.Lcs;
 using Utils.Object;
 
 namespace Brutalsky.Base
@@ -47,27 +48,25 @@ namespace Brutalsky.Base
             return instanceController;
         }
 
-        public SrzObject ToSrz()
+        public LcsLine ToLcs()
         {
-            var srzAddons = new List<SrzAddon>();
-            foreach (var addon in Addons)
-            {
-                srzAddons.Add(addon.ToSrz());
-            }
-            return new SrzObject(Tag, Id, _ToSrz(), srzAddons);
+            return new LcsLine
+            (
+                '#',
+                new[] { SrzUtils.Stringify(Tag), SrzUtils.Stringify(Id) },
+                _ToSrz(),
+                Addons.Select(addon => addon.ToLcs()).ToList()
+            );
         }
 
-        public void FromSrz(string id, SrzObject srzObject)
+        public void FromLcs(LcsLine line)
         {
-            Id = id;
-            _FromSrz(SrzUtils.ExpandProperties(srzObject.pr));
-            foreach (var srzAddon in srzObject.ad)
+            Id = SrzUtils.ParseString(line.Header[1]);
+            _FromSrz(line.Properties);
+            foreach (var child in line.Children)
             {
-                var addonIdParts = BsUtils.SplitFullId(srzAddon.id);
-                var addonTag = addonIdParts[0];
-                var addonId = addonIdParts[1];
-                var addon = ResourceSystem._.GetTemplateAddon(addonTag);
-                addon.FromSrz(addonId, srzAddon);
+                var addon = ResourceSystem._.GetTemplateAddon(child.Header[0]);
+                addon.FromLcs(child);
                 Addons.Add(addon);
             }
         }

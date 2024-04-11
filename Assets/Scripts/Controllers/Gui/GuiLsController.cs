@@ -4,9 +4,9 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using Utils.Gui;
 
-namespace Gui
+namespace Controllers.Gui
 {
-    public class GuiLs : BsBehavior
+    public class GuiLsController : BsBehavior
     {
         // Gui metadata
         public const string PaneId = "ls";
@@ -19,7 +19,7 @@ namespace Gui
 
         protected override void OnLoad()
         {
-            GuiSystem._.RegisterPane(PaneId, this, GuiPm.PaneId);
+            GuiSystem._.RegisterPane(PaneId, this, GuiPmController.PaneId);
             GuiSystem._.RegisterButton(PaneId, "back");
 
             foreach (var rawMap in MapSystem._.RawMapList.Values)

@@ -2,9 +2,10 @@ using System.Collections.Generic;
 using System.Linq;
 using Brutalsky.Base;
 using Core;
-using Serializable;
 using UnityEngine;
 using Utils;
+using Utils.Constants;
+using Utils.Lcs;
 using Utils.Object;
 using YamlDotNet.Serialization;
 
@@ -30,33 +31,77 @@ namespace Brutalsky
         {
         }
 
-        public SrzMap ToSrz()
+        public LcsDocument ToLcs()
         {
-            var srzSpawns = Spawns.Select(spawn => spawn.ToSrz()).ToList();
-            var srzObjects = Objects.Values.Select(obj => obj.ToSrz()).ToList();
-            return new SrzMap(SrzUtils.Stringify(Title), SrzUtils.Stringify(Author),
-                SrzUtils.Stringify(Size), SrzUtils.Stringify(Lighting), srzSpawns, srzObjects);
+            var lines = new List<LcsLine>
+            {
+                new(
+                    '!',
+                    new[] { SrzUtils.Stringify(Title), SrzUtils.ParseString(Author) },
+                    new[] { SrzUtils.Stringify(Size), SrzUtils.Stringify(Lighting) }
+                )
+            };
+            lines.AddRange(Spawns.Select(spawn => spawn.ToLcs()));
+            lines.AddRange(Objects.Values.Select(obj => obj.ToLcs()));
+            return new LcsDocument(lines);
+        }
+
+        public void FromLcs(LcsDocument document)
+        {
+            if (document.Lines.Count == 0)
+            {
+                throw Errors.EmptyLcs();
+            }
+            var metadataLine = document.Lines[0];
+            if (document.Lines[0].Prefix != '!')
+            {
+                throw Errors.InvalidLcs(metadataLine, 0);
+            }
+            Title = SrzUtils.ParseString(metadataLine.Header[0]);
+            Author = SrzUtils.ParseString(metadataLine.Header[1]);
+            Size = SrzUtils.ParseVector2(metadataLine.Properties[0]);
+            Lighting = SrzUtils.ParseColor(metadataLine.Properties[1]);
+            for (var i = 1; i < document.Lines.Count; i++)
+            {
+                var line = document.Lines[i];
+                switch (line.Prefix)
+                {
+                    case '$':
+                        break;
+                    case '#':
+                        break;
+                    case '@':
+                        break;
+                    default:
+                        throw Errors.InvalidLcs(line, i);
+                }
+            }
+            _FromSrz(line.Properties);
+            foreach (var child in line.Children)
+            {
+                var addon = ResourceSystem._.GetTemplateAddon(child.Header[0]);
+                addon.FromLcs(child);
+                Addons.Add(addon);
+            }
         }
 
         public void FromSrz(SrzMap srzMap)
         {
-            Title = srzMap.tt;
-            Author = srzMap.at;
-            Size = SrzUtils.ParseVector2(srzMap.sz);
-            Lighting = SrzUtils.ParseColor(srzMap.lg);
-            foreach (var srzSpawn in srzMap.sp)
+            var parts = srzMap.Properties;
+            Title = SrzUtils.ParseString(parts[0]);
+            Author = SrzUtils.ParseString(parts[1]);
+            Size = SrzUtils.ParseVector2(parts[2]);
+            Lighting = SrzUtils.ParseColor(parts[3]);
+            foreach (var srzSpawn in srzMap.Spawns)
             {
                 var spawn = new BsSpawn();
-                spawn.FromSrz(srzSpawn);
+                spawn.FromLcs(srzSpawn);
                 AddSpawn(spawn);
             }
-            foreach (var srzObject in srzMap.ob)
+            foreach (var srzObject in srzMap.Objects)
             {
-                var objIdParts = BsUtils.SplitFullId(srzObject.id);
-                var objTag = objIdParts[0];
-                var objId = objIdParts[1];
-                var obj = ResourceSystem._.GetTemplateObject(objTag);
-                obj.FromSrz(objId, srzObject);
+                var obj = ResourceSystem._.GetTemplateObject(srzObject.Tag);
+                obj.FromSrz(srzObject.Id, srzObject);
                 AddObject(obj);
             }
         }

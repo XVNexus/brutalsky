@@ -1,6 +1,6 @@
-using Serializable;
 using UnityEngine;
 using Utils;
+using Utils.Lcs;
 
 namespace Brutalsky
 {
@@ -20,21 +20,20 @@ namespace Brutalsky
         {
         }
 
-        public SrzSpawn ToSrz()
+        public LcsLine ToLcs()
         {
-            return new SrzSpawn(SrzUtils.CompressFields(new[]
-            {
-                SrzUtils.Stringify(Position.x),
-                SrzUtils.Stringify(Position.y),
-                SrzUtils.Stringify(Priority)
-            }));
+            return new LcsLine
+            (
+                '$',
+                new[] { SrzUtils.Stringify(Position) },
+                new[] { SrzUtils.Stringify(Priority) }
+            );
         }
 
-        public void FromSrz(SrzSpawn srzSpawn)
+        public void FromLcs(LcsLine line)
         {
-            var parts = SrzUtils.ExpandFields(srzSpawn.pr);
-            Position = new Vector2(SrzUtils.ParseFloat(parts[0]), SrzUtils.ParseFloat(parts[1]));
-            Priority = SrzUtils.ParseInt(parts[2]);
+            Position = SrzUtils.ParseVector2(line.Header[0]);
+            Priority = SrzUtils.ParseInt(line.Properties[0]);
         }
 
         public Vector2 Use()

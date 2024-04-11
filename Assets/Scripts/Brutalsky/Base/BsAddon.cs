@@ -1,7 +1,7 @@
 using JetBrains.Annotations;
-using Serializable;
 using UnityEngine;
 using Utils;
+using Utils.Lcs;
 using Utils.Object;
 
 namespace Brutalsky.Base
@@ -36,15 +36,20 @@ namespace Brutalsky.Base
             return _Init(gameObject, parentObject, map);
         }
 
-        public SrzAddon ToSrz()
+        public LcsLine ToLcs()
         {
-            return new SrzAddon(Tag, Id, _ToSrz());
+            return new LcsLine
+            (
+                '@',
+                new[] { SrzUtils.Stringify(Tag), SrzUtils.Stringify(Id) },
+                _ToSrz()
+            );
         }
 
-        public void FromSrz(string id, SrzAddon srzAddon)
+        public void FromLcs(LcsLine line)
         {
-            Id = id;
-            _FromSrz(SrzUtils.ExpandProperties(srzAddon.pr));
+            Id = SrzUtils.ParseString(line.Header[1]);
+            _FromSrz(line.Properties);
         }
 
         public void Activate(Component instanceComponent)

@@ -1,9 +1,9 @@
 using Core;
 using Utils.Gui;
 
-namespace Gui
+namespace Controllers.Gui
 {
-    public class GuiCf : BsBehavior
+    public class GuiCfController : BsBehavior
     {
         // Gui metadata
         public const string PaneId = "cf";
@@ -16,7 +16,7 @@ namespace Gui
 
         protected override void OnLoad()
         {
-            GuiSystem._.RegisterPane(PaneId, this, GuiPm.PaneId);
+            GuiSystem._.RegisterPane(PaneId, this, GuiPmController.PaneId);
             GuiSystem._.RegisterButton(PaneId, "back");
         }
 

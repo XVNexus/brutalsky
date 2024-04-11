@@ -3,9 +3,9 @@ using Core;
 using UnityEngine;
 using Utils.Gui;
 
-namespace Gui
+namespace Controllers.Gui
 {
-    public class GuiPm : BsBehavior
+    public class GuiPmController : BsBehavior
     {
         // Gui metadata
         public const string PaneId = "pm";
@@ -68,7 +68,7 @@ namespace Gui
 
         private void OnButtonPressLvls()
         {
-            GuiSystem._.ActivatePane(GuiLs.PaneId);
+            GuiSystem._.ActivatePane(GuiLsController.PaneId);
         }
 
         private void OnButtonPressPrev()
@@ -89,12 +89,12 @@ namespace Gui
 
         private void OnButtonPressCnfg()
         {
-            GuiSystem._.ActivatePane(GuiCf.PaneId);
+            GuiSystem._.ActivatePane(GuiCfController.PaneId);
         }
 
         private void OnButtonPressHelp()
         {
-            GuiSystem._.ActivatePane(GuiHe.PaneId);
+            GuiSystem._.ActivatePane(GuiHeController.PaneId);
         }
 
         private void OnButtonPressMenu()

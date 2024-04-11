@@ -1,11 +1,19 @@
 using System;
+using System.IO;
 using Brutalsky;
 using Utils.Joint;
+using Utils.Lcs;
 
 namespace Utils.Constants
 {
     public static class Errors
     {
+        public static InvalidDataException EmptyLcs()
+            => new($"Cannot parse an empty LCS document");
+
+        public static InvalidDataException InvalidLcs(LcsLine line, int index)
+            => new($"Invalid LCS data on line {index + 1} with prefix '{line.Prefix}'");
+
         public static IndexOutOfRangeException NoDataFound(string id)
             => new($"No controller data registered with id '{id}'");
 

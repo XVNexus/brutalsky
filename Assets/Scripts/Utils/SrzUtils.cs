@@ -15,9 +15,10 @@ namespace Utils
 {
     public static class SrzUtils
     {
-        public const char FieldSeperator = ',';
+        public const char HeaderSeparator = ':';
         public const char PropertySeperator = ';';
-        public const bool UseLcsFormat = true;
+        public const char FieldSeperator = ',';
+        public const bool UseLcsFormat = false;
 
         // Basic types
         public static bool ParseBool(string raw)
@@ -311,24 +312,24 @@ namespace Utils
             return items.Split(separator);
         }
 
-        public static string CompressFields(string[] fields)
+        public static string CompressProperties(string[] items)
         {
-            return CompressList(fields, FieldSeperator);
+            return CompressList(items, PropertySeperator);
         }
 
-        public static string[] ExpandFields(string fields)
+        public static string[] ExpandProperties(string items)
         {
-            return ExpandList(fields, FieldSeperator);
+            return ExpandList(items, PropertySeperator);
         }
 
-        public static string CompressProperties(string[] properties)
+        public static string CompressFields(string[] items)
         {
-            return CompressList(properties, PropertySeperator);
+            return CompressList(items, FieldSeperator);
         }
 
-        public static string[] ExpandProperties(string properties)
+        public static string[] ExpandFields(string items)
         {
-            return ExpandList(properties, PropertySeperator);
+            return ExpandList(items, FieldSeperator);
         }
 
         public static string CompressMapString(string value)
