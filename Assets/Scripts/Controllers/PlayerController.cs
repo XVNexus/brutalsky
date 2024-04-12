@@ -9,7 +9,7 @@ namespace Controllers
     public class PlayerController : ControllerBase<BsPlayer>
     {
         // Controller metadata
-        public override string Tag => Tags.PlayerName;
+        public override string Tag => Tags.PlayerTag;
 
         // Master functions
         public void Refresh()

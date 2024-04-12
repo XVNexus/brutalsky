@@ -14,25 +14,20 @@ namespace Utils.Lcs
 {
     public static class LcsParser
     {
-        public const int Version = 1;
+        public const int Version = 2;
         public const char HeaderSeparator = ':';
         public const char PropertySeperator = ';';
         public const char FieldSeperator = ',';
 
         // Basic types
-        public static bool ParseBool(string raw)
-        {
-            return raw == "1";
-        }
-
         public static string Stringify(bool value)
         {
             return value ? "1" : "";
         }
 
-        public static int ParseInt(string raw)
+        public static bool ParseBool(string raw)
         {
-            return raw.Length > 0 ? int.Parse(raw) : 0;
+            return raw == "1";
         }
 
         public static string Stringify(int value)
@@ -40,9 +35,9 @@ namespace Utils.Lcs
             return value != 0 ? value.ToString() : "";
         }
 
-        public static float ParseFloat(string raw)
+        public static int ParseInt(string raw)
         {
-            return raw.Length > 0 ? float.Parse(raw) : 0f;
+            return raw.Length > 0 ? int.Parse(raw) : 0;
         }
 
         public static string Stringify(float value)
@@ -50,33 +45,79 @@ namespace Utils.Lcs
             return value != 0f ? value.ToString() : "";
         }
 
-        public static char ParseChar(string raw)
+        public static float ParseFloat(string raw)
         {
-            return raw[0];
+            return raw.Length > 0 ? float.Parse(raw) : 0f;
         }
 
         public static string Stringify(char value)
         {
-            return value.ToString();
+            return Stringify(value.ToString());
         }
 
-        public static string ParseString(string raw)
+        public static char ParseChar(string raw)
         {
-            return raw;
+            return ParseString(raw)[0];
         }
 
         public static string Stringify(string value)
         {
-            return value;
+            var result = value;
+
+            // Escape backslashes
+            result = result.Replace(@"\", @"\\");
+
+            // Escape whitespace and special characters
+            var specialChars = new Dictionary<char, char>
+            {
+                {FieldSeperator, 'f'},
+                {PropertySeperator, 'p'},
+                {HeaderSeparator, 'h'},
+                {' ', 's'},
+                {'\t', 't'},
+                {'\n', 'n'},
+                {'#', 'g'}
+            };
+            result = specialChars.Keys.Aggregate(result, (current, specialChar)
+                => current.Replace($"{specialChar}", $@"\{specialChars[specialChar]}"));
+
+            // Force uppercase
+            result = Regex.Replace(result, "[A-Z]", match => '#' + match.Value);
+            result = Regex.Replace(result, "[a-z]+", match => match.Value.ToUpper());
+
+            return result;
+        }
+
+        public static string ParseString(string raw)
+        {
+            var result = raw;
+
+            // Restore casing
+            result = Regex.Replace(result, "[A-Z]+", match => match.Value.ToLower());
+            result = Regex.Replace(result, "#[a-z]", match => match.Value[1..2].ToUpper());
+
+            // Unescape whitespace and special characters
+            result = result.Replace(@"\\", @"\\ ");
+            var specialChars = new Dictionary<char, char>
+            {
+                {'f', FieldSeperator},
+                {'p', PropertySeperator},
+                {'h', HeaderSeparator},
+                {'s', ' '},
+                {'t', '\t'},
+                {'n', '\n'},
+                {'g', '#'}
+            };
+            result = specialChars.Keys.Aggregate(result, (current, specialChar)
+                => current.Replace($@"\{specialChar}", $"{specialChars[specialChar]}"));
+
+            // Unescape backslashes
+            result = result.Replace(@"\\ ", @"\");
+
+            return result;
         }
 
         // Unity types
-        public static Vector2 ParseVector2(string raw)
-        {
-            var parts = ExpandFields(raw);
-            return new Vector2(float.Parse(parts[0]), float.Parse(parts[1]));
-        }
-
         public static string Stringify(Vector2 value)
         {
             return CompressFields(new[]
@@ -86,7 +127,19 @@ namespace Utils.Lcs
             });
         }
 
+        public static Vector2 ParseVector2(string raw)
+        {
+            var parts = ExpandFields(raw);
+            return new Vector2(float.Parse(parts[0]), float.Parse(parts[1]));
+        }
+
         // Object types
+        public static string Stringify(ObjectColor color)
+        {
+            return (color.Alpha < 1f ? ColorUtility.ToHtmlStringRGBA(color.Tint)
+                : ColorUtility.ToHtmlStringRGB(color.Tint)) + Stringify(color.Glow);
+        }
+
         public static ObjectColor ParseColor(string raw)
         {
             var hexString = raw[..^(raw.Length % 2)];
@@ -95,26 +148,14 @@ namespace Utils.Lcs
             return new ObjectColor(tint, glow);
         }
 
-        public static string Stringify(ObjectColor color)
-        {
-            return (color.Alpha < 1f ? ColorUtility.ToHtmlStringRGBA(color.Tint)
-                : ColorUtility.ToHtmlStringRGB(color.Tint)) + Stringify(color.Glow);
-        }
-
-        public static ObjectLayer ParseLayer(string raw)
-        {
-            return (ObjectLayer)ParseInt(raw);
-        }
-
         public static string Stringify(ObjectLayer layer)
         {
             return Stringify((int)layer);
         }
 
-        public static ObjectTransform ParseTransform(string raw)
+        public static ObjectLayer ParseLayer(string raw)
         {
-            var parts = ExpandFields(raw);
-            return new ObjectTransform(ParseFloat(parts[0]), ParseFloat(parts[1]), ParseFloat(parts[2]));
+            return (ObjectLayer)ParseInt(raw);
         }
 
         public static string Stringify(ObjectTransform transform)
@@ -127,16 +168,26 @@ namespace Utils.Lcs
             });
         }
 
+        public static ObjectTransform ParseTransform(string raw)
+        {
+            var parts = ExpandFields(raw);
+            return new ObjectTransform(ParseFloat(parts[0]), ParseFloat(parts[1]), ParseFloat(parts[2]));
+        }
+
         // Shape types
+        public static string Stringify(Form form)
+        {
+            return Stringify((int)form.FormType) + (' ' + form.FormString).Replace(" 0", " ")
+                .Replace(' ', FieldSeperator);
+        }
+
         public static Form ParseForm(string raw)
         {
             Form result;
             var rawFull = Regex.Replace(' ' + raw.Replace(FieldSeperator, ' '),
                 " (?= |$)", " 0")[1..];
-            UnityEngine.Debug.Log($"PARSE '{rawFull}' from '{raw}'");
             var formType = (FormType)ParseInt(rawFull[..1]);
             var formData = rawFull[2..];
-            UnityEngine.Debug.Log($"TYPE '{formType}' / DATA '{formData}'");
             var formParts = formData.Split(' ');
             switch (formType)
             {
@@ -177,10 +228,17 @@ namespace Utils.Lcs
             return result;
         }
 
-        public static string Stringify(Form form)
+        public static string Stringify(ShapeMaterial material)
         {
-            return Stringify((int)form.FormType) + (' ' + form.FormString).Replace(" 0", " ")
-                .Replace(' ', FieldSeperator);
+            return CompressFields(new[]
+            {
+                Stringify(material.Friction),
+                Stringify(material.Restitution),
+                Stringify(material.Adhesion),
+                Stringify(material.Density),
+                Stringify(material.Health),
+                Stringify(material.Dynamic)
+            });
         }
 
         public static ShapeMaterial ParseMaterial(string raw)
@@ -195,29 +253,7 @@ namespace Utils.Lcs
             return new ShapeMaterial(friction, restitution, adhesion, density, health, dynamic);
         }
 
-        public static string Stringify(ShapeMaterial material)
-        {
-            return CompressFields(new[]
-            {
-                Stringify(material.Friction),
-                Stringify(material.Restitution),
-                Stringify(material.Adhesion),
-                Stringify(material.Density),
-                Stringify(material.Health),
-                Stringify(material.Dynamic)
-            });
-        }
-
         // Pool types
-        public static PoolChemical ParseChemical(string raw)
-        {
-            var parts = ExpandFields(raw);
-            var buoyancy = ParseFloat(parts[0]);
-            var viscosity = ParseFloat(parts[1]);
-            var health = ParseFloat(parts[2]);
-            return new PoolChemical(buoyancy, viscosity, health);
-        }
-
         public static string Stringify(PoolChemical chemical)
         {
             return CompressFields(new[]
@@ -228,20 +264,24 @@ namespace Utils.Lcs
             });
         }
 
-        // Joint types
-        public static JointType ParseJointType(string raw)
+        public static PoolChemical ParseChemical(string raw)
         {
-            return (JointType)ParseInt(raw);
+            var parts = ExpandFields(raw);
+            var buoyancy = ParseFloat(parts[0]);
+            var viscosity = ParseFloat(parts[1]);
+            var health = ParseFloat(parts[2]);
+            return new PoolChemical(buoyancy, viscosity, health);
         }
 
+        // Joint types
         public static string Stringify(JointType jointType)
         {
             return Stringify((int)jointType);
         }
 
-        public static JointConfig ParseJointConfig(string raw)
+        public static JointType ParseJointType(string raw)
         {
-            return raw == "" ? JointConfig.AutoValue() : JointConfig.SetValue(float.Parse(raw));
+            return (JointType)ParseInt(raw);
         }
 
         public static string Stringify(JointConfig jointConfig)
@@ -249,10 +289,9 @@ namespace Utils.Lcs
             return jointConfig.Auto ? "" : jointConfig.Value.ToString();
         }
 
-        public static JointDamping ParseJointDamping(string raw)
+        public static JointConfig ParseJointConfig(string raw)
         {
-            var parts = ExpandFields(raw);
-            return JointDamping.Damped(float.Parse(parts[0]), float.Parse(parts[1]));
+            return raw == "" ? JointConfig.AutoValue() : JointConfig.SetValue(float.Parse(raw));
         }
 
         public static string Stringify(JointDamping jointDamping)
@@ -264,11 +303,10 @@ namespace Utils.Lcs
             });
         }
 
-        public static JointLimits ParseJointLimits(string raw)
+        public static JointDamping ParseJointDamping(string raw)
         {
-            if (raw == "") return JointLimits.Unlimited();
             var parts = ExpandFields(raw);
-            return JointLimits.Limited(float.Parse(parts[0]), float.Parse(parts[1]));
+            return JointDamping.Damped(float.Parse(parts[0]), float.Parse(parts[1]));
         }
 
         public static string Stringify(JointLimits jointLimits)
@@ -280,11 +318,11 @@ namespace Utils.Lcs
             }) : "";
         }
 
-        public static JointMotor ParseJointMotor(string raw)
+        public static JointLimits ParseJointLimits(string raw)
         {
-            if (raw == "") return JointMotor.Unpowered();
+            if (raw == "") return JointLimits.Unlimited();
             var parts = ExpandFields(raw);
-            return JointMotor.Powered(float.Parse(parts[0]), float.Parse(parts[1]));
+            return JointLimits.Limited(float.Parse(parts[0]), float.Parse(parts[1]));
         }
 
         public static string Stringify(JointMotor jointMotor)
@@ -296,22 +334,29 @@ namespace Utils.Lcs
             }) : "";
         }
 
-        public static JointStrength ParseJointStrength(string raw)
+        public static JointMotor ParseJointMotor(string raw)
         {
-            if (raw == "") return JointStrength.Unbreakable();
+            if (raw == "") return JointMotor.Unpowered();
             var parts = ExpandFields(raw);
-            return JointStrength.Breakable(float.Parse(parts[0]), float.Parse(parts[1]));
+            return JointMotor.Powered(float.Parse(parts[0]), float.Parse(parts[1]));
         }
 
         public static string Stringify(JointStrength jointStrength)
         {
             var breakable = !float.IsPositiveInfinity(jointStrength.BreakForce)
-                || !float.IsPositiveInfinity(jointStrength.BreakTorque);
+                            || !float.IsPositiveInfinity(jointStrength.BreakTorque);
             return breakable ? CompressFields(new[]
             {
                 Stringify(jointStrength.BreakForce),
                 Stringify(jointStrength.BreakTorque)
             }) : "";
+        }
+
+        public static JointStrength ParseJointStrength(string raw)
+        {
+            if (raw == "") return JointStrength.Unbreakable();
+            var parts = ExpandFields(raw);
+            return JointStrength.Breakable(float.Parse(parts[0]), float.Parse(parts[1]));
         }
 
         // Utilities

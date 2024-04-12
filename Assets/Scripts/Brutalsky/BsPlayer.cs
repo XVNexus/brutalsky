@@ -11,7 +11,7 @@ namespace Brutalsky
     public class BsPlayer : BsObject
     {
         public override GameObject Prefab => ResourceSystem._.playerPrefab;
-        public override char Tag => Tags.PlayerPrefix;
+        public override char Tag => Tags.PlayerSym;
 
         public string Name { get; set; }
         public float Health { get; set; }
@@ -48,7 +48,7 @@ namespace Brutalsky
             InstanceObject.GetComponent<PlayerController>().Refresh();
         }
 
-        protected override string[] _ToSrz()
+        protected override string[] _ToLcs()
         {
             return new[]
             {
@@ -59,7 +59,7 @@ namespace Brutalsky
             };
         }
 
-        protected override void _FromSrz(string[] properties)
+        protected override void _FromLcs(string[] properties)
         {
             Name = LcsParser.ParseString(properties[0]);
             Health = LcsParser.ParseFloat(properties[1]);

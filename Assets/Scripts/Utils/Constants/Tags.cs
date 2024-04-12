@@ -3,17 +3,17 @@ namespace Utils.Constants
     public static class Tags
     {
         // Main
-        public const string PlayerName = "Player";
-        public const char PlayerPrefix = 'X';
+        public const string PlayerTag = "Player";
+        public const char PlayerSym = 'x';
 
         // Objects
-        public const string ShapeName = "Shape";
-        public const char ShapePrefix = 'S';
-        public const string PoolName = "Pool";
-        public const char PoolPrefix = 'P';
+        public const string ShapeTag = "Shape";
+        public const char ShapeSym = 's';
+        public const string PoolTag = "Pool";
+        public const char PoolSym = 'p';
 
         // Addons
-        public const string JointName = "Joint";
-        public const char JointPrefix = 'J';
+        public const string JointTag = "Joint";
+        public const char JointSym = 'j';
     }
 }

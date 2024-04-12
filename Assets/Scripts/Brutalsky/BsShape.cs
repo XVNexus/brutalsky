@@ -14,7 +14,7 @@ namespace Brutalsky
     public class BsShape : BsObject
     {
         public override GameObject Prefab => ResourceSystem._.shapePrefab;
-        public override char Tag => Tags.ShapePrefix;
+        public override char Tag => Tags.ShapeSym;
 
         public Form Form { get; set; }
         public ShapeMaterial Material { get; set; }
@@ -93,7 +93,7 @@ namespace Brutalsky
             return controller;
         }
 
-        protected override string[] _ToSrz()
+        protected override string[] _ToLcs()
         {
             return new[]
             {
@@ -106,7 +106,7 @@ namespace Brutalsky
             };
         }
 
-        protected override void _FromSrz(string[] properties)
+        protected override void _FromLcs(string[] properties)
         {
             Transform = LcsParser.ParseTransform(properties[0]);
             Form = LcsParser.ParseForm(properties[1]);

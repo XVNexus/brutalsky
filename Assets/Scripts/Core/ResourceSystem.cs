@@ -34,9 +34,9 @@ namespace Core
         {
             return objectPrefix switch
             {
-                Tags.PlayerPrefix => new BsPlayer(),
-                Tags.ShapePrefix => new BsShape(),
-                Tags.PoolPrefix => new BsPool(),
+                Tags.PlayerSym => new BsPlayer(),
+                Tags.ShapeSym => new BsShape(),
+                Tags.PoolSym => new BsPool(),
                 _ => throw Errors.InvalidObjectOrAddonTag("object", objectPrefix)
             };
         }
@@ -45,7 +45,7 @@ namespace Core
         {
             return addonPrefix switch
             {
-                Tags.JointPrefix => new BsJoint(),
+                Tags.JointSym => new BsJoint(),
                 _ => throw Errors.InvalidObjectOrAddonTag("addon", addonPrefix)
             };
         }

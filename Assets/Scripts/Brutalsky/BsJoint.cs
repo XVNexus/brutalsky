@@ -12,7 +12,7 @@ namespace Brutalsky
 {
     public class BsJoint : BsAddon
     {
-        public override char Tag => Tags.JointPrefix;
+        public override char Tag => Tags.JointSym;
 
         public JointType JointType { get; private set; }
         public string MountShapeId { get; set; }
@@ -147,7 +147,7 @@ namespace Brutalsky
             // Set up connected rigidbody
             if (MountShapeId.Length > 0)
             {
-                var mountShape = map.GetObject<BsShape>(Tags.ShapePrefix, MountShapeId);
+                var mountShape = map.GetObject<BsShape>(Tags.ShapeSym, MountShapeId);
                 if (mountShape.InstanceObject == null)
                 {
                     throw Errors.JointMountShapeUnbuilt(this);
@@ -159,7 +159,7 @@ namespace Brutalsky
             return component;
         }
 
-        protected override string[] _ToSrz()
+        protected override string[] _ToLcs()
         {
             var result = new List<string>
             {
@@ -202,7 +202,7 @@ namespace Brutalsky
             return result.ToArray();
         }
 
-        protected override void _FromSrz(string[] properties)
+        protected override void _FromLcs(string[] properties)
         {
             Transform = LcsParser.ParseTransform(properties[0]);
             JointType = LcsParser.ParseJointType(properties[1]);

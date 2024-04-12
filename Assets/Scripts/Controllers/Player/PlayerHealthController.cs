@@ -86,7 +86,7 @@ namespace Controllers.Player
             if (!alive) return;
 
             // Get collision info
-            var impactForce = other.TotalNormalImpulse() * (other.gameObject.CompareTag(Tags.PlayerName) ? 2f : 1f);
+            var impactForce = other.TotalNormalImpulse() * (other.gameObject.CompareTag(Tags.PlayerTag) ? 2f : 1f);
             if (impactForce < 25f) return;
             var impactSpeed = _lastSpeed;
 

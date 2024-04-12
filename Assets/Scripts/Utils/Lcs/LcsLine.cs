@@ -9,7 +9,6 @@ namespace Utils.Lcs
         public char Prefix { get; set; }
         public string[] Header { get; set; }
         public string[] Properties { get; set; }
-        // TODO: MAKE CHILDREN WORK
         public List<LcsLine> Children { get; set; }
 
         public LcsLine(char prefix, string[] header, string[] properties, [CanBeNull] List<LcsLine> children = null)

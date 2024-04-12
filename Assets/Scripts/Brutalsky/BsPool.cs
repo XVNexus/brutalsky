@@ -13,7 +13,7 @@ namespace Brutalsky
     public class BsPool : BsObject
     {
         public override GameObject Prefab => ResourceSystem._.poolPrefab;
-        public override char Tag => Tags.PoolPrefix;
+        public override char Tag => Tags.PoolSym;
 
         public Vector2 Size { get; set; }
         public PoolChemical Chemical { get; set; }
@@ -64,7 +64,7 @@ namespace Brutalsky
             return controller;
         }
 
-        protected override string[] _ToSrz()
+        protected override string[] _ToLcs()
         {
             return new[]
             {
@@ -77,7 +77,7 @@ namespace Brutalsky
             };
         }
 
-        protected override void _FromSrz(string[] properties)
+        protected override void _FromLcs(string[] properties)
         {
             Transform = LcsParser.ParseTransform(properties[0]);
             Size = LcsParser.ParseVector2(properties[1]);
