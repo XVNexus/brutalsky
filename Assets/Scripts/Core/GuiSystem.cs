@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Controllers.Base;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -160,7 +161,7 @@ namespace Core
                 not null when type == typeof(TextField) => _root.Q<T>($"{paneId}-txt-{itemId}"),
                 not null when type == typeof(IntegerField) => _root.Q<T>($"{paneId}-int-{itemId}"),
                 not null when type == typeof(FloatField) => _root.Q<T>($"{paneId}-flt-{itemId}"),
-                _ => throw Errors.InvalidGuiElement()
+                _ => throw Errors.InvalidGuiElementType()
             };
         }
 

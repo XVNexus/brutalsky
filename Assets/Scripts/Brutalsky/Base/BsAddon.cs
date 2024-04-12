@@ -1,6 +1,5 @@
 using JetBrains.Annotations;
 using UnityEngine;
-using Utils;
 using Utils.Lcs;
 using Utils.Object;
 
@@ -8,7 +7,7 @@ namespace Brutalsky.Base
 {
     public abstract class BsAddon
     {
-        public abstract string Tag { get; }
+        public abstract char Tag { get; }
         public string Id { get; set; }
         public ObjectTransform Transform { get; set; }
 
@@ -41,14 +40,14 @@ namespace Brutalsky.Base
             return new LcsLine
             (
                 '@',
-                new[] { SrzUtils.Stringify(Tag), SrzUtils.Stringify(Id) },
+                new[] { LcsParser.Stringify(Tag), LcsParser.Stringify(Id) },
                 _ToSrz()
             );
         }
 
         public void FromLcs(LcsLine line)
         {
-            Id = SrzUtils.ParseString(line.Header[1]);
+            Id = LcsParser.ParseString(line.Header[1]);
             _FromSrz(line.Properties);
         }
 

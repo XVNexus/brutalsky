@@ -38,10 +38,7 @@ namespace Brutalsky
         public static BsMap Parse(string lcs)
         {
             var result = new BsMap();
-            result.FromLcs(LcsDocument.Parse(lcs, new Dictionary<char, int>
-            {
-                { '!', 0 }, { '$', 0 }, { '#', 0 }, { '@', 1 }
-            }));
+            result.FromLcs(LcsDocument.Parse(lcs));
             return result;
         }
 
@@ -51,8 +48,8 @@ namespace Brutalsky
             {
                 new(
                     '!',
-                    new[] { SrzUtils.Stringify(Title), SrzUtils.ParseString(Author) },
-                    new[] { SrzUtils.Stringify(Size), SrzUtils.Stringify(Lighting) }
+                    new[] { LcsParser.Stringify(Title), LcsParser.Stringify(Author) },
+                    new[] { LcsParser.Stringify(Size), LcsParser.Stringify(Lighting) }
                 )
             };
             lines.AddRange(Spawns.Select(spawn => spawn.ToLcs()));
@@ -64,17 +61,17 @@ namespace Brutalsky
         {
             if (document.Lines.Count == 0)
             {
-                throw Errors.EmptyLcs();
+                throw Errors.EmptyLcsDocument();
             }
             var metadataLine = document.Lines[0];
             if (document.Lines[0].Prefix != '!')
             {
-                throw Errors.InvalidLcs(metadataLine, 0);
+                throw Errors.InvalidLcsLine(metadataLine, 0);
             }
-            Title = SrzUtils.ParseString(metadataLine.Header[0]);
-            Author = SrzUtils.ParseString(metadataLine.Header[1]);
-            Size = SrzUtils.ParseVector2(metadataLine.Properties[0]);
-            Lighting = SrzUtils.ParseColor(metadataLine.Properties[1]);
+            Title = LcsParser.ParseString(metadataLine.Header[0]);
+            Author = LcsParser.ParseString(metadataLine.Header[1]);
+            Size = LcsParser.ParseVector2(metadataLine.Properties[0]);
+            Lighting = LcsParser.ParseColor(metadataLine.Properties[1]);
             for (var i = 1; i < document.Lines.Count; i++)
             {
                 var line = document.Lines[i];
@@ -86,12 +83,12 @@ namespace Brutalsky
                         AddSpawn(spawn);
                         break;
                     case '#':
-                        var obj = ResourceSystem._.GetTemplateObject(line.Header[0]);
+                        var obj = ResourceSystem._.GetTemplateObject(LcsParser.ParseChar(line.Header[0]));
                         obj.FromLcs(line);
                         AddObject(obj);
                         break;
                     default:
-                        throw Errors.InvalidLcs(line, i);
+                        throw Errors.InvalidLcsLine(line, i);
                 }
             }
         }
@@ -137,15 +134,15 @@ namespace Brutalsky
             return index >= 0 && index < Spawns.Count;
         }
 
-        public T GetObject<T>(string tag, string id) where T : BsObject
+        public T GetObject<T>(char tag, string id) where T : BsObject
         {
-            return ContainsObject(tag, id) ? (T)Objects[BsUtils.GenerateFullId(tag, id)] : null;
+            return ContainsObject(tag, id) ? (T)Objects[tag + id] : null;
         }
 
         public bool AddObject(BsObject obj)
         {
             if (ContainsObject(obj)) return false;
-            Objects[BsUtils.GenerateFullId(obj.Tag, obj.Id)] = obj;
+            Objects[obj.Tag + obj.Id] = obj;
             return true;
         }
 
@@ -154,9 +151,9 @@ namespace Brutalsky
             return RemoveObject(obj.Tag, obj.Id);
         }
 
-        public bool RemoveObject(string tag, string id)
+        public bool RemoveObject(char tag, string id)
         {
-            return Objects.Remove(BsUtils.GenerateFullId(tag, id));
+            return Objects.Remove(tag + id);
         }
 
         public bool ContainsObject(BsObject obj)
@@ -164,9 +161,9 @@ namespace Brutalsky
             return ContainsObject(obj.Tag, obj.Id);
         }
 
-        public bool ContainsObject(string tag, string id)
+        public bool ContainsObject(char tag, string id)
         {
-            return Objects.ContainsKey(BsUtils.GenerateFullId(tag, id));
+            return Objects.ContainsKey(tag + id);
         }
     }
 }

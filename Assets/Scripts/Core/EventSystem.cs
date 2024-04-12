@@ -1,11 +1,11 @@
 using System;
-using UnityEngine;
+using Controllers.Base;
 using UnityEngine.InputSystem;
 using Utils.Gui;
 
 namespace Core
 {
-    public class EventSystem : MonoBehaviour
+    public class EventSystem : BsBehavior
     {
         // Static instance
         public static EventSystem _ { get; private set; }

@@ -5,6 +5,7 @@ using Core;
 using UnityEngine;
 using Utils;
 using Utils.Constants;
+using Utils.Lcs;
 using Utils.Object;
 using Utils.Shape;
 
@@ -13,7 +14,7 @@ namespace Brutalsky
     public class BsShape : BsObject
     {
         public override GameObject Prefab => ResourceSystem._.shapePrefab;
-        public override string Tag => Tags.Shape;
+        public override char Tag => Tags.ShapePrefix;
 
         public Form Form { get; set; }
         public ShapeMaterial Material { get; set; }
@@ -96,23 +97,23 @@ namespace Brutalsky
         {
             return new[]
             {
-                SrzUtils.Stringify(Transform),
-                SrzUtils.Stringify(Form),
-                SrzUtils.Stringify(Material),
-                SrzUtils.Stringify(Color),
-                SrzUtils.Stringify(Layer),
-                SrzUtils.Stringify(Simulated)
+                LcsParser.Stringify(Transform),
+                LcsParser.Stringify(Form),
+                LcsParser.Stringify(Material),
+                LcsParser.Stringify(Color),
+                LcsParser.Stringify(Layer),
+                LcsParser.Stringify(Simulated)
             };
         }
 
         protected override void _FromSrz(string[] properties)
         {
-            Transform = SrzUtils.ParseTransform(properties[0]);
-            Form = SrzUtils.ParseForm(properties[1]);
-            Material = SrzUtils.ParseMaterial(properties[2]);
-            Color = SrzUtils.ParseColor(properties[3]);
-            Layer = SrzUtils.ParseLayer(properties[4]);
-            Simulated = SrzUtils.ParseBool(properties[5]);
+            Transform = LcsParser.ParseTransform(properties[0]);
+            Form = LcsParser.ParseForm(properties[1]);
+            Material = LcsParser.ParseMaterial(properties[2]);
+            Color = LcsParser.ParseColor(properties[3]);
+            Layer = LcsParser.ParseLayer(properties[4]);
+            Simulated = LcsParser.ParseBool(properties[5]);
         }
     }
 }

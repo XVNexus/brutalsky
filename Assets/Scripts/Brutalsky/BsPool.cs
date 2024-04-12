@@ -4,6 +4,7 @@ using Core;
 using UnityEngine;
 using Utils;
 using Utils.Constants;
+using Utils.Lcs;
 using Utils.Object;
 using Utils.Pool;
 
@@ -12,7 +13,7 @@ namespace Brutalsky
     public class BsPool : BsObject
     {
         public override GameObject Prefab => ResourceSystem._.poolPrefab;
-        public override string Tag => Tags.Pool;
+        public override char Tag => Tags.PoolPrefix;
 
         public Vector2 Size { get; set; }
         public PoolChemical Chemical { get; set; }
@@ -67,23 +68,23 @@ namespace Brutalsky
         {
             return new[]
             {
-                SrzUtils.Stringify(Transform),
-                SrzUtils.Stringify(Size),
-                SrzUtils.Stringify(Chemical),
-                SrzUtils.Stringify(Color),
-                SrzUtils.Stringify(Layer),
-                SrzUtils.Stringify(Simulated)
+                LcsParser.Stringify(Transform),
+                LcsParser.Stringify(Size),
+                LcsParser.Stringify(Chemical),
+                LcsParser.Stringify(Color),
+                LcsParser.Stringify(Layer),
+                LcsParser.Stringify(Simulated)
             };
         }
 
         protected override void _FromSrz(string[] properties)
         {
-            Transform = SrzUtils.ParseTransform(properties[0]);
-            Size = SrzUtils.ParseVector2(properties[1]);
-            Chemical = SrzUtils.ParseChemical(properties[2]);
-            Color = SrzUtils.ParseColor(properties[3]);
-            Layer = SrzUtils.ParseLayer(properties[4]);
-            Simulated = SrzUtils.ParseBool(properties[5]);
+            Transform = LcsParser.ParseTransform(properties[0]);
+            Size = LcsParser.ParseVector2(properties[1]);
+            Chemical = LcsParser.ParseChemical(properties[2]);
+            Color = LcsParser.ParseColor(properties[3]);
+            Layer = LcsParser.ParseLayer(properties[4]);
+            Simulated = LcsParser.ParseBool(properties[5]);
         }
     }
 }

@@ -10,10 +10,11 @@ using ColorUtility = UnityEngine.ColorUtility;
 using JointLimits = Utils.Joint.JointLimits;
 using JointMotor = Utils.Joint.JointMotor;
 
-namespace Utils
+namespace Utils.Lcs
 {
-    public static class SrzUtils
+    public static class LcsParser
     {
+        public const int Version = 1;
         public const char HeaderSeparator = ':';
         public const char PropertySeperator = ';';
         public const char FieldSeperator = ',';
@@ -47,6 +48,16 @@ namespace Utils
         public static string Stringify(float value)
         {
             return value != 0f ? value.ToString() : "";
+        }
+
+        public static char ParseChar(string raw)
+        {
+            return raw[0];
+        }
+
+        public static string Stringify(char value)
+        {
+            return value.ToString();
         }
 
         public static string ParseString(string raw)
@@ -120,41 +131,44 @@ namespace Utils
         public static Form ParseForm(string raw)
         {
             Form result;
-            var rawFull = Regex.Replace(raw.Replace(FieldSeperator, ' '), " (?= |$)", " 0");
-            var pathType = rawFull[0];
-            var pathData = rawFull[2..];
-            var pathParts = pathData.Split(' ');
-            switch (pathType)
+            var rawFull = Regex.Replace(' ' + raw.Replace(FieldSeperator, ' '),
+                " (?= |$)", " 0")[1..];
+            UnityEngine.Debug.Log($"PARSE '{rawFull}' from '{raw}'");
+            var formType = (FormType)ParseInt(rawFull[..1]);
+            var formData = rawFull[2..];
+            UnityEngine.Debug.Log($"TYPE '{formType}' / DATA '{formData}'");
+            var formParts = formData.Split(' ');
+            switch (formType)
             {
-                case 'X':
-                    result = Form.Vector(pathData);
+                case FormType.Vector:
+                    result = Form.Vector(formData);
                     break;
-                case 'Y':
+                case FormType.Polygon:
                     List<Vector2> polygonPoints = new();
-                    for (var i = 0; i < pathParts.Length; i += 2)
+                    for (var i = 0; i < formParts.Length; i += 2)
                     {
-                        polygonPoints.Add(new Vector2(float.Parse(pathParts[i]), float.Parse(pathParts[i + 1])));
+                        polygonPoints.Add(new Vector2(float.Parse(formParts[i]), float.Parse(formParts[i + 1])));
                     }
                     result = Form.Polygon(polygonPoints.ToArray());
                     break;
-                case 'S':
-                    result = Form.Square(float.Parse(pathParts[0]));
+                case FormType.Square:
+                    result = Form.Square(float.Parse(formParts[0]));
                     break;
-                case 'R':
-                    result = Form.Rectangle(float.Parse(pathParts[0]), float.Parse(pathParts[1]));
+                case FormType.Rectangle:
+                    result = Form.Rectangle(float.Parse(formParts[0]), float.Parse(formParts[1]));
                     break;
-                case 'C':
-                    result = Form.Circle(float.Parse(pathParts[0]));
+                case FormType.Circle:
+                    result = Form.Circle(float.Parse(formParts[0]));
                     break;
-                case 'E':
-                    result = Form.Ellipse(float.Parse(pathParts[0]), float.Parse(pathParts[1]));
+                case FormType.Ellipse:
+                    result = Form.Ellipse(float.Parse(formParts[0]), float.Parse(formParts[1]));
                     break;
-                case 'N':
-                    result = Form.Ngon(int.Parse(pathParts[0]), float.Parse(pathParts[1]));
+                case FormType.Ngon:
+                    result = Form.Ngon(int.Parse(formParts[0]), float.Parse(formParts[1]));
                     break;
-                case 'T':
-                    result = Form.Star(int.Parse(pathParts[0]), float.Parse(pathParts[1]),
-                        float.Parse(pathParts[2]));
+                case FormType.Star:
+                    result = Form.Star(int.Parse(formParts[0]), float.Parse(formParts[1]),
+                        float.Parse(formParts[2]));
                     break;
                 default:
                     result = Form.Ngon(3, 1f);
@@ -165,19 +179,20 @@ namespace Utils
 
         public static string Stringify(Form form)
         {
-            return form.VectorString.Replace(" 0", " ").Replace(' ', FieldSeperator);
+            return Stringify((int)form.FormType) + (' ' + form.FormString).Replace(" 0", " ")
+                .Replace(' ', FieldSeperator);
         }
 
         public static ShapeMaterial ParseMaterial(string raw)
         {
             var parts = ExpandFields(raw);
             var friction = ParseFloat(parts[0]);
-            var restition = ParseFloat(parts[1]);
+            var restitution = ParseFloat(parts[1]);
             var adhesion = ParseFloat(parts[2]);
             var density = ParseFloat(parts[3]);
             var health = ParseFloat(parts[4]);
             var dynamic = ParseBool(parts[5]);
-            return new ShapeMaterial(friction, restition, adhesion, density, health, dynamic);
+            return new ShapeMaterial(friction, restitution, adhesion, density, health, dynamic);
         }
 
         public static string Stringify(ShapeMaterial material)

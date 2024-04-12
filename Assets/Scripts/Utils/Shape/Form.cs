@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using UnityEngine;
 using Utils.Constants;
 
@@ -8,8 +7,10 @@ namespace Utils.Shape
 {
     public class Form
     {
+        public FormType FormType { get; private set; }
+        public string FormString { get; private set; } = "";
+
         public FormNode StartNode { get; set; }
-        public string VectorString { get; private set; } = "";
 
         public Form(Vector2 startPoint, IEnumerable<FormNode> nodes)
         {
@@ -24,40 +25,29 @@ namespace Utils.Shape
 
         public static Form Vector(string path)
         {
-            var parts = Regex.Split(path.ToUpper(), " (?=[LC])");
-            if (parts.Length < 3)
-            {
-                throw Errors.MissingPathParams("path", 3);
-            }
-            var startValues = parts[0].Split(' ');
-            var startPoint = new Vector2(float.Parse(startValues[0]), float.Parse(startValues[1]));
+            var parts = path.Split(' ');
+            var startPoint = new Vector2(float.Parse(parts[0]), float.Parse(parts[1]));
             var nodes = new List<FormNode>();
-            for (var i = 1; i < parts.Length; i++)
+            for (var i = 2; i < parts.Length; i++)
             {
-                var values = parts[i].Split(' ');
-                var nodeType = values[0];
-                switch (nodeType)
+                switch (parts[i])
                 {
-                    case "L":
-                        if (values.Length < 3)
-                        {
-                            throw Errors.MissingPathParams("line node", 2);
-                        }
-                        nodes.Add(new FormLine(float.Parse(values[1]), float.Parse(values[2])));
+                    case "0":
+                        nodes.Add(new FormLine(float.Parse(parts[i + 1]), float.Parse(parts[i + 2])));
+                        i += 2;
                         break;
-                    case "C":
-                        if (values.Length < 5)
-                        {
-                            throw Errors.MissingPathParams("curve node", 4);
-                        }
-                        nodes.Add(new FormCurve(float.Parse(values[1]), float.Parse(values[2]),
-                            float.Parse(values[3]), float.Parse(values[4])));
+                    case "1":
+                        nodes.Add(new FormCurve(float.Parse(parts[i + 1]), float.Parse(parts[i + 2]),
+                            float.Parse(parts[i + 3]), float.Parse(parts[i + 4])));
+                        i += 4;
                         break;
                 }
             }
-
-            var result = new Form(startPoint, nodes);
-            result.VectorString = $"X {path.ToUpper()}";
+            var result = new Form(startPoint, nodes)
+            {
+                FormType = FormType.Vector,
+                FormString = path
+            };
             return result;
         }
 
@@ -65,7 +55,7 @@ namespace Utils.Shape
         {
             if (points.Length < 3)
             {
-                throw Errors.MissingPathParams("polygon", 3);
+                throw Errors.MissingFormParams("polygon", 3);
             }
             var startPoint = points[0];
             var nodes = new FormLine[points.Length - 1];
@@ -73,16 +63,19 @@ namespace Utils.Shape
             {
                 nodes[i - 1] = new FormLine(points[i]);
             }
-
-            var result = new Form(startPoint, nodes);
-            result.VectorString = points.Aggregate("Y", (current, point) => current + $" {point.x} {point.y}");
+            var result = new Form(startPoint, nodes)
+            {
+                FormType = FormType.Polygon,
+                FormString = points.Aggregate("", (current, point) => current + $" {point.x} {point.y}")[1..]
+            };
             return result;
         }
 
         public static Form Square(float diameter)
         {
             var result = Rectangle(diameter, diameter);
-            result.VectorString = $"S {diameter}";
+            result.FormType = FormType.Square;
+            result.FormString = $"{diameter}";
             return result;
         }
 
@@ -95,14 +88,16 @@ namespace Utils.Shape
                 new(width / 2f, -height / 2f),
                 new(-width / 2f, -height / 2f)
             });
-            result.VectorString = $"R {width} {height}";
+            result.FormType = FormType.Rectangle;
+            result.FormString = $"{width} {height}";
             return result;
         }
 
         public static Form Circle(float diameter)
         {
             var result = Ellipse(diameter, diameter);
-            result.VectorString = $"C {diameter}";
+            result.FormType = FormType.Circle;
+            result.FormString = $"{diameter}";
             return result;
         }
 
@@ -114,8 +109,11 @@ namespace Utils.Shape
                 new FormCurve(width / 2f, -height / 2f, 0f, -height / 2f),
                 new FormCurve(-width / 2f, -height / 2f, -width / 2f, 0f),
                 new FormCurve(-width / 2f, height / 2f, 0f, height / 2f)
-            });
-            result.VectorString = $"E {width} {height}";
+            })
+            {
+                FormType = FormType.Ellipse,
+                FormString = $"{width} {height}"
+            };
             return result;
         }
 
@@ -127,9 +125,9 @@ namespace Utils.Shape
                 var vertexAngle = i / (float)sides * 2f * Mathf.PI;
                 vertices[i] = new Vector2(Mathf.Cos(vertexAngle), Mathf.Sin(vertexAngle)) * (diameter / 2f);
             }
-
             var result = Polygon(vertices);
-            result.VectorString = $"N {sides} {diameter}";
+            result.FormType = FormType.Ngon;
+            result.FormString = $"{sides} {diameter}";
             return result;
         }
 
@@ -142,9 +140,9 @@ namespace Utils.Shape
                 var diameter = i % 2 == 0 ? outerDiameter : innerDiameter;
                 vertices[i] = new Vector2(Mathf.Cos(vertexAngle), Mathf.Sin(vertexAngle)) * (diameter / 2f);
             }
-
             var result = Polygon(vertices);
-            result.VectorString = $"T {points} {outerDiameter} {innerDiameter}";
+            result.FormType = FormType.Star;
+            result.FormString = $"{points} {outerDiameter} {innerDiameter}";
             return result;
         }
 
@@ -164,16 +162,5 @@ namespace Utils.Shape
 
             return result.ToArray();
         }
-
-        /*
-         * X: Path
-         * Y: Polygon
-         * S: Square
-         * R: Rectangle
-         * C: Circle
-         * E: Ellipse
-         * N: Ngon
-         * T: Star
-         */
     }
 }

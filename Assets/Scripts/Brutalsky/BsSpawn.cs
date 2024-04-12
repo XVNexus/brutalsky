@@ -1,5 +1,4 @@
 using UnityEngine;
-using Utils;
 using Utils.Lcs;
 
 namespace Brutalsky
@@ -25,15 +24,15 @@ namespace Brutalsky
             return new LcsLine
             (
                 '$',
-                new[] { SrzUtils.Stringify(Position) },
-                new[] { SrzUtils.Stringify(Priority) }
+                new[] { LcsParser.Stringify(Position) },
+                new[] { LcsParser.Stringify(Priority) }
             );
         }
 
         public void FromLcs(LcsLine line)
         {
-            Position = SrzUtils.ParseVector2(line.Header[0]);
-            Priority = SrzUtils.ParseInt(line.Properties[0]);
+            Position = LcsParser.ParseVector2(line.Header[0]);
+            Priority = LcsParser.ParseInt(line.Properties[0]);
         }
 
         public Vector2 Use()

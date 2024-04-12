@@ -2,8 +2,8 @@ using Brutalsky.Base;
 using Controllers;
 using Core;
 using UnityEngine;
-using Utils;
 using Utils.Constants;
+using Utils.Lcs;
 using Utils.Object;
 
 namespace Brutalsky
@@ -11,7 +11,7 @@ namespace Brutalsky
     public class BsPlayer : BsObject
     {
         public override GameObject Prefab => ResourceSystem._.playerPrefab;
-        public override string Tag => Tags.Player;
+        public override char Tag => Tags.PlayerPrefix;
 
         public string Name { get; set; }
         public float Health { get; set; }
@@ -52,19 +52,19 @@ namespace Brutalsky
         {
             return new[]
             {
-                SrzUtils.Stringify(Name),
-                SrzUtils.Stringify(Health),
-                SrzUtils.Stringify(Color),
-                SrzUtils.Stringify(Dummy)
+                LcsParser.Stringify(Name),
+                LcsParser.Stringify(Health),
+                LcsParser.Stringify(Color),
+                LcsParser.Stringify(Dummy)
             };
         }
 
         protected override void _FromSrz(string[] properties)
         {
-            Name = SrzUtils.ParseString(properties[0]);
-            Health = SrzUtils.ParseFloat(properties[1]);
-            Color = SrzUtils.ParseColor(properties[2]);
-            Dummy = SrzUtils.ParseBool(properties[3]);
+            Name = LcsParser.ParseString(properties[0]);
+            Health = LcsParser.ParseFloat(properties[1]);
+            Color = LcsParser.ParseColor(properties[2]);
+            Dummy = LcsParser.ParseBool(properties[3]);
         }
     }
 }

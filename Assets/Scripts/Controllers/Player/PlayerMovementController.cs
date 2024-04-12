@@ -72,7 +72,7 @@ namespace Controllers.Player
             OnCollision(other);
 
             // Get collision info
-            if (!other.gameObject.CompareTag(Tags.Player)) return;
+            if (!other.gameObject.CompareTag(Tags.PlayerName)) return;
             var impactSpeed = _lastSpeed * other.DirectnessFactor();
 
             // Reduce velocity based on collision force
@@ -88,7 +88,7 @@ namespace Controllers.Player
         private void OnCollision(Collision2D other)
         {
             // Update ground status
-            if (!other.gameObject.CompareTag(Tags.Shape) && !other.gameObject.CompareTag(Tags.Player)) return;
+            if (!other.gameObject.CompareTag(Tags.ShapeName) && !other.gameObject.CompareTag(Tags.PlayerName)) return;
             if (other.GetContact(0).point.y > _lastPositionY - .25f) return;
             _onGroundFrames = MaxOnGroundFrames;
             onGround = true;
@@ -110,7 +110,8 @@ namespace Controllers.Player
             // Apply directional movement
             var movementInput = iMovement.ReadValue<Vector2>();
             var jumpInput = onGround && movementInput.y > 0f && _jumpCooldown == 0;
-            _cRigidbody2D.AddForce(movementInput * new Vector2(movementForce, Physics2D.gravity.magnitude * .5f));
+            _cRigidbody2D.AddForce(movementInput
+                * new Vector2(movementForce * (onGround ? 1.5f : .5f), Physics2D.gravity.magnitude * .5f));
             if (jumpInput)
             {
                 _cRigidbody2D.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);

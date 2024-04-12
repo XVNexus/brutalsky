@@ -3,7 +3,6 @@ using System.Linq;
 using Core;
 using JetBrains.Annotations;
 using UnityEngine;
-using Utils;
 using Utils.Lcs;
 using Utils.Object;
 
@@ -13,7 +12,7 @@ namespace Brutalsky.Base
     {
         public List<BsAddon> Addons { get; } = new();
         public abstract GameObject Prefab { get; }
-        public abstract string Tag { get; }
+        public abstract char Tag { get; }
         public string Id { get; set; }
         public ObjectTransform Transform { get; set; }
 
@@ -53,7 +52,7 @@ namespace Brutalsky.Base
             return new LcsLine
             (
                 '#',
-                new[] { SrzUtils.Stringify(Tag), SrzUtils.Stringify(Id) },
+                new[] { LcsParser.Stringify(Tag), LcsParser.Stringify(Id) },
                 _ToSrz(),
                 Addons.Select(addon => addon.ToLcs()).ToList()
             );
@@ -61,11 +60,11 @@ namespace Brutalsky.Base
 
         public void FromLcs(LcsLine line)
         {
-            Id = SrzUtils.ParseString(line.Header[1]);
+            Id = LcsParser.ParseString(line.Header[1]);
             _FromSrz(line.Properties);
             foreach (var child in line.Children)
             {
-                var addon = ResourceSystem._.GetTemplateAddon(child.Header[0]);
+                var addon = ResourceSystem._.GetTemplateAddon(LcsParser.ParseChar(child.Header[0]));
                 addon.FromLcs(child);
                 Addons.Add(addon);
             }

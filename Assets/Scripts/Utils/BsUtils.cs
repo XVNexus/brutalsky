@@ -25,15 +25,5 @@ namespace Utils
         {
             return BitConverter.ToUInt32(BitConverter.GetBytes((title + author).GetHashCode()), 0);
         }
-
-        public static string GenerateFullId(string tag, string id)
-        {
-            return $"{tag}:{id}";
-        }
-
-        public static string[] SplitFullId(string fullId)
-        {
-            return fullId.Split(':');
-        }
     }
 }

@@ -1,13 +1,14 @@
 using System;
 using Brutalsky;
 using Brutalsky.Base;
+using Controllers.Base;
 using UnityEngine;
 using Utils.Constants;
 using Random = Unity.Mathematics.Random;
 
 namespace Core
 {
-    public class ResourceSystem : MonoBehaviour
+    public class ResourceSystem : BsBehavior
     {
         // Static instance
         public static ResourceSystem _ { get; private set; }
@@ -29,23 +30,23 @@ namespace Core
         public Material unlitMaterial;
 
         // System functions
-        public BsObject GetTemplateObject(string objectTag)
+        public BsObject GetTemplateObject(char objectPrefix)
         {
-            return objectTag switch
+            return objectPrefix switch
             {
-                Tags.Player => new BsPlayer(),
-                Tags.Shape => new BsShape(),
-                Tags.Pool => new BsPool(),
-                _ => throw Errors.InvalidTag("object", objectTag)
+                Tags.PlayerPrefix => new BsPlayer(),
+                Tags.ShapePrefix => new BsShape(),
+                Tags.PoolPrefix => new BsPool(),
+                _ => throw Errors.InvalidObjectOrAddonTag("object", objectPrefix)
             };
         }
 
-        public BsAddon GetTemplateAddon(string addonTag)
+        public BsAddon GetTemplateAddon(char addonPrefix)
         {
-            return addonTag switch
+            return addonPrefix switch
             {
-                Tags.Joint => new BsJoint(),
-                _ => throw Errors.InvalidTag("addon", addonTag)
+                Tags.JointPrefix => new BsJoint(),
+                _ => throw Errors.InvalidObjectOrAddonTag("addon", addonPrefix)
             };
         }
     }

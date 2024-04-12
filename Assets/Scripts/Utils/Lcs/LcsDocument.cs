@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Utils.Constants;
 
 namespace Utils.Lcs
 {
@@ -12,10 +13,33 @@ namespace Utils.Lcs
             Lines = lines;
         }
 
-        public static LcsDocument Parse(string raw, Dictionary<char, int> lineLevels)
+        public static LcsDocument Parse(string raw)
+        {
+            var version = int.Parse(raw[..3]);
+            var lcs = raw[4..];
+            return version switch
+            {
+                1 => Parse001(lcs),
+                _ => throw Errors.InvalidLcsVersion(version)
+            };
+        }
+
+        public string Stringify()
+        {
+            var header = LcsParser.Version.ToString().PadLeft(3, '0') + '\n';
+            var lcs = LcsParser.Version switch
+            {
+                1 => Stringify001(),
+                _ => throw Errors.InvalidLcsVersion(LcsParser.Version)
+            };
+            return header + lcs;
+        }
+
+        private static LcsDocument Parse001(string raw)
         {
             var result = new List<LcsLine>();
             var rawLines = raw.Trim().Split('\n');
+            var lineLevels = new Dictionary<char, int> { { '!', 0 }, { '$', 0 }, { '#', 0 }, { '@', 1 } };
             var lineCache = new Dictionary<int, LcsLine>();
             var lastLineLevel = 0;
             foreach (var rawLine in rawLines)
@@ -36,7 +60,7 @@ namespace Utils.Lcs
             return new LcsDocument(result.ToList());
         }
 
-        public string Stringify()
+        private string Stringify001()
         {
             return Lines.Aggregate("", (current, line) => current + line.Stringify());
         }

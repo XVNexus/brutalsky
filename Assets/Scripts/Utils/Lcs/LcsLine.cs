@@ -23,15 +23,15 @@ namespace Utils.Lcs
         public static LcsLine Parse(string raw)
         {
             var prefix = raw[0];
-            var parts = raw[1..].Trim().Split(SrzUtils.HeaderSeparator);
-            var header = SrzUtils.ExpandProperties(parts[0]);
-            var properties = SrzUtils.ExpandProperties(parts[1]);
+            var parts = raw[1..].Trim().Split(LcsParser.HeaderSeparator);
+            var header = LcsParser.ExpandProperties(parts[0]);
+            var properties = LcsParser.ExpandProperties(parts[1]);
             return new LcsLine(prefix, header, properties);
         }
 
         public string Stringify()
         {
-            var result = $"{Prefix}{SrzUtils.CompressProperties(Header)}:{SrzUtils.CompressProperties(Properties)}\n";
+            var result = $"{Prefix}{LcsParser.CompressProperties(Header)}:{LcsParser.CompressProperties(Properties)}\n";
             result = Children.Aggregate(result, (current, child) => current + child.Stringify());
             return result;
         }
