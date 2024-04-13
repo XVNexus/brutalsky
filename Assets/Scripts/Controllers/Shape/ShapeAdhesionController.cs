@@ -1,3 +1,4 @@
+using System;
 using Brutalsky;
 using Controllers.Base;
 using UnityEngine;
@@ -21,6 +22,15 @@ namespace Controllers.Shape
         }
 
         // Event functions
+        private void OnCollisionExit2D(Collision2D other)
+        {
+            if (!other.gameObject.CompareTag(Tags.PlayerTag)) return;
+
+            // Allow players to unstick no matter how much adhesion there is
+            var playerRigidbody = other.rigidbody;
+            playerRigidbody.position -= playerRigidbody.velocity.normalized * .025f;
+        }
+
         private void OnCollisionStay2D(Collision2D other)
         {
             // Get collision info
