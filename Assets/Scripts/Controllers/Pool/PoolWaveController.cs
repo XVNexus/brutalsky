@@ -80,27 +80,29 @@ namespace Controllers.Pool
         {
             // Trigger wave splash effect
             var splashPoint = transform.InverseTransformPoint(other.transform.position).x * Master.Object.Size.x;
-            _waves.Add(new PoolWave(splashPoint, 25f, 2f, 3f));
+            _waves.Add(new PoolWave(splashPoint, 50f, 2.5f, 5f));
         }
 
         private void Update()
         {
-            // Update wave effects
-            if (_waves.Count == 0) return;
+            // Generate idle wave animation
             var wavePointHeights = new float[_wavePointCount];
+            for (var i = 0; i < _wavePointCount; i++)
+            {
+                wavePointHeights[i] = Mathf.Sin((_wavePointOffsets[i] + Time.timeSinceLevelLoad) * 2f) * .25f;
+            }
+
+            // Update wave effects
             for (var i = _waves.Count - 1; i >= 0; i--)
             {
                 var wave = _waves[i];
                 wave.Update(Time.deltaTime);
-                if (wave.Idle)
-                {
-                    _waves.RemoveAt(i);
-                    continue;
-                }
                 for (var j = 0; j < _wavePointCount; j++)
                 {
                     wavePointHeights[j] += wave.SamplePoint(_wavePointOffsets[j]);
                 }
+                if (!wave.Idle) continue;
+                _waves.RemoveAt(i);
             }
 
             // Apply wave heightmap to line renderer
