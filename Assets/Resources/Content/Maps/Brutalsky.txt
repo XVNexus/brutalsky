@@ -3,8 +3,8 @@
 !Brutalsky;Xveon:40,20;FFFFFFCC
 $-15,1:
 $15,1:
-#s;spinner-left-bg:-2,,;4,5;2,,,10,,;4C4C4C;;
-#s;spinner-right-bg:2,,;4,5;2,,,10,,;4C4C4C;;
+#s;spinner-left-bg:-2,,;4,4.9;2,,,10,,;FFFFFF0D;;
+#s;spinner-right-bg:2,,;4,4.9;2,,,10,,;FFFFFF0D;;
 #s;wall-left:-20,,;3,2,22;2,,,10,,;B2B2B2;1;1
 #s;wall-right:20,,;3,2,22;2,,,10,,;B2B2B2;1;1
 #s;wall-top:,10,;,-15,1,,15,1,,15,,,14,-.5,,-14,-.5,,-15,;2,,,10,,;B2B2B2;1;1

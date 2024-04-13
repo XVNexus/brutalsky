@@ -69,7 +69,7 @@ namespace Core
             else
             {
                 // Respawn existing player
-                player.Refresh(map);
+                player.Refresh();
                 player.InstanceObject.transform.position = map.SelectSpawn();
             }
             return true;

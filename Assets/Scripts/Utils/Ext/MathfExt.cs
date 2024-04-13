@@ -1,4 +1,5 @@
 using UnityEngine;
+using Utils.Object;
 
 namespace Utils.Ext
 {
@@ -14,6 +15,11 @@ namespace Utils.Ext
             return Mathf.Pow(Mathf.Max(x - threshold, 0) * multiplier, power);
         }
 
+        public static Vector2 TranslateVector(Vector2 vector, Vector2 translation)
+        {
+            return vector + translation;
+        }
+
         public static Vector2 RotateVector(Vector2 vector, float rotation)
         {
             /*var magnitude = vector.magnitude;
@@ -22,6 +28,11 @@ namespace Utils.Ext
             var cos = Mathf.Cos(rotation);
             var sin = Mathf.Sin(rotation);
             return new Vector2(vector.x * cos - vector.y * sin, vector.x * sin + vector.y * cos);
+        }
+
+        public static Vector2 TransformVector(Vector2 vector, Vector2 translation, float rotation)
+        {
+            return TranslateVector(RotateVector(vector, rotation), translation);
         }
 
         public static float MoveTo(float from, float to, float step)

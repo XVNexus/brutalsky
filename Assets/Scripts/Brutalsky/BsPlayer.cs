@@ -42,7 +42,7 @@ namespace Brutalsky
             return controller;
         }
 
-        public void Refresh(BsMap map)
+        public void Refresh()
         {
             // Get reference to existing object and reset player
             InstanceObject.GetComponent<PlayerController>().Refresh();
