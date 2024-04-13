@@ -29,8 +29,8 @@
      inkscape:document-units="mm"
      showgrid="true"
      inkscape:zoom="0.91018638"
-     inkscape:cx="522.96981"
-     inkscape:cy="553.18341"
+     inkscape:cx="498.79894"
+     inkscape:cy="393.87537"
      inkscape:window-width="2560"
      inkscape:window-height="1334"
      inkscape:window-x="-11"
@@ -57,6 +57,30 @@
   <defs
      id="defs1">
     <linearGradient
+       id="linearGradient1"
+       inkscape:collect="always">
+      <stop
+         style="stop-color:#404040;stop-opacity:0;"
+         offset="0"
+         id="stop3" />
+      <stop
+         style="stop-color:#404040;stop-opacity:1;"
+         offset="0.1"
+         id="stop6" />
+      <stop
+         style="stop-color:#404040;stop-opacity:1;"
+         offset="0.2"
+         id="stop7" />
+      <stop
+         style="stop-color:#000000;stop-opacity:1;"
+         offset="0.80000001"
+         id="stop8" />
+      <stop
+         style="stop-color:#000000;stop-opacity:1;"
+         offset="1"
+         id="stop4" />
+    </linearGradient>
+    <linearGradient
        id="linearGradient30"
        inkscape:collect="always">
       <stop
@@ -81,41 +105,6 @@
          id="stop32" />
     </linearGradient>
     <linearGradient
-       id="linearGradient29"
-       inkscape:collect="always">
-      <stop
-         style="stop-color:#404040;stop-opacity:0;"
-         offset="0"
-         id="stop29" />
-      <stop
-         style="stop-color:#404040;stop-opacity:1;"
-         offset="0.1"
-         id="stop33" />
-      <stop
-         style="stop-color:#404040;stop-opacity:1;"
-         offset="0.2"
-         id="stop35" />
-      <stop
-         style="stop-color:#000000;stop-opacity:1;"
-         offset="0.80000001"
-         id="stop1" />
-      <stop
-         style="stop-color:#000000;stop-opacity:1;"
-         offset="1"
-         id="stop30" />
-    </linearGradient>
-    <radialGradient
-       inkscape:collect="always"
-       xlink:href="#linearGradient29"
-       id="radialGradient30"
-       cx="100"
-       cy="100"
-       fx="100"
-       fy="100"
-       r="50"
-       gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(0,-2,2,-6.9471322e-8,-99.999999,300)" />
-    <linearGradient
        inkscape:collect="always"
        xlink:href="#linearGradient30"
        id="linearGradient32"
@@ -124,23 +113,22 @@
        x2="150"
        y2="0"
        gradientUnits="userSpaceOnUse" />
+    <radialGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient1"
+       id="radialGradient4"
+       cx="100"
+       cy="100"
+       fx="100"
+       fy="100"
+       r="50"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0,-1.9999999,2,-3.1834972e-8,-99.999999,299.99999)" />
   </defs>
   <g
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1">
-    <path
-       style="fill:url(#radialGradient30);fill-opacity:1;stroke-width:0.264999"
-       id="path29"
-       sodipodi:type="arc"
-       sodipodi:cx="100"
-       sodipodi:cy="100"
-       sodipodi:rx="100"
-       sodipodi:ry="100"
-       sodipodi:start="3.1415927"
-       sodipodi:end="4.712389"
-       sodipodi:arc-type="slice"
-       d="M 0,100 A 100,100 0 0 1 100,0 v 100 z" />
     <rect
        style="fill:url(#linearGradient32);fill-opacity:1;stroke-width:0.264999"
        id="rect29"
@@ -151,21 +139,9 @@
     <use
        x="0"
        y="0"
-       xlink:href="#path29"
-       id="use36"
-       transform="rotate(90,150,150)" />
-    <use
-       x="0"
-       y="0"
        xlink:href="#rect29"
        id="use37"
        transform="rotate(90,150,150)" />
-    <use
-       x="0"
-       y="0"
-       xlink:href="#path29"
-       id="use38"
-       transform="rotate(180,150,150)" />
     <use
        x="0"
        y="0"
@@ -175,14 +151,33 @@
     <use
        x="0"
        y="0"
-       xlink:href="#path29"
-       id="use40"
+       xlink:href="#rect29"
+       id="use41"
        transform="rotate(-90,150,150)" />
+    <rect
+       style="fill:url(#radialGradient4);stroke-width:0.264999"
+       id="rect1"
+       width="100"
+       height="100"
+       x="0"
+       y="1.4210855e-14" />
     <use
        x="0"
        y="0"
-       xlink:href="#rect29"
-       id="use41"
+       xlink:href="#rect1"
+       id="use4"
+       transform="rotate(90,150,150)" />
+    <use
+       x="0"
+       y="0"
+       xlink:href="#rect1"
+       id="use5"
+       transform="rotate(180,150,150)" />
+    <use
+       x="0"
+       y="0"
+       xlink:href="#rect1"
+       id="use6"
        transform="rotate(-90,150,150)" />
   </g>
 </svg>

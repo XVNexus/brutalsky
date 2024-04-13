@@ -81,20 +81,12 @@ namespace Utils.Lcs
             result = specialChars.Keys.Aggregate(result, (current, specialChar)
                 => current.Replace($"{specialChar}", $@"\{specialChars[specialChar]}"));
 
-            // Force uppercase
-            result = Regex.Replace(result, "[A-Z]", match => '#' + match.Value);
-            result = Regex.Replace(result, "[a-z]+", match => match.Value.ToUpper());
-
             return result;
         }
 
         public static string ParseString(string raw)
         {
             var result = raw;
-
-            // Restore casing
-            result = Regex.Replace(result, "[A-Z]+", match => match.Value.ToLower());
-            result = Regex.Replace(result, "#[a-z]", match => match.Value[1..2].ToUpper());
 
             // Unescape whitespace and special characters
             result = result.Replace(@"\\", @"\\ ");

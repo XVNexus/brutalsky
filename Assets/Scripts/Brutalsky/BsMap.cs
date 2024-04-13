@@ -54,7 +54,7 @@ namespace Brutalsky
             };
             lines.AddRange(Spawns.Select(spawn => spawn.ToLcs()));
             lines.AddRange(Objects.Values.Select(obj => obj.ToLcs()));
-            return new LcsDocument(lines);
+            return new LcsDocument(lines, new[] { "!$#", "@" });
         }
 
         public void FromLcs(LcsDocument document)
