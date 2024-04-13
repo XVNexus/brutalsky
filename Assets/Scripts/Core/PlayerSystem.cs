@@ -5,7 +5,6 @@ using Controllers;
 using Controllers.Base;
 using Controllers.Player;
 using JetBrains.Annotations;
-using UnityEngine;
 
 namespace Core
 {

@@ -12,7 +12,7 @@ namespace Core
         private void Awake() => _ = this;
 
         // External references
-        public InputActionAsset inputActionAsset;
+        public InputActionAsset aInputAction;
 
         // Event functions
         public void EmitGuiAction(GuiAction action, string paneId, string itemId) => OnGuiAction?.Invoke(action, paneId, itemId);

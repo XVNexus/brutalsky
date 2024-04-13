@@ -7,6 +7,7 @@ using Controllers.Base;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
+using Utils;
 using Utils.Constants;
 
 namespace Core
@@ -26,9 +27,9 @@ namespace Core
         public bool IsMapLoaded { get; private set; }
 
         // External references
-        public GameObject mapMargins;
-        public Light2D cMapLight2D;
-        private GameObject _mapParent;
+        public GameObject gMapMargins;
+        public Light2D cLight2D;
+        private GameObject _gMapParent;
 
         // Init functions
         protected override void OnStart()
@@ -82,6 +83,16 @@ namespace Core
             Build(map);
         }
 
+        public void Build(string title, string author)
+        {
+            Build(BsUtils.GenerateId(title, author));
+        }
+
+        public void Build(uint id)
+        {
+            Build(BsMap.Parse(RawMapList[id]));
+        }
+
         public void Build(BsMap map)
         {
             // Make sure there is not already an active map
@@ -93,12 +104,12 @@ namespace Core
 
             // Set camera and lighting config
             CameraSystem._.ResizeView(map.Size);
-            mapMargins.transform.localScale = map.Size;
-            cMapLight2D.color = map.Lighting.Tint;
-            cMapLight2D.intensity = map.Lighting.Alpha;
+            gMapMargins.transform.localScale = map.Size;
+            cLight2D.color = map.Lighting.Tint;
+            cLight2D.intensity = map.Lighting.Alpha;
 
             // Instantiate the map container and create all objects
-            _mapParent = new GameObject();
+            _gMapParent = new GameObject();
             foreach (var obj in map.Objects.Values)
             {
                 Create(obj);
@@ -115,8 +126,8 @@ namespace Core
             {
                 Delete(obj);
             }
-            Destroy(_mapParent);
-            _mapParent = null;
+            Destroy(_gMapParent);
+            _gMapParent = null;
 
             // Note map as inactive
             ActiveMap = null;
@@ -126,7 +137,7 @@ namespace Core
         public bool Create(BsObject obj)
         {
             if (obj.Active) return false;
-            var instanceObject = Instantiate(obj.Prefab, _mapParent.transform);
+            var instanceObject = Instantiate(obj.Prefab, _gMapParent.transform);
             var instanceController = obj.Init(instanceObject, ActiveMap);
             obj.Activate(instanceObject, instanceController);
             return true;

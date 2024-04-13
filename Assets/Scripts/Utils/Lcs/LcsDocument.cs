@@ -42,9 +42,9 @@ namespace Utils.Lcs
         {
             var result = raw;
             result = Regex.Replace(result, "[a-m]",
-                match => BsUtils.RepeatChar(LcsParser.FieldSeperator, match.Value[0] - 95));
+                match => BsUtils.RepeatChar(LcsParser.FieldSeperator, match.Value[0] - 96));
             result = Regex.Replace(result, "[n-z]",
-                match => BsUtils.RepeatChar(LcsParser.PropertySeperator, match.Value[0] - 108));
+                match => BsUtils.RepeatChar(LcsParser.PropertySeperator, match.Value[0] - 109));
             return Parse001(result);
         }
 
@@ -76,10 +76,10 @@ namespace Utils.Lcs
         private string Stringify002()
         {
             var result = Stringify001();
-            result = Regex.Replace(result, $"{LcsParser.FieldSeperator}{{2,14}}",
-                match => $"{(char)(match.Length + 95)}");
-            result = Regex.Replace(result, $"{LcsParser.PropertySeperator}{{2,14}}",
-                match => $"{(char)(match.Length + 108)}");
+            result = Regex.Replace(result, $"{LcsParser.FieldSeperator}{{1,13}}",
+                match => $"{(char)(match.Length + 96)}");
+            result = Regex.Replace(result, $"{LcsParser.PropertySeperator}{{1,13}}",
+                match => $"{(char)(match.Length + 109)}");
             return result;
         }
 

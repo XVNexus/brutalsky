@@ -13,7 +13,7 @@ namespace Brutalsky
 {
     public class BsShape : BsObject
     {
-        public override GameObject Prefab => ResourceSystem._.shapePrefab;
+        public override GameObject Prefab => ResourceSystem._.pShape;
         public override char Tag => Tags.ShapeSym;
 
         public Form Form { get; set; }
@@ -60,7 +60,7 @@ namespace Brutalsky
 
             // Apply color and layer
             var meshRenderer = gameObject.GetComponent<MeshRenderer>();
-            meshRenderer.material = Color.Glow ? ResourceSystem._.unlitMaterial : ResourceSystem._.litMaterial;
+            meshRenderer.material = Color.Glow ? ResourceSystem._.aUnlitMaterial : ResourceSystem._.aLitMaterial;
             meshRenderer.material.color = Color.Tint;
             meshRenderer.sortingOrder = BsUtils.Layer2Order(Layer);
 

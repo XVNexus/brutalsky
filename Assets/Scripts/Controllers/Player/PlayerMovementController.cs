@@ -44,9 +44,9 @@ namespace Controllers.Player
             _cRigidbody2D = GetComponent<Rigidbody2D>();
             _cCircleCollider2D = GetComponent<CircleCollider2D>();
 
-            iMovement = EventSystem._.inputActionAsset.FindAction("Movement");
+            iMovement = EventSystem._.aInputAction.FindAction("Movement");
             iMovement.Enable();
-            iBoost = EventSystem._.inputActionAsset.FindAction("Boost");
+            iBoost = EventSystem._.aInputAction.FindAction("Boost");
             iBoost.Enable();
 
             // Disable movement if dummy is set to true

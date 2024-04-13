@@ -130,9 +130,12 @@ namespace Controllers.Player
         private void FixedUpdate()
         {
             // Display boost particles
-            var speed = _cRigidbody2D.velocity.magnitude;
-            DisplayBoostParticles(speed);
-            _lastSpeed = speed;
+            if (!_mHealth || (_mHealth && _mHealth.alive))
+            {
+                var speed = _cRigidbody2D.velocity.magnitude;
+                DisplayBoostParticles(speed);
+                _lastSpeed = speed;
+            }
 
             // Display heal/hurt particles
             if (!_mHealth) return;

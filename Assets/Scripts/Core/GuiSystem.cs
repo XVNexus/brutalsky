@@ -21,12 +21,12 @@ namespace Core
         public const string PauseMenuId = "pm";
 
         // Local variables
+        private VisualElement _root;
         private readonly Dictionary<string, GuiPane> _panes = new();
         private readonly Dictionary<string, string> _parentRegistrationHold = new();
 
         // External references
         public UIDocument cUIDocument;
-        private VisualElement _root;
 
         // Player input
         public InputAction iEscape;
@@ -37,7 +37,7 @@ namespace Core
             _root = cUIDocument.rootVisualElement;
             _panes[""] = new GuiPane("", _root, this, true);
 
-            iEscape = EventSystem._.inputActionAsset.FindAction("Escape");
+            iEscape = EventSystem._.aInputAction.FindAction("Escape");
             iEscape.Enable();
 
             iEscape.performed += OnIEscape;

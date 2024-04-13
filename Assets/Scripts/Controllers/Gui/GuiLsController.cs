@@ -60,10 +60,9 @@ namespace Controllers.Gui
                     break;
                 case "load":
                     var mapId = uint.Parse(itemId[5..]);
-                    var map = BsMap.Parse(MapSystem._.RawMapList[mapId]);
                     MapSystem._.Unbuild();
-                    MapSystem._.Build(map);
-                    PlayerSystem._.SpawnAll(map);
+                    MapSystem._.Build(mapId);
+                    PlayerSystem._.SpawnAll(MapSystem._.ActiveMap);
                     break;
             }
         }

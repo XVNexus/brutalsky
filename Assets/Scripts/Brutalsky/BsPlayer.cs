@@ -10,7 +10,7 @@ namespace Brutalsky
 {
     public class BsPlayer : BsObject
     {
-        public override GameObject Prefab => ResourceSystem._.playerPrefab;
+        public override GameObject Prefab => ResourceSystem._.pPlayer;
         public override char Tag => Tags.PlayerSym;
 
         public string Name { get; set; }

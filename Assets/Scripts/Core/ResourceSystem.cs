@@ -23,11 +23,11 @@ namespace Core
         }
 
         // External references
-        public GameObject playerPrefab;
-        public GameObject shapePrefab;
-        public GameObject poolPrefab;
-        public Material litMaterial;
-        public Material unlitMaterial;
+        public GameObject pPlayer;
+        public GameObject pShape;
+        public GameObject pPool;
+        public Material aLitMaterial;
+        public Material aUnlitMaterial;
 
         // System functions
         public BsObject GetTemplateObject(char objectPrefix)

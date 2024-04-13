@@ -12,7 +12,7 @@ namespace Brutalsky
 {
     public class BsPool : BsObject
     {
-        public override GameObject Prefab => ResourceSystem._.poolPrefab;
+        public override GameObject Prefab => ResourceSystem._.pPool;
         public override char Tag => Tags.PoolSym;
 
         public Vector2 Size { get; set; }
@@ -46,7 +46,7 @@ namespace Brutalsky
 
             // Apply color and layer
             var spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
-            spriteRenderer.material = Color.Glow ? ResourceSystem._.unlitMaterial : ResourceSystem._.litMaterial;
+            spriteRenderer.material = Color.Glow ? ResourceSystem._.aUnlitMaterial : ResourceSystem._.aLitMaterial;
             spriteRenderer.material.color = Color.Tint;
             spriteRenderer.sortingOrder = BsUtils.Layer2Order(Layer);
 
