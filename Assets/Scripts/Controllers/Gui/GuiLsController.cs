@@ -66,12 +66,16 @@ namespace Controllers.Gui
         public void DrawPreviewBackground(Painter2D painter)
         {
             painter.BeginPath();
-            painter.MoveTo(new Vector2(-8f, -8f));
-            painter.LineTo(new Vector2(208f, -8f));
-            painter.LineTo(new Vector2(208f, 108f));
-            painter.LineTo(new Vector2(-8f, 108f));
+            painter.MoveTo(new Vector2(-3f, 0f));
+            painter.ArcTo(new Vector2(-3f, -3f), new Vector2(0f, -3f), 3f);
+            painter.LineTo(new Vector2(200f, -3f));
+            painter.ArcTo(new Vector2(203f, -3f), new Vector2(203f, 0f), 3f);
+            painter.LineTo(new Vector2(203f, 100f));
+            painter.ArcTo(new Vector2(203f, 103f), new Vector2(200f, 103f), 3f);
+            painter.LineTo(new Vector2(0f, 103f));
+            painter.ArcTo(new Vector2(-3f, 103f), new Vector2(-3f, 100f), 3f);
             painter.ClosePath();
-            painter.fillColor = new Color(.5f, .5f, .5f, 1/255f);
+            painter.fillColor = new Color(.25f, .25f, .25f, 1f);
             painter.Fill();
         }
 
@@ -108,32 +112,29 @@ namespace Controllers.Gui
         public void DrawObjectPreview(BsMap map, ObjectTransform transform, Vector2[] points, Color color,
             Painter2D painter)
         {
-            var clamp = map.Size * .5f;
+            var clampRange = map.Size * .5f;
+            var viewSize = map.Size.x / map.Size.y >= 2f
+                ? new Vector2(map.Size.x, map.Size.x * .5f)
+                : new Vector2(map.Size.y * 2f, map.Size.y);
             var translation = transform.Position;
             var rotation = transform.Rotation * Mathf.Deg2Rad;
             painter.BeginPath();
-            var transformedStart = TransformDrawPoint(clamp, points[0], translation, rotation);
-            var scaledStart = new Vector2(transformedStart.x * 200f / map.Size.x + 100f,
-                -transformedStart.y * 100f / map.Size.y + 50f);
-            painter.MoveTo(scaledStart);
+            painter.MoveTo(TransformDrawPoint(points[0], translation, rotation, clampRange, viewSize));
             for (var i = 1; i < points.Length; i++)
             {
-                var point = points[i];
-                var transformedPoint = TransformDrawPoint(clamp, point, translation, rotation);
-                var scaledPoint = new Vector2(transformedPoint.x * 200f / map.Size.x + 100f,
-                    -transformedPoint.y * 100f / map.Size.y + 50f);
-                painter.LineTo(scaledPoint);
+                painter.LineTo(TransformDrawPoint(points[i], translation, rotation, clampRange, viewSize));
             }
             painter.ClosePath();
             painter.fillColor = color;
             painter.Fill();
         }
 
-        public Vector2 TransformDrawPoint(Vector2 clamp, Vector2 point, Vector2 translation, float rotation)
+        public Vector2 TransformDrawPoint(Vector2 point, Vector2 translation, float rotation, Vector2 clampRange, Vector2 viewSize)
         {
             var result = MathfExt.TransformVector(point, translation, rotation);
-            return new Vector2(Mathf.Clamp(result.x, -clamp.x, clamp.x),
-                Mathf.Clamp(result.y, -clamp.y, clamp.y));
+            result = new Vector2(Mathf.Clamp(result.x, -clampRange.x, clampRange.x),
+                Mathf.Clamp(result.y, -clampRange.y, clampRange.y));
+            return new Vector2(result.x * 200f / viewSize.x + 100f, -result.y * 100f / viewSize.y + 50f);
         }
 
         // Event functions
