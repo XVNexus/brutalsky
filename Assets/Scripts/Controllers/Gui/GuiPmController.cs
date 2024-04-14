@@ -38,14 +38,8 @@ namespace Controllers.Gui
                 case "lvls":
                     OnButtonPressLvls();
                     break;
-                case "prev":
-                    OnButtonPressPrev();
-                    break;
                 case "rest":
                     OnButtonPressRest();
-                    break;
-                case "next":
-                    OnButtonPressNext();
                     break;
                 case "cnfg":
                     OnButtonPressCnfg();
@@ -72,20 +66,10 @@ namespace Controllers.Gui
             GuiSystem._.ActivatePane(GuiLsController.PaneId);
         }
 
-        private void OnButtonPressPrev()
-        {
-            OnButtonPressRest();
-        }
-
         private void OnButtonPressRest()
         {
             MapSystem._.Rebuild();
             PlayerSystem._.SpawnAll(MapSystem._.ActiveMap);
-        }
-
-        private void OnButtonPressNext()
-        {
-            OnButtonPressRest();
         }
 
         private void OnButtonPressCnfg()

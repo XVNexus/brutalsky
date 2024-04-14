@@ -3,6 +3,7 @@ using System.Text.RegularExpressions;
 using Utils.Ext;
 using Utils.Object;
 
+// TODO: ASSIMILATE THIS CLASS
 namespace Utils
 {
     public static class BsUtils
@@ -29,7 +30,7 @@ namespace Utils
 
         public static float CalculateDamage(float impactForce)
         {
-            return MathfExt.TMP(impactForce, 20f, .5f);
+            return MathfExt.ThresholdMultiplierPower(impactForce, 20f, .5f);
         }
 
         public static uint GenerateId(string title, string author)

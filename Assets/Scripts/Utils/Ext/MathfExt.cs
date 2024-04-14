@@ -1,5 +1,4 @@
 using UnityEngine;
-using Utils.Object;
 
 namespace Utils.Ext
 {
@@ -10,7 +9,7 @@ namespace Utils.Ext
             return Mathf.Atan2(vector.y, vector.x);
         }
 
-        public static float TMP(float x, float threshold, float multiplier = 1f, float power = 1f)
+        public static float ThresholdMultiplierPower(float x, float threshold, float multiplier = 1f, float power = 1f)
         {
             return Mathf.Pow(Mathf.Max(x - threshold, 0) * multiplier, power);
         }
@@ -22,9 +21,6 @@ namespace Utils.Ext
 
         public static Vector2 RotateVector(Vector2 vector, float rotation)
         {
-            /*var magnitude = vector.magnitude;
-            var angle = Atan2(vector);
-            return new Vector2(Mathf.Cos(angle + rotation), Mathf.Sin(angle + rotation)) * magnitude;*/
             var cos = Mathf.Cos(rotation);
             var sin = Mathf.Sin(rotation);
             return new Vector2(vector.x * cos - vector.y * sin, vector.x * sin + vector.y * cos);
