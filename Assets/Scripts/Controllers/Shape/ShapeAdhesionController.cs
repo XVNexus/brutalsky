@@ -26,7 +26,7 @@ namespace Controllers.Shape
         {
             if (!other.gameObject.CompareTag(Tags.PlayerTag)) return;
 
-            // Allow players to unstick no matter how much adhesion there is
+            // Allow players to unstick from low to moderate adhesion
             var playerRigidbody = other.rigidbody;
             playerRigidbody.position -= playerRigidbody.velocity.normalized * .025f;
         }

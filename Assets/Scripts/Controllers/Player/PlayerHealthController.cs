@@ -3,7 +3,6 @@ using Controllers.Base;
 using Core;
 using JetBrains.Annotations;
 using UnityEngine;
-using Utils;
 using Utils.Constants;
 using Utils.Ext;
 
@@ -91,7 +90,7 @@ namespace Controllers.Player
             var impactSpeed = _lastSpeed;
 
             // Apply damage to player
-            var damageApplied = BsUtils.CalculateDamage(impactForce);
+            var damageApplied = CalculateDamage(impactForce);
             var damageMultiplier = Mathf.Min(1f / (impactSpeed * .2f), 1f);
             Hurt(damageApplied * damageMultiplier);
         }
@@ -119,6 +118,12 @@ namespace Controllers.Player
 
             // Save the current speed for future reference
             _lastSpeed = _cRigidbody2D.velocity.magnitude;
+        }
+
+        // Utility functions
+        public static float CalculateDamage(float impactForce)
+        {
+            return MathfExt.ThresholdMultiplierPower(impactForce, 20f, .5f);
         }
     }
 }

@@ -3,7 +3,6 @@ using System.Linq;
 using Brutalsky.Base;
 using Core;
 using UnityEngine;
-using Utils;
 using Utils.Constants;
 using Utils.Lcs;
 using Utils.Object;
@@ -12,7 +11,7 @@ namespace Brutalsky
 {
     public class BsMap
     {
-        public uint Id => BsUtils.GenerateId(Title, Author);
+        public uint Id => MapSystem.GenerateId(Title, Author);
         public string Title { get; set; }
         public string Author { get; set; }
         public Vector2 Size { get; set; }

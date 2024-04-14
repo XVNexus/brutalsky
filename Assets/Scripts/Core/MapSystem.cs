@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
@@ -9,6 +10,7 @@ using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using Utils;
 using Utils.Constants;
+using Utils.Object;
 
 namespace Core
 {
@@ -85,7 +87,7 @@ namespace Core
 
         public void Build(string title, string author)
         {
-            Build(BsUtils.GenerateId(title, author));
+            Build(GenerateId(title, author));
         }
 
         public void Build(uint id)
@@ -149,6 +151,27 @@ namespace Core
             Destroy(obj.InstanceObject);
             obj.Deactivate();
             return true;
+        }
+
+        // Utility functions
+        public static int Layer2Order(ObjectLayer layer)
+        {
+            return layer switch
+            {
+                ObjectLayer.Background => -2,
+                ObjectLayer.Foreground => 2,
+                _ => 0
+            };
+        }
+
+        public static string CleanId(string id)
+        {
+            return Regex.Replace(id.Replace(' ', '-').ToLower(), "[^a-z0-9-]|-(?=-)", "");
+        }
+
+        public static uint GenerateId(string title, string author)
+        {
+            return BitConverter.ToUInt32(BitConverter.GetBytes((title + author).GetHashCode()), 0);
         }
     }
 }

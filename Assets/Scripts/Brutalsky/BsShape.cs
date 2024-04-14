@@ -3,7 +3,6 @@ using Brutalsky.Base;
 using Controllers;
 using Core;
 using UnityEngine;
-using Utils;
 using Utils.Constants;
 using Utils.Lcs;
 using Utils.Object;
@@ -62,7 +61,7 @@ namespace Brutalsky
             var meshRenderer = gameObject.GetComponent<MeshRenderer>();
             meshRenderer.material = Color.Glow ? ResourceSystem._.aUnlitMaterial : ResourceSystem._.aLitMaterial;
             meshRenderer.material.color = Color.Tint;
-            meshRenderer.sortingOrder = BsUtils.Layer2Order(Layer);
+            meshRenderer.sortingOrder = MapSystem.Layer2Order(Layer);
 
             // Apply material
             var rigidbody = gameObject.GetComponent<Rigidbody2D>();

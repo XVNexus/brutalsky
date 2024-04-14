@@ -2,7 +2,6 @@ using Brutalsky.Base;
 using Controllers;
 using Core;
 using UnityEngine;
-using Utils;
 using Utils.Constants;
 using Utils.Lcs;
 using Utils.Object;
@@ -48,7 +47,7 @@ namespace Brutalsky
             var spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
             spriteRenderer.material = Color.Glow ? ResourceSystem._.aUnlitMaterial : ResourceSystem._.aLitMaterial;
             spriteRenderer.material.color = Color.Tint;
-            spriteRenderer.sortingOrder = BsUtils.Layer2Order(Layer);
+            spriteRenderer.sortingOrder = MapSystem.Layer2Order(Layer);
 
             // Apply chemical
             if (!Simulated)

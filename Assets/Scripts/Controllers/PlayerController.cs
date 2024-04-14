@@ -18,22 +18,22 @@ namespace Controllers
             GetComponent<Rigidbody2D>().velocity = Vector2.zero;
 
             // Reset health
-            var _mHealth = GetSub<PlayerHealthController>("health");
-            if (_mHealth.alive)
+            var mHealth = GetSub<PlayerHealthController>("health");
+            if (mHealth.alive)
             {
-                _mHealth.health = _mHealth.maxHealth;
+                mHealth.health = mHealth.maxHealth;
             }
             else
             {
-                _mHealth.Revive();
+                mHealth.Revive();
             }
 
             // Reset boost
-            var _mMovement = GetSub<PlayerMovementController>("movement");
-            if (_mMovement)
+            var mMovement = GetSub<PlayerMovementController>("movement");
+            if (mMovement)
             {
-                _mMovement.boostCharge = 0f;
-                _mMovement.boostCooldown = 0f;
+                mMovement.boostCharge = 0f;
+                mMovement.boostCooldown = 0f;
             }
         }
     }

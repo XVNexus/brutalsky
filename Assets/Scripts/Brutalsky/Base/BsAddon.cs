@@ -1,6 +1,6 @@
+using Core;
 using JetBrains.Annotations;
 using UnityEngine;
-using Utils;
 using Utils.Lcs;
 using Utils.Object;
 
@@ -9,7 +9,7 @@ namespace Brutalsky.Base
     public abstract class BsAddon
     {
         public abstract char Tag { get; }
-        public string Id { get => _id; set => _id = BsUtils.CleanId(value); }
+        public string Id { get => _id; set => _id = MapSystem.CleanId(value); }
         private string _id;
         public ObjectTransform Transform { get; set; }
 
