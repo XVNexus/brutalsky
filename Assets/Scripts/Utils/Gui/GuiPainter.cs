@@ -5,44 +5,36 @@ namespace Utils.Gui
 {
     public class GuiPainter
     {
-        public Painter2D Painter { get; private set; }
         public Rect ViewRect { get; private set; }
         public Rect RenderRect { get; private set; }
         public Vector2 ImageSize { get; private set; }
         public float RenderScale { get; private set; }
         public bool AutoTransform { get; set; }
 
+        private readonly Painter2D _painter;
+
         public GuiPainter(Rect viewRect, Vector2 imageSize, bool autoTransform = true)
         {
-            Painter = new Painter2D();
             ViewRect = viewRect;
             var renderAspect = imageSize.x / imageSize.y;
-            float renderWidth;
-            float renderHeight;
-            var viewAspect = viewRect.width / viewRect.height;
-            if (viewAspect > renderAspect)
-            {
-                renderWidth = viewRect.width;
-                renderHeight = viewRect.width / renderAspect;
-            }
-            else
-            {
-                renderWidth = viewRect.height * renderAspect;
-                renderHeight = viewRect.height;
-            }
-            RenderRect = new Rect(viewRect.x - (renderWidth - viewRect.width) * .5f,
-                viewRect.y - (renderHeight - viewRect.height) * .5f, renderWidth, renderHeight);
+            Vector2 renderSize = viewRect.width / viewRect.height > renderAspect
+                ? new Vector2(viewRect.width, viewRect.width / renderAspect)
+                : new Vector2(viewRect.height * renderAspect, viewRect.height);
+            RenderRect = new Rect(viewRect.x - (renderSize.x - viewRect.width) * .5f,
+                viewRect.y - (renderSize.y - viewRect.height) * .5f, renderSize.x, renderSize.y);
             ImageSize = imageSize;
             RenderScale = imageSize.x / RenderRect.width;
             AutoTransform = autoTransform;
+
+            _painter = new Painter2D();
         }
 
         // Main
         public VectorImage Print()
         {
             var result = ScriptableObject.CreateInstance<VectorImage>();
-            Painter.SaveToVectorImage(result);
-            Painter.Dispose();
+            _painter.SaveToVectorImage(result);
+            _painter.Dispose();
             return result;
         }
 
@@ -57,32 +49,42 @@ namespace Utils.Gui
             Close();
         }
 
-        public void DrawRect(float x, float y, float w, float h)
+        public void DrawRect(Rect rect)
         {
-            Start(x, y);
-            Line(x + w, y);
-            Line(x + w, y + h);
-            Line(x, y + h);
+            Start(rect.xMin, rect.yMin);
+            Line(rect.xMax, rect.yMin);
+            Line(rect.xMax, rect.yMax);
+            Line(rect.xMin, rect.yMax);
             Close();
         }
 
-        public void DrawRoundedRect(float x, float y, float w, float h, float r)
+        public void DrawRoundedRect(Rect rect, float radius)
         {
-            Start(x, y + r);
-            Arc(x, y, x + r, y, r);
-            Line(x + w - r, y);
-            Arc(x + w, y, x + w, y + r, r);
-            Line(x + w, y + h - r);
-            Arc(x + w, y + h, x + w - r, y + h, r);
-            Line(x + r, y + h);
-            Arc(x, y + h, x, y + h - r, r);
+            Start(rect.xMin, rect.yMin + radius);
+            Arc(rect.xMin, rect.yMin, rect.xMin + radius, rect.yMin, radius);
+            Line(rect.xMax - radius, rect.yMin);
+            Arc(rect.xMax, rect.yMin, rect.xMax, rect.yMin + radius, radius);
+            Line(rect.xMax, rect.yMax - radius);
+            Arc(rect.xMax, rect.yMax, rect.xMax - radius, rect.yMax, radius);
+            Line(rect.xMin + radius, rect.yMax);
+            Arc(rect.xMin, rect.yMax, rect.xMin, rect.yMax - radius, radius);
+            Close();
+        }
+
+        public void DrawCircle(Vector2 position, float radius)
+        {
+            Start(position.x, position.y - radius);
+            Arc(position.x + radius, position.y - radius, position.x + radius, position.y, radius);
+            Arc(position.x + radius, position.y + radius, position.x, position.y + radius, radius);
+            Arc(position.x - radius, position.y + radius, position.x - radius, position.y, radius);
+            Arc(position.x - radius, position.y - radius, position.x, position.y - radius, radius);
             Close();
         }
 
         // Pen
         public void Start()
         {
-            Painter.BeginPath();
+            _painter.BeginPath();
         }
 
         public void Start(float x, float y)
@@ -103,7 +105,7 @@ namespace Utils.Gui
 
         public void Move(Vector2 point)
         {
-            Painter.MoveTo(MakePoint(point));
+            _painter.MoveTo(MakePoint(point));
         }
 
         public void Line(float x, float y)
@@ -113,7 +115,7 @@ namespace Utils.Gui
 
         public void Line(Vector2 point)
         {
-            Painter.LineTo(MakePoint(point));
+            _painter.LineTo(MakePoint(point));
         }
 
         public void Arc(float a, float b, float x, float y, float r)
@@ -123,7 +125,7 @@ namespace Utils.Gui
 
         public void Arc(Vector2 control, Vector2 point, float radius)
         {
-            Painter.ArcTo(MakePoint(control), MakePoint(point), MakeValue(radius));
+            _painter.ArcTo(MakePoint(control), MakePoint(point), MakeValue(radius));
         }
 
         public void Quadratic(float a, float b, float x, float y)
@@ -133,7 +135,7 @@ namespace Utils.Gui
 
         public void Quadratic(Vector2 control, Vector2 point)
         {
-            Painter.QuadraticCurveTo(MakePoint(control), MakePoint(point));
+            _painter.QuadraticCurveTo(MakePoint(control), MakePoint(point));
         }
 
         public void Bezier(float a, float b, float c, float d, float x, float y)
@@ -143,40 +145,40 @@ namespace Utils.Gui
 
         public void Bezier(Vector2 control1, Vector2 control2, Vector2 point)
         {
-            Painter.BezierCurveTo(MakePoint(control1), MakePoint(control2), MakePoint(point));
+            _painter.BezierCurveTo(MakePoint(control1), MakePoint(control2), MakePoint(point));
         }
 
         public void Close()
         {
-            Painter.ClosePath();
+            _painter.ClosePath();
         }
 
         public void Fill()
         {
-            Painter.Fill();
+            _painter.Fill();
         }
 
         public void Stroke()
         {
-            Painter.Stroke();
+            _painter.Stroke();
         }
 
         // Config
         public void SetFill(Color color)
         {
-            Painter.fillColor = color;
+            _painter.fillColor = color;
         }
 
         public void SetStroke(Color color, float width)
         {
-            Painter.strokeColor = color;
-            Painter.lineWidth = width;
+            _painter.strokeColor = color;
+            _painter.lineWidth = width;
         }
 
         public void SetLine(LineCap cap, LineJoin join)
         {
-            Painter.lineCap = cap;
-            Painter.lineJoin = join;
+            _painter.lineCap = cap;
+            _painter.lineJoin = join;
         }
 
         // Math

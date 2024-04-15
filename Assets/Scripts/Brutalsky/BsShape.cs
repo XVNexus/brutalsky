@@ -18,17 +18,13 @@ namespace Brutalsky
         public Form Form { get; set; }
         public ShapeMaterial Material { get; set; }
         public ObjectColor Color { get; set; }
-        public ObjectLayer Layer { get; set; }
-        public bool Simulated { get; set; }
 
-        public BsShape(string id, ObjectTransform transform, Form form, ShapeMaterial material, ObjectColor color,
-            ObjectLayer layer = ObjectLayer.Midground, bool simulated = true) : base(id, transform)
+        public BsShape(string id, ObjectTransform transform, ObjectLayer layer, bool simulated,
+            Form form, ShapeMaterial material, ObjectColor color) : base(id, transform, layer, simulated)
         {
             Form = form;
             Material = material;
             Color = color;
-            Layer = layer;
-            Simulated = simulated;
         }
 
         public BsShape()

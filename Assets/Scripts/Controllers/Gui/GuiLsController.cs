@@ -1,4 +1,7 @@
+using System.Collections.Generic;
+using System.Linq;
 using Brutalsky;
+using Brutalsky.Base;
 using Controllers.Base;
 using Core;
 using UnityEngine;
@@ -60,15 +63,30 @@ namespace Controllers.Gui
 
         public void PaintMapPreview(GuiPainter painter, BsMap map)
         {
+            // Paint background frame
             painter.AutoTransform = false;
-            painter.DrawRoundedRect(-3f, -3f, 206f, 106f, 3f);
+            painter.DrawRoundedRect(new Rect(-3f, -3f, 206f, 106f), 3f);
             painter.SetFill(new Color(.25f, .25f, .25f, 1f));
             painter.Fill();
-            painter.DrawRoundedRect(-2f, -2f, 204f, 104f, 2f);
+            painter.DrawRoundedRect(new Rect(-2f, -2f, 204f, 104f), 2f);
             painter.SetStroke(new Color(.15f, .15f, .15f, 1f), 2f);
             painter.Stroke();
             painter.AutoTransform = true;
-            foreach (var obj in map.Objects.Values) switch (obj.Tag)
+
+            // Sort objects by layer
+            var objects = new Dictionary<ObjectLayer, List<BsObject>>
+            {
+                [ObjectLayer.Background] = new(),
+                [ObjectLayer.Midground] = new(),
+                [ObjectLayer.Foreground] = new()
+            };
+            foreach (var obj in map.Objects.Values)
+            {
+                objects[obj.Layer].Add(obj);
+            }
+
+            // Paint objects
+            foreach (var obj in objects.Keys.SelectMany(layer => objects[layer])) switch (obj.Tag)
             {
                 case Tags.ShapeSym:
                     var shape = (BsShape)obj;
@@ -86,6 +104,22 @@ namespace Controllers.Gui
                     PaintObjectPreview(painter, pool.Transform, points, pool.Color.Tint);
                     break;
             }
+
+            // Paint spawns
+            foreach (var spawn in map.Spawns)
+            {
+                PaintSpawnPreview(painter, spawn.Position);
+            }
+        }
+
+        public void PaintSpawnPreview(GuiPainter painter, Vector2 position)
+        {
+            painter.DrawCircle(position, .5f);
+            painter.SetFill(new Color(1f, 1f, 1f));
+            painter.Fill();
+            painter.DrawCircle(position, 1f);
+            painter.SetStroke(new Color(1f, 1f, 1f, .1f), 2f);
+            painter.Stroke();
         }
 
         public void PaintObjectPreview(GuiPainter painter, ObjectTransform transform, Vector2[] points, Color color)

@@ -16,11 +16,12 @@ public class Testing : MonoBehaviour
         MapSystem._.Build("Brutalsky", "Xveon");
         PlayerSystem._.SpawnAll(MapSystem._.ActiveMap, new[]
         {
-            new BsPlayer("player-1", "Player 1", 100f, new ObjectColor(1f, .5f, 0f)),
-            new BsPlayer("player-2", "Player 2", 100f, new ObjectColor(0f, .5f, 1f), true)
+            new BsPlayer("Player 1", 100f, new ObjectColor(1f, .5f, 0f)),
+            new BsPlayer("Player 2", 100f, new ObjectColor(0f, .5f, 1f), true)
         });
     }
 
+    // TODO: THIS FUNCTION IS DOGSHIT
     private void GenerateDefaultMaps()
     {
         var sizes = new[] { 20f, 40f, 80f };
@@ -34,6 +35,7 @@ public class Testing : MonoBehaviour
         }
     }
 
+    // TODO: THIS ONE IS TOO
     private void GenerateBoxMap(string title, float size, string name, bool bottom, bool top, bool left, bool right)
     {
         var map = new BsMap($"{name} {title}", "Brutalsky")
@@ -41,30 +43,86 @@ public class Testing : MonoBehaviour
             Size = new Vector2(size, size / 2f),
             Lighting = new ObjectColor(1f, 1f, 1f, .8f)
         };
-        if (bottom)
-            map.AddObject(new BsShape("wall-bottom", new ObjectTransform(0f, -size / 4f + .5f),
-                Form.Rectangle(size, 1f), ShapeMaterial.Stone(), ObjectColor.Stone()));
-        if (top)
-            map.AddObject(new BsShape("wall-top", new ObjectTransform(0f, size / 4f - .5f), Form.Rectangle(size, 1f),
-                ShapeMaterial.Stone(), ObjectColor.Stone()));
-        if (left)
-            map.AddObject(new BsShape("wall-left", new ObjectTransform(-size / 2f + .5f, 0f),
-                Form.Rectangle(1f, size / 2f), ShapeMaterial.Stone(), ObjectColor.Stone()));
-        if (right)
-            map.AddObject(new BsShape("wall-right", new ObjectTransform(size / 2f - .5f, 0f),
-                Form.Rectangle(1f, size / 2f), ShapeMaterial.Stone(), ObjectColor.Stone()));
-        if (top && left)
-            map.AddObject(new BsShape("corner-tl", new ObjectTransform(-size / 2f + 1f, size / 4f - 1f),
-                Form.Vector("0 0 0 3 0 1 0 0 0 -3"), ShapeMaterial.Stone(), ObjectColor.Stone()));
-        if (top && right)
-            map.AddObject(new BsShape("corner-tr", new ObjectTransform(size / 2f - 1f, size / 4f - 1f),
-                Form.Vector("0 0 0 -3 0 1 0 0 0 -3"), ShapeMaterial.Stone(), ObjectColor.Stone()));
-        if (bottom && left)
-            map.AddObject(new BsShape("corner-bl", new ObjectTransform(-size / 2f + 1f, -size / 4f + 1f),
-                Form.Vector("0 0 0 3 0 1 0 0 0 3"), ShapeMaterial.Stone(), ObjectColor.Stone()));
-        if (bottom && right)
-            map.AddObject(new BsShape("corner-br", new ObjectTransform(size / 2f - 1f, -size / 4f + 1f),
-                Form.Vector("0 0 0 -3 0 1 0 0 0 3"), ShapeMaterial.Stone(), ObjectColor.Stone()));
+        if (bottom) map.AddObject(new BsShape
+        (
+            "wall-bottom",
+            new ObjectTransform(0f, -size / 4f + .5f),
+            ObjectLayer.Midground,
+            true,
+            Form.Rectangle(size, 1f),
+            ShapeMaterial.Stone(),
+            ObjectColor.Stone()
+        ));
+        if (top) map.AddObject(new BsShape
+        (
+            "wall-top",
+            new ObjectTransform(0f, size / 4f - .5f),
+            ObjectLayer.Midground,
+            true,
+            Form.Rectangle(size, 1f),
+            ShapeMaterial.Stone(),
+            ObjectColor.Stone()
+        ));
+        if (left) map.AddObject(new BsShape
+        (
+            "wall-left",
+            new ObjectTransform(-size / 2f + .5f, 0f),
+            ObjectLayer.Midground,
+            true,
+            Form.Rectangle(1f, size / 2f),
+            ShapeMaterial.Stone(),
+            ObjectColor.Stone()
+        ));
+        if (right) map.AddObject(new BsShape
+        (
+            "wall-right",
+            new ObjectTransform(size / 2f - .5f, 0f),
+            ObjectLayer.Midground,
+            true,
+            Form.Rectangle(1f, size / 2f),
+            ShapeMaterial.Stone(),
+            ObjectColor.Stone()
+        ));
+        if (top && left) map.AddObject(new BsShape
+        (
+            "corner-tl",
+            new ObjectTransform(-size / 2f + 1f, size / 4f - 1f),
+            ObjectLayer.Midground,
+            true,
+            Form.Vector("0 0 0 3 0 1 0 0 0 -3"),
+            ShapeMaterial.Stone(),
+            ObjectColor.Stone()
+        ));
+        if (top && right) map.AddObject(new BsShape
+        (
+            "corner-tr",
+            new ObjectTransform(size / 2f - 1f, size / 4f - 1f),
+            ObjectLayer.Midground,
+            true,
+            Form.Vector("0 0 0 -3 0 1 0 0 0 -3"),
+            ShapeMaterial.Stone(),
+            ObjectColor.Stone()
+        ));
+        if (bottom && left) map.AddObject(new BsShape
+        (
+            "corner-bl",
+            new ObjectTransform(-size / 2f + 1f, -size / 4f + 1f),
+            ObjectLayer.Midground,
+            true,
+            Form.Vector("0 0 0 3 0 1 0 0 0 3"),
+            ShapeMaterial.Stone(),
+            ObjectColor.Stone()
+        ));
+        if (bottom && right) map.AddObject(new BsShape
+        (
+            "corner-br",
+            new ObjectTransform(size / 2f - 1f, -size / 4f + 1f),
+            ObjectLayer.Midground,
+            true,
+            Form.Vector("0 0 0 -3 0 1 0 0 0 3"),
+            ShapeMaterial.Stone(),
+            ObjectColor.Stone()
+        ));
         map.AddSpawn(new BsSpawn(new Vector2(-1f, -size / 4f + 1.5f)));
         map.AddSpawn(new BsSpawn(new Vector2(1f, -size / 4f + 1.5f)));
         MapSystem.Save(map.Stringify(), $"{title}{name}");

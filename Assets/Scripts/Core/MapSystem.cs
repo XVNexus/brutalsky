@@ -8,7 +8,6 @@ using Controllers.Base;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
-using Utils;
 using Utils.Constants;
 using Utils.Object;
 
@@ -36,16 +35,19 @@ namespace Core
         // Init functions
         protected override void OnStart()
         {
-            GenerateMapList();
+            GenerateMapList(new[] { "Brutalsky", "Ring" });
         }
 
         // System functions
-        public void GenerateMapList()
+        public void GenerateMapList(string[] builtinMapFilenames)
         {
             RawMapList.Clear();
-            var defaultRawMap = LoadInternal("Brutalsky");
-            var defaultMap = BsMap.Parse(defaultRawMap);
-            RawMapList[defaultMap.Id] = defaultRawMap;
+            foreach (var builtinMapFilename in builtinMapFilenames)
+            {
+                var builtinRawMap = LoadInternal(builtinMapFilename);
+                var builtinMap = BsMap.Parse(builtinRawMap);
+                RawMapList[builtinMap.Id] = builtinRawMap;
+            }
             var path = $"{ResourceSystem.DataPath}/{Paths.Maps}";
             if (!Directory.Exists(path)) return;
             foreach (var mapPath in Directory.GetFiles(path, $"*.{SaveFormat}"))

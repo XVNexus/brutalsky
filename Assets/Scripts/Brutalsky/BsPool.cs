@@ -17,17 +17,13 @@ namespace Brutalsky
         public Vector2 Size { get; set; }
         public PoolChemical Chemical { get; set; }
         public ObjectColor Color { get; set; }
-        public ObjectLayer Layer { get; set; }
-        public bool Simulated { get; set; }
 
-        public BsPool(string id, ObjectTransform transform, Vector2 size, PoolChemical chemical, ObjectColor color,
-            ObjectLayer layer = ObjectLayer.Midground, bool simulated = true) : base(id, transform)
+        public BsPool(string id, ObjectTransform transform, Vector2 size, ObjectLayer layer, bool simulated,
+            PoolChemical chemical, ObjectColor color) : base(id, transform, layer, simulated)
         {
             Size = size;
             Chemical = chemical;
             Color = color;
-            Layer = layer;
-            Simulated = simulated;
         }
 
         public BsPool()

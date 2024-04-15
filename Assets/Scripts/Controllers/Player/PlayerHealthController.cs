@@ -12,7 +12,7 @@ namespace Controllers.Player
     {
         // Controller metadata
         public override string Id => "health";
-        public override bool IsUnused => false;
+        public override bool IsUnused => Mathf.Approximately(Master.Object.Health, -1f);
 
         // Local constants
         public const float DeathOffset = 1000f;
@@ -111,7 +111,7 @@ namespace Controllers.Player
             }
 
             // Kill the player if health reaches zero
-            if (health == 0)
+            if (health == 0f)
             {
                 Kill();
             }

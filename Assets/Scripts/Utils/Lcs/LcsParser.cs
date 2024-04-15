@@ -122,7 +122,7 @@ namespace Utils.Lcs
         public static Vector2 ParseVector2(string raw)
         {
             var parts = ExpandFields(raw);
-            return new Vector2(float.Parse(parts[0]), float.Parse(parts[1]));
+            return new Vector2(ParseFloat(parts[0]), ParseFloat(parts[1]));
         }
 
         // Object types
@@ -283,7 +283,7 @@ namespace Utils.Lcs
 
         public static JointConfig ParseJointConfig(string raw)
         {
-            return raw == "" ? JointConfig.AutoValue() : JointConfig.SetValue(float.Parse(raw));
+            return raw == "" ? JointConfig.AutoValue() : JointConfig.SetValue(ParseFloat(raw));
         }
 
         public static string Stringify(JointDamping jointDamping)
@@ -298,7 +298,7 @@ namespace Utils.Lcs
         public static JointDamping ParseJointDamping(string raw)
         {
             var parts = ExpandFields(raw);
-            return JointDamping.Damped(float.Parse(parts[0]), float.Parse(parts[1]));
+            return JointDamping.Damped(ParseFloat(parts[0]), ParseFloat(parts[1]));
         }
 
         public static string Stringify(JointLimits jointLimits)
@@ -314,7 +314,7 @@ namespace Utils.Lcs
         {
             if (raw == "") return JointLimits.Unlimited();
             var parts = ExpandFields(raw);
-            return JointLimits.Limited(float.Parse(parts[0]), float.Parse(parts[1]));
+            return JointLimits.Limited(ParseFloat(parts[0]), ParseFloat(parts[1]));
         }
 
         public static string Stringify(JointMotor jointMotor)
@@ -330,7 +330,7 @@ namespace Utils.Lcs
         {
             if (raw == "") return JointMotor.Unpowered();
             var parts = ExpandFields(raw);
-            return JointMotor.Powered(float.Parse(parts[0]), float.Parse(parts[1]));
+            return JointMotor.Powered(ParseFloat(parts[0]), ParseFloat(parts[1]));
         }
 
         public static string Stringify(JointStrength jointStrength)
@@ -348,7 +348,7 @@ namespace Utils.Lcs
         {
             if (raw == "") return JointStrength.Unbreakable();
             var parts = ExpandFields(raw);
-            return JointStrength.Breakable(float.Parse(parts[0]), float.Parse(parts[1]));
+            return JointStrength.Breakable(ParseFloat(parts[0]), ParseFloat(parts[1]));
         }
 
         // Utilities

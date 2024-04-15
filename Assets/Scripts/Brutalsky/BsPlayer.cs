@@ -18,7 +18,8 @@ namespace Brutalsky
         public ObjectColor Color { get; set; }
         public bool Dummy { get; set; }
 
-        public BsPlayer(string id, string name, float health, ObjectColor color, bool dummy = false) : base(id, new ObjectTransform())
+        public BsPlayer(string name, float health, ObjectColor color, bool dummy = false)
+            : base(name, new ObjectTransform(), ObjectLayer.Midground, true)
         {
             Name = name;
             Health = health;

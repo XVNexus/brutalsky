@@ -16,15 +16,19 @@ namespace Brutalsky.Base
         public string Id { get => _id; set => _id = MapSystem.CleanId(value); }
         private string _id;
         public ObjectTransform Transform { get; set; }
+        public ObjectLayer Layer { get; set; }
+        public bool Simulated { get; set; }
 
         [CanBeNull] public GameObject InstanceObject { get; set; }
         [CanBeNull] public Component InstanceController { get; set; }
         public bool Active { get; set; }
 
-        protected BsObject(string id, ObjectTransform transform)
+        protected BsObject(string id, ObjectTransform transform, ObjectLayer layer, bool simulated)
         {
             Id = id;
             Transform = transform;
+            Layer = layer;
+            Simulated = simulated;
         }
 
         protected BsObject()
