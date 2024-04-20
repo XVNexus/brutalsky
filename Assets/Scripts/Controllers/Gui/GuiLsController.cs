@@ -51,7 +51,7 @@ namespace Controllers.Gui
             mapTileCell.Q<Label>("title").text = $"<b>{map.Title}</b>\n{map.Author}";
 
             // Render map preview
-            var preview = new GuiPainter(new Rect(map.Size * -.5f, map.Size), new Vector2(200f, 100f));
+            var preview = new GuiPainter(new Rect(map.PlayArea * -.5f, map.PlayArea), new Vector2(200f, 100f));
             PaintMapPreview(preview, map);
             mapTileCell.Q<VisualElement>("preview").style.backgroundImage = new StyleBackground(preview.Print());
 
@@ -90,7 +90,7 @@ namespace Controllers.Gui
             {
                 case Tags.ShapeSym:
                     var shape = (BsShape)obj;
-                    PaintObjectPreview(painter, shape.Transform, shape.Form.ToPoints(), shape.Color.Tint);
+                    PaintObjectPreview(painter, shape.Transform, shape.Form.ToPoints(), shape.Color.Color);
                     break;
                 case Tags.PoolSym:
                     var pool = (BsPool)obj;
@@ -101,7 +101,7 @@ namespace Controllers.Gui
                         new Vector2(pool.Size.x * .5f, pool.Size.y * .5f),
                         new Vector2(-pool.Size.x * .5f, pool.Size.y * .5f)
                     };
-                    PaintObjectPreview(painter, pool.Transform, points, pool.Color.Tint);
+                    PaintObjectPreview(painter, pool.Transform, points, pool.Color.Color);
                     break;
             }
 

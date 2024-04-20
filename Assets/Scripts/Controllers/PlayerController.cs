@@ -21,14 +21,8 @@ namespace Controllers
             var mHealth = GetSub<PlayerHealthController>("health");
             if (mHealth)
             {
-                if (mHealth.alive)
-                {
-                    mHealth.health = mHealth.maxHealth;
-                }
-                else
-                {
-                    mHealth.Revive();
-                }
+                mHealth.maxHealth = Object.Health;
+                mHealth.Revive();
             }
 
             // Reset boost

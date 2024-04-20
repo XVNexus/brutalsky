@@ -5,6 +5,7 @@ using Core;
 using UnityEngine;
 using Utils.Constants;
 using Utils.Lcs;
+using Utils.Map;
 using Utils.Object;
 
 namespace Brutalsky
@@ -14,8 +15,11 @@ namespace Brutalsky
         public uint Id => MapSystem.GenerateId(Title, Author);
         public string Title { get; set; }
         public string Author { get; set; }
-        public Vector2 Size { get; set; }
-        public ObjectColor Lighting { get; set; }
+        public Vector2 PlayArea { get; set; }
+        public ObjectColor BackgroundColor { get; set; }
+        public ObjectColor LightingColor { get; set; }
+        public MapGravity GravityDirection { get; set; }
+        public float PlayerHealth { get; set; }
         public List<BsSpawn> Spawns { get; } = new();
         public Dictionary<string, BsObject> Objects { get; } = new();
 
@@ -48,7 +52,9 @@ namespace Brutalsky
                 new(
                     '!',
                     new[] { LcsParser.Stringify(Title), LcsParser.Stringify(Author) },
-                    new[] { LcsParser.Stringify(Size), LcsParser.Stringify(Lighting) }
+                    new[] { LcsParser.Stringify(PlayArea), LcsParser.Stringify(BackgroundColor),
+                        LcsParser.Stringify(LightingColor), LcsParser.Stringify(GravityDirection),
+                        LcsParser.Stringify(PlayerHealth) }
                 )
             };
             lines.AddRange(Spawns.Select(spawn => spawn.ToLcs()));
@@ -69,8 +75,11 @@ namespace Brutalsky
             }
             Title = LcsParser.ParseString(metadataLine.Header[0]);
             Author = LcsParser.ParseString(metadataLine.Header[1]);
-            Size = LcsParser.ParseVector2(metadataLine.Properties[0]);
-            Lighting = LcsParser.ParseColor(metadataLine.Properties[1]);
+            PlayArea = LcsParser.ParseVector2(metadataLine.Properties[0]);
+            BackgroundColor = LcsParser.ParseColor(metadataLine.Properties[1]);
+            LightingColor = LcsParser.ParseColor(metadataLine.Properties[2]);
+            GravityDirection = LcsParser.ParseGravity(metadataLine.Properties[3]);
+            PlayerHealth = LcsParser.ParseFloat(metadataLine.Properties[4]);
             for (var i = 1; i < document.Lines.Count; i++)
             {
                 var line = document.Lines[i];

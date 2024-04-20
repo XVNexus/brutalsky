@@ -4,28 +4,29 @@ namespace Utils.Object
 {
     public class ObjectColor
     {
-        public Color Tint { get; set; }
+        public Color Color { get; set; }
+        public Color Tint => new Color(Color.r * Color.a, Color.g * Color.a, Color.b * Color.a);
         public float Alpha
         {
-            get => Tint.a;
+            get => Color.a;
             set
             {
-                var color = Tint;
+                var color = Color;
                 color.a = value;
-                Tint = color;
+                Color = color;
             }
         }
         public bool Glow { get; set; }
 
-        public ObjectColor(Color tint, bool glow = false)
+        public ObjectColor(Color color, bool glow = false)
         {
-            Tint = tint;
+            Color = color;
             Glow = glow;
         }
 
         public ObjectColor(float r, float g, float b, float a = 1f, bool glow = false)
         {
-            Tint = new Color(r, g, b, a);
+            Color = new Color(r, g, b, a);
             Glow = glow;
         }
 

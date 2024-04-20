@@ -3,6 +3,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using UnityEngine;
 using Utils.Joint;
+using Utils.Map;
 using Utils.Object;
 using Utils.Pool;
 using Utils.Shape;
@@ -125,11 +126,22 @@ namespace Utils.Lcs
             return new Vector2(ParseFloat(parts[0]), ParseFloat(parts[1]));
         }
 
+        // Map types
+        public static string Stringify(MapGravity gravity)
+        {
+            return Stringify((int)gravity);
+        }
+
+        public static MapGravity ParseGravity(string raw)
+        {
+            return (MapGravity)ParseInt(raw);
+        }
+
         // Object types
         public static string Stringify(ObjectColor color)
         {
-            return (color.Alpha < 1f ? ColorUtility.ToHtmlStringRGBA(color.Tint)
-                : ColorUtility.ToHtmlStringRGB(color.Tint)) + Stringify(color.Glow);
+            return (color.Alpha < 1f ? ColorUtility.ToHtmlStringRGBA(color.Color)
+                : ColorUtility.ToHtmlStringRGB(color.Color)) + Stringify(color.Glow);
         }
 
         public static ObjectColor ParseColor(string raw)

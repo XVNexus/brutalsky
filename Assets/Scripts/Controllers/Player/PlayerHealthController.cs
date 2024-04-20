@@ -57,11 +57,16 @@ namespace Controllers.Player
 
         public bool Revive()
         {
-            if (alive) return false;
-            transform.position -= new Vector3(DeathOffset, DeathOffset);
-            if (_mMovement) _mMovement.Unfreeze();
+            if (!alive)
+            {
+                transform.position -= new Vector3(DeathOffset, DeathOffset);
+                alive = true;
+                if (_mMovement)
+                {
+                    _mMovement.Unfreeze();
+                }
+            }
             health = maxHealth;
-            alive = true;
             return true;
         }
 
@@ -103,7 +108,7 @@ namespace Controllers.Player
             if (MapSystem._.IsMapLoaded)
             {
                 var position = transform.position;
-                var mapSize = MapSystem._.ActiveMap.Size;
+                var mapSize = MapSystem._.ActiveMap.PlayArea;
                 if (Mathf.Abs(position.x) > mapSize.x / 2f + 3f || Mathf.Abs(position.y) > mapSize.y / 2f + 3f)
                 {
                     Kill();

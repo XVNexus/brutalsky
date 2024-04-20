@@ -42,7 +42,7 @@ namespace Brutalsky
             // Apply color and layer
             var spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
             spriteRenderer.material = Color.Glow ? ResourceSystem._.aUnlitMaterial : ResourceSystem._.aLitMaterial;
-            spriteRenderer.material.color = Color.Tint;
+            spriteRenderer.material.color = Color.Color;
             spriteRenderer.sortingOrder = MapSystem.Layer2Order(Layer);
 
             // Apply chemical

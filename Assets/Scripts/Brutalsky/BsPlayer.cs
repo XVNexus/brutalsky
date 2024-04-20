@@ -1,5 +1,6 @@
 using Brutalsky.Base;
 using Controllers;
+using Controllers.Player;
 using Core;
 using UnityEngine;
 using Utils.Constants;
@@ -38,7 +39,7 @@ namespace Brutalsky
             controller.Object = this;
 
             // Apply config
-            controller.GetComponent<SpriteRenderer>().color = Color.Tint;
+            controller.GetComponent<SpriteRenderer>().color = Color.Color;
 
             return controller;
         }

@@ -1,6 +1,7 @@
 using Brutalsky;
 using Core;
 using UnityEngine;
+using Utils.Map;
 using Utils.Object;
 using Utils.Shape;
 
@@ -40,8 +41,11 @@ public class Testing : MonoBehaviour
     {
         var map = new BsMap($"{name} {title}", "Brutalsky")
         {
-            Size = new Vector2(size, size / 2f),
-            Lighting = new ObjectColor(1f, 1f, 1f, .8f)
+            PlayArea = new Vector2(size, size / 2f),
+            BackgroundColor = new ObjectColor(.3f, .3f, .3f),
+            LightingColor = new ObjectColor(1f, 1f, 1f, .8f),
+            GravityDirection = MapGravity.Up,
+            PlayerHealth = 100f
         };
         if (bottom) map.AddObject(new BsShape
         (

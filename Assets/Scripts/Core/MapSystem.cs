@@ -28,7 +28,8 @@ namespace Core
         public bool IsMapLoaded { get; private set; }
 
         // External references
-        public GameObject gMapMargins;
+        public GameObject gBackground;
+        public GameObject gForeground;
         public Light2D cLight2D;
         private GameObject _gMapParent;
 
@@ -106,11 +107,15 @@ namespace Core
             ActiveMap = map;
             IsMapLoaded = true;
 
-            // Set camera and lighting config
-            CameraSystem._.ResizeView(map.Size);
-            gMapMargins.transform.localScale = map.Size;
-            cLight2D.color = map.Lighting.Tint;
-            cLight2D.intensity = map.Lighting.Alpha;
+            // Apply config
+            CameraSystem._.ResizeView(map.PlayArea);
+            gBackground.transform.localScale = map.PlayArea;
+            gForeground.transform.localScale = map.PlayArea;
+            var backgroundColor = map.BackgroundColor.Tint * map.LightingColor.Tint;
+            gBackground.GetComponent<SpriteRenderer>().color = backgroundColor;
+            gForeground.GetComponent<SpriteRenderer>().color = backgroundColor;
+            cLight2D.color = map.LightingColor.Tint;
+            cLight2D.intensity = map.LightingColor.Alpha;
 
             // Instantiate the map container and create all objects
             _gMapParent = new GameObject();

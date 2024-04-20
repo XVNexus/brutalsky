@@ -56,7 +56,7 @@ namespace Brutalsky
             // Apply color and layer
             var meshRenderer = gameObject.GetComponent<MeshRenderer>();
             meshRenderer.material = Color.Glow ? ResourceSystem._.aUnlitMaterial : ResourceSystem._.aLitMaterial;
-            meshRenderer.material.color = Color.Tint;
+            meshRenderer.material.color = Color.Color;
             meshRenderer.sortingOrder = MapSystem.Layer2Order(Layer);
 
             // Apply material

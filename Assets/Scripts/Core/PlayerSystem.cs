@@ -57,6 +57,7 @@ namespace Core
         public bool Spawn(BsMap map, BsPlayer player)
         {
             if (!MapSystem._.IsMapLoaded) return false;
+            player.Health = map.PlayerHealth;
             if (!player.Active)
             {
                 // Spawn new player
