@@ -50,6 +50,8 @@ namespace Controllers.Player
         // Event functions
         private void OnPlayerRespawn(BsMap map, BsPlayer player)
         {
+            if (player.Id != Master.Object.Id) return;
+
             _ringAlpha = 0f;
             _ringThickness = 0f;
             _ringSpin = 0f;

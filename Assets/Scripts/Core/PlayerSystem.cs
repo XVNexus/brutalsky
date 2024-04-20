@@ -72,7 +72,6 @@ namespace Core
             {
                 // Respawn existing player
                 player.InstanceObject.transform.position = map.SelectSpawn();
-                player.InstanceController.Start();
                 EventSystem._.EmitPlayerRespawn(map, player);
             }
             return true;

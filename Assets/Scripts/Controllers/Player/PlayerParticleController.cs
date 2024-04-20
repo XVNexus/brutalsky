@@ -16,6 +16,7 @@ namespace Controllers.Player
 
         // Local constants
         public const float BoostThreshold = 30f;
+        public const float BoostCap = 1000f;
         public const float ParticleMultiplier = 3f;
 
         // Local variables
@@ -30,6 +31,7 @@ namespace Controllers.Player
         public ParticleSystem cHealParticleSystem;
         public ParticleSystem cHurtParticleSystem;
         public ParticleSystem cDeathParticleSystem;
+        private ParticleSystem[] _cAllParticleSystems;
         private Rigidbody2D _cRigidbody2D;
         private SpriteRenderer _cSpriteRenderer;
 
@@ -39,15 +41,22 @@ namespace Controllers.Player
         // Init functions
         protected override void OnInit()
         {
+            EventSystem._.OnPlayerRespawn += OnPlayerRespawn;
+
             _cRigidbody2D = GetComponent<Rigidbody2D>();
             _cSpriteRenderer = GetComponent<SpriteRenderer>();
 
-            // Sync particle system colors with player color
-            foreach (var coloredParticleSystem in new[] { cTouchParticleSystem, cSlideParticleSystem,
-                 cBoostParticleSystem, cImpactParticleSystem, cHealParticleSystem, cHurtParticleSystem,
-                 cDeathParticleSystem })
+            // Add all particle systems to a group for convenience
+            _cAllParticleSystems = new[]
             {
-                coloredParticleSystem.GetComponent<Renderer>().material.color = _cSpriteRenderer.color;
+                cTouchParticleSystem, cSlideParticleSystem, cBoostParticleSystem, cImpactParticleSystem,
+                cHealParticleSystem, cHurtParticleSystem, cDeathParticleSystem
+            };
+
+            // Sync particle system colors with player color
+            foreach (var cParticleSystem in _cAllParticleSystems)
+            {
+                cParticleSystem.GetComponent<Renderer>().material.color = _cSpriteRenderer.color;
             }
 
             // Shift death particle system to ensure death particles play where the player originally was
@@ -75,6 +84,7 @@ namespace Controllers.Player
 
         public void DisplayBoostParticles(float speed)
         {
+            if (speed > BoostCap) return;
             switch (speed)
             {
                 case >= BoostThreshold when _lastSpeed < BoostThreshold:
@@ -112,6 +122,19 @@ namespace Controllers.Player
         }
 
         // Event functions
+        private void OnPlayerRespawn(BsMap map, BsPlayer player)
+        {
+            if (player.Id != Master.Object.Id) return;
+
+            // Clear all particles and reset trackers
+            foreach (var cParticleSystem in _cAllParticleSystems)
+            {
+                cParticleSystem.Stop(false, ParticleSystemStopBehavior.StopEmittingAndClear);
+            }
+            _lastSpeed = 0f;
+            _lastHealth = -1;
+        }
+
         private void OnCollisionEnter2D(Collision2D other)
         {
             DisplayImpactParticles(other.TotalNormalImpulse());
@@ -130,16 +153,18 @@ namespace Controllers.Player
         private void FixedUpdate()
         {
             // Display boost particles
-            if (!_mHealth || (_mHealth && _mHealth.alive))
-            {
-                var speed = _cRigidbody2D.velocity.magnitude;
-                DisplayBoostParticles(speed);
-                _lastSpeed = speed;
-            }
+            var speed = _cRigidbody2D.velocity.magnitude;
+            DisplayBoostParticles(speed);
+            _lastSpeed = speed;
 
             // Display heal/hurt particles
             if (!_mHealth) return;
             var health = Mathf.CeilToInt(_mHealth.health * ParticleMultiplier);
+            if (_lastHealth == -1)
+            {
+                _lastHealth = health;
+                return;
+            }
             var deltaHealth = health - _lastHealth;
             if (deltaHealth == 0) return;
             DisplayHealHurtParticles(deltaHealth);

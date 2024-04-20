@@ -71,6 +71,7 @@ namespace Controllers.Player
         // Event functions
         private void OnPlayerRespawn(BsMap map, BsPlayer player)
         {
+            if (player.Id != Master.Object.Id) return;
             _cRigidbody2D.velocity = Vector2.zero;
             boostCharge = 0f;
             boostCooldown = 0f;

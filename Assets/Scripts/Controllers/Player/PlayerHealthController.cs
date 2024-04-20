@@ -57,34 +57,35 @@ namespace Controllers.Player
             health = Mathf.Max(health - amount, 0f);
         }
 
-        public bool Revive()
+        public void Revive()
         {
-            if (!alive)
-            {
-                transform.position -= new Vector3(DeathOffset, DeathOffset);
-                alive = true;
-                if (_mMovement)
-                {
-                    _mMovement.Unfreeze();
-                }
-            }
+            if (alive) return;
             health = maxHealth;
-            return true;
+            alive = true;
+            if (_mMovement)
+            {
+                _mMovement.Unfreeze();
+            }
         }
 
-        public bool Kill()
+        public void Kill()
         {
-            if (!alive) return false;
+            if (!alive) return;
             transform.position += new Vector3(DeathOffset, DeathOffset);
-            if (_mMovement) _mMovement.Freeze();
             health = 0f;
             alive = false;
-            return true;
+            if (_mMovement)
+            {
+                _mMovement.Freeze();
+            }
         }
 
         // Event functions
         private void OnPlayerRespawn(BsMap map, BsPlayer player)
         {
+            if (player.Id != Master.Object.Id) return;
+            maxHealth = player.Health;
+            health = maxHealth;
             Revive();
         }
 
