@@ -19,6 +19,7 @@ namespace Brutalsky
         public ObjectColor BackgroundColor { get; set; }
         public ObjectColor LightingColor { get; set; }
         public MapGravity GravityDirection { get; set; }
+        public float GravityStrength { get; set; }
         public float PlayerHealth { get; set; }
         public List<BsSpawn> Spawns { get; } = new();
         public Dictionary<string, BsObject> Objects { get; } = new();
@@ -54,7 +55,7 @@ namespace Brutalsky
                     new[] { LcsParser.Stringify(Title), LcsParser.Stringify(Author) },
                     new[] { LcsParser.Stringify(PlayArea), LcsParser.Stringify(BackgroundColor),
                         LcsParser.Stringify(LightingColor), LcsParser.Stringify(GravityDirection),
-                        LcsParser.Stringify(PlayerHealth) }
+                        LcsParser.Stringify(GravityStrength), LcsParser.Stringify(PlayerHealth) }
                 )
             };
             lines.AddRange(Spawns.Select(spawn => spawn.ToLcs()));
@@ -79,7 +80,8 @@ namespace Brutalsky
             BackgroundColor = LcsParser.ParseColor(metadataLine.Properties[1]);
             LightingColor = LcsParser.ParseColor(metadataLine.Properties[2]);
             GravityDirection = LcsParser.ParseGravity(metadataLine.Properties[3]);
-            PlayerHealth = LcsParser.ParseFloat(metadataLine.Properties[4]);
+            GravityStrength = LcsParser.ParseFloat(metadataLine.Properties[4]);
+            PlayerHealth = LcsParser.ParseFloat(metadataLine.Properties[5]);
             for (var i = 1; i < document.Lines.Count; i++)
             {
                 var line = document.Lines[i];

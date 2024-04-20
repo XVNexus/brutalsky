@@ -42,9 +42,10 @@ public class Testing : MonoBehaviour
         var map = new BsMap($"{name} {title}", "Brutalsky")
         {
             PlayArea = new Vector2(size, size / 2f),
-            BackgroundColor = new ObjectColor(.3f, .3f, .3f),
-            LightingColor = new ObjectColor(1f, 1f, 1f, .8f),
-            GravityDirection = MapGravity.Up,
+            BackgroundColor = new ObjectColor(.1f, .1f, .1f),
+            LightingColor = new ObjectColor(1f, 1f, 1f, .5f),
+            GravityDirection = MapGravity.Down,
+            GravityStrength = 20f,
             PlayerHealth = 100f
         };
         if (bottom) map.AddObject(new BsShape
@@ -55,7 +56,7 @@ public class Testing : MonoBehaviour
             true,
             Form.Rectangle(size, 1f),
             ShapeMaterial.Stone(),
-            ObjectColor.Stone()
+            ObjectColor.Ether()
         ));
         if (top) map.AddObject(new BsShape
         (
@@ -65,7 +66,7 @@ public class Testing : MonoBehaviour
             true,
             Form.Rectangle(size, 1f),
             ShapeMaterial.Stone(),
-            ObjectColor.Stone()
+            ObjectColor.Ether()
         ));
         if (left) map.AddObject(new BsShape
         (
@@ -75,7 +76,7 @@ public class Testing : MonoBehaviour
             true,
             Form.Rectangle(1f, size / 2f),
             ShapeMaterial.Stone(),
-            ObjectColor.Stone()
+            ObjectColor.Ether()
         ));
         if (right) map.AddObject(new BsShape
         (
@@ -85,7 +86,7 @@ public class Testing : MonoBehaviour
             true,
             Form.Rectangle(1f, size / 2f),
             ShapeMaterial.Stone(),
-            ObjectColor.Stone()
+            ObjectColor.Ether()
         ));
         if (top && left) map.AddObject(new BsShape
         (
@@ -95,7 +96,7 @@ public class Testing : MonoBehaviour
             true,
             Form.Vector("0 0 0 3 0 1 0 0 0 -3"),
             ShapeMaterial.Stone(),
-            ObjectColor.Stone()
+            ObjectColor.Ether()
         ));
         if (top && right) map.AddObject(new BsShape
         (
@@ -105,7 +106,7 @@ public class Testing : MonoBehaviour
             true,
             Form.Vector("0 0 0 -3 0 1 0 0 0 -3"),
             ShapeMaterial.Stone(),
-            ObjectColor.Stone()
+            ObjectColor.Ether()
         ));
         if (bottom && left) map.AddObject(new BsShape
         (
@@ -115,7 +116,7 @@ public class Testing : MonoBehaviour
             true,
             Form.Vector("0 0 0 3 0 1 0 0 0 3"),
             ShapeMaterial.Stone(),
-            ObjectColor.Stone()
+            ObjectColor.Ether()
         ));
         if (bottom && right) map.AddObject(new BsShape
         (
@@ -125,7 +126,7 @@ public class Testing : MonoBehaviour
             true,
             Form.Vector("0 0 0 -3 0 1 0 0 0 3"),
             ShapeMaterial.Stone(),
-            ObjectColor.Stone()
+            ObjectColor.Ether()
         ));
         map.AddSpawn(new BsSpawn(new Vector2(-1f, -size / 4f + 1.5f)));
         map.AddSpawn(new BsSpawn(new Vector2(1f, -size / 4f + 1.5f)));

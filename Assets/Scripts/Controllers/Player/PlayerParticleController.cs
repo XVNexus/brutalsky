@@ -125,8 +125,6 @@ namespace Controllers.Player
         private void OnPlayerRespawn(BsMap map, BsPlayer player)
         {
             if (player.Id != Master.Object.Id) return;
-
-            // Clear all particles and reset trackers
             foreach (var cParticleSystem in _cAllParticleSystems)
             {
                 cParticleSystem.Stop(false, ParticleSystemStopBehavior.StopEmittingAndClear);
@@ -160,7 +158,7 @@ namespace Controllers.Player
             // Display heal/hurt particles
             if (!_mHealth) return;
             var health = Mathf.CeilToInt(_mHealth.health * ParticleMultiplier);
-            if (_lastHealth == -1)
+            if (_lastHealth < 0)
             {
                 _lastHealth = health;
                 return;

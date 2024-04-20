@@ -63,14 +63,12 @@ namespace Controllers.Gui
 
         public void PaintMapPreview(GuiPainter painter, BsMap map)
         {
-            // Paint background frame
+            // Paint background and frame
             painter.AutoTransform = false;
             painter.DrawRoundedRect(new Rect(-3f, -3f, 206f, 106f), 3f);
-            painter.SetFill(new Color(.25f, .25f, .25f, 1f));
-            painter.Fill();
+            painter.Fill(map.BackgroundColor.Tint * map.LightingColor.Tint);
             painter.DrawRoundedRect(new Rect(-2f, -2f, 204f, 104f), 2f);
-            painter.SetStroke(new Color(.15f, .15f, .15f, 1f), 2f);
-            painter.Stroke();
+            painter.Stroke(new Color(1f, 1f, 1f, .25f), 2f);
             painter.AutoTransform = true;
 
             // Sort objects by layer
@@ -90,7 +88,8 @@ namespace Controllers.Gui
             {
                 case Tags.ShapeSym:
                     var shape = (BsShape)obj;
-                    PaintObjectPreview(painter, shape.Transform, shape.Form.ToPoints(), shape.Color.Color);
+                    PaintObjectPreview(painter, shape.Transform, shape.Form.ToPoints(),
+                        shape.Color.Color * map.LightingColor.Tint);
                     break;
                 case Tags.PoolSym:
                     var pool = (BsPool)obj;
@@ -101,7 +100,7 @@ namespace Controllers.Gui
                         new Vector2(pool.Size.x * .5f, pool.Size.y * .5f),
                         new Vector2(-pool.Size.x * .5f, pool.Size.y * .5f)
                     };
-                    PaintObjectPreview(painter, pool.Transform, points, pool.Color.Color);
+                    PaintObjectPreview(painter, pool.Transform, points, pool.Color.Color * map.LightingColor.Tint);
                     break;
             }
 
@@ -115,11 +114,9 @@ namespace Controllers.Gui
         public void PaintSpawnPreview(GuiPainter painter, Vector2 position)
         {
             painter.DrawCircle(position, .5f);
-            painter.SetFill(new Color(1f, 1f, 1f));
-            painter.Fill();
+            painter.Fill(new Color(1f, 1f, 1f));
             painter.DrawCircle(position, 1f);
-            painter.SetStroke(new Color(1f, 1f, 1f, .1f), 2f);
-            painter.Stroke();
+            painter.Stroke(new Color(1f, 1f, 1f, .1f), 2f);
         }
 
         public void PaintObjectPreview(GuiPainter painter, ObjectTransform transform, Vector2[] points, Color color)
@@ -132,8 +129,7 @@ namespace Controllers.Gui
                 transformedPoints[i] = MathfExt.TransformVector(points[i], translation, rotation);
             }
             painter.DrawPolygon(transformedPoints);
-            painter.SetFill(color);
-            painter.Fill();
+            painter.Fill(color);
         }
 
         // Event functions

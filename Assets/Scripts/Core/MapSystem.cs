@@ -22,7 +22,6 @@ namespace Core
 
         // Local constants
         public const string SaveFormat = "txt";
-        public const float GravityStrength = 20f;
 
         // Local variables
         public Dictionary<uint, string> RawMapList { get; private set; } = new();
@@ -38,7 +37,7 @@ namespace Core
         // Init functions
         protected override void OnStart()
         {
-            GenerateMapList(new[] { "Brutalsky", "Ring" });
+            GenerateMapList(new[] { "Brutalsky", "Voidsky", "Ring" });
         }
 
         // System functions
@@ -118,7 +117,7 @@ namespace Core
             gForeground.GetComponent<SpriteRenderer>().color = backgroundColor;
             cLight2D.color = map.LightingColor.Tint;
             cLight2D.intensity = map.LightingColor.Alpha;
-            Physics2D.gravity = Gravity2Vector(map.GravityDirection);
+            Physics2D.gravity = Gravity2Vector(map.GravityDirection, map.GravityStrength);
 
             // Instantiate the map container and create all objects
             _gMapParent = new GameObject();
@@ -176,16 +175,16 @@ namespace Core
             };
         }
 
-        public static Vector2 Gravity2Vector(MapGravity gravity)
+        public static Vector2 Gravity2Vector(MapGravity direction, float strength)
         {
-            return gravity switch
+            return direction switch
             {
                 MapGravity.Down => Vector2.down,
                 MapGravity.Up => Vector2.up,
                 MapGravity.Left => Vector2.left,
                 MapGravity.Right => Vector2.right,
                 _ => Vector2.zero
-            } * GravityStrength;
+            } * strength;
         }
 
         public static string CleanId(string id)

@@ -17,7 +17,7 @@ namespace Utils.Gui
         {
             ViewRect = viewRect;
             var renderAspect = imageSize.x / imageSize.y;
-            Vector2 renderSize = viewRect.width / viewRect.height > renderAspect
+            var renderSize = viewRect.width / viewRect.height > renderAspect
                 ? new Vector2(viewRect.width, viewRect.width / renderAspect)
                 : new Vector2(viewRect.height * renderAspect, viewRect.height);
             RenderRect = new Rect(viewRect.x - (renderSize.x - viewRect.width) * .5f,
@@ -158,9 +158,27 @@ namespace Utils.Gui
             _painter.Fill();
         }
 
+        public void Fill(Color color)
+        {
+            SetFill(color);
+            Fill();
+        }
+
         public void Stroke()
         {
             _painter.Stroke();
+        }
+
+        public void Stroke(Color color, float width)
+        {
+            SetStroke(color, width);
+            Stroke();
+        }
+
+        public void Stroke(Color color, float width, LineCap cap, LineJoin join)
+        {
+            SetStroke(color, width, cap, join);
+            Stroke();
         }
 
         // Config
@@ -175,8 +193,10 @@ namespace Utils.Gui
             _painter.lineWidth = width;
         }
 
-        public void SetLine(LineCap cap, LineJoin join)
+        public void SetStroke(Color color, float width, LineCap cap, LineJoin join)
         {
+            _painter.strokeColor = color;
+            _painter.lineWidth = width;
             _painter.lineCap = cap;
             _painter.lineJoin = join;
         }
@@ -209,8 +229,8 @@ namespace Utils.Gui
                 Mathf.Clamp(point.y, ViewRect.yMin, ViewRect.yMax));
 
             // Convert from object coordinates to pixel coordinates
-            return new Vector2(Mathf.InverseLerp(RenderRect.xMin, RenderRect.xMax, result.x) * ImageSize.x,
-                Mathf.InverseLerp(RenderRect.yMin, RenderRect.yMax, -result.y) * ImageSize.y);
+            return new Vector2((result.x - RenderRect.xMin) / (RenderRect.xMax - RenderRect.xMin) * ImageSize.x,
+                (-result.y - RenderRect.yMin) / (RenderRect.yMax - RenderRect.yMin) * ImageSize.y);
         }
 
         public float TransformValue(float value)

@@ -21,12 +21,23 @@ namespace Controllers.Player
         [CanBeNull] private PlayerHealthController _mHealth;
 
         // Init functions
+        protected override void OnInit()
+        {
+            EventSystem._.OnPlayerRespawn += OnPlayerRespawn;
+        }
+
         protected override void OnLink()
         {
             _mHealth = Master.GetSub<PlayerHealthController>("health");
         }
 
         // Event functions
+        private void OnPlayerRespawn(BsMap map, BsPlayer player)
+        {
+            if (player.Id != Master.Object.Id) return;
+            _lastHealth = -1f;
+        }
+
         private void OnCollisionEnter2D(Collision2D other)
         {
             // Get collision info
@@ -44,6 +55,11 @@ namespace Controllers.Player
             // Apply camera shake after taking damage
             if (!_mHealth) return;
             var health = _mHealth.health;
+            if (_lastHealth < 0f)
+            {
+                _lastHealth = health;
+                return;
+            }
             var deltaHealth = health - _lastHealth;
             if (deltaHealth < 0f)
             {

@@ -1,3 +1,4 @@
+using System;
 using Brutalsky;
 using Controllers.Base;
 using Core;
@@ -5,6 +6,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using Utils.Constants;
 using Utils.Ext;
+using Utils.Map;
 
 namespace Controllers.Player
 {
@@ -24,11 +26,17 @@ namespace Controllers.Player
         public bool onGround;
         public float boostCharge;
         public float boostCooldown;
+        private Vector2 _movementScale;
+        private Vector2 _jumpVector;
         private int _jumpCooldown;
         private bool _lastBoostInput;
         private float _lastSpeed;
         private int _onGroundFrames;
-        private float _lastPositionY;
+        private Vector2 _lastPosition;
+
+        // Local functions
+        public Func<Vector2, Vector2, bool> TestOnGround = (_, _) => false;
+        public Func<Vector2, bool> TestJumpInput = _ => false;
 
         // Component references
         private Rigidbody2D _cRigidbody2D;
@@ -41,6 +49,7 @@ namespace Controllers.Player
         // Init functions
         protected override void OnInit()
         {
+            EventSystem._.OnMapBuild += OnMapBuild;
             EventSystem._.OnPlayerRespawn += OnPlayerRespawn;
 
             _cRigidbody2D = GetComponent<Rigidbody2D>();
@@ -53,6 +62,9 @@ namespace Controllers.Player
 
             // Disable movement if dummy is set to true
             dummy = Master.Object.Dummy;
+
+            // Force scanning map settings
+            OnMapBuild(MapSystem._.ActiveMap);
         }
 
         // Module functions
@@ -69,6 +81,43 @@ namespace Controllers.Player
         }
 
         // Event functions
+        private void OnMapBuild(BsMap map)
+        {
+            // Configure movement to fit with current gravity
+            _movementScale = map.GravityDirection switch
+            {
+                MapGravity.Down => new Vector2(movementForce, map.GravityStrength * .5f),
+                MapGravity.Up => new Vector2(movementForce, map.GravityStrength * .5f),
+                MapGravity.Left => new Vector2(map.GravityStrength * .5f, movementForce),
+                MapGravity.Right => new Vector2(map.GravityStrength * .5f, movementForce),
+                _ => Vector2.one * movementForce
+            };
+            _jumpVector = map.GravityDirection switch
+            {
+                MapGravity.Down => Vector2.up * jumpForce,
+                MapGravity.Up => Vector2.down * jumpForce,
+                MapGravity.Left => Vector2.right * jumpForce,
+                MapGravity.Right => Vector2.left * jumpForce,
+                _ => Vector2.zero
+            };
+            TestOnGround = map.GravityDirection switch
+            {
+                MapGravity.Down => (c, p) => c.y < p.y - .25f,
+                MapGravity.Up => (c, p) => c.y > p.y + .25f,
+                MapGravity.Left => (c, p) => c.x < p.x - .25f,
+                MapGravity.Right => (c, p) => c.x > p.x + .25f,
+                _ => (_, _) => false
+            };
+            TestJumpInput = map.GravityDirection switch
+            {
+                MapGravity.Down => m => m.y > 0f,
+                MapGravity.Up => m => m.y < 0f,
+                MapGravity.Left => m => m.x > 0f,
+                MapGravity.Right => m => m.x < 0f,
+                _ => _ => false
+            };
+        }
+
         private void OnPlayerRespawn(BsMap map, BsPlayer player)
         {
             if (player.Id != Master.Object.Id) return;
@@ -99,7 +148,7 @@ namespace Controllers.Player
         {
             // Update ground status
             if (!other.gameObject.CompareTag(Tags.ShapeTag) && !other.gameObject.CompareTag(Tags.PlayerTag)) return;
-            if (other.GetContact(0).point.y > _lastPositionY - .25f) return;
+            if (!TestOnGround(other.GetContact(0).point, _lastPosition)) return;
             _onGroundFrames = MaxOnGroundFrames;
             onGround = true;
         }
@@ -111,7 +160,7 @@ namespace Controllers.Player
             // Update ground status
             onGround = _onGroundFrames > 0;
             _onGroundFrames = Mathf.Max(_onGroundFrames - 1, 0);
-            _lastPositionY = transform.position.y;
+            _lastPosition = transform.position;
 
             // Get movement data
             var velocity = _cRigidbody2D.velocity;
@@ -119,18 +168,13 @@ namespace Controllers.Player
 
             // Apply directional movement
             var movementInput = iMovement.ReadValue<Vector2>();
-            var movementScale = new Vector2
-                (
-                    movementForce * (onGround ? 1.5f : .5f),
-                    Physics2D.gravity.magnitude * .5f
-                );
-            _cRigidbody2D.AddForce(movementInput * movementScale);
+            _cRigidbody2D.AddForce(movementInput * _movementScale * (onGround ? 1.5f : .5f));
 
             // Apply jump movement
-            var jumpInput = onGround && movementInput.y > 0f && _jumpCooldown == 0;
+            var jumpInput = onGround && TestJumpInput(movementInput) && _jumpCooldown == 0;
             if (jumpInput)
             {
-                _cRigidbody2D.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+                _cRigidbody2D.AddForce(_jumpVector, ForceMode2D.Impulse);
                 _jumpCooldown = MaxOnGroundFrames + 1;
             }
 
