@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Controllers.Base;
 using Core;
 using JetBrains.Annotations;
 using UnityEngine;
@@ -20,7 +21,7 @@ namespace Brutalsky.Base
         public bool Simulated { get; set; }
 
         [CanBeNull] public GameObject InstanceObject { get; set; }
-        [CanBeNull] public Component InstanceController { get; set; }
+        [CanBeNull] public BsBehavior InstanceController { get; set; }
         public bool Active { get; set; }
 
         protected BsObject(string id, ObjectTransform transform, ObjectLayer layer, bool simulated)
@@ -35,13 +36,13 @@ namespace Brutalsky.Base
         {
         }
 
-        protected abstract Component _Init(GameObject gameObject, BsMap map);
+        protected abstract BsBehavior _Init(GameObject gameObject, BsMap map);
 
         protected abstract string[] _ToLcs();
 
         protected abstract void _FromLcs(string[] properties);
 
-        public Component Init(GameObject gameObject, BsMap map)
+        public BsBehavior Init(GameObject gameObject, BsMap map)
         {
             var instanceController = _Init(gameObject, map);
             foreach (var addon in Addons)
@@ -75,7 +76,7 @@ namespace Brutalsky.Base
             }
         }
 
-        public void Activate(GameObject instanceObject, Component instanceController)
+        public void Activate(GameObject instanceObject, BsBehavior instanceController)
         {
             InstanceObject = instanceObject;
             InstanceController = instanceController;

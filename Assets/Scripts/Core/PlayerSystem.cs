@@ -66,12 +66,14 @@ namespace Core
                 player.Activate(instanceObject, instanceController);
                 ActivePlayers[player.Id] = player;
                 instanceObject.transform.position = map.SelectSpawn();
+                EventSystem._.EmitPlayerSpawn(map, player);
             }
             else
             {
                 // Respawn existing player
-                player.Refresh();
                 player.InstanceObject.transform.position = map.SelectSpawn();
+                player.InstanceController.Start();
+                EventSystem._.EmitPlayerRespawn(map, player);
             }
             return true;
         }

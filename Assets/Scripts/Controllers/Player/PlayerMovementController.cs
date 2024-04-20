@@ -41,6 +41,8 @@ namespace Controllers.Player
         // Init functions
         protected override void OnInit()
         {
+            EventSystem._.OnPlayerRespawn += OnPlayerRespawn;
+
             _cRigidbody2D = GetComponent<Rigidbody2D>();
             _cCircleCollider2D = GetComponent<CircleCollider2D>();
 
@@ -67,6 +69,13 @@ namespace Controllers.Player
         }
 
         // Event functions
+        private void OnPlayerRespawn(BsMap map, BsPlayer player)
+        {
+            _cRigidbody2D.velocity = Vector2.zero;
+            boostCharge = 0f;
+            boostCooldown = 0f;
+        }
+
         private void OnCollisionEnter2D(Collision2D other)
         {
             OnCollision(other);

@@ -1,6 +1,7 @@
 using System.Linq;
 using Brutalsky.Base;
 using Controllers;
+using Controllers.Base;
 using Core;
 using UnityEngine;
 using Utils.Constants;
@@ -31,7 +32,7 @@ namespace Brutalsky
         {
         }
 
-        protected override Component _Init(GameObject gameObject, BsMap map)
+        protected override BsBehavior _Init(GameObject gameObject, BsMap map)
         {
             // Link object to controller
             var controller = gameObject.GetComponent<ShapeController>();

@@ -1,5 +1,6 @@
 using Brutalsky;
 using Controllers.Base;
+using Core;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
@@ -31,6 +32,8 @@ namespace Controllers.Player
         // Init functions
         protected override void OnInit()
         {
+            EventSystem._.OnPlayerRespawn += OnPlayerRespawn;
+
             _cPlayerSpriteRenderer = GetComponent<SpriteRenderer>();
 
             // Sync ring color with player color
@@ -45,6 +48,13 @@ namespace Controllers.Player
         }
 
         // Event functions
+        private void OnPlayerRespawn(BsMap map, BsPlayer player)
+        {
+            _ringAlpha = 0f;
+            _ringThickness = 0f;
+            _ringSpin = 0f;
+        }
+
         private void Update()
         {
             // Calculate target ring properties

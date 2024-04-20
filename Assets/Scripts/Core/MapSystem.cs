@@ -9,6 +9,7 @@ using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using Utils.Constants;
+using Utils.Map;
 using Utils.Object;
 
 namespace Core
@@ -21,6 +22,7 @@ namespace Core
 
         // Local constants
         public const string SaveFormat = "txt";
+        public const float GravityStrength = 20f;
 
         // Local variables
         public Dictionary<uint, string> RawMapList { get; private set; } = new();
@@ -116,6 +118,7 @@ namespace Core
             gForeground.GetComponent<SpriteRenderer>().color = backgroundColor;
             cLight2D.color = map.LightingColor.Tint;
             cLight2D.intensity = map.LightingColor.Alpha;
+            Physics2D.gravity = Gravity2Vector(map.GravityDirection);
 
             // Instantiate the map container and create all objects
             _gMapParent = new GameObject();
@@ -123,6 +126,7 @@ namespace Core
             {
                 Create(obj);
             }
+            EventSystem._.EmitMapBuild(map);
         }
 
         public void Unbuild()
@@ -139,6 +143,7 @@ namespace Core
             _gMapParent = null;
 
             // Note map as inactive
+            EventSystem._.EmitMapUnbuild(ActiveMap);
             ActiveMap = null;
             IsMapLoaded = false;
         }
@@ -169,6 +174,18 @@ namespace Core
                 ObjectLayer.Foreground => 2,
                 _ => 0
             };
+        }
+
+        public static Vector2 Gravity2Vector(MapGravity gravity)
+        {
+            return gravity switch
+            {
+                MapGravity.Down => Vector2.down,
+                MapGravity.Up => Vector2.up,
+                MapGravity.Left => Vector2.left,
+                MapGravity.Right => Vector2.right,
+                _ => Vector2.zero
+            } * GravityStrength;
         }
 
         public static string CleanId(string id)

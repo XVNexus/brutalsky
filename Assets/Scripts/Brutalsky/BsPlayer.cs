@@ -1,5 +1,6 @@
 using Brutalsky.Base;
 using Controllers;
+using Controllers.Base;
 using Controllers.Player;
 using Core;
 using UnityEngine;
@@ -32,7 +33,7 @@ namespace Brutalsky
         {
         }
 
-        protected override Component _Init(GameObject gameObject, BsMap map)
+        protected override BsBehavior _Init(GameObject gameObject, BsMap map)
         {
             // Link object to controller
             var controller = gameObject.GetComponent<PlayerController>();
@@ -42,12 +43,6 @@ namespace Brutalsky
             controller.GetComponent<SpriteRenderer>().color = Color.Color;
 
             return controller;
-        }
-
-        public void Refresh()
-        {
-            // Get reference to existing object and reset player
-            InstanceObject.GetComponent<PlayerController>().Refresh();
         }
 
         protected override string[] _ToLcs()

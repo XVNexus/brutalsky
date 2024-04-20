@@ -13,6 +13,7 @@ namespace Controllers.Base
         protected override void OnStart()
         {
             Master = GetComponent<ControllerBase<TO>>();
+            enabled = true;
             Master.AddSub(this);
             OnInit();
             IsInitialized = true;
@@ -24,11 +25,9 @@ namespace Controllers.Base
 
         protected override void OnLoad()
         {
-            if (IsUnused)
-            {
-                Master.RemoveSub(this);
-                Destroy(this);
-            }
+            if (!IsUnused) return;
+            enabled = false;
+            Master.RemoveSub(this);
         }
     }
 }

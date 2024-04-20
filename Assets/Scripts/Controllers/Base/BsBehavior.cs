@@ -12,7 +12,7 @@ namespace Controllers.Base
         public int Status { get; private set; } = Unloaded;
 
         // Phase 1: Initialize all components and subscribe to event system events
-        private void Start()
+        public void Start()
         {
             OnStart();
             Status = Started;

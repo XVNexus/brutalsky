@@ -1,6 +1,6 @@
 001
 !$# @
-!Brutalsky;Xveon:40,20;4C4C4C;FFFFFFCC;;100
+!Brutalsky;Xveon:40,20;4C4C4C;FFFFFFCC;1;100
 $-15,1:
 $15,1:
 #s;spinner-left-bg:-2,,;4,4.9;2,,,10,,;FFFFFF0D;;

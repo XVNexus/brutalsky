@@ -32,6 +32,8 @@ namespace Controllers.Player
         // Init functions
         protected override void OnInit()
         {
+            EventSystem._.OnPlayerRespawn += OnPlayerRespawn;
+
             _cRigidbody2D = GetComponent<Rigidbody2D>();
 
             // Sync health with max health
@@ -81,6 +83,11 @@ namespace Controllers.Player
         }
 
         // Event functions
+        private void OnPlayerRespawn(BsMap map, BsPlayer player)
+        {
+            Revive();
+        }
+
         private void OnCollisionEnter2D(Collision2D other) => OnCollision(other);
 
         private void OnCollisionStay2D(Collision2D other) => OnCollision(other);
@@ -128,7 +135,7 @@ namespace Controllers.Player
         // Utility functions
         public static float CalculateDamage(float impactForce)
         {
-            return MathfExt.ThresholdMultiplierPower(impactForce, 20f, .5f);
+            return Mathf.Max(impactForce - 20f, 0) * .5f;
         }
     }
 }

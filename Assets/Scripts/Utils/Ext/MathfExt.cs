@@ -9,11 +9,6 @@ namespace Utils.Ext
             return Mathf.Atan2(vector.y, vector.x);
         }
 
-        public static float ThresholdMultiplierPower(float x, float threshold, float multiplier = 1f, float power = 1f)
-        {
-            return Mathf.Pow(Mathf.Max(x - threshold, 0) * multiplier, power);
-        }
-
         public static Vector2 TranslateVector(Vector2 vector, Vector2 translation)
         {
             return vector + translation;
