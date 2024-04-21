@@ -37,7 +37,7 @@ namespace Core
         // Init functions
         protected override void OnStart()
         {
-            GenerateMapList(new[] { "Brutalsky", "Voidsky", "Ring" });
+            GenerateMapList(new[] { "Brutalsky", "Doomring", "Voidsky" });
         }
 
         // System functions
@@ -140,6 +140,7 @@ namespace Core
             }
             Destroy(_gMapParent);
             _gMapParent = null;
+            ActiveMap.ResetSpawns();
 
             // Note map as inactive
             EventSystem._.EmitMapUnbuild(ActiveMap);

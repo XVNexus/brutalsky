@@ -37,7 +37,7 @@ namespace Controllers.Pool
             var poolScale = poolTransform.localScale;
             poolScale.y -= lineWidth * .5f;
             poolTransform.localScale = poolScale;
-            var surfaceAngle = (poolTransform.rotation.eulerAngles.z + 90f) * Mathf.Deg2Rad;
+            var surfaceAngle = poolTransform.rotation.eulerAngles.z + 90f;
             var poolPosition = poolTransform.position;
             poolPosition -= (Vector3)MathfExt.RotateVector(new Vector2(lineWidth * .25f, 0f), surfaceAngle);
             poolTransform.position = poolPosition;

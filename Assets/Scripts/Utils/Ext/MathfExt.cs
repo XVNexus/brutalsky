@@ -16,8 +16,9 @@ namespace Utils.Ext
 
         public static Vector2 RotateVector(Vector2 vector, float rotation)
         {
-            var cos = Mathf.Cos(rotation);
-            var sin = Mathf.Sin(rotation);
+            var rad = rotation * Mathf.Deg2Rad;
+            var cos = Mathf.Cos(rad);
+            var sin = Mathf.Sin(rad);
             return new Vector2(vector.x * cos - vector.y * sin, vector.x * sin + vector.y * cos);
         }
 

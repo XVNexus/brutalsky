@@ -88,17 +88,18 @@ namespace Controllers.Gui
             {
                 case Tags.ShapeSym:
                     var shape = (BsShape)obj;
-                    PaintObjectPreview(painter, shape.Transform, shape.Form.ToPoints(),
+                    PaintObjectPreview(painter, shape.Transform, shape.Form.ToPoints(shape.Transform.Rotation),
                         shape.Color.Color * map.LightingColor.Tint);
                     break;
                 case Tags.PoolSym:
                     var pool = (BsPool)obj;
+                    var rotation = pool.Transform.Rotation;
                     var points = new[]
                     {
-                        new Vector2(-pool.Size.x * .5f, -pool.Size.y * .5f),
-                        new Vector2(pool.Size.x * .5f, -pool.Size.y * .5f),
-                        new Vector2(pool.Size.x * .5f, pool.Size.y * .5f),
-                        new Vector2(-pool.Size.x * .5f, pool.Size.y * .5f)
+                        MathfExt.RotateVector(new Vector2(-pool.Size.x * .5f, -pool.Size.y * .5f), rotation),
+                        MathfExt.RotateVector(new Vector2(pool.Size.x * .5f, -pool.Size.y * .5f), rotation),
+                        MathfExt.RotateVector(new Vector2(pool.Size.x * .5f, pool.Size.y * .5f), rotation),
+                        MathfExt.RotateVector(new Vector2(-pool.Size.x * .5f, pool.Size.y * .5f), rotation)
                     };
                     PaintObjectPreview(painter, pool.Transform, points, pool.Color.Color * map.LightingColor.Tint);
                     break;
@@ -121,12 +122,10 @@ namespace Controllers.Gui
 
         public void PaintObjectPreview(GuiPainter painter, ObjectTransform transform, Vector2[] points, Color color)
         {
-            var translation = transform.Position;
-            var rotation = transform.Rotation * Mathf.Deg2Rad;
             var transformedPoints = new Vector2[points.Length];
             for (var i = 0; i < points.Length; i++)
             {
-                transformedPoints[i] = MathfExt.TransformVector(points[i], translation, rotation);
+                transformedPoints[i] = MathfExt.TranslateVector(points[i], transform.Position);
             }
             painter.DrawPolygon(transformedPoints);
             painter.Fill(color);

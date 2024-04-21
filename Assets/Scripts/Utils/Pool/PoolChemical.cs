@@ -37,9 +37,9 @@ namespace Utils.Pool
         public static PoolChemical Honey() => new(25f, 10f);
 
         // Healing
-        public static PoolChemical Medicine() => new(25f, 1f, 25f);
+        public static PoolChemical Medicine() => new(25f, 1f, 50f);
 
         // Harmful
-        public static PoolChemical Lava() => new(25f, 1f, -25f);
+        public static PoolChemical Lava() => new(25f, 1f, -50f);
     }
 }

@@ -234,7 +234,7 @@ namespace Utils.Lcs
 
         public static string Stringify(ShapeMaterial material)
         {
-            return CompressFields(new[]
+            var result = CompressFields(new[]
             {
                 Stringify(material.Friction),
                 Stringify(material.Restitution),
@@ -243,10 +243,15 @@ namespace Utils.Lcs
                 Stringify(material.Health),
                 Stringify(material.Dynamic)
             });
+            return result.Length > 5 ? result : "";
         }
 
         public static ShapeMaterial ParseMaterial(string raw)
         {
+            if (raw.Length == 0)
+            {
+                return new ShapeMaterial(0f, 0f, 0f, 0f);
+            }
             var parts = ExpandFields(raw);
             var friction = ParseFloat(parts[0]);
             var restitution = ParseFloat(parts[1]);
@@ -260,16 +265,21 @@ namespace Utils.Lcs
         // Pool types
         public static string Stringify(PoolChemical chemical)
         {
-            return CompressFields(new[]
+            var result = CompressFields(new[]
             {
                 Stringify(chemical.Buoyancy),
                 Stringify(chemical.Viscosity),
                 Stringify(chemical.Health)
             });
+            return result.Length > 2 ? result : "";
         }
 
         public static PoolChemical ParseChemical(string raw)
         {
+            if (raw.Length == 0)
+            {
+                return new PoolChemical(0f, 0f);
+            }
             var parts = ExpandFields(raw);
             var buoyancy = ParseFloat(parts[0]);
             var viscosity = ParseFloat(parts[1]);

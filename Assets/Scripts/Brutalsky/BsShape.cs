@@ -5,6 +5,7 @@ using Controllers.Base;
 using Core;
 using UnityEngine;
 using Utils.Constants;
+using Utils.Ext;
 using Utils.Lcs;
 using Utils.Object;
 using Utils.Shape;
@@ -39,7 +40,7 @@ namespace Brutalsky
             controller.Object = this;
 
             // Convert path to mesh
-            var points = Form.ToPoints();
+            var points = Form.ToPoints(Transform.Rotation);
             var vertices = points.Select(point => (Vector3)point).ToArray();
             var mesh = new Mesh
             {
@@ -82,9 +83,8 @@ namespace Brutalsky
                 rigidbody.simulated = false;
             }
 
-            // Apply position and rotation
+            // Apply position
             gameObject.transform.position = Transform.Position;
-            gameObject.transform.rotation = Quaternion.Euler(0f, 0f, Transform.Rotation);
 
             return controller;
         }

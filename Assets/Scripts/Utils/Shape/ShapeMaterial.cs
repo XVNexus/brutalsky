@@ -56,9 +56,9 @@ namespace Utils.Shape
         public static ShapeMaterial Glue(bool dynamic = false) => new(5f, 0f, 2f, 1f, 0f, dynamic);
 
         // Healing
-        public static ShapeMaterial Medkit(bool dynamic = false) => new(2f, 0f, 0f, 1f, 25f, dynamic);
+        public static ShapeMaterial Medkit(bool dynamic = false) => new(2f, 0f, 0f, 1f, 50f, dynamic);
 
         // Harmful
-        public static ShapeMaterial Electric(bool dynamic = false) => new(2f, 0f, 0f, 1f, -25f, dynamic);
+        public static ShapeMaterial Electric(bool dynamic = false) => new(2f, 0f, 0f, 1f, -50f, dynamic);
     }
 }

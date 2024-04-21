@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Utils.Constants;
+using Utils.Ext;
 
 namespace Utils.Shape
 {
@@ -146,15 +147,16 @@ namespace Utils.Shape
             return result;
         }
 
-        public Vector2[] ToPoints()
+        public Vector2[] ToPoints(float rotation)
         {
-            var result = new List<Vector2>{StartNode.EndPoint};
+            var result = new List<Vector2>{MathfExt.RotateVector(StartNode.EndPoint, rotation)};
             var currentNode = StartNode.Next;
             while (currentNode != null)
             {
                 for (var i = 1; i <= currentNode.DetailLevel; i++)
                 {
-                    result.Add(currentNode.SamplePoint(i / (float)currentNode.DetailLevel));
+                    result.Add(MathfExt.RotateVector(
+                        currentNode.SamplePoint(i / (float)currentNode.DetailLevel), rotation));
                 }
                 currentNode = currentNode.Next;
             }

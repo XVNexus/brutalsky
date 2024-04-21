@@ -39,11 +39,18 @@ public class Testing : MonoBehaviour
     // TODO: THIS ONE IS TOO
     private void GenerateBoxMap(string title, float size, string name, bool bottom, bool top, bool left, bool right)
     {
+        var baseColor = size switch
+        {
+            20f => new ObjectColor(0f, 1f, .5f),
+            40f => new ObjectColor(0f, 1f, 0f),
+            80f => new ObjectColor(.5f, 1f, 0f),
+            _ => ObjectColor.Ether()
+        };
         var map = new BsMap($"{name} {title}", "Brutalsky")
         {
             PlayArea = new Vector2(size, size / 2f),
-            BackgroundColor = new ObjectColor(.1f, .1f, .1f),
-            LightingColor = new ObjectColor(1f, 1f, 1f, .5f),
+            BackgroundColor = new ObjectColor(baseColor.Color.r, baseColor.Color.g, baseColor.Color.b, .25f),
+            LightingColor = new ObjectColor(baseColor.Color.r, baseColor.Color.g, baseColor.Color.b, .9f),
             GravityDirection = MapGravity.Down,
             GravityStrength = 20f,
             PlayerHealth = 100f

@@ -28,7 +28,10 @@ namespace Controllers.Shape
 
             // Allow players to unstick from low to moderate adhesion
             var playerRigidbody = other.rigidbody;
-            playerRigidbody.position -= playerRigidbody.velocity.normalized * .025f;
+            var playerDirection = -playerRigidbody.velocity.normalized;
+            var adhesionForce = Master.Object.Material.Adhesion * playerDirection;
+            playerRigidbody.position += playerDirection * .025f;
+            playerRigidbody.AddForce(adhesionForce, ForceMode2D.Impulse);
         }
 
         private void OnCollisionStay2D(Collision2D other)
