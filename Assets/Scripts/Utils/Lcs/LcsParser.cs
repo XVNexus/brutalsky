@@ -15,7 +15,6 @@ namespace Utils.Lcs
 {
     public static class LcsParser
     {
-        public const int Version = 1;
         public const char HeaderSeparator = ':';
         public const char PropertySeperator = ';';
         public const char FieldSeperator = ',';
