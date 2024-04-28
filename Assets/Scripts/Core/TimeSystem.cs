@@ -1,3 +1,4 @@
+using System;
 using Controllers.Base;
 using UnityEngine;
 
@@ -9,24 +10,25 @@ namespace Core
         public static TimeSystem _ { get; private set; }
         private void Awake() => _ = this;
 
-        // Local variables
-        private bool _paused;
-
         // System functions
-        public bool Pause()
+        public void Pause()
         {
-            if (_paused) return false;
             Time.timeScale = 0f;
-            _paused = true;
-            return true;
         }
 
-        public bool Unpause()
+        public void Unpause()
         {
-            if (!_paused) return false;
             Time.timeScale = 1f;
-            _paused = false;
-            return true;
+        }
+
+        public void Slowdown()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Speedup()
+        {
+            throw new NotImplementedException();
         }
     }
 }

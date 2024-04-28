@@ -68,8 +68,7 @@ namespace Controllers.Gui
 
         private void OnButtonPressRest()
         {
-            MapSystem._.Rebuild();
-            PlayerSystem._.SpawnAll(MapSystem._.ActiveMap);
+            GameManager._.RestartRound();
         }
 
         private void OnButtonPressCnfg()

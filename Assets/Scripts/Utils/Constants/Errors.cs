@@ -18,6 +18,9 @@ namespace Utils.Constants
         public static ArgumentOutOfRangeException InvalidGuiElementType()
             => new("", "Unrecognized GUI element query type");
 
+        public static ArgumentNullException BuildNullMap()
+            => new("", "Cannot rebuild the map when no map is currently loaded");
+
         // Map system errors
         public static ArgumentOutOfRangeException InvalidObjectOrAddonTag(string type, char tag)
             => new("", $"'{tag}' is not a valid {type} tag");

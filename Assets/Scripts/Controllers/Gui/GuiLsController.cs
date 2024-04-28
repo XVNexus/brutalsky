@@ -153,9 +153,7 @@ namespace Controllers.Gui
 
         private void OnButtonPressLoad(uint mapId)
         {
-            MapSystem._.Unbuild();
-            MapSystem._.Build(mapId);
-            PlayerSystem._.SpawnAll(MapSystem._.ActiveMap);
+            GameManager._.ChangeMap(mapId);
         }
     }
 }
