@@ -37,8 +37,13 @@ namespace Utils.Shape
                         i += 2;
                         break;
                     case 1f:
-                        nodes.Add(new FormCurve(points[i + 1], points[i + 2], points[i + 3], points[i + 4]));
+                        nodes.Add(new FormArc(points[i + 1], points[i + 2], points[i + 3], points[i + 4]));
                         i += 4;
+                        break;
+                    case 2f:
+                        nodes.Add(new FormBezier(points[i + 1], points[i + 2], points[i + 3], points[i + 4],
+                            points[i + 5], points[i + 6]));
+                        i += 6;
                         break;
                 }
             }
@@ -68,16 +73,6 @@ namespace Utils.Shape
                 FormString = points.Aggregate("", (current, point) => current + $" {point.x} {point.y}")[1..]
             };
             return result;
-        }
-
-        public static Form Curve(Vector2 handle, Vector2 point)
-        {
-            return Invalid();
-        }
-
-        public static Form Line(Vector2 point)
-        {
-            return Invalid();
         }
 
         public static Form Square(float diameter)
@@ -114,10 +109,10 @@ namespace Utils.Shape
         {
             var result = new Form(new Vector2(0f, height / 2f), new FormNode[]
             {
-                new FormCurve(width / 2f, height / 2f, width / 2f, 0f),
-                new FormCurve(width / 2f, -height / 2f, 0f, -height / 2f),
-                new FormCurve(-width / 2f, -height / 2f, -width / 2f, 0f),
-                new FormCurve(-width / 2f, height / 2f, 0f, height / 2f)
+                new FormArc(width / 2f, height / 2f, width / 2f, 0f),
+                new FormArc(width / 2f, -height / 2f, 0f, -height / 2f),
+                new FormArc(-width / 2f, -height / 2f, -width / 2f, 0f),
+                new FormArc(-width / 2f, height / 2f, 0f, height / 2f)
             })
             {
                 FormType = FormType.Ellipse,
