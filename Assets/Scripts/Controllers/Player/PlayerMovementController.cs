@@ -131,7 +131,7 @@ namespace Controllers.Player
             OnCollision(other);
 
             // Get collision info
-            if (!other.gameObject.CompareTag(Tags.PlayerTag)) return;
+            if (!other.gameObject.CompareTag(Tags.PlayerTag) || other.relativeVelocity.magnitude < 5f) return;
             var impactSpeed = _lastSpeed * other.DirectnessFactor();
 
             // Reduce velocity based on collision force
