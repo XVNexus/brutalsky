@@ -6,7 +6,6 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using Utils.Constants;
 using Utils.Ext;
-using Utils.Map;
 
 namespace Controllers.Player
 {
@@ -86,34 +85,34 @@ namespace Controllers.Player
             // Configure movement to fit with current gravity
             _movementScale = map.GravityDirection switch
             {
-                MapGravity.Down => new Vector2(movementForce, map.GravityStrength * .5f),
-                MapGravity.Up => new Vector2(movementForce, map.GravityStrength * .5f),
-                MapGravity.Left => new Vector2(map.GravityStrength * .5f, movementForce),
-                MapGravity.Right => new Vector2(map.GravityStrength * .5f, movementForce),
+                Direction.Down => new Vector2(movementForce, map.GravityStrength * .5f),
+                Direction.Up => new Vector2(movementForce, map.GravityStrength * .5f),
+                Direction.Left => new Vector2(map.GravityStrength * .5f, movementForce),
+                Direction.Right => new Vector2(map.GravityStrength * .5f, movementForce),
                 _ => Vector2.one * movementForce
             };
             _jumpVector = map.GravityDirection switch
             {
-                MapGravity.Down => Vector2.up * jumpForce,
-                MapGravity.Up => Vector2.down * jumpForce,
-                MapGravity.Left => Vector2.right * jumpForce,
-                MapGravity.Right => Vector2.left * jumpForce,
+                Direction.Down => Vector2.up * jumpForce,
+                Direction.Up => Vector2.down * jumpForce,
+                Direction.Left => Vector2.right * jumpForce,
+                Direction.Right => Vector2.left * jumpForce,
                 _ => Vector2.zero
             };
             TestOnGround = map.GravityDirection switch
             {
-                MapGravity.Down => (c, p) => c.y < p.y - .25f,
-                MapGravity.Up => (c, p) => c.y > p.y + .25f,
-                MapGravity.Left => (c, p) => c.x < p.x - .25f,
-                MapGravity.Right => (c, p) => c.x > p.x + .25f,
+                Direction.Down => (c, p) => c.y < p.y - .25f,
+                Direction.Up => (c, p) => c.y > p.y + .25f,
+                Direction.Left => (c, p) => c.x < p.x - .25f,
+                Direction.Right => (c, p) => c.x > p.x + .25f,
                 _ => (_, _) => false
             };
             TestJumpInput = map.GravityDirection switch
             {
-                MapGravity.Down => m => m.y > 0f,
-                MapGravity.Up => m => m.y < 0f,
-                MapGravity.Left => m => m.x > 0f,
-                MapGravity.Right => m => m.x < 0f,
+                Direction.Down => m => m.y > 0f,
+                Direction.Up => m => m.y < 0f,
+                Direction.Left => m => m.x > 0f,
+                Direction.Right => m => m.x < 0f,
                 _ => _ => false
             };
         }

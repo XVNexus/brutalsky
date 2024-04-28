@@ -5,7 +5,6 @@ using Core;
 using UnityEngine;
 using Utils.Constants;
 using Utils.Lcs;
-using Utils.Map;
 using Utils.Object;
 
 namespace Brutalsky
@@ -18,7 +17,7 @@ namespace Brutalsky
         public Vector2 PlayArea { get; set; }
         public ObjectColor BackgroundColor { get; set; }
         public ObjectColor LightingColor { get; set; }
-        public MapGravity GravityDirection { get; set; }
+        public Direction GravityDirection { get; set; }
         public float GravityStrength { get; set; }
         public float PlayerHealth { get; set; }
         public List<BsSpawn> Spawns { get; } = new();
@@ -79,7 +78,7 @@ namespace Brutalsky
             PlayArea = LcsParser.ParseVector2(metadataLine.Properties[0]);
             BackgroundColor = LcsParser.ParseColor(metadataLine.Properties[1]);
             LightingColor = LcsParser.ParseColor(metadataLine.Properties[2]);
-            GravityDirection = LcsParser.ParseGravity(metadataLine.Properties[3]);
+            GravityDirection = LcsParser.ParseDirection(metadataLine.Properties[3]);
             GravityStrength = LcsParser.ParseFloat(metadataLine.Properties[4]);
             PlayerHealth = LcsParser.ParseFloat(metadataLine.Properties[5]);
             for (var i = 1; i < document.Lines.Count; i++)

@@ -1,6 +1,6 @@
-namespace Utils.Map
+namespace Utils.Constants
 {
-    public enum MapGravity
+    public enum Direction
     {
         None,
         Down,

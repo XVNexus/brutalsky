@@ -5,8 +5,6 @@ using Utils.Constants;
 using Utils.Joint;
 using Utils.Lcs;
 using Utils.Object;
-using JointLimits = Utils.Joint.JointLimits;
-using JointMotor = Utils.Joint.JointMotor;
 
 namespace Brutalsky
 {
@@ -15,22 +13,37 @@ namespace Brutalsky
         public override char Tag => Tags.JointSym;
 
         public JointType JointType { get; private set; }
-        public string MountShapeId { get; set; }
-        public bool Collision { get; set; } // Universal
-        public JointStrength Strength { get; set; } // Universal
-        public JointDamping Damping { get; set; } // Fixed, Spring, Wheel
-        public bool MaxDistanceOnly { get; set; } // Distance
-        public JointConfig Distance { get; set; } // Distance, Spring
-        public JointLimits Limits { get; set; } // Hinge, Slider
-        public JointMotor Motor { get; set; } // Hinge, Slider, Wheel
-        public JointConfig Angle { get; set; } // Slider, Wheel
+        public string MountShape { get; set; }
+        public bool SelfCollision { get; set; } // Universal
 
-        public BsJoint(string id, ObjectTransform transform, string mountShapeId, bool collision,
-            JointStrength strength) : base(id, transform)
+        public float BreakForce { get; set; } // Universal
+        public float BreakTorque { get; set; } // Universal
+
+        public float AngleValue { get; set; } // Slider, Wheel
+        public bool AngleAuto { get; set; } // Slider, Wheel
+
+        public float DistanceValue { get; set; } // Distance, Spring
+        public bool DistanceAuto { get; set; } // Distance, Spring
+        public bool DistanceMax { get; set; } // Distance
+
+        public float DampingRatio { get; set; } // Fixed, Spring, Wheel
+        public float DampingFrequency { get; set; } // Fixed, Spring, Wheel
+
+        public bool MotorEnabled { get; set; } // Hinge, Slider, Wheel
+        public float MotorSpeed { get; set; } // Hinge, Slider, Wheel
+        public float MotorForce { get; set; } // Hinge, Slider, Wheel
+
+        public bool LimitEnabled { get; set; } // Hinge, Slider
+        public float LimitMin { get; set; } // Hinge, Slider
+        public float LimitMax { get; set; } // Hinge, Slider
+
+        public BsJoint(string id, ObjectTransform transform, string mountShape, bool selfCollision,
+            float breakForce, float breakTorque) : base(id, transform)
         {
-            MountShapeId = mountShapeId;
-            Collision = collision;
-            Strength = strength;
+            MountShape = mountShape;
+            SelfCollision = selfCollision;
+            BreakForce = breakForce;
+            BreakTorque = breakTorque;
         }
 
         public BsJoint()
@@ -53,72 +66,72 @@ namespace Brutalsky
 
             // Apply universal joint config
             component.anchor = Transform.Position;
-            component.enableCollision = Collision;
-            component.breakForce = Strength.BreakForce;
-            component.breakTorque = Strength.BreakTorque;
+            component.enableCollision = SelfCollision;
+            component.breakForce = BreakForce;
+            component.breakTorque = BreakTorque;
 
             // Apply specific joint config
             switch (JointType)
             {
                 case JointType.Fixed:
                     var fixedJointComponent = (FixedJoint2D)component;
-                    fixedJointComponent.dampingRatio = Damping.Ratio;
-                    fixedJointComponent.frequency = Damping.Frequency;
+                    fixedJointComponent.dampingRatio = DampingRatio;
+                    fixedJointComponent.frequency = DampingFrequency;
                     break;
 
                 case JointType.Distance:
                     var distanceJointComponent = (DistanceJoint2D)component;
-                    distanceJointComponent.distance = Distance.Value;
-                    distanceJointComponent.autoConfigureDistance = Distance.Auto;
-                    distanceJointComponent.maxDistanceOnly = MaxDistanceOnly;
+                    distanceJointComponent.distance = DistanceValue;
+                    distanceJointComponent.autoConfigureDistance = DistanceAuto;
+                    distanceJointComponent.maxDistanceOnly = DistanceMax;
                     break;
 
                 case JointType.Spring:
                     var springJointComponent = (SpringJoint2D)component;
-                    springJointComponent.distance = Distance.Value;
-                    springJointComponent.autoConfigureDistance = Distance.Auto;
-                    springJointComponent.dampingRatio = Damping.Ratio;
-                    springJointComponent.frequency = Damping.Frequency;
+                    springJointComponent.distance = DistanceValue;
+                    springJointComponent.autoConfigureDistance = DistanceAuto;
+                    springJointComponent.dampingRatio = DampingRatio;
+                    springJointComponent.frequency = DampingFrequency;
                     break;
 
                 case JointType.Hinge:
                     var hingeJointComponent = (HingeJoint2D)component;
-                    if (Motor.Use)
+                    if (MotorEnabled)
                     {
                         hingeJointComponent.useMotor = true;
                         var hingeJointMotor = hingeJointComponent.motor;
-                        hingeJointMotor.motorSpeed = Motor.Speed;
-                        hingeJointMotor.maxMotorTorque = Motor.MaxForce;
+                        hingeJointMotor.motorSpeed = MotorSpeed;
+                        hingeJointMotor.maxMotorTorque = MotorForce;
                         hingeJointComponent.motor = hingeJointMotor;
                     }
-                    if (Limits.Use)
+                    if (LimitEnabled)
                     {
                         hingeJointComponent.useLimits = true;
                         var hingeJointLimits = hingeJointComponent.limits;
-                        hingeJointLimits.min = Limits.Min;
-                        hingeJointLimits.max = Limits.Max;
+                        hingeJointLimits.min = LimitMin;
+                        hingeJointLimits.max = LimitMax;
                         hingeJointComponent.limits = hingeJointLimits;
                     }
                     break;
 
                 case JointType.Slider:
                     var sliderJointComponent = (SliderJoint2D)component;
-                    sliderJointComponent.angle = Angle.Value;
-                    sliderJointComponent.autoConfigureAngle = Angle.Auto;
-                    if (Motor.Use)
+                    sliderJointComponent.angle = AngleValue;
+                    sliderJointComponent.autoConfigureAngle = AngleAuto;
+                    if (MotorEnabled)
                     {
                         sliderJointComponent.useMotor = true;
                         var sliderJointMotor = sliderJointComponent.motor;
-                        sliderJointMotor.motorSpeed = Motor.Speed;
-                        sliderJointMotor.maxMotorTorque = Motor.MaxForce;
+                        sliderJointMotor.motorSpeed = MotorSpeed;
+                        sliderJointMotor.maxMotorTorque = MotorForce;
                         sliderJointComponent.motor = sliderJointMotor;
                     }
-                    if (Limits.Use)
+                    if (LimitEnabled)
                     {
                         sliderJointComponent.useLimits = true;
                         var sliderJointLimits = sliderJointComponent.limits;
-                        sliderJointLimits.min = Limits.Min;
-                        sliderJointLimits.max = Limits.Max;
+                        sliderJointLimits.min = LimitMin;
+                        sliderJointLimits.max = LimitMax;
                         sliderJointComponent.limits = sliderJointLimits;
                     }
                     break;
@@ -126,16 +139,16 @@ namespace Brutalsky
                 case JointType.Wheel:
                     var wheelJointComponent = (WheelJoint2D)component;
                     var wheelJointSuspension = wheelJointComponent.suspension;
-                    wheelJointSuspension.dampingRatio = Damping.Ratio;
-                    wheelJointSuspension.frequency = Damping.Frequency;
-                    wheelJointSuspension.angle = Angle.Value;
+                    wheelJointSuspension.dampingRatio = DampingRatio;
+                    wheelJointSuspension.frequency = DampingFrequency;
+                    wheelJointSuspension.angle = AngleValue;
                     wheelJointComponent.suspension = wheelJointSuspension;
-                    if (Motor.Use)
+                    if (MotorEnabled)
                     {
                         wheelJointComponent.useMotor = true;
                         var wheelJointMotor = wheelJointComponent.motor;
-                        wheelJointMotor.motorSpeed = Motor.Speed;
-                        wheelJointMotor.maxMotorTorque = Motor.MaxForce;
+                        wheelJointMotor.motorSpeed = MotorSpeed;
+                        wheelJointMotor.maxMotorTorque = MotorForce;
                         wheelJointComponent.motor = wheelJointMotor;
                     }
                     break;
@@ -145,9 +158,9 @@ namespace Brutalsky
             }
 
             // Set up connected rigidbody
-            if (MountShapeId.Length > 0)
+            if (MountShape.Length > 0)
             {
-                var mountShape = map.GetObject<BsShape>(Tags.ShapeSym, MountShapeId);
+                var mountShape = map.GetObject<BsShape>(Tags.ShapeSym, MountShape);
                 if (mountShape.InstanceObject == null)
                 {
                     throw Errors.JointMountShapeUnbuilt(this);
@@ -165,36 +178,54 @@ namespace Brutalsky
             {
                 LcsParser.Stringify(Transform),
                 LcsParser.Stringify(JointType),
-                LcsParser.Stringify(MountShapeId),
-                LcsParser.Stringify(Collision),
-                LcsParser.Stringify(Strength)
+                LcsParser.Stringify(MountShape),
+                LcsParser.Stringify(SelfCollision),
+                LcsParser.Stringify(BreakForce),
+                LcsParser.Stringify(BreakTorque)
             };
             switch (JointType)
             {
                 case JointType.Fixed:
-                    result.Add(LcsParser.Stringify(Damping));
+                    result.Add(LcsParser.Stringify(DampingRatio));
+                    result.Add(LcsParser.Stringify(DampingFrequency));
                     break;
                 case JointType.Distance:
-                    result.Add(LcsParser.Stringify(Distance));
-                    result.Add(LcsParser.Stringify(MaxDistanceOnly));
+                    result.Add(LcsParser.Stringify(DistanceValue));
+                    result.Add(LcsParser.Stringify(DistanceAuto));
+                    result.Add(LcsParser.Stringify(DistanceMax));
                     break;
                 case JointType.Spring:
-                    result.Add(LcsParser.Stringify(Distance));
-                    result.Add(LcsParser.Stringify(Damping));
+                    result.Add(LcsParser.Stringify(DistanceValue));
+                    result.Add(LcsParser.Stringify(DistanceAuto));
+                    result.Add(LcsParser.Stringify(DampingRatio));
+                    result.Add(LcsParser.Stringify(DampingFrequency));
                     break;
                 case JointType.Hinge:
-                    result.Add(LcsParser.Stringify(Motor));
-                    result.Add(LcsParser.Stringify(Limits));
+                    result.Add(LcsParser.Stringify(MotorEnabled));
+                    result.Add(LcsParser.Stringify(MotorSpeed));
+                    result.Add(LcsParser.Stringify(MotorForce));
+                    result.Add(LcsParser.Stringify(LimitEnabled));
+                    result.Add(LcsParser.Stringify(LimitMin));
+                    result.Add(LcsParser.Stringify(LimitMax));
                     break;
                 case JointType.Slider:
-                    result.Add(LcsParser.Stringify(Angle));
-                    result.Add(LcsParser.Stringify(Motor));
-                    result.Add(LcsParser.Stringify(Limits));
+                    result.Add(LcsParser.Stringify(AngleValue));
+                    result.Add(LcsParser.Stringify(AngleAuto));
+                    result.Add(LcsParser.Stringify(MotorEnabled));
+                    result.Add(LcsParser.Stringify(MotorSpeed));
+                    result.Add(LcsParser.Stringify(MotorForce));
+                    result.Add(LcsParser.Stringify(LimitEnabled));
+                    result.Add(LcsParser.Stringify(LimitMin));
+                    result.Add(LcsParser.Stringify(LimitMax));
                     break;
                 case JointType.Wheel:
-                    result.Add(LcsParser.Stringify(Damping));
-                    result.Add(LcsParser.Stringify(Angle));
-                    result.Add(LcsParser.Stringify(Motor));
+                    result.Add(LcsParser.Stringify(DampingRatio));
+                    result.Add(LcsParser.Stringify(DampingFrequency));
+                    result.Add(LcsParser.Stringify(AngleValue));
+                    result.Add(LcsParser.Stringify(AngleAuto));
+                    result.Add(LcsParser.Stringify(MotorEnabled));
+                    result.Add(LcsParser.Stringify(MotorSpeed));
+                    result.Add(LcsParser.Stringify(MotorForce));
                     break;
                 default:
                     throw Errors.InvalidJointType(JointType);
@@ -206,87 +237,125 @@ namespace Brutalsky
         {
             Transform = LcsParser.ParseTransform(properties[0]);
             JointType = LcsParser.ParseJointType(properties[1]);
-            MountShapeId = LcsParser.ParseString(properties[2]);
-            Collision = LcsParser.ParseBool(properties[3]);
-            Strength = LcsParser.ParseJointStrength(properties[4]);
+            MountShape = LcsParser.ParseString(properties[2]);
+            SelfCollision = LcsParser.ParseBool(properties[3]);
+            BreakForce = LcsParser.ParseFloat(properties[4]);
+            BreakTorque = LcsParser.ParseFloat(properties[5]);
             switch (JointType)
             {
                 case JointType.Fixed:
-                    Damping = LcsParser.ParseJointDamping(properties[5]);
+                    DampingRatio = LcsParser.ParseFloat(properties[6]);
+                    DampingFrequency = LcsParser.ParseFloat(properties[7]);
                     break;
                 case JointType.Distance:
-                    Distance = LcsParser.ParseJointConfig(properties[5]);
-                    MaxDistanceOnly = LcsParser.ParseBool(properties[6]);
+                    DistanceValue = LcsParser.ParseFloat(properties[6]);
+                    DistanceAuto = LcsParser.ParseBool(properties[7]);
+                    DistanceMax = LcsParser.ParseBool(properties[8]);
                     break;
                 case JointType.Spring:
-                    Distance = LcsParser.ParseJointConfig(properties[5]);
-                    Damping = LcsParser.ParseJointDamping(properties[6]);
+                    DistanceValue = LcsParser.ParseFloat(properties[6]);
+                    DistanceAuto = LcsParser.ParseBool(properties[7]);
+                    DampingRatio = LcsParser.ParseFloat(properties[8]);
+                    DampingFrequency = LcsParser.ParseFloat(properties[9]);
                     break;
                 case JointType.Hinge:
-                    Motor = LcsParser.ParseJointMotor(properties[5]);
-                    Limits = LcsParser.ParseJointLimits(properties[6]);
+                    MotorEnabled = LcsParser.ParseBool(properties[6]);
+                    MotorSpeed = LcsParser.ParseFloat(properties[7]);
+                    MotorForce = LcsParser.ParseFloat(properties[8]);
+                    LimitEnabled = LcsParser.ParseBool(properties[9]);
+                    LimitMin = LcsParser.ParseFloat(properties[10]);
+                    LimitMax = LcsParser.ParseFloat(properties[11]);
                     break;
                 case JointType.Slider:
-                    Angle = LcsParser.ParseJointConfig(properties[5]);
-                    Motor = LcsParser.ParseJointMotor(properties[6]);
-                    Limits = LcsParser.ParseJointLimits(properties[7]);
+                    AngleValue = LcsParser.ParseFloat(properties[6]);
+                    AngleAuto = LcsParser.ParseBool(properties[7]);
+                    MotorEnabled = LcsParser.ParseBool(properties[8]);
+                    MotorSpeed = LcsParser.ParseFloat(properties[9]);
+                    MotorForce = LcsParser.ParseFloat(properties[10]);
+                    LimitEnabled = LcsParser.ParseBool(properties[11]);
+                    LimitMin = LcsParser.ParseFloat(properties[12]);
+                    LimitMax = LcsParser.ParseFloat(properties[13]);
                     break;
                 case JointType.Wheel:
-                    Damping = LcsParser.ParseJointDamping(properties[5]);
-                    Angle = LcsParser.ParseJointConfig(properties[6]);
-                    Motor = LcsParser.ParseJointMotor(properties[7]);
+                    DampingRatio = LcsParser.ParseFloat(properties[6]);
+                    DampingFrequency = LcsParser.ParseFloat(properties[7]);
+                    AngleValue = LcsParser.ParseFloat(properties[8]);
+                    AngleAuto = LcsParser.ParseBool(properties[9]);
+                    MotorEnabled = LcsParser.ParseBool(properties[10]);
+                    MotorSpeed = LcsParser.ParseFloat(properties[11]);
+                    MotorForce = LcsParser.ParseFloat(properties[12]);
                     break;
                 default:
                     throw Errors.InvalidJointType(JointType);
             }
         }
 
-        public BsJoint FixedJoint(JointDamping damping)
+        public BsJoint FixedJoint(float dampingRatio, float dampingFrequency)
         {
             JointType = JointType.Fixed;
-            Damping = damping;
+            DampingRatio = dampingRatio;
+            DampingFrequency = dampingFrequency;
             return this;
         }
 
-        public BsJoint DistanceJoint(JointConfig distance, bool maxDistanceOnly)
+        public BsJoint DistanceJoint(float distanceValue, bool distanceAuto, bool distanceMax)
         {
             JointType = JointType.Distance;
-            Distance = distance;
-            MaxDistanceOnly = maxDistanceOnly;
+            DistanceValue = distanceValue;
+            DistanceAuto = distanceAuto;
+            DistanceMax = distanceMax;
             return this;
         }
 
-        public BsJoint SpringJoint(JointConfig distance, JointDamping damping)
+        public BsJoint SpringJoint(float distanceValue, bool distanceAuto, float dampingRatio, float dampingFrequency)
         {
             JointType = JointType.Spring;
-            Distance = distance;
-            Damping = damping;
+            DistanceValue = distanceValue;
+            DistanceAuto = distanceAuto;
+            DampingRatio = dampingRatio;
+            DampingFrequency = dampingFrequency;
             return this;
         }
 
-        public BsJoint HingeJoint(JointMotor motor, JointLimits limits)
+        public BsJoint HingeJoint(bool motorEnabled, float motorSpeed, float motorForce, bool limitEnabled,
+            float limitMin, float limitMax)
         {
             JointType = JointType.Hinge;
-            Motor = motor;
-            Limits = limits;
+            MotorEnabled = motorEnabled;
+            MotorSpeed = motorSpeed;
+            MotorForce = motorForce;
+            LimitEnabled = limitEnabled;
+            LimitMin = limitMin;
+            LimitMax = limitMax;
             return this;
         }
 
-        public BsJoint SliderJoint(JointConfig angle, JointMotor motor, JointLimits limits)
+        public BsJoint SliderJoint(float angleValue, bool angleAuto, bool motorEnabled, float motorSpeed,
+            float motorForce, bool limitEnabled, float limitMin, float limitMax)
         {
             JointType = JointType.Slider;
-            Angle = angle;
-            Motor = motor;
-            Limits = limits;
+            AngleValue = angleValue;
+            AngleAuto = angleAuto;
+            MotorEnabled = motorEnabled;
+            MotorSpeed = motorSpeed;
+            MotorForce = motorForce;
+            LimitEnabled = limitEnabled;
+            LimitMin = limitMin;
+            LimitMax = limitMax;
             return this;
         }
 
-        public BsJoint WheelJoint(JointDamping damping, JointConfig angle, JointMotor motor)
+        public BsJoint WheelJoint(float dampingRatio, float dampingFrequency, float angleValue, bool angleAuto,
+            bool motorEnabled, float motorSpeed, float motorForce)
         {
             JointType = JointType.Wheel;
-            Damping = damping;
-            Angle = angle;
-            Motor = motor;
+            DampingRatio = dampingRatio;
+            DampingFrequency = dampingFrequency;
+            AngleValue = angleValue;
+            AngleAuto = angleAuto;
+            MotorEnabled = motorEnabled;
+            MotorSpeed = motorSpeed;
+            MotorForce = motorForce;
             return this;
         }
     }

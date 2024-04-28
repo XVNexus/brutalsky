@@ -13,12 +13,12 @@ $-10,:
 #s;quadrant-bottom:,,-135;,,20,1,20,20,20,,,19,,1,19,19,,19;2,2,,10,-10,;3FFFFF;1;1
 #s;quadrant-left:,,-225;,,20,1,20,20,20,,,19,,1,19,19,,19;2,2,,10,-10,;9F3FFF;1;1
 #s;spinner:,,;6,8,4;5,,1,100,,1;FFFFFF;1;1
-@j;spinner-motor:,,;3;;;;50,1000000;
+@j;spinner-motor:,,;3;;;.;.;1;50;1000000;;;
 #s;spinner-arm-top:,15,;6,3,4;2,,,1,,1;E5E5FF;1;1
-@j;spinner-arm-top-link:,,;3;spinner;;;-1000,100;
+@j;spinner-arm-top-link:,,;3;spinner;;.;.;1;-1000;100;;;
 #s;spinner-arm-right:15,,-90;6,3,4;2,,,1,,1;E5E5FF;1;1
-@j;spinner-arm-right-link:,,;3;spinner;;;-1000,100;
+@j;spinner-arm-right-link:,,;3;spinner;;.;.;1;-1000;100;;;
 #s;spinner-arm-bottom:,-15,-180;6,3,4;2,,,1,,1;E5E5FF;1;1
-@j;spinner-arm-bottom-link:,,;3;spinner;;;-1000,100;
+@j;spinner-arm-bottom-link:,,;3;spinner;;.;.;1;-1000;100;;;
 #s;spinner-arm-left:-15,,-270;6,3,4;2,,,1,,1;E5E5FF;1;1
-@j;spinner-arm-left-link:,,;3;spinner;;;-1000,100;
+@j;spinner-arm-left-link:,,;3;spinner;;.;.;1;-1000;100;;;

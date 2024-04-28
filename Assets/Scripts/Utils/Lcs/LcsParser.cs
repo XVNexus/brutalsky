@@ -2,14 +2,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using UnityEngine;
+using Utils.Constants;
 using Utils.Joint;
-using Utils.Map;
 using Utils.Object;
 using Utils.Pool;
 using Utils.Shape;
 using ColorUtility = UnityEngine.ColorUtility;
-using JointLimits = Utils.Joint.JointLimits;
-using JointMotor = Utils.Joint.JointMotor;
 
 namespace Utils.Lcs
 {
@@ -42,12 +40,24 @@ namespace Utils.Lcs
 
         public static string Stringify(float value)
         {
-            return value != 0f ? value.ToString() : "";
+            return value switch
+            {
+                0f => "",
+                float.NegativeInfinity => "-.",
+                float.PositiveInfinity => ".",
+                _ => value.ToString()
+            };
         }
 
         public static float ParseFloat(string raw)
         {
-            return raw.Length > 0 ? float.Parse(raw) : 0f;
+            return raw switch
+            {
+                "" => 0f,
+                "-." => float.NegativeInfinity,
+                "." => float.PositiveInfinity,
+                _ => float.Parse(raw)
+            };
         }
 
         public static string Stringify(char value)
@@ -109,7 +119,6 @@ namespace Utils.Lcs
             return result;
         }
 
-        // Unity types
         public static string Stringify(Vector2 value)
         {
             return CompressFields(new[]
@@ -125,18 +134,16 @@ namespace Utils.Lcs
             return new Vector2(ParseFloat(parts[0]), ParseFloat(parts[1]));
         }
 
-        // Map types
-        public static string Stringify(MapGravity gravity)
+        public static string Stringify(Direction direction)
         {
-            return Stringify((int)gravity);
+            return Stringify((int)direction);
         }
 
-        public static MapGravity ParseGravity(string raw)
+        public static Direction ParseDirection(string raw)
         {
-            return (MapGravity)ParseInt(raw);
+            return (Direction)ParseInt(raw);
         }
 
-        // Object types
         public static string Stringify(ObjectColor color)
         {
             return (color.Alpha < 1f ? ColorUtility.ToHtmlStringRGBA(color.Color)
@@ -177,7 +184,6 @@ namespace Utils.Lcs
             return new ObjectTransform(ParseFloat(parts[0]), ParseFloat(parts[1]), ParseFloat(parts[2]));
         }
 
-        // Shape types
         public static string Stringify(Form form)
         {
             return Stringify((int)form.FormType) + (' ' + form.FormString).Replace(" 0", " ")
@@ -233,7 +239,6 @@ namespace Utils.Lcs
             return new ShapeMaterial(friction, restitution, adhesion, density, health, dynamic);
         }
 
-        // Pool types
         public static string Stringify(PoolChemical chemical)
         {
             var result = CompressFields(new[]
@@ -258,7 +263,6 @@ namespace Utils.Lcs
             return new PoolChemical(buoyancy, viscosity, health);
         }
 
-        // Joint types
         public static string Stringify(JointType jointType)
         {
             return Stringify((int)jointType);
@@ -267,81 +271,6 @@ namespace Utils.Lcs
         public static JointType ParseJointType(string raw)
         {
             return (JointType)ParseInt(raw);
-        }
-
-        public static string Stringify(JointConfig jointConfig)
-        {
-            return jointConfig.Auto ? "" : jointConfig.Value.ToString();
-        }
-
-        public static JointConfig ParseJointConfig(string raw)
-        {
-            return raw == "" ? JointConfig.AutoValue() : JointConfig.SetValue(ParseFloat(raw));
-        }
-
-        public static string Stringify(JointDamping jointDamping)
-        {
-            return CompressFields(new[]
-            {
-                Stringify(jointDamping.Ratio),
-                Stringify(jointDamping.Frequency)
-            });
-        }
-
-        public static JointDamping ParseJointDamping(string raw)
-        {
-            var parts = ExpandFields(raw);
-            return JointDamping.Damped(ParseFloat(parts[0]), ParseFloat(parts[1]));
-        }
-
-        public static string Stringify(JointLimits jointLimits)
-        {
-            return jointLimits.Use ? CompressFields(new[]
-            {
-                Stringify(jointLimits.Min),
-                Stringify(jointLimits.Max)
-            }) : "";
-        }
-
-        public static JointLimits ParseJointLimits(string raw)
-        {
-            if (raw == "") return JointLimits.Unlimited();
-            var parts = ExpandFields(raw);
-            return JointLimits.Limited(ParseFloat(parts[0]), ParseFloat(parts[1]));
-        }
-
-        public static string Stringify(JointMotor jointMotor)
-        {
-            return jointMotor.Use ? CompressFields(new[]
-            {
-                Stringify(jointMotor.Speed),
-                Stringify(jointMotor.MaxForce)
-            }) : "";
-        }
-
-        public static JointMotor ParseJointMotor(string raw)
-        {
-            if (raw == "") return JointMotor.Unpowered();
-            var parts = ExpandFields(raw);
-            return JointMotor.Powered(ParseFloat(parts[0]), ParseFloat(parts[1]));
-        }
-
-        public static string Stringify(JointStrength jointStrength)
-        {
-            var breakable = !float.IsPositiveInfinity(jointStrength.BreakForce)
-                            || !float.IsPositiveInfinity(jointStrength.BreakTorque);
-            return breakable ? CompressFields(new[]
-            {
-                Stringify(jointStrength.BreakForce),
-                Stringify(jointStrength.BreakTorque)
-            }) : "";
-        }
-
-        public static JointStrength ParseJointStrength(string raw)
-        {
-            if (raw == "") return JointStrength.Unbreakable();
-            var parts = ExpandFields(raw);
-            return JointStrength.Breakable(ParseFloat(parts[0]), ParseFloat(parts[1]));
         }
 
         // Utilities

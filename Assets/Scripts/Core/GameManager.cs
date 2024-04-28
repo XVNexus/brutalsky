@@ -1,7 +1,7 @@
 using Brutalsky;
 using Controllers.Base;
 using UnityEngine;
-using Utils.Map;
+using Utils.Constants;
 using Utils.Object;
 using Utils.Shape;
 
@@ -20,7 +20,7 @@ namespace Core
         // Init functions
         protected override void OnLoad()
         {
-            StartGame(new[] { "Brutalsky", "Doomring", "Voidsky" },
+            StartGame(new[] { "Brutalsky", "Doomring" },
                 MapSystem.GenerateId("Brutalsky", "Xveon"), new[]
                 {
                     new BsPlayer("Player 1", 100f, new ObjectColor(1f, .5f, 0f)),
@@ -73,7 +73,7 @@ namespace Core
                 PlayArea = new Vector2(size, size / 2f),
                 BackgroundColor = new ObjectColor(baseColor.Color.r, baseColor.Color.g, baseColor.Color.b, .25f),
                 LightingColor = new ObjectColor(baseColor.Color.r, baseColor.Color.g, baseColor.Color.b, .9f),
-                GravityDirection = MapGravity.Down,
+                GravityDirection = Direction.Down,
                 GravityStrength = 20f,
                 PlayerHealth = 100f
             };
