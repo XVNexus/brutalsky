@@ -190,12 +190,11 @@ namespace Utils.Lcs
             var rawFull = Regex.Replace(' ' + raw.Replace(FieldSeperator, ' '),
                 " (?= |$)", " 0")[1..];
             var formType = (FormType)ParseInt(rawFull[..1]);
-            var formData = rawFull[2..];
-            var formParts = formData.Split(' ');
+            var formParts = rawFull[2..].Split(' ');
             switch (formType)
             {
                 case FormType.Vector:
-                    result = Form.Vector(formData);
+                    result = Form.Vector(formParts.Select(point => float.Parse(point)).ToArray());
                     break;
                 case FormType.Polygon:
                     List<Vector2> polygonPoints = new();

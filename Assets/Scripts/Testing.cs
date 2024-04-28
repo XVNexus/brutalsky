@@ -101,7 +101,7 @@ public class Testing : MonoBehaviour
             new ObjectTransform(-size / 2f + 1f, size / 4f - 1f),
             ObjectLayer.Midground,
             true,
-            Form.Vector("0 0 0 3 0 1 0 0 0 -3"),
+            Form.Vector(new[] { 0f, 0f, 0f, 3f, 0f, 1f, 0f, 0f, 0f, -3f }),
             ShapeMaterial.Stone(),
             ObjectColor.Ether()
         ));
@@ -111,7 +111,7 @@ public class Testing : MonoBehaviour
             new ObjectTransform(size / 2f - 1f, size / 4f - 1f),
             ObjectLayer.Midground,
             true,
-            Form.Vector("0 0 0 -3 0 1 0 0 0 -3"),
+            Form.Vector(new[] { 0f, 0f, 0f, -3f, 0f, 1f, 0f, 0f, 0f, -3f }),
             ShapeMaterial.Stone(),
             ObjectColor.Ether()
         ));
@@ -121,7 +121,7 @@ public class Testing : MonoBehaviour
             new ObjectTransform(-size / 2f + 1f, -size / 4f + 1f),
             ObjectLayer.Midground,
             true,
-            Form.Vector("0 0 0 3 0 1 0 0 0 3"),
+            Form.Vector(new[] { 0f, 0f, 0f, 3f, 0f, 1f, 0f, 0f, 0f, 3f }),
             ShapeMaterial.Stone(),
             ObjectColor.Ether()
         ));
@@ -131,7 +131,7 @@ public class Testing : MonoBehaviour
             new ObjectTransform(size / 2f - 1f, -size / 4f + 1f),
             ObjectLayer.Midground,
             true,
-            Form.Vector("0 0 0 -3 0 1 0 0 0 3"),
+            Form.Vector(new[] { 0f, 0f, 0f, -3f, 0f, 1f, 0f, 0f, 0f, 3f }),
             ShapeMaterial.Stone(),
             ObjectColor.Ether()
         ));

@@ -24,22 +24,20 @@ namespace Utils.Shape
             }
         }
 
-        public static Form Vector(string path)
+        public static Form Vector(float[] points)
         {
-            var parts = path.Split(' ');
-            var startPoint = new Vector2(float.Parse(parts[0]), float.Parse(parts[1]));
+            var startPoint = new Vector2(points[0], points[1]);
             var nodes = new List<FormNode>();
-            for (var i = 2; i < parts.Length; i++)
+            for (var i = 2; i < points.Length; i++)
             {
-                switch (parts[i])
+                switch (points[i])
                 {
-                    case "0":
-                        nodes.Add(new FormLine(float.Parse(parts[i + 1]), float.Parse(parts[i + 2])));
+                    case 0f:
+                        nodes.Add(new FormLine(points[i + 1], points[i + 2]));
                         i += 2;
                         break;
-                    case "1":
-                        nodes.Add(new FormCurve(float.Parse(parts[i + 1]), float.Parse(parts[i + 2]),
-                            float.Parse(parts[i + 3]), float.Parse(parts[i + 4])));
+                    case 1f:
+                        nodes.Add(new FormCurve(points[i + 1], points[i + 2], points[i + 3], points[i + 4]));
                         i += 4;
                         break;
                 }
@@ -47,7 +45,7 @@ namespace Utils.Shape
             var result = new Form(startPoint, nodes)
             {
                 FormType = FormType.Vector,
-                FormString = path
+                FormString = points.Aggregate("", (current, point) => current + $" {point}")[1..]
             };
             return result;
         }
@@ -70,6 +68,16 @@ namespace Utils.Shape
                 FormString = points.Aggregate("", (current, point) => current + $" {point.x} {point.y}")[1..]
             };
             return result;
+        }
+
+        public static Form Curve(Vector2 handle, Vector2 point)
+        {
+            return Invalid();
+        }
+
+        public static Form Line(Vector2 point)
+        {
+            return Invalid();
         }
 
         public static Form Square(float diameter)
@@ -145,6 +153,11 @@ namespace Utils.Shape
             result.FormType = FormType.Star;
             result.FormString = $"{points} {outerDiameter} {innerDiameter}";
             return result;
+        }
+
+        public static Form Invalid()
+        {
+            return Star(24, 24f, .24f);
         }
 
         public Vector2[] ToPoints(float rotation)
