@@ -32,6 +32,7 @@ namespace Core
         public Dictionary<string, BsPlayer> ActivePlayers { get; private set; } = new();
 
         // External references
+        public GameObject gMargins;
         public GameObject gBackground;
         public GameObject gForeground;
         public Light2D cLight2D;
@@ -96,8 +97,7 @@ namespace Core
 
             // Apply config
             CameraSystem._.ResizeView(map.PlayArea);
-            gBackground.transform.localScale = map.PlayArea;
-            gForeground.transform.localScale = map.PlayArea;
+            gMargins.transform.localScale = map.PlayArea;
             var backgroundColor = map.BackgroundColor.Tint * map.LightingColor.Tint;
             gBackground.GetComponent<SpriteRenderer>().color = backgroundColor;
             gForeground.GetComponent<SpriteRenderer>().color = backgroundColor;
