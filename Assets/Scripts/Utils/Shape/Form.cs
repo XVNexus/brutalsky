@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using Utils.Constants;
 using Utils.Ext;
 
 namespace Utils.Shape
@@ -152,7 +151,7 @@ namespace Utils.Shape
 
         public static Form Invalid()
         {
-            return Star(24, 24f, .24f);
+            return Star(10, 100f, 1f);
         }
 
         public Vector2[] ToFillPoints(float rotation)
@@ -175,7 +174,11 @@ namespace Utils.Shape
         public Vector2[] ToStrokePoints(float rotation, float width)
         {
             var result = new List<Vector2>();
-            // TODO: STUFF
+            var fillPoints = ToFillPoints(rotation);
+            foreach (var point in fillPoints)
+            {
+                // TODO: CONNECT THE DOTS
+            }
             return result.ToArray();
         }
     }

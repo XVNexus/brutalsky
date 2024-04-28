@@ -186,20 +186,19 @@ namespace Utils.Lcs
 
         public static Form ParseForm(string raw)
         {
-            var rawFull = Regex.Replace(' ' + raw.Replace(FieldSeperator, ' '),
-                " (?= |$)", " 0")[1..];
-            var formType = (FormType)ParseInt(rawFull[..1]);
-            var formParts = rawFull[2..].Split(' ').Select(part => float.Parse(part)).ToArray();
-            return formType switch
+            raw = Regex.Replace(' ' + raw.Replace(FieldSeperator, ' '), " (?= |$)", " 0")[1..];
+            var type = (FormType)ParseInt(raw[..1]);
+            var parts = raw[2..].Split(' ').Select(part => float.Parse(part)).ToArray();
+            return type switch
             {
-                FormType.Vector => Form.Vector(formParts),
-                FormType.Polygon => Form.Polygon(formParts),
-                FormType.Square => Form.Square(formParts[0]),
-                FormType.Rectangle => Form.Rectangle(formParts[0], formParts[1]),
-                FormType.Circle => Form.Circle(formParts[0]),
-                FormType.Ellipse => Form.Ellipse(formParts[0], formParts[1]),
-                FormType.Ngon => Form.Ngon(Mathf.RoundToInt(formParts[0]), formParts[1]),
-                FormType.Star => Form.Star(Mathf.RoundToInt(formParts[0]), formParts[1], formParts[2]),
+                FormType.Vector => Form.Vector(parts),
+                FormType.Polygon => Form.Polygon(parts),
+                FormType.Square => Form.Square(parts[0]),
+                FormType.Rectangle => Form.Rectangle(parts[0], parts[1]),
+                FormType.Circle => Form.Circle(parts[0]),
+                FormType.Ellipse => Form.Ellipse(parts[0], parts[1]),
+                FormType.Ngon => Form.Ngon(Mathf.RoundToInt(parts[0]), parts[1]),
+                FormType.Star => Form.Star(Mathf.RoundToInt(parts[0]), parts[1], parts[2]),
                 _ => Form.Invalid()
             };
         }

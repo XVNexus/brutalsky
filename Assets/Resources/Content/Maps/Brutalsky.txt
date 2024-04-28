@@ -2,8 +2,6 @@
 !Brutalsky;Xveon:40,20;4C4C4C;FFFFFFCC;1;20;100
 $-15,1:
 $15,1:
-#s;spinner-left-bg:-2,,;4,4.9;;FFFFFF0D;;
-#s;spinner-right-bg:2,,;4,4.9;;FFFFFF0D;;
 #s;wall-left:-20,,;3,2,22;2,,,10,,;B2B2B2;1;1
 #s;wall-right:20,,;3,2,22;2,,,10,,;B2B2B2;1;1
 #s;wall-top:,10,;,-15,1,,15,1,,15,,,14,-.5,,-14,-.5,,-15,;2,,,10,,;B2B2B2;1;1
@@ -30,8 +28,10 @@ $15,1:
 #s;rubber-top:,9.25,;,4,.25,,4,-.25,,,-1.25,,-4,-.25,,-4,.25;,1,,1,,;B266E5;1;1
 #s;electric-left:-11,,45;2,.7;2,,,1,-50,;FFFF331;1;1
 #s;electric-right:11,,45;2,.7;2,,,1,-50,;FFFF331;1;1
+#s;spinner-left-bg:-2,,;4,4.9;;FFFFFF0D;;
 #s;spinner-left:-2,,;7,6,4.9,2.9;2,,,1,,1;E5E5FF;1;1
 @j;spinner-left-motor:,,;3;;;;100,10000;
+#s;spinner-right-bg:2,,;4,4.9;;FFFFFF0D;;
 #s;spinner-right:2,,30;7,6,4.9,2.9;2,,,1,,1;E5E5FF;1;1
 @j;spinner-right-motor:,,;3;;;;-100,10000;
 #p;water-left:-17,11.25,180;4,3.5;25,1,;6666FF;2;1
