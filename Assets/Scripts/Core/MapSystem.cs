@@ -66,11 +66,26 @@ namespace Core
             return Resources.Load<TextAsset>($"{Paths.Content}/{Paths.Maps}/{filename}").text;
         }
 
+        public static string Load(string title, string author)
+        {
+            return Load(GenerateId(title, author).ToString());
+        }
+
         public static string Load(string filename)
         {
             var path = $"{ResourceSystem.DataPath}/{Paths.Maps}/{filename}.{SaveFormat}";
             using var reader = new StreamReader(path);
             return reader.ReadToEnd();
+        }
+
+        public static void Save(BsMap map)
+        {
+            Save(map.Stringify(), map.Id.ToString());
+        }
+
+        public static void Save(string raw, string title, string author)
+        {
+            Save(raw, GenerateId(title, author).ToString());
         }
 
         public static void Save(string raw, string filename)

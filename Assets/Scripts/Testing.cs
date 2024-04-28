@@ -137,6 +137,6 @@ public class Testing : MonoBehaviour
         ));
         map.AddSpawn(new BsSpawn(new Vector2(-1f, -size / 4f + 1.5f)));
         map.AddSpawn(new BsSpawn(new Vector2(1f, -size / 4f + 1.5f)));
-        MapSystem.Save(map.Stringify(), $"{title}{name}");
+        MapSystem.Save(map);
     }
 }
