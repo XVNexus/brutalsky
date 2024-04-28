@@ -24,25 +24,25 @@ namespace Utils.Shape
             }
         }
 
-        public static Form Vector(float[] points)
+        public static Form Vector(float[] args)
         {
-            var startPoint = new Vector2(points[0], points[1]);
+            var startPoint = new Vector2(args[0], args[1]);
             var nodes = new List<FormNode>();
-            for (var i = 2; i < points.Length; i++)
+            for (var i = 2; i < args.Length; i++)
             {
-                switch (points[i])
+                switch (args[i])
                 {
                     case 0f:
-                        nodes.Add(new FormLine(points[i + 1], points[i + 2]));
+                        nodes.Add(new FormLine(args[i + 1], args[i + 2]));
                         i += 2;
                         break;
                     case 1f:
-                        nodes.Add(new FormArc(points[i + 1], points[i + 2], points[i + 3], points[i + 4]));
+                        nodes.Add(new FormArc(args[i + 1], args[i + 2], args[i + 3], args[i + 4]));
                         i += 4;
                         break;
                     case 2f:
-                        nodes.Add(new FormBezier(points[i + 1], points[i + 2], points[i + 3], points[i + 4],
-                            points[i + 5], points[i + 6]));
+                        nodes.Add(new FormBezier(args[i + 1], args[i + 2], args[i + 3], args[i + 4],
+                            args[i + 5], args[i + 6]));
                         i += 6;
                         break;
                 }
@@ -50,27 +50,23 @@ namespace Utils.Shape
             var result = new Form(startPoint, nodes)
             {
                 FormType = FormType.Vector,
-                FormString = points.Aggregate("", (current, point) => current + $" {point}")[1..]
+                FormString = args.Aggregate("", (current, arg) => current + $" {arg}")[1..]
             };
             return result;
         }
 
-        public static Form Polygon(Vector2[] points)
+        public static Form Polygon(float[] args)
         {
-            if (points.Length < 3)
+            var startPoint = new Vector2(args[0], args[1]);
+            var nodes = new FormLine[args.Length / 2 - 1];
+            for (var i = 2; i < args.Length; i += 2)
             {
-                throw Errors.MissingFormParams("polygon", 3);
-            }
-            var startPoint = points[0];
-            var nodes = new FormLine[points.Length - 1];
-            for (var i = 1; i < points.Length; i++)
-            {
-                nodes[i - 1] = new FormLine(points[i]);
+                nodes[i / 2 - 1] = new FormLine(new Vector2(args[i], args[i + 1]));
             }
             var result = new Form(startPoint, nodes)
             {
                 FormType = FormType.Polygon,
-                FormString = points.Aggregate("", (current, point) => current + $" {point.x} {point.y}")[1..]
+                FormString = args.Aggregate("", (current, arg) => current + $" {arg}")[1..]
             };
             return result;
         }
@@ -85,12 +81,12 @@ namespace Utils.Shape
 
         public static Form Rectangle(float width, float height)
         {
-            var result = Polygon(new Vector2[]
+            var result = Polygon(new[]
             {
-                new(-width / 2f, height / 2f),
-                new(width / 2f, height / 2f),
-                new(width / 2f, -height / 2f),
-                new(-width / 2f, -height / 2f)
+                -width / 2f, height / 2f,
+                width / 2f, height / 2f,
+                width / 2f, -height / 2f,
+                -width / 2f, -height / 2f
             });
             result.FormType = FormType.Rectangle;
             result.FormString = $"{width} {height}";
@@ -123,13 +119,15 @@ namespace Utils.Shape
 
         public static Form Ngon(int sides, float diameter)
         {
-            var vertices = new Vector2[sides];
+            var args = new float[sides * 2];
+            var scale = diameter / 2f;
             for (var i = 0; i < sides; i++)
             {
                 var vertexAngle = i / (float)sides * 2f * Mathf.PI;
-                vertices[i] = new Vector2(Mathf.Cos(vertexAngle), Mathf.Sin(vertexAngle)) * (diameter / 2f);
+                args[i * 2] = Mathf.Cos(vertexAngle) * scale;
+                args[i * 2 + 1] = Mathf.Sin(vertexAngle) * scale;
             }
-            var result = Polygon(vertices);
+            var result = Polygon(args);
             result.FormType = FormType.Ngon;
             result.FormString = $"{sides} {diameter}";
             return result;
@@ -137,14 +135,16 @@ namespace Utils.Shape
 
         public static Form Star(int points, float outerDiameter, float innerDiameter)
         {
-            var vertices = new Vector2[points * 2];
+            var args = new float[points * 4];
+            var scales = new[] { outerDiameter / 2f, innerDiameter / 2f };
             for (var i = 0; i < points * 2; i++)
             {
                 var vertexAngle = i / (float)(points * 2) * 2f * Mathf.PI;
-                var diameter = i % 2 == 0 ? outerDiameter : innerDiameter;
-                vertices[i] = new Vector2(Mathf.Cos(vertexAngle), Mathf.Sin(vertexAngle)) * (diameter / 2f);
+                var scale = scales[i % 2];
+                args[i * 2] = Mathf.Cos(vertexAngle) * scale;
+                args[i * 2 + 1] = Mathf.Sin(vertexAngle) * scale;
             }
-            var result = Polygon(vertices);
+            var result = Polygon(args);
             result.FormType = FormType.Star;
             result.FormString = $"{points} {outerDiameter} {innerDiameter}";
             return result;
@@ -155,7 +155,7 @@ namespace Utils.Shape
             return Star(24, 24f, .24f);
         }
 
-        public Vector2[] ToPoints(float rotation)
+        public Vector2[] ToFillPoints(float rotation)
         {
             var result = new List<Vector2>{MathfExt.RotateVector(StartNode.EndPoint, rotation)};
             var currentNode = StartNode.Next;
@@ -169,7 +169,13 @@ namespace Utils.Shape
                 currentNode = currentNode.Next;
             }
             if (result[^1] == result[0]) result.RemoveAt(result.Count - 1);
+            return result.ToArray();
+        }
 
+        public Vector2[] ToStrokePoints(float rotation, float width)
+        {
+            var result = new List<Vector2>();
+            // TODO: STUFF
             return result.ToArray();
         }
     }

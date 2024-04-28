@@ -186,48 +186,22 @@ namespace Utils.Lcs
 
         public static Form ParseForm(string raw)
         {
-            Form result;
             var rawFull = Regex.Replace(' ' + raw.Replace(FieldSeperator, ' '),
                 " (?= |$)", " 0")[1..];
             var formType = (FormType)ParseInt(rawFull[..1]);
-            var formParts = rawFull[2..].Split(' ');
-            switch (formType)
+            var formParts = rawFull[2..].Split(' ').Select(part => float.Parse(part)).ToArray();
+            return formType switch
             {
-                case FormType.Vector:
-                    result = Form.Vector(formParts.Select(point => float.Parse(point)).ToArray());
-                    break;
-                case FormType.Polygon:
-                    List<Vector2> polygonPoints = new();
-                    for (var i = 0; i < formParts.Length; i += 2)
-                    {
-                        polygonPoints.Add(new Vector2(float.Parse(formParts[i]), float.Parse(formParts[i + 1])));
-                    }
-                    result = Form.Polygon(polygonPoints.ToArray());
-                    break;
-                case FormType.Square:
-                    result = Form.Square(float.Parse(formParts[0]));
-                    break;
-                case FormType.Rectangle:
-                    result = Form.Rectangle(float.Parse(formParts[0]), float.Parse(formParts[1]));
-                    break;
-                case FormType.Circle:
-                    result = Form.Circle(float.Parse(formParts[0]));
-                    break;
-                case FormType.Ellipse:
-                    result = Form.Ellipse(float.Parse(formParts[0]), float.Parse(formParts[1]));
-                    break;
-                case FormType.Ngon:
-                    result = Form.Ngon(int.Parse(formParts[0]), float.Parse(formParts[1]));
-                    break;
-                case FormType.Star:
-                    result = Form.Star(int.Parse(formParts[0]), float.Parse(formParts[1]),
-                        float.Parse(formParts[2]));
-                    break;
-                default:
-                    result = Form.Ngon(3, 1f);
-                    break;
-            }
-            return result;
+                FormType.Vector => Form.Vector(formParts),
+                FormType.Polygon => Form.Polygon(formParts),
+                FormType.Square => Form.Square(formParts[0]),
+                FormType.Rectangle => Form.Rectangle(formParts[0], formParts[1]),
+                FormType.Circle => Form.Circle(formParts[0]),
+                FormType.Ellipse => Form.Ellipse(formParts[0], formParts[1]),
+                FormType.Ngon => Form.Ngon(Mathf.RoundToInt(formParts[0]), formParts[1]),
+                FormType.Star => Form.Star(Mathf.RoundToInt(formParts[0]), formParts[1], formParts[2]),
+                _ => Form.Invalid()
+            };
         }
 
         public static string Stringify(ShapeMaterial material)

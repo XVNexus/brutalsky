@@ -88,7 +88,7 @@ namespace Controllers.Gui
             {
                 case Tags.ShapeSym:
                     var shape = (BsShape)obj;
-                    PaintObjectPreview(painter, shape.Transform, shape.Form.ToPoints(shape.Transform.Rotation),
+                    PaintObjectPreview(painter, shape.Transform, shape.Form.ToFillPoints(shape.Transform.Rotation),
                         shape.Color.Color * map.LightingColor.Tint);
                     break;
                 case Tags.PoolSym:
