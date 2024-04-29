@@ -67,7 +67,14 @@ namespace Core
         // TODO: THIS ONE IS TOO
         private void GenerateBoxMap(string title, float size, string name, bool bottom, bool top, bool left, bool right)
         {
-            var baseColor = new ObjectColor(0f, 1f, 0f);
+            var baseColor = title switch
+            {
+                "Platform" => new ObjectColor(1f, .1f, .1f),
+                "Box" => new ObjectColor(.1f, 1f, .1f),
+                "Cage" => new ObjectColor(.1f, 1f, 1f),
+                "Tunnel" => new ObjectColor(1f, 1f, .1f),
+                _ => ObjectColor.Ether()
+            };
             var map = new BsMap($"{name} {title}", "Brutalsky")
             {
                 PlayArea = new Vector2(size, size / 2f),

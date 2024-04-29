@@ -102,11 +102,11 @@ namespace Core
             // Apply config
             CameraSystem._.ResizeView(map.PlayArea);
             var backgroundColor = map.BackgroundColor.Tint * map.LightingColor.Tint;
+            var halfArea = map.PlayArea / 2f;
+            const float halfFade = BackgroundFade / 2f;
+            const float halfField = BackgroundField / 2f;
             gBackgroundMain.GetComponent<SpriteRenderer>().color = backgroundColor;
             gBackgroundMain.transform.localScale = map.PlayArea;
-            var halfArea = map.PlayArea / 2f;
-            var halfFade = BackgroundFade / 2f;
-            var halfField = BackgroundField / 2f;
             for (var i = 0; i < 8; i++)
             {
                 var gBackgroundEdge = gBackgroundEdges[i];
