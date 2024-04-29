@@ -32,9 +32,10 @@ namespace Core
         public Dictionary<string, BsPlayer> ActivePlayers { get; private set; } = new();
 
         // External references
-        public GameObject gMargins;
-        public GameObject gBackground;
-        public GameObject gForeground;
+        public GameObject gBackgroundMain;
+        public GameObject[] gBackgroundEdges;
+        public GameObject[] gBackgroundCorners;
+        public GameObject[] gBackgroundOobs;
         public Light2D cLight2D;
         private GameObject _gMapParent;
 
@@ -97,10 +98,55 @@ namespace Core
 
             // Apply config
             CameraSystem._.ResizeView(map.PlayArea);
-            gMargins.transform.localScale = map.PlayArea;
             var backgroundColor = map.BackgroundColor.Tint * map.LightingColor.Tint;
-            gBackground.GetComponent<SpriteRenderer>().color = backgroundColor;
-            gForeground.GetComponent<SpriteRenderer>().color = backgroundColor;
+            gBackgroundMain.GetComponent<SpriteRenderer>().color = backgroundColor;
+            gBackgroundMain.transform.localScale = map.PlayArea;
+            var halfArea = map.PlayArea / 2f;
+            for (var i = 0; i < 8; i++)
+            {
+                var gBackgroundEdge = gBackgroundEdges[i];
+                gBackgroundEdge.GetComponent<SpriteRenderer>().color = backgroundColor;
+                gBackgroundEdge.transform.localPosition = (i % 4) switch
+                {
+                    0 => new Vector2(0f, halfArea.y + 1f),
+                    1 => new Vector2(halfArea.x + 1f, 0f),
+                    2 => new Vector2(0f, -halfArea.y - 1f),
+                    3 => new Vector2(-halfArea.x - 1f, 0f),
+                    _ => gBackgroundEdge.transform.localPosition
+                };
+                gBackgroundEdge.transform.localScale = (i % 2) switch
+                {
+                    0 => new Vector2(map.PlayArea.x, 2f),
+                    1 => new Vector2(map.PlayArea.y, 2f),
+                    _ => gBackgroundEdge.transform.localScale
+                };
+            }
+            for (var i = 0; i < 8; i++)
+            {
+                var gBackgroundCorner = gBackgroundCorners[i];
+                gBackgroundCorner.GetComponent<SpriteRenderer>().color = backgroundColor;
+                gBackgroundCorner.transform.localPosition = (i % 4) switch
+                {
+                    0 => new Vector2(halfArea.x + 1f, halfArea.y + 1f),
+                    1 => new Vector2(halfArea.x + 1f, -halfArea.y - 1f),
+                    2 => new Vector2(-halfArea.x - 1f, -halfArea.y - 1f),
+                    3 => new Vector2(-halfArea.x - 1f, halfArea.y + 1f),
+                    _ => gBackgroundCorner.transform.localPosition
+                };
+            }
+            for (var i = 0; i < 4; i++)
+            {
+                var gBackgroundOob = gBackgroundOobs[i];
+                gBackgroundOob.GetComponent<SpriteRenderer>().color = backgroundColor;
+                gBackgroundOob.transform.localPosition = i switch
+                {
+                    0 => new Vector2(0f, halfArea.y + 52f),
+                    1 => new Vector2(halfArea.x + 52f, 0f),
+                    2 => new Vector2(0f, -halfArea.y - 52f),
+                    3 => new Vector2(-halfArea.x - 52f, 0f),
+                    _ => gBackgroundOob.transform.localPosition
+                };
+            }
             cLight2D.color = map.LightingColor.Tint;
             cLight2D.intensity = map.LightingColor.Alpha;
             Physics2D.gravity = Gravity2Vector(map.GravityDirection, map.GravityStrength);
