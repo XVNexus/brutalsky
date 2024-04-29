@@ -14,16 +14,16 @@ PlayerSettings:
   accelerometerFrequency: 60
   companyName: Nexus VX
   productName: Brutalsky
-  defaultCursor: {fileID: 0}
-  cursorHotspot: {x: 0, y: 0}
-  m_SplashScreenBackgroundColor: {r: 0.13725491, g: 0.12156863, b: 0.1254902, a: 1}
+  defaultCursor: {fileID: 2800000, guid: c7630e16cec1fde67b862b230277f2c6, type: 3}
+  cursorHotspot: {x: 16, y: 16}
+  m_SplashScreenBackgroundColor: {r: 0.15, g: 0.15, b: 0.15, a: 1}
   m_ShowUnitySplashScreen: 1
   m_ShowUnitySplashLogo: 1
   m_SplashScreenOverlayOpacity: 1
-  m_SplashScreenAnimation: 1
+  m_SplashScreenAnimation: 2
   m_SplashScreenLogoStyle: 1
   m_SplashScreenDrawMode: 0
-  m_SplashScreenBackgroundAnimationZoom: 1
+  m_SplashScreenBackgroundAnimationZoom: 0
   m_SplashScreenLogoAnimationZoom: 1
   m_SplashScreenBackgroundLandscapeAspect: 1
   m_SplashScreenBackgroundPortraitAspect: 1
@@ -39,7 +39,9 @@ PlayerSettings:
     y: 0
     width: 1
     height: 1
-  m_SplashScreenLogos: []
+  m_SplashScreenLogos:
+  - logo: {fileID: 21300000, guid: 9d16056504a80e515be8700f2b614409, type: 3}
+    duration: 2
   m_VirtualRealitySplashScreen: {fileID: 0}
   m_HolographicTrackingLossScreen: {fileID: 0}
   defaultScreenWidth: 1920
@@ -283,7 +285,7 @@ PlayerSettings:
   - m_BuildTarget: 
     m_Icons:
     - serializedVersion: 2
-      m_Icon: {fileID: 2800000, guid: eb89ec1bffe1e1aec98616fd6868c0d0, type: 3}
+      m_Icon: {fileID: 2800000, guid: 4cd32274fe121a6bd8dc2bb0df63aa2a, type: 3}
       m_Width: 128
       m_Height: 128
       m_Kind: 0
