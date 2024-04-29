@@ -112,6 +112,10 @@ namespace Controllers.Player
         {
             if (!alive) return;
 
+            // Slowly heal over time
+            health += 10f * Time.fixedDeltaTime;
+
+            // TODO: DO NOT CHECK THIS EVERY FRAME, USE AN EXTERNAL TRIGGER OBJECT INSTEAD
             // Kill the player if out of map bounds
             if (MapSystem._.IsMapLoaded)
             {
