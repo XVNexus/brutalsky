@@ -24,6 +24,9 @@ namespace Core
 
         // Local constants
         public const string SaveFormat = "txt";
+        public const float BoundsMargin = 3f;
+        public const float BackgroundFade = 10f;
+        public const float BackgroundField = 1000f;
 
         // Local variables
         public Dictionary<uint, string> RawMapList { get; private set; } = new();
@@ -102,22 +105,24 @@ namespace Core
             gBackgroundMain.GetComponent<SpriteRenderer>().color = backgroundColor;
             gBackgroundMain.transform.localScale = map.PlayArea;
             var halfArea = map.PlayArea / 2f;
+            var halfFade = BackgroundFade / 2f;
+            var halfField = BackgroundField / 2f;
             for (var i = 0; i < 8; i++)
             {
                 var gBackgroundEdge = gBackgroundEdges[i];
                 gBackgroundEdge.GetComponent<SpriteRenderer>().color = backgroundColor;
                 gBackgroundEdge.transform.localPosition = (i % 4) switch
                 {
-                    0 => new Vector2(0f, halfArea.y + 1f),
-                    1 => new Vector2(halfArea.x + 1f, 0f),
-                    2 => new Vector2(0f, -halfArea.y - 1f),
-                    3 => new Vector2(-halfArea.x - 1f, 0f),
+                    0 => new Vector2(0f, halfArea.y + halfFade),
+                    1 => new Vector2(halfArea.x + halfFade, 0f),
+                    2 => new Vector2(0f, -halfArea.y - halfFade),
+                    3 => new Vector2(-halfArea.x - halfFade, 0f),
                     _ => gBackgroundEdge.transform.localPosition
                 };
                 gBackgroundEdge.transform.localScale = (i % 2) switch
                 {
-                    0 => new Vector2(map.PlayArea.x, 2f),
-                    1 => new Vector2(map.PlayArea.y, 2f),
+                    0 => new Vector2(map.PlayArea.x, BackgroundFade),
+                    1 => new Vector2(map.PlayArea.y, BackgroundFade),
                     _ => gBackgroundEdge.transform.localScale
                 };
             }
@@ -127,12 +132,13 @@ namespace Core
                 gBackgroundCorner.GetComponent<SpriteRenderer>().color = backgroundColor;
                 gBackgroundCorner.transform.localPosition = (i % 4) switch
                 {
-                    0 => new Vector2(halfArea.x + 1f, halfArea.y + 1f),
-                    1 => new Vector2(halfArea.x + 1f, -halfArea.y - 1f),
-                    2 => new Vector2(-halfArea.x - 1f, -halfArea.y - 1f),
-                    3 => new Vector2(-halfArea.x - 1f, halfArea.y + 1f),
+                    0 => new Vector2(halfArea.x + halfFade, halfArea.y + halfFade),
+                    1 => new Vector2(halfArea.x + halfFade, -halfArea.y - halfFade),
+                    2 => new Vector2(-halfArea.x - halfFade, -halfArea.y - halfFade),
+                    3 => new Vector2(-halfArea.x - halfFade, halfArea.y + halfFade),
                     _ => gBackgroundCorner.transform.localPosition
                 };
+                gBackgroundCorner.transform.localScale = new Vector2(BackgroundFade, BackgroundFade);
             }
             for (var i = 0; i < 4; i++)
             {
@@ -140,12 +146,13 @@ namespace Core
                 gBackgroundOob.GetComponent<SpriteRenderer>().color = backgroundColor;
                 gBackgroundOob.transform.localPosition = i switch
                 {
-                    0 => new Vector2(0f, halfArea.y + 52f),
-                    1 => new Vector2(halfArea.x + 52f, 0f),
-                    2 => new Vector2(0f, -halfArea.y - 52f),
-                    3 => new Vector2(-halfArea.x - 52f, 0f),
+                    0 => new Vector2(0f, halfArea.y + BackgroundFade + halfField),
+                    1 => new Vector2(halfArea.x + BackgroundFade + halfField, 0f),
+                    2 => new Vector2(0f, -halfArea.y - BackgroundFade - halfField),
+                    3 => new Vector2(-halfArea.x - BackgroundFade - halfField, 0f),
                     _ => gBackgroundOob.transform.localPosition
                 };
+                gBackgroundOob.transform.localScale = new Vector2(BackgroundField, BackgroundField);
             }
             cLight2D.color = map.LightingColor.Tint;
             cLight2D.intensity = map.LightingColor.Alpha;

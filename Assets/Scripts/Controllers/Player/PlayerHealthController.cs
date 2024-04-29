@@ -117,7 +117,8 @@ namespace Controllers.Player
             {
                 var position = transform.position;
                 var mapSize = MapSystem._.ActiveMap.PlayArea;
-                if (Mathf.Abs(position.x) > mapSize.x / 2f + 3f || Mathf.Abs(position.y) > mapSize.y / 2f + 3f)
+                if (Mathf.Abs(position.x) > mapSize.x / 2f + MapSystem.BoundsMargin
+                    || Mathf.Abs(position.y) > mapSize.y / 2f + MapSystem.BoundsMargin)
                 {
                     Kill();
                 }
