@@ -227,6 +227,7 @@ MonoBehaviour:
   maxHealth: 0
   health: -1
   alive: 1
+  cRingSpriteRenderer: {fileID: 1062589161020571729}
 --- !u!114 &3399184115846437671
 MonoBehaviour:
   m_ObjectHideFlags: 0

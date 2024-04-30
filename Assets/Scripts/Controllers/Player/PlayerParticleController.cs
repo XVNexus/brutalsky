@@ -58,10 +58,6 @@ namespace Controllers.Player
             {
                 cParticleSystem.GetComponent<Renderer>().material.color = _cSpriteRenderer.color;
             }
-
-            // Shift death particle system to ensure death particles play where the player originally was
-            cDeathParticleSystem.transform.localPosition =
-                new Vector3(-PlayerHealthController.DeathOffset, -PlayerHealthController.DeathOffset);
         }
 
         protected override void OnLink()

@@ -3,6 +3,7 @@ using Controllers.Base;
 using Core;
 using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Utils.Constants;
 using Utils.Ext;
 
@@ -13,9 +14,6 @@ namespace Controllers.Player
         // Controller metadata
         public override string Id => "health";
         public override bool IsUnused => Mathf.Approximately(Master.Object.Health, -1f);
-
-        // Local constants
-        public const float DeathOffset = 1000f;
 
         // Local variables
         public float maxHealth;
@@ -55,6 +53,10 @@ namespace Controllers.Player
         public void Hurt(float amount)
         {
             health = Mathf.Max(health - amount, 0f);
+            if (health == 0f)
+            {
+                Kill();
+            }
         }
 
         public void Revive()
@@ -62,22 +64,15 @@ namespace Controllers.Player
             if (alive) return;
             health = maxHealth;
             alive = true;
-            if (_mMovement)
-            {
-                _mMovement.Unfreeze();
-            }
+            gameObject.SetActive(true);
         }
 
         public void Kill()
         {
             if (!alive) return;
-            transform.position += new Vector3(DeathOffset, DeathOffset);
             health = 0f;
             alive = false;
-            if (_mMovement)
-            {
-                _mMovement.Freeze();
-            }
+            gameObject.SetActive(false);
         }
 
         // Event functions
@@ -111,28 +106,6 @@ namespace Controllers.Player
         private void FixedUpdate()
         {
             if (!alive) return;
-
-            // Slowly heal over time
-            health += 10f * Time.fixedDeltaTime;
-
-            // TODO: DO NOT CHECK THIS EVERY FRAME, USE AN EXTERNAL TRIGGER OBJECT INSTEAD
-            // Kill the player if out of map bounds
-            if (MapSystem._.IsMapLoaded)
-            {
-                var position = transform.position;
-                var mapSize = MapSystem._.ActiveMap.PlayArea;
-                if (Mathf.Abs(position.x) > mapSize.x / 2f + MapSystem.BoundsMargin
-                    || Mathf.Abs(position.y) > mapSize.y / 2f + MapSystem.BoundsMargin)
-                {
-                    Kill();
-                }
-            }
-
-            // Kill the player if health reaches zero
-            if (health == 0f)
-            {
-                Kill();
-            }
 
             // Save the current speed for future reference
             _lastSpeed = _cRigidbody2D.velocity.magnitude;
