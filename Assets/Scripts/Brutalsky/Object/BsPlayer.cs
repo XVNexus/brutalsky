@@ -1,14 +1,13 @@
 using Brutalsky.Base;
 using Controllers;
 using Controllers.Base;
-using Controllers.Player;
 using Core;
 using UnityEngine;
 using Utils.Constants;
 using Utils.Lcs;
 using Utils.Object;
 
-namespace Brutalsky
+namespace Brutalsky.Object
 {
     public class BsPlayer : BsObject
     {

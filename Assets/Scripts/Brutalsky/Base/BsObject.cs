@@ -20,9 +20,10 @@ namespace Brutalsky.Base
         public ObjectLayer Layer { get; set; }
         public bool Simulated { get; set; }
 
-        [CanBeNull] public GameObject InstanceObject { get; set; }
-        [CanBeNull] public BsBehavior InstanceController { get; set; }
-        public bool Active { get; set; }
+        [CanBeNull] public GameObject InstanceObject { get; private set; }
+        [CanBeNull] public BsBehavior InstanceController { get; private set; }
+        public bool Active { get; private set; }
+        public Dictionary<string, BsProp> Props { get; private set; }
 
         protected BsObject(string id, ObjectTransform transform, ObjectLayer layer, bool simulated)
         {
@@ -42,15 +43,28 @@ namespace Brutalsky.Base
 
         protected abstract void _FromLcs(string[] properties);
 
-        public BsBehavior Init(GameObject gameObject, BsMap map)
+        public void Activate(Transform parent, BsMap map)
         {
-            var instanceController = _Init(gameObject, map);
+            InstanceObject = UnityEngine.Object.Instantiate(Prefab, parent);
+            InstanceController = _Init(InstanceObject, map);
+            Active = true;
             foreach (var addon in Addons)
             {
-                var instanceComponent = addon.Init(gameObject, this, map);
+                var instanceComponent = addon.Init(InstanceObject, this, map);
                 addon.Activate(instanceComponent);
             }
-            return instanceController;
+        }
+
+        public void Deactivate()
+        {
+            UnityEngine.Object.Destroy(InstanceObject);
+            foreach (var addon in Addons)
+            {
+                addon.Deactivate();
+            }
+            InstanceObject = null;
+            InstanceController = null;
+            Active = false;
         }
 
         public LcsLine ToLcs()
@@ -74,24 +88,6 @@ namespace Brutalsky.Base
                 addon.FromLcs(child);
                 Addons.Add(addon);
             }
-        }
-
-        public void Activate(GameObject instanceObject, BsBehavior instanceController)
-        {
-            InstanceObject = instanceObject;
-            InstanceController = instanceController;
-            Active = true;
-        }
-
-        public void Deactivate()
-        {
-            foreach (var addon in Addons)
-            {
-                addon.Deactivate();
-            }
-            InstanceObject = null;
-            InstanceController = null;
-            Active = false;
         }
     }
 }

@@ -5,12 +5,11 @@ using Controllers.Base;
 using Core;
 using UnityEngine;
 using Utils.Constants;
-using Utils.Ext;
 using Utils.Lcs;
 using Utils.Object;
 using Utils.Shape;
 
-namespace Brutalsky
+namespace Brutalsky.Object
 {
     public class BsShape : BsObject
     {

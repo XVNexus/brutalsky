@@ -8,7 +8,7 @@ using Utils.Lcs;
 using Utils.Object;
 using Utils.Pool;
 
-namespace Brutalsky
+namespace Brutalsky.Object
 {
     public class BsPool : BsObject
     {

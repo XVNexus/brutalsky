@@ -1,4 +1,5 @@
 using Brutalsky;
+using Brutalsky.Object;
 using Controllers.Base;
 using Core;
 using JetBrains.Annotations;
@@ -32,7 +33,7 @@ namespace Controllers.Player
         // Init functions
         protected override void OnInit()
         {
-            EventSystem._.OnPlayerRespawn += OnPlayerRespawn;
+            EventSystem._.OnPlayerSpawn += OnPlayerSpawn;
 
             _cPlayerSpriteRenderer = GetComponent<SpriteRenderer>();
 
@@ -48,7 +49,7 @@ namespace Controllers.Player
         }
 
         // Event functions
-        private void OnPlayerRespawn(BsMap map, BsPlayer player)
+        private void OnPlayerSpawn(BsMap map, BsPlayer player)
         {
             if (player.Id != Master.Object.Id) return;
 

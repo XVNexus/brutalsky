@@ -1,4 +1,5 @@
 using Brutalsky;
+using Brutalsky.Object;
 using Controllers.Base;
 using Core;
 using JetBrains.Annotations;
@@ -41,7 +42,7 @@ namespace Controllers.Player
         // Init functions
         protected override void OnInit()
         {
-            EventSystem._.OnPlayerRespawn += OnPlayerRespawn;
+            EventSystem._.OnPlayerSpawn += OnPlayerSpawn;
 
             _cRigidbody2D = GetComponent<Rigidbody2D>();
             _cSpriteRenderer = GetComponent<SpriteRenderer>();
@@ -114,7 +115,7 @@ namespace Controllers.Player
 
         public void DisplayDeathParticles()
         {
-            if (!MapSystem._.IsMapLoaded) return;
+            if (!MapSystem._.MapLoaded) return;
             cDeathParticleSystem.gameObject.SetActive(true);
             var mapBounds = MapSystem._.ActiveMap.PlayArea * .5f + Vector2.one;
             cDeathParticleSystem.transform.position = new Vector2
@@ -126,7 +127,7 @@ namespace Controllers.Player
         }
 
         // Event functions
-        private void OnPlayerRespawn(BsMap map, BsPlayer player)
+        private void OnPlayerSpawn(BsMap map, BsPlayer player)
         {
             if (player.Id != Master.Object.Id) return;
             foreach (var cParticleSystem in _cAllParticleSystems)

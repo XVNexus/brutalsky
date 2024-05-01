@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Core;
 using JetBrains.Annotations;
 using UnityEngine;
@@ -13,8 +14,9 @@ namespace Brutalsky.Base
         private string _id;
         public ObjectTransform Transform { get; set; }
 
-        [CanBeNull] public Component InstanceComponent { get; set; }
-        public bool Active { get; set; }
+        [CanBeNull] public Component InstanceComponent { get; private set; }
+        public bool Active { get; private set; }
+        public Dictionary<string, BsProp> Props { get; private set; }
 
         protected BsAddon(string id, ObjectTransform transform)
         {

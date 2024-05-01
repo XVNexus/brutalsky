@@ -1,5 +1,6 @@
 using System;
 using Brutalsky;
+using Brutalsky.Object;
 using Controllers.Base;
 using Core;
 using UnityEngine;
@@ -48,7 +49,7 @@ namespace Controllers.Player
         protected override void OnInit()
         {
             EventSystem._.OnMapBuild += OnMapBuild;
-            EventSystem._.OnPlayerRespawn += OnPlayerRespawn;
+            EventSystem._.OnPlayerSpawn += OnPlayerSpawn;
 
             _cRigidbody2D = GetComponent<Rigidbody2D>();
 
@@ -102,7 +103,7 @@ namespace Controllers.Player
             };
         }
 
-        private void OnPlayerRespawn(BsMap map, BsPlayer player)
+        private void OnPlayerSpawn(BsMap map, BsPlayer player)
         {
             if (player.Id != Master.Object.Id) return;
             _cRigidbody2D.velocity = Vector2.zero;

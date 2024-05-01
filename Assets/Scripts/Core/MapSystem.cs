@@ -5,9 +5,8 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using Brutalsky;
 using Brutalsky.Base;
-using Controllers;
+using Brutalsky.Object;
 using Controllers.Base;
-using Controllers.Player;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
@@ -30,16 +29,16 @@ namespace Core
         // Local variables
         public Dictionary<uint, string> RawMapList { get; private set; } = new();
         [CanBeNull] public BsMap ActiveMap { get; private set; }
-        public bool IsMapLoaded { get; private set; }
+        public bool MapLoaded { get; private set; }
         public Dictionary<string, BsPlayer> ActivePlayers { get; private set; } = new();
 
         // External references
+        public GameObject gMapParent;
         public GameObject gBackgroundMain;
         public GameObject[] gBackgroundEdges;
         public GameObject[] gBackgroundCorners;
         public GameObject[] gBackgroundOobs;
         public Light2D cLight2D;
-        private GameObject _gMapParent;
 
         // System functions
         public void ScanMapFiles(string[] builtinMapFilenames)
@@ -66,7 +65,17 @@ namespace Core
         {
             foreach (var player in players)
             {
+                player.Activate(gMapParent.transform, ActiveMap);
                 ActivePlayers[player.Id] = player;
+            }
+        }
+
+        public void UnregisterPlayers()
+        {
+            foreach (var id in ActivePlayers.Keys)
+            {
+                ActivePlayers[id].Deactivate();
+                ActivePlayers.Remove(id);
             }
         }
 
@@ -89,14 +98,14 @@ namespace Core
             }
 
             // Make sure there is not already an active map
-            if (IsMapLoaded)
+            if (MapLoaded)
             {
                 UnbuildMap();
             }
 
             // Note map as active
             ActiveMap = map;
-            IsMapLoaded = true;
+            MapLoaded = true;
 
             // Apply config
             CameraSystem._.ResizeView(map.PlayArea);
@@ -158,7 +167,6 @@ namespace Core
             Physics2D.gravity = Gravity2Vector(map.GravityDirection, map.GravityStrength);
 
             // Instantiate the map container and create all objects
-            _gMapParent = new GameObject();
             foreach (var obj in map.Objects.Values)
             {
                 CreateObject(obj);
@@ -169,38 +177,31 @@ namespace Core
         public void UnbuildMap()
         {
             // Make sure there is an active map to unbuild
-            if (!IsMapLoaded) return;
+            if (!MapLoaded) return;
 
             // Delete all objects and destroy the map container
             foreach (var obj in ActiveMap.Objects.Values)
             {
                 DeleteObject(obj);
             }
-            Destroy(_gMapParent);
-            _gMapParent = null;
             ActiveMap.ResetSpawns();
 
             // Note map as inactive
             EventSystem._.EmitMapUnbuild(ActiveMap);
             ActiveMap = null;
-            IsMapLoaded = false;
+            MapLoaded = false;
         }
 
-        public bool CreateObject(BsObject obj)
+        public void CreateObject(BsObject obj)
         {
-            if (obj.Active) return false;
-            var instanceObject = Instantiate(obj.Prefab, _gMapParent.transform);
-            var instanceController = obj.Init(instanceObject, ActiveMap);
-            obj.Activate(instanceObject, instanceController);
-            return true;
+            if (obj.Active) return;
+            obj.Activate(gMapParent.transform, ActiveMap);
         }
 
-        public bool DeleteObject(BsObject obj)
+        public void DeleteObject(BsObject obj)
         {
-            if (!obj.Active) return false;
-            Destroy(obj.InstanceObject);
+            if (!obj.Active) return;
             obj.Deactivate();
-            return true;
         }
 
         public void SpawnAllPlayers()
@@ -214,43 +215,12 @@ namespace Core
             }
         }
 
-        public void DespawnAllPlayers()
-        {
-            var playerList = ActivePlayers.Values.ToList();
-            foreach (var player in playerList)
-            {
-                DespawnPlayer(player);
-            }
-        }
-
         public void SpawnPlayer(BsPlayer player)
         {
-            if (!IsMapLoaded) return;
+            if (!MapLoaded || !player.Active) return;
             player.Health = ActiveMap.PlayerHealth;
-            if (!player.Active)
-            {
-                // Spawn new player
-                var instanceObject = Instantiate(player.Prefab);
-                var instanceController = player.Init(instanceObject, ActiveMap);
-                player.Activate(instanceObject, instanceController);
-                ActivePlayers[player.Id] = player;
-                instanceObject.transform.position = ActiveMap.SelectSpawn();
-                EventSystem._.EmitPlayerSpawn(ActiveMap, player);
-            }
-            else
-            {
-                // Respawn existing player
-                player.InstanceObject.transform.position = ActiveMap.SelectSpawn();
-                EventSystem._.EmitPlayerRespawn(ActiveMap, player);
-            }
-        }
-
-        public void DespawnPlayer(BsPlayer player)
-        {
-            if (!player.Active || !IsMapLoaded) return;
-            Destroy(player.InstanceObject);
-            player.Deactivate();
-            ActivePlayers.Remove(player.Id);
+            player.InstanceObject.transform.position = ActiveMap.SelectSpawn();
+            EventSystem._.EmitPlayerSpawn(ActiveMap, player);
         }
 
         // Utility functions

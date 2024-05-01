@@ -1,5 +1,6 @@
 using System;
 using Brutalsky;
+using Brutalsky.Object;
 using Controllers.Base;
 using UnityEngine.InputSystem;
 using Utils.Gui;
@@ -27,11 +28,5 @@ namespace Core
 
         public void EmitPlayerSpawn(BsMap map, BsPlayer player) => OnPlayerSpawn?.Invoke(map, player);
         public event Action<BsMap, BsPlayer> OnPlayerSpawn;
-
-        public void EmitPlayerDespawn(BsMap map, BsPlayer player) => OnPlayerDespawn?.Invoke(map, player);
-        public event Action<BsMap, BsPlayer> OnPlayerDespawn;
-
-        public void EmitPlayerRespawn(BsMap map, BsPlayer player) => OnPlayerRespawn?.Invoke(map, player);
-        public event Action<BsMap, BsPlayer> OnPlayerRespawn;
     }
 }
