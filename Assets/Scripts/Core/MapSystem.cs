@@ -24,7 +24,6 @@ namespace Core
 
         // Local constants
         public const string SaveFormat = "txt";
-        public const float BoundsMargin = 3f;
         public const float BackgroundFade = 10f;
         public const float BackgroundField = 1000f;
 
@@ -102,9 +101,9 @@ namespace Core
             // Apply config
             CameraSystem._.ResizeView(map.PlayArea);
             var backgroundColor = map.BackgroundColor.Tint * map.LightingColor.Tint;
-            var halfArea = map.PlayArea / 2f;
-            const float halfFade = BackgroundFade / 2f;
-            const float halfField = BackgroundField / 2f;
+            var halfArea = map.PlayArea * .5f;
+            const float halfFade = BackgroundFade * .5f;
+            const float halfField = BackgroundField * .5f;
             gBackgroundMain.GetComponent<SpriteRenderer>().color = backgroundColor;
             gBackgroundMain.transform.localScale = map.PlayArea;
             for (var i = 0; i < 8; i++)
@@ -202,22 +201,6 @@ namespace Core
             Destroy(obj.InstanceObject);
             obj.Deactivate();
             return true;
-        }
-
-        public void FreezeAllPlayers()
-        {
-            foreach (var player in ActivePlayers.Values)
-            {
-                ((PlayerController)player.InstanceController)?.GetSub<PlayerMovementController>("movement")?.Freeze();
-            }
-        }
-
-        public void UnfreezeAllPlayers()
-        {
-            foreach (var player in ActivePlayers.Values)
-            {
-                ((PlayerController)player.InstanceController)?.GetSub<PlayerMovementController>("movement")?.Unfreeze();
-            }
         }
 
         public void SpawnAllPlayers()

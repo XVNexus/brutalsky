@@ -77,7 +77,7 @@ namespace Core
             };
             var map = new BsMap($"{name} {title}", "Brutalsky")
             {
-                PlayArea = new Vector2(size, size / 2f),
+                PlayArea = new Vector2(size, size * .5f),
                 BackgroundColor = new ObjectColor(baseColor.Color.r, baseColor.Color.g, baseColor.Color.b, .25f),
                 LightingColor = new ObjectColor(baseColor.Color.r, baseColor.Color.g, baseColor.Color.b, .9f),
                 GravityDirection = Direction.Down,
@@ -87,7 +87,7 @@ namespace Core
             if (bottom) map.AddObject(new BsShape
             (
                 "wall-bottom",
-                new ObjectTransform(0f, -size / 4f + .5f),
+                new ObjectTransform(0f, -size * .25f + .5f),
                 ObjectLayer.Midground,
                 true,
                 Form.Rectangle(size, 1f),
@@ -97,7 +97,7 @@ namespace Core
             if (top) map.AddObject(new BsShape
             (
                 "wall-top",
-                new ObjectTransform(0f, size / 4f - .5f),
+                new ObjectTransform(0f, size * .25f - .5f),
                 ObjectLayer.Midground,
                 true,
                 Form.Rectangle(size, 1f),
@@ -107,27 +107,27 @@ namespace Core
             if (left) map.AddObject(new BsShape
             (
                 "wall-left",
-                new ObjectTransform(-size / 2f + .5f, 0f),
+                new ObjectTransform(-size * .5f + .5f, 0f),
                 ObjectLayer.Midground,
                 true,
-                Form.Rectangle(1f, size / 2f),
+                Form.Rectangle(1f, size * .5f),
                 ShapeMaterial.Stone(),
                 ObjectColor.Ether()
             ));
             if (right) map.AddObject(new BsShape
             (
                 "wall-right",
-                new ObjectTransform(size / 2f - .5f, 0f),
+                new ObjectTransform(size * .5f - .5f, 0f),
                 ObjectLayer.Midground,
                 true,
-                Form.Rectangle(1f, size / 2f),
+                Form.Rectangle(1f, size * .5f),
                 ShapeMaterial.Stone(),
                 ObjectColor.Ether()
             ));
             if (top && left) map.AddObject(new BsShape
             (
                 "corner-tl",
-                new ObjectTransform(-size / 2f + 1f, size / 4f - 1f),
+                new ObjectTransform(-size * .5f + 1f, size * .25f - 1f),
                 ObjectLayer.Midground,
                 true,
                 Form.Vector(new[] { 0f, 0f, 0f, 3f, 0f, 1f, 0f, 0f, 0f, -3f }),
@@ -137,7 +137,7 @@ namespace Core
             if (top && right) map.AddObject(new BsShape
             (
                 "corner-tr",
-                new ObjectTransform(size / 2f - 1f, size / 4f - 1f),
+                new ObjectTransform(size * .5f - 1f, size * .25f - 1f),
                 ObjectLayer.Midground,
                 true,
                 Form.Vector(new[] { 0f, 0f, 0f, -3f, 0f, 1f, 0f, 0f, 0f, -3f }),
@@ -147,7 +147,7 @@ namespace Core
             if (bottom && left) map.AddObject(new BsShape
             (
                 "corner-bl",
-                new ObjectTransform(-size / 2f + 1f, -size / 4f + 1f),
+                new ObjectTransform(-size * .5f + 1f, -size * .25f + 1f),
                 ObjectLayer.Midground,
                 true,
                 Form.Vector(new[] { 0f, 0f, 0f, 3f, 0f, 1f, 0f, 0f, 0f, 3f }),
@@ -157,15 +157,15 @@ namespace Core
             if (bottom && right) map.AddObject(new BsShape
             (
                 "corner-br",
-                new ObjectTransform(size / 2f - 1f, -size / 4f + 1f),
+                new ObjectTransform(size * .5f - 1f, -size * .25f + 1f),
                 ObjectLayer.Midground,
                 true,
                 Form.Vector(new[] { 0f, 0f, 0f, -3f, 0f, 1f, 0f, 0f, 0f, 3f }),
                 ShapeMaterial.Stone(),
                 ObjectColor.Ether()
             ));
-            map.AddSpawn(new BsSpawn(new Vector2(-1f, -size / 4f + 1.5f)));
-            map.AddSpawn(new BsSpawn(new Vector2(1f, -size / 4f + 1.5f)));
+            map.AddSpawn(new BsSpawn(new Vector2(-1f, -size * .25f + 1.5f)));
+            map.AddSpawn(new BsSpawn(new Vector2(1f, -size * .25f + 1.5f)));
             MapSystem.SaveMap(map);
         }
     }

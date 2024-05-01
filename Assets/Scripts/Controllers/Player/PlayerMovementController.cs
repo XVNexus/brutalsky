@@ -39,7 +39,6 @@ namespace Controllers.Player
 
         // Component references
         private Rigidbody2D _cRigidbody2D;
-        private CircleCollider2D _cCircleCollider2D;
 
         // Player input
         public InputAction iMovement;
@@ -52,7 +51,6 @@ namespace Controllers.Player
             EventSystem._.OnPlayerRespawn += OnPlayerRespawn;
 
             _cRigidbody2D = GetComponent<Rigidbody2D>();
-            _cCircleCollider2D = GetComponent<CircleCollider2D>();
 
             iMovement = EventSystem._.aInputAction.FindAction("Movement");
             iMovement.Enable();
@@ -64,19 +62,6 @@ namespace Controllers.Player
 
             // Force scanning map settings
             OnMapBuild(MapSystem._.ActiveMap);
-        }
-
-        // Module functions
-        public void Freeze()
-        {
-            _cRigidbody2D.simulated = false;
-            _cCircleCollider2D.enabled = false;
-        }
-
-        public void Unfreeze()
-        {
-            _cRigidbody2D.simulated = true;
-            _cCircleCollider2D.enabled = true;
         }
 
         // Event functions
@@ -134,7 +119,7 @@ namespace Controllers.Player
             var impactSpeed = _lastSpeed * other.DirectnessFactor();
 
             // Reduce velocity based on collision force
-            var velocityFactor = Mathf.Min(10f / impactSpeed, 1f) / 2f;
+            var velocityFactor = Mathf.Min(10f / impactSpeed, 1f) * .5f;
             _cRigidbody2D.velocity *= velocityFactor;
         }
 

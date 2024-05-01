@@ -3,7 +3,6 @@ using Controllers.Base;
 using Core;
 using JetBrains.Annotations;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Utils.Constants;
 using Utils.Ext;
 
@@ -23,6 +22,8 @@ namespace Controllers.Player
 
         // Component references
         private Rigidbody2D _cRigidbody2D;
+        private SpriteRenderer _cSpriteRenderer;
+        private CircleCollider2D _cCircleCollider2D;
 
         // Linked modules
         [CanBeNull] private PlayerMovementController _mMovement;
@@ -33,6 +34,8 @@ namespace Controllers.Player
             EventSystem._.OnPlayerRespawn += OnPlayerRespawn;
 
             _cRigidbody2D = GetComponent<Rigidbody2D>();
+            _cSpriteRenderer = GetComponent<SpriteRenderer>();
+            _cCircleCollider2D = GetComponent<CircleCollider2D>();
 
             // Sync health with max health
             maxHealth = Master.Object.Health;
@@ -52,11 +55,12 @@ namespace Controllers.Player
 
         public void Hurt(float amount)
         {
-            health = Mathf.Max(health - amount, 0f);
-            if (health == 0f)
+            if (amount >= health)
             {
                 Kill();
+                return;
             }
+            health = Mathf.Max(health - amount, 0f);
         }
 
         public void Revive()
@@ -64,7 +68,10 @@ namespace Controllers.Player
             if (alive) return;
             health = maxHealth;
             alive = true;
-            gameObject.SetActive(true);
+            _cRigidbody2D.simulated = true;
+            _cSpriteRenderer.enabled = true;
+            _cCircleCollider2D.enabled = true;
+            gameObject.SetChildrenActive(true);
         }
 
         public void Kill()
@@ -72,7 +79,10 @@ namespace Controllers.Player
             if (!alive) return;
             health = 0f;
             alive = false;
-            gameObject.SetActive(false);
+            _cRigidbody2D.simulated = false;
+            _cSpriteRenderer.enabled = false;
+            _cCircleCollider2D.enabled = false;
+            gameObject.SetChildrenActive(false);
         }
 
         // Event functions

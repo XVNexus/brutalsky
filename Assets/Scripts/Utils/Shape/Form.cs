@@ -82,10 +82,10 @@ namespace Utils.Shape
         {
             var result = Polygon(new[]
             {
-                -width / 2f, height / 2f,
-                width / 2f, height / 2f,
-                width / 2f, -height / 2f,
-                -width / 2f, -height / 2f
+                -width * .5f, height * .5f,
+                width * .5f, height * .5f,
+                width * .5f, -height * .5f,
+                -width * .5f, -height * .5f
             });
             result.FormType = FormType.Rectangle;
             result.FormString = $"{width} {height}";
@@ -102,12 +102,12 @@ namespace Utils.Shape
 
         public static Form Ellipse(float width, float height)
         {
-            var result = new Form(new Vector2(0f, height / 2f), new FormNode[]
+            var result = new Form(new Vector2(0f, height * .5f), new FormNode[]
             {
-                new FormArc(width / 2f, height / 2f, width / 2f, 0f),
-                new FormArc(width / 2f, -height / 2f, 0f, -height / 2f),
-                new FormArc(-width / 2f, -height / 2f, -width / 2f, 0f),
-                new FormArc(-width / 2f, height / 2f, 0f, height / 2f)
+                new FormArc(width * .5f, height * .5f, width * .5f, 0f),
+                new FormArc(width * .5f, -height * .5f, 0f, -height * .5f),
+                new FormArc(-width * .5f, -height * .5f, -width * .5f, 0f),
+                new FormArc(-width * .5f, height * .5f, 0f, height * .5f)
             })
             {
                 FormType = FormType.Ellipse,
@@ -119,7 +119,7 @@ namespace Utils.Shape
         public static Form Ngon(int sides, float diameter)
         {
             var args = new float[sides * 2];
-            var scale = diameter / 2f;
+            var scale = diameter * .5f;
             for (var i = 0; i < sides; i++)
             {
                 var vertexAngle = i / (float)sides * 2f * Mathf.PI;
@@ -135,7 +135,7 @@ namespace Utils.Shape
         public static Form Star(int points, float outerDiameter, float innerDiameter)
         {
             var args = new float[points * 4];
-            var scales = new[] { outerDiameter / 2f, innerDiameter / 2f };
+            var scales = new[] { outerDiameter * .5f, innerDiameter * .5f };
             for (var i = 0; i < points * 2; i++)
             {
                 var vertexAngle = i / (float)(points * 2) * 2f * Mathf.PI;

@@ -114,6 +114,14 @@ namespace Controllers.Player
 
         public void DisplayDeathParticles()
         {
+            if (!MapSystem._.IsMapLoaded) return;
+            cDeathParticleSystem.gameObject.SetActive(true);
+            var mapBounds = MapSystem._.ActiveMap.PlayArea * .5f + Vector2.one;
+            cDeathParticleSystem.transform.position = new Vector2
+            (
+                Mathf.Clamp(transform.position.x, -mapBounds.x, mapBounds.x),
+                Mathf.Clamp(transform.position.y, -mapBounds.y, mapBounds.y)
+            );
             cDeathParticleSystem.Play();
         }
 

@@ -13,7 +13,7 @@ namespace Utils.Shape
         private Vector2 P1 => MathfExt.Lerp(StartPoint, Handle, HandleMultiplier);
         private Vector2 P2 => MathfExt.Lerp(EndPoint, Handle, HandleMultiplier);
         private Vector2 P3 => EndPoint;
-        private float Length => ((P3 - P0).magnitude + (P1 - P0).magnitude + (P2 - P1).magnitude + (P3 - P2).magnitude) / 2f;
+        private float Length => ((P3 - P0).magnitude + (P1 - P0).magnitude + (P2 - P1).magnitude + (P3 - P2).magnitude) * .5f;
 
         public FormArc(Vector2 handle, Vector2 point)
         {

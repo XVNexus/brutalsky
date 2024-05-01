@@ -41,7 +41,7 @@ namespace Utils.Ext
 
         public static float Mean(float a, float b)
         {
-            return (a + b) / 2f;
+            return (a + b) * .5f;
         }
 
         public static Vector2 Mean(Vector2 a, Vector2 b)
