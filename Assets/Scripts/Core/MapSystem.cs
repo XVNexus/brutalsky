@@ -22,6 +22,7 @@ namespace Core
         private void Awake() => _ = this;
 
         // Local constants
+        public const float LogicInterval = .1f;
         public const string SaveFormat = "txt";
         public const float BackgroundFade = 10f;
         public const float BackgroundField = 1000f;
@@ -172,6 +173,9 @@ namespace Core
                 CreateObject(obj);
             }
             EventSystem._.EmitMapBuild(map);
+
+            // Start the logic system
+            InvokeRepeating(nameof(UpdateLogic), 0f, LogicInterval);
         }
 
         public void UnbuildMap()
@@ -190,6 +194,9 @@ namespace Core
             EventSystem._.EmitMapUnbuild(ActiveMap);
             ActiveMap = null;
             MapLoaded = false;
+
+            // Stop the logic system
+            CancelInvoke();
         }
 
         public void CreateObject(BsObject obj)
@@ -221,6 +228,12 @@ namespace Core
             player.Health = ActiveMap.PlayerHealth;
             player.InstanceObject.transform.position = ActiveMap.SelectSpawn();
             EventSystem._.EmitPlayerSpawn(ActiveMap, player);
+        }
+
+        // Event functions
+        private void UpdateLogic()
+        {
+            // TODO: ADD LOGIC
         }
 
         // Utility functions

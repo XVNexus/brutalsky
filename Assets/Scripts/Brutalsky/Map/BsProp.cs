@@ -1,7 +1,7 @@
 using System;
 using Utils.Constants;
 
-namespace Brutalsky.Base
+namespace Brutalsky.Map
 {
     public class BsProp
     {
