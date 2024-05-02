@@ -7,6 +7,6 @@ namespace Controllers
     public class PlayerController : ControllerBase<BsPlayer>
     {
         // Controller metadata
-        public override string Tag => Tags.PlayerTag;
+        public override string Tag => Tags.Player;
     }
 }

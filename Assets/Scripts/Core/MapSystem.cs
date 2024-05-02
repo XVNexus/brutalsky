@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using Brutalsky;
 using Brutalsky.Base;
+using Brutalsky.Logic;
 using Brutalsky.Object;
 using Controllers.Base;
 using JetBrains.Annotations;
@@ -22,7 +23,6 @@ namespace Core
         private void Awake() => _ = this;
 
         // Local constants
-        public const float LogicInterval = .5f;
         public const string SaveFormat = "txt";
         public const float BackgroundFade = 10f;
         public const float BackgroundField = 1000f;
@@ -30,8 +30,9 @@ namespace Core
         // Local variables
         public Dictionary<uint, string> RawMapList { get; private set; } = new();
         [CanBeNull] public BsMap ActiveMap { get; private set; }
-        public bool MapLoaded { get; private set; }
         public Dictionary<string, BsPlayer> ActivePlayers { get; private set; } = new();
+        [CanBeNull] public BsMatrix Matrix { get; private set; }
+        public bool MapLoaded { get; private set; }
 
         // External references
         public GameObject gMapParent;
@@ -75,7 +76,7 @@ namespace Core
         {
             foreach (var id in ActivePlayers.Keys)
             {
-                ActivePlayers[id].Deactivate();
+                ActivePlayers[id].Deactivate(ActiveMap);
                 ActivePlayers.Remove(id);
             }
         }
@@ -168,14 +169,17 @@ namespace Core
             Physics2D.gravity = Gravity2Vector(map.GravityDirection, map.GravityStrength);
 
             // Create all objects
+            var logicNodes = new List<BsNode>();
             foreach (var obj in map.Objects.Values)
             {
                 CreateObject(obj);
+                logicNodes.AddRange(obj.RegisterLogic());
             }
+            logicNodes.AddRange(map.Nodes);
             EventSystem._.EmitMapBuild(map);
 
             // Start the logic system
-            InvokeRepeating(nameof(UpdateLogic), 0f, LogicInterval);
+            Matrix = new BsMatrix(logicNodes, map.Links);
         }
 
         public void UnbuildMap()
@@ -191,7 +195,7 @@ namespace Core
             ActiveMap.ResetSpawns();
 
             // Stop the logic system
-            CancelInvoke();
+            Matrix = null;
 
             // Note map as inactive
             EventSystem._.EmitMapUnbuild(ActiveMap);
@@ -208,7 +212,7 @@ namespace Core
         public void DeleteObject(BsObject obj)
         {
             if (!obj.Active) return;
-            obj.Deactivate();
+            obj.Deactivate(ActiveMap);
         }
 
         public void SpawnAllPlayers()
@@ -231,9 +235,9 @@ namespace Core
         }
 
         // Event functions
-        private void UpdateLogic()
+        private void FixedUpdate()
         {
-            ActiveMap.Matrix.Update();
+            Matrix?.Update();
         }
 
         // Utility functions

@@ -888,9 +888,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   viewSize: {x: 10, y: 10}
-  dampening: 0.1
+  dampening: 0.4
   shakeInterval: 0.1
-  simSpeed: 10
+  simSpeed: 20
 --- !u!114 &581734019
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -941,6 +941,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8542157c84b4a99a48df8f8fa37683b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxFps: 120
 --- !u!114 &581734022
 MonoBehaviour:
   m_ObjectHideFlags: 0

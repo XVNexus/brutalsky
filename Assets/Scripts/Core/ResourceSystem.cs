@@ -31,22 +31,22 @@ namespace Core
         public Material aUnlitMaterial;
 
         // System functions
-        public BsObject GetTemplateObject(char objectPrefix)
+        public BsObject GetTemplateObject(string objectPrefix)
         {
             return objectPrefix switch
             {
-                Tags.PlayerSym => new BsPlayer(),
-                Tags.ShapeSym => new BsShape(),
-                Tags.PoolSym => new BsPool(),
+                Tags.Player => new BsPlayer(),
+                Tags.Shape => new BsShape(),
+                Tags.Pool => new BsPool(),
                 _ => throw Errors.InvalidObjectOrAddonTag("object", objectPrefix)
             };
         }
 
-        public BsAddon GetTemplateAddon(char addonPrefix)
+        public BsAddon GetTemplateAddon(string addonPrefix)
         {
             return addonPrefix switch
             {
-                Tags.JointSym => new BsJoint(),
+                Tags.Joint => new BsJoint(),
                 _ => throw Errors.InvalidObjectOrAddonTag("addon", addonPrefix)
             };
         }

@@ -1,5 +1,4 @@
 using Brutalsky.Base;
-using Brutalsky.Logic;
 using Controllers;
 using Controllers.Base;
 using Core;
@@ -13,7 +12,7 @@ namespace Brutalsky.Object
     public class BsPlayer : BsObject
     {
         public override GameObject Prefab => ResourceSystem._.pPlayer;
-        public override char Tag => Tags.PlayerSym;
+        public override string Tag => Tags.Player;
 
         public string Name { get; set; }
         public float Health { get; set; }

@@ -23,7 +23,7 @@ namespace Core
         }
 
         // Init functions
-        protected override void OnLoad()
+        private void Testing()
         {
             var map = new BsMap("Testing", "Dev")
             {
@@ -41,7 +41,7 @@ namespace Core
                 new ObjectTransform(0f, -9.5f),
                 ObjectLayer.Midground,
                 true,
-                Form.Rectangle(20f, 1f),
+                Form.Rectangle(30f, 1f),
                 ShapeMaterial.Stone(),
                 ObjectColor.Stone()
             ));
@@ -51,9 +51,9 @@ namespace Core
                 new ObjectTransform(0f, 0f),
                 ObjectLayer.Midground,
                 true,
-                Form.Star(6, 5f, 3f),
-                ShapeMaterial.Metal(true),
-                ObjectColor.Metal()
+                Form.Square(1f),
+                ShapeMaterial.Glue(true).Modify(adhesion:20f),
+                ObjectColor.Glue()
             )
             .AttachAddon(new BsJoint
             (
@@ -65,14 +65,20 @@ namespace Core
                 float.PositiveInfinity
             ).HingeJoint(
                 true,
-                100f,
+                0f,
                 10000f,
                 false,
                 0f,
                 0f
             )));
-            // map.Matrix.AddNode(new BsNode("testing", Array.Empty<float>(), new float[1], _ => new[] { Time.timeSinceLevelLoad * 10f }));
-            // map.Matrix.AddLink(("testing", 0), ("spinner-motor", 4));
+            map.AddNode(BsNode.LevelTime());
+            map.AddNode(BsNode.Sin());
+            map.AddNode(BsNode.Constant(250f));
+            map.AddNode(BsNode.Multiply(2));
+            map.AddLink((1, 0), (2, 0));
+            map.AddLink((2, 0), (4, 0));
+            map.AddLink((3, 0), (4, 1));
+            map.AddLink((4, 0), (0, 4));
             MapSystem._.BuildMap(map);
             MapSystem._.RegisterPlayers(new[]
             {
@@ -80,14 +86,17 @@ namespace Core
                 new BsPlayer("Player 2", 100f, new ObjectColor(0f, .5f, 1f), true)
             });
             MapSystem._.SpawnAllPlayers();
+        }
 
-            /*
+        protected override void OnLoad()
+        {
+            Testing();
+            return;
             StartGame(new[] { "Brutalsky", "Doomring" }, MapSystem.GenerateId("Brutalsky", "Xveon"), new[]
             {
                 new BsPlayer("Player 1", 100f, new ObjectColor(1f, .5f, 0f)),
                 new BsPlayer("Player 2", 100f, new ObjectColor(0f, .5f, 1f), true)
             });
-            */
         }
 
         // System functions

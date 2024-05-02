@@ -4,6 +4,7 @@ using Brutalsky.Base;
 using Brutalsky.Logic;
 using Brutalsky.Map;
 using Core;
+using JetBrains.Annotations;
 using UnityEngine;
 using Utils.Constants;
 using Utils.Lcs;
@@ -24,7 +25,8 @@ namespace Brutalsky
         public float PlayerHealth { get; set; }
         public List<BsSpawn> Spawns { get; } = new();
         public Dictionary<string, BsObject> Objects { get; } = new();
-        public BsMatrix Matrix { get; } = new();
+        public List<BsNode> Nodes { get; } = new();
+        public Dictionary<(int, int), (int, int)> Links { get; } = new();
 
         public BsMap(string title = "Untitled Map", string author = "Anonymous Marble")
         {
@@ -95,7 +97,7 @@ namespace Brutalsky
                         AddSpawn(spawn);
                         break;
                     case '#':
-                        var obj = ResourceSystem._.GetTemplateObject(LcsParser.ParseChar(line.Header[0]));
+                        var obj = ResourceSystem._.GetTemplateObject(LcsParser.ParseString(line.Header[0]));
                         obj.FromLcs(line);
                         AddObject(obj);
                         break;
@@ -146,7 +148,7 @@ namespace Brutalsky
             return index >= 0 && index < Spawns.Count;
         }
 
-        public T GetObject<T>(char tag, string id) where T : BsObject
+        public T GetObject<T>(string tag, string id) where T : BsObject
         {
             return ContainsObject(tag, id) ? (T)Objects[tag + id] : null;
         }
@@ -163,7 +165,7 @@ namespace Brutalsky
             return RemoveObject(obj.Tag, obj.Id);
         }
 
-        public bool RemoveObject(char tag, string id)
+        public bool RemoveObject(string tag, string id)
         {
             return Objects.Remove(tag + id);
         }
@@ -173,9 +175,66 @@ namespace Brutalsky
             return ContainsObject(obj.Tag, obj.Id);
         }
 
-        public bool ContainsObject(char tag, string id)
+        public bool ContainsObject(string tag, string id)
         {
             return Objects.ContainsKey(tag + id);
+        }
+
+        [CanBeNull]
+        public BsNode GetNode(int id)
+        {
+            return ContainsNode(id) ? Nodes[id] : null;
+        }
+
+        public void AddNode(BsNode node)
+        {
+            Nodes.Add(node);
+        }
+
+        public bool RemoveNode(int id)
+        {
+            if (!ContainsNode(id)) return false;
+            Nodes.RemoveAt(id);
+            return true;
+        }
+
+        public bool ContainsNode(int id)
+        {
+            return id >= 0 && id < Nodes.Count;
+        }
+
+        public (int, int) GetLink((int, int) toPort)
+        {
+            return ContainsLink(toPort) ? Links[toPort] : (-1, -1);
+        }
+
+        public bool AddLink((int, int) fromPort, (int, int) toPort)
+        {
+            if (ContainsLink(toPort)) return false;
+            Links[toPort] = fromPort;
+            return true;
+        }
+
+        public bool RemoveLink((int, int) toPort)
+        {
+            if (!ContainsLink(toPort)) return false;
+            Links.Remove(toPort);
+            return true;
+        }
+
+        public bool RemoveLink((int, int) fromPort, (int, int) toPort)
+        {
+            return ContainsLink(fromPort, toPort) && Links.Remove(toPort);
+        }
+
+        public bool ContainsLink((int, int) toPort)
+        {
+            return Links.ContainsKey(toPort);
+        }
+
+        public bool ContainsLink((int, int) fromPort, (int, int) toPort)
+        {
+            return ContainsLink(toPort) && Equals(Links[toPort], fromPort);
         }
     }
 }

@@ -10,6 +10,15 @@ namespace Core
         public static TimeSystem _ { get; private set; }
         private void Awake() => _ = this;
 
+        // Local variables
+        public int maxFps;
+
+        // Init functions
+        protected override void OnStart()
+        {
+            Application.targetFrameRate = maxFps;
+        }
+
         // System functions
         public void Pause()
         {

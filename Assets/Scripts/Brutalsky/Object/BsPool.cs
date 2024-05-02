@@ -1,5 +1,4 @@
 using Brutalsky.Base;
-using Brutalsky.Logic;
 using Controllers;
 using Controllers.Base;
 using Core;
@@ -14,7 +13,7 @@ namespace Brutalsky.Object
     public class BsPool : BsObject
     {
         public override GameObject Prefab => ResourceSystem._.pPool;
-        public override char Tag => Tags.PoolSym;
+        public override string Tag => Tags.Pool;
 
         public Vector2 Size { get; set; }
         public PoolChemical Chemical { get; set; }

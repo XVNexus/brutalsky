@@ -14,7 +14,7 @@ namespace Brutalsky.Base
     {
         public List<BsAddon> Addons { get; } = new();
         public abstract GameObject Prefab { get; }
-        public abstract char Tag { get; }
+        public abstract string Tag { get; }
         public string Id { get => _id; set => _id = MapSystem.CleanId(value); }
         private string _id;
         public ObjectTransform Transform { get; set; }
@@ -45,6 +45,27 @@ namespace Brutalsky.Base
             return null;
         }
 
+        public List<BsNode> RegisterLogic()
+        {
+            var result = new List<BsNode>();
+            var objNode = _RegisterLogic();
+            if (objNode != null)
+            {
+                objNode.Tag = Tag;
+                result.Add(objNode);
+            }
+            foreach (var addon in Addons)
+            {
+                var addonNode = addon.RegisterLogic();
+                if (addonNode != null)
+                {
+                    addonNode.Tag = addon.Tag;
+                    result.Add(addonNode);
+                }
+            }
+            return result;
+        }
+
         protected abstract string[] _ToLcs();
 
         protected abstract void _FromLcs(string[] properties);
@@ -58,19 +79,14 @@ namespace Brutalsky.Base
             {
                 addon.Activate(InstanceObject, this, map);
             }
-            var logicNode = _RegisterLogic();
-            if (logicNode != null)
-            {
-                map.Matrix.AddNode(logicNode);
-            }
         }
 
-        public void Deactivate()
+        public void Deactivate(BsMap map)
         {
             UnityEngine.Object.Destroy(InstanceObject);
             foreach (var addon in Addons)
             {
-                addon.Deactivate();
+                addon.Deactivate(map);
             }
             InstanceObject = null;
             InstanceController = null;
@@ -94,7 +110,7 @@ namespace Brutalsky.Base
             _FromLcs(line.Properties);
             foreach (var child in line.Children)
             {
-                var addon = ResourceSystem._.GetTemplateAddon(LcsParser.ParseChar(child.Header[0]));
+                var addon = ResourceSystem._.GetTemplateAddon(LcsParser.ParseString(child.Header[0]));
                 addon.FromLcs(child);
                 Addons.Add(addon);
             }

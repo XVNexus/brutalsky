@@ -29,6 +29,8 @@ namespace Core
         protected override void OnStart()
         {
             _cCamera = Camera.main;
+
+            InvokeRepeating(nameof(RareUpdate), 1f, 1f);
         }
 
         // System functions
@@ -52,7 +54,30 @@ namespace Core
         }
 
         // Event functions
-        private void Update()
+        private void FixedUpdate()
+        {
+            // Convert shake to shove
+            _shakeTimer += Time.fixedDeltaTime;
+            if (_shakeTimer >= shakeInterval)
+            {
+                Shove(ResourceSystem.Random.NextFloat2Direction() * _shake);
+                _shake -= _shake * simSpeed * 2f * Time.fixedDeltaTime;
+                _shakeTimer -= shakeInterval;
+            }
+
+            // Simulate camera spring mount
+            var velocityFromSpring = _velocity + -_offset * (simSpeed * Time.fixedDeltaTime);
+            var velocityFromDampening = -_offset;
+            _velocity = MathfExt.Lerp(velocityFromSpring, velocityFromDampening, dampening);
+            _offset += _velocity * (simSpeed * Time.fixedDeltaTime);
+
+            // Apply shove offset
+            var cameraTransform = _cCamera.transform;
+            var scaledOffset = _offset * _offsetMultiplier;
+            cameraTransform.position = new Vector3(scaledOffset.x, scaledOffset.y, cameraTransform.position.z);
+        }
+
+        private void RareUpdate()
         {
             // Configure the viewport to fit the screen
             if (!Mathf.Approximately(_cCamera.aspect, _lastCameraAspect))
@@ -60,27 +85,6 @@ namespace Core
                 ResizeView(viewSize);
                 _lastCameraAspect = _cCamera.aspect;
             }
-
-            // Simulate camera spring mount
-            var velocityFromSpring = _velocity + -_offset * (simSpeed * Time.deltaTime);
-            var velocityFromDampening = -_offset;
-            _velocity = MathfExt.Lerp(velocityFromSpring, velocityFromDampening, dampening);
-            _offset += _velocity * (simSpeed * Time.deltaTime);
-
-            // Apply shake offset
-            var cameraTransform = _cCamera.transform;
-            var scaledOffset = _offset * _offsetMultiplier;
-            cameraTransform.position = new Vector3(scaledOffset.x, scaledOffset.y, cameraTransform.position.z);
-        }
-
-        private void FixedUpdate()
-        {
-            // Convert shake to shove
-            _shakeTimer += Time.fixedDeltaTime;
-            if (_shakeTimer < shakeInterval) return;
-            Shove(ResourceSystem.Random.NextFloat2Direction() * _shake);
-            _shake -= _shake * simSpeed * 2f * Time.fixedDeltaTime;
-            _shakeTimer -= shakeInterval;
         }
     }
 }

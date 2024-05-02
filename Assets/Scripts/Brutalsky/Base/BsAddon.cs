@@ -9,7 +9,7 @@ namespace Brutalsky.Base
 {
     public abstract class BsAddon
     {
-        public abstract char Tag { get; }
+        public abstract string Tag { get; }
         public string Id { get => _id; set => _id = MapSystem.CleanId(value); }
         private string _id;
         public ObjectTransform Transform { get; set; }
@@ -30,7 +30,7 @@ namespace Brutalsky.Base
         protected abstract Component _Init(GameObject gameObject, BsObject parentObject, BsMap map);
 
         [CanBeNull]
-        protected virtual BsNode RegisterLogic()
+        public virtual BsNode RegisterLogic()
         {
             return null;
         }
@@ -43,14 +43,9 @@ namespace Brutalsky.Base
         {
             InstanceComponent = _Init(gameObject, parentObject, map);
             Active = true;
-            var logicNode = RegisterLogic();
-            if (logicNode != null)
-            {
-                map.Matrix.AddNode(logicNode);
-            }
         }
 
-        public void Deactivate()
+        public void Deactivate(BsMap map)
         {
             InstanceComponent = null;
             Active = false;

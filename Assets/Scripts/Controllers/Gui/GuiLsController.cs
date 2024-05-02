@@ -87,12 +87,12 @@ namespace Controllers.Gui
             // Paint objects
             foreach (var obj in objects.Keys.SelectMany(layer => objects[layer])) switch (obj.Tag)
             {
-                case Tags.ShapeSym:
+                case Tags.Shape:
                     var shape = (BsShape)obj;
                     PaintObjectPreview(painter, shape.Transform, shape.Form.ToFillPoints(shape.Transform.Rotation),
                         shape.Color.Color * map.LightingColor.Tint);
                     break;
-                case Tags.PoolSym:
+                case Tags.Pool:
                     var pool = (BsPool)obj;
                     var rotation = pool.Transform.Rotation;
                     var points = new[]

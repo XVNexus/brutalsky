@@ -116,7 +116,7 @@ namespace Controllers.Player
             OnCollision(other);
 
             // Get collision info
-            if (!other.gameObject.CompareTag(Tags.PlayerTag) || other.relativeVelocity.magnitude < 5f) return;
+            if (!other.gameObject.CompareTag(Tags.Player) || other.relativeVelocity.magnitude < 5f) return;
             var impactSpeed = _lastSpeed * other.DirectnessFactor();
 
             // Reduce velocity based on collision force
@@ -132,7 +132,7 @@ namespace Controllers.Player
         private void OnCollision(Collision2D other)
         {
             // Update ground status
-            if (!other.gameObject.CompareTag(Tags.ShapeTag) && !other.gameObject.CompareTag(Tags.PlayerTag)) return;
+            if (!other.gameObject.CompareTag(Tags.Shape) && !other.gameObject.CompareTag(Tags.Player)) return;
             if (!TestOnGround(other.GetContact(0).point, _lastPosition)) return;
             _onGroundFrames = MaxOnGroundFrames;
             onGround = true;

@@ -42,12 +42,12 @@ namespace Controllers.Player
         private void OnCollisionEnter2D(Collision2D other)
         {
             // Get collision info
-            if (other.gameObject.CompareTag(Tags.PlayerTag)) return;
+            if (other.gameObject.CompareTag(Tags.Player)) return;
             var impactForce = other.TotalNormalImpulse();
             var impactDirection = ((Vector2)transform.position - other.contacts[0].point).normalized;
 
             // Apply camera shake
-            var shakeForce = Mathf.Min(PlayerHealthController.CalculateDamage(impactForce) * .15f, 15f);
+            var shakeForce = Mathf.Min(PlayerHealthController.CalculateDamage(impactForce) * .05f, 5f);
             CameraSystem._.Shove(shakeForce * impactDirection);
         }
 
@@ -64,12 +64,12 @@ namespace Controllers.Player
             var deltaHealth = health - _lastHealth;
             if (deltaHealth < 0f)
             {
-                var shakeForce = Mathf.Min(-deltaHealth * .15f, 15f);
+                var shakeForce = Mathf.Min(-deltaHealth * .05f, 5f);
                 CameraSystem._.Shake(shakeForce);
             }
             if (health == 0f && _lastHealth > 0f)
             {
-                CameraSystem._.Shake(10f);
+                CameraSystem._.Shake(5f);
             }
             _lastHealth = health;
         }

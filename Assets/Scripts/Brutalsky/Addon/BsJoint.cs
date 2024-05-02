@@ -12,7 +12,7 @@ namespace Brutalsky.Addon
 {
     public class BsJoint : BsAddon
     {
-        public override char Tag => Tags.JointSym;
+        public override string Tag => Tags.Joint;
 
         public JointType JointType { get; private set; }
         public string MountShape { get; set; }
@@ -162,7 +162,7 @@ namespace Brutalsky.Addon
             // Set up connected rigidbody
             if (MountShape.Length > 0)
             {
-                var mountShape = map.GetObject<BsShape>(Tags.ShapeSym, MountShape);
+                var mountShape = map.GetObject<BsShape>(Tags.Shape, MountShape);
                 if (mountShape.InstanceObject == null)
                 {
                     throw Errors.JointMountShapeUnbuilt(this);
@@ -174,7 +174,7 @@ namespace Brutalsky.Addon
             return component;
         }
 
-        protected override BsNode RegisterLogic()
+        public override BsNode RegisterLogic()
         {
             return JointType switch
             {
@@ -191,7 +191,8 @@ namespace Brutalsky.Addon
         private BsNode RegisterLogicFixed()
         {
             var fixedJoint = (FixedJoint2D)InstanceComponent;
-            return new BsNode(Id,
+            return new BsNode
+            (
                 new[]
                 {
                     BsMatrix.Bool2Logic(SelfCollision), BreakForce, BreakTorque, DampingRatio, DampingFrequency
@@ -216,13 +217,14 @@ namespace Brutalsky.Addon
         private BsNode RegisterLogicDistance()
         {
             var distanceJoint = (DistanceJoint2D)InstanceComponent;
-            return new BsNode(Id,
+            return new BsNode
+            (
                 new[]
                 {
                     BsMatrix.Bool2Logic(SelfCollision), BreakForce, BreakTorque, DistanceValue,
                     BsMatrix.Bool2Logic(DistanceAuto), BsMatrix.Bool2Logic(DistanceMax)
                 },
-                new float[5],
+                new float[6],
                 inputs =>
                 {
                     distanceJoint.enableCollision = BsMatrix.Logic2Bool(inputs[0]);
@@ -245,13 +247,14 @@ namespace Brutalsky.Addon
         private BsNode RegisterLogicSpring()
         {
             var springJoint = (SpringJoint2D)InstanceComponent;
-            return new BsNode(Id,
+            return new BsNode
+            (
                 new[]
                 {
                     BsMatrix.Bool2Logic(SelfCollision), BreakForce, BreakTorque, DistanceValue,
                     BsMatrix.Bool2Logic(DistanceAuto), DampingRatio, DampingFrequency
                 },
-                new float[5],
+                new float[7],
                 inputs =>
                 {
                     springJoint.enableCollision = BsMatrix.Logic2Bool(inputs[0]);
@@ -275,28 +278,35 @@ namespace Brutalsky.Addon
         private BsNode RegisterLogicHinge()
         {
             var hingeJoint = (HingeJoint2D)InstanceComponent;
-            return new BsNode(Id,
+            return new BsNode
+            (
                 new[]
                 {
                     BsMatrix.Bool2Logic(SelfCollision), BreakForce, BreakTorque, BsMatrix.Bool2Logic(MotorEnabled),
                     MotorSpeed, MotorForce, BsMatrix.Bool2Logic(LimitEnabled), LimitMin, LimitMax
                 },
-                new float[5],
+                new float[9],
                 inputs =>
                 {
                     hingeJoint.enableCollision = BsMatrix.Logic2Bool(inputs[0]);
                     hingeJoint.breakForce = inputs[1];
                     hingeJoint.breakTorque = inputs[2];
                     hingeJoint.useMotor = BsMatrix.Logic2Bool(inputs[3]);
-                    var motor = hingeJoint.motor;
-                    motor.motorSpeed = inputs[4];
-                    motor.maxMotorTorque = inputs[5];
-                    hingeJoint.motor = motor;
+                    if (hingeJoint.useMotor)
+                    {
+                        var motor = hingeJoint.motor;
+                        motor.motorSpeed = inputs[4];
+                        motor.maxMotorTorque = inputs[5];
+                        hingeJoint.motor = motor;
+                    }
                     hingeJoint.useLimits = BsMatrix.Logic2Bool(inputs[6]);
-                    var limits = hingeJoint.limits;
-                    limits.min = inputs[7];
-                    limits.max = inputs[8];
-                    hingeJoint.limits = limits;
+                    if (hingeJoint.useLimits)
+                    {
+                        var limits = hingeJoint.limits;
+                        limits.min = inputs[7];
+                        limits.max = inputs[8];
+                        hingeJoint.limits = limits;
+                    }
                     return new[]
                     {
                         BsMatrix.Bool2Logic(hingeJoint.enableCollision), hingeJoint.breakForce, hingeJoint.breakTorque,
@@ -311,14 +321,15 @@ namespace Brutalsky.Addon
         private BsNode RegisterLogicSlider()
         {
             var sliderJoint = (SliderJoint2D)InstanceComponent;
-            return new BsNode(Id,
+            return new BsNode
+            (
                 new[]
                 {
                     BsMatrix.Bool2Logic(SelfCollision), BreakForce, BreakTorque, AngleValue,
                     BsMatrix.Bool2Logic(AngleAuto), BsMatrix.Bool2Logic(MotorEnabled), MotorSpeed, MotorForce,
                     BsMatrix.Bool2Logic(LimitEnabled), LimitMin, LimitMax
                 },
-                new float[5],
+                new float[11],
                 inputs =>
                 {
                     sliderJoint.enableCollision = BsMatrix.Logic2Bool(inputs[0]);
@@ -327,15 +338,21 @@ namespace Brutalsky.Addon
                     sliderJoint.angle = inputs[3];
                     sliderJoint.autoConfigureAngle = BsMatrix.Logic2Bool(inputs[4]);
                     sliderJoint.useMotor = BsMatrix.Logic2Bool(inputs[5]);
-                    var motor = sliderJoint.motor;
-                    motor.motorSpeed = inputs[6];
-                    motor.maxMotorTorque = inputs[7];
-                    sliderJoint.motor = motor;
+                    if (sliderJoint.useMotor)
+                    {
+                        var motor = sliderJoint.motor;
+                        motor.motorSpeed = inputs[6];
+                        motor.maxMotorTorque = inputs[7];
+                        sliderJoint.motor = motor;
+                    }
                     sliderJoint.useLimits = BsMatrix.Logic2Bool(inputs[8]);
-                    var limits = sliderJoint.limits;
-                    limits.min = inputs[9];
-                    limits.max = inputs[10];
-                    sliderJoint.limits = limits;
+                    if (sliderJoint.useLimits)
+                    {
+                        var limits = sliderJoint.limits;
+                        limits.min = inputs[9];
+                        limits.max = inputs[10];
+                        sliderJoint.limits = limits;
+                    }
                     return new[]
                     {
                         BsMatrix.Bool2Logic(sliderJoint.enableCollision), sliderJoint.breakForce,
@@ -351,13 +368,14 @@ namespace Brutalsky.Addon
         private BsNode RegisterLogicWheel()
         {
             var wheelJoint = (WheelJoint2D)InstanceComponent;
-            return new BsNode(Id,
+            return new BsNode
+            (
                 new[]
                 {
                     BsMatrix.Bool2Logic(SelfCollision), BreakForce, BreakTorque, DampingRatio, DampingFrequency,
                     AngleValue, BsMatrix.Bool2Logic(MotorEnabled), MotorSpeed, MotorForce
                 },
-                new float[5],
+                new float[9],
                 inputs =>
                 {
                     wheelJoint.enableCollision = BsMatrix.Logic2Bool(inputs[0]);
@@ -369,10 +387,13 @@ namespace Brutalsky.Addon
                     suspension.angle = inputs[5];
                     wheelJoint.suspension = suspension;
                     wheelJoint.useMotor = BsMatrix.Logic2Bool(inputs[6]);
-                    var motor = wheelJoint.motor;
-                    motor.motorSpeed = inputs[7];
-                    motor.maxMotorTorque = inputs[8];
-                    wheelJoint.motor = motor;
+                    if (wheelJoint.useMotor)
+                    {
+                        var motor = wheelJoint.motor;
+                        motor.motorSpeed = inputs[7];
+                        motor.maxMotorTorque = inputs[8];
+                        wheelJoint.motor = motor;
+                    }
                     return new[]
                     {
                         BsMatrix.Bool2Logic(wheelJoint.enableCollision), wheelJoint.breakForce, wheelJoint.breakTorque,

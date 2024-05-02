@@ -1,19 +1,28 @@
 using System.Collections.Generic;
-using System.Linq;
-using JetBrains.Annotations;
 using UnityEngine;
+using Utils.Constants;
 
 namespace Brutalsky.Logic
 {
     public class BsMatrix
     {
-        public Dictionary<string, BsNode> Nodes { get; } = new();
-        public Dictionary<(string, int), (string, int)> Links { get; } = new();
-        private Dictionary<(string, int), float> _buffer = new();
+        public List<BsNode> Nodes { get; }
+        public Dictionary<(int, int), (int, int)> Links { get; }
+        private Dictionary<(int, int), float> _buffer = new();
+
+        public BsMatrix(List<BsNode> nodes, Dictionary<(int, int), (int, int)> links)
+        {
+            Nodes = nodes;
+            Links = links;
+            foreach (var toPort in Links.Keys)
+            {
+                _buffer[toPort] = float.NaN;
+            }
+        }
 
         public void Update()
         {
-            foreach (var node in Nodes.Values)
+            foreach (var node in Nodes)
             {
                 node.Update();
             }
@@ -27,110 +36,58 @@ namespace Brutalsky.Logic
             }
         }
 
-        public float GetPort((string, int) port)
+        public float GetPort((int, int) port)
         {
             return GetPort(port.Item1, port.Item2);
         }
 
-        public float GetPort(string id, int index)
+        public float GetPort(int id, int index)
         {
-            return ContainsOutputPort(id, index) ? Nodes[id].Outputs[index] : float.NaN;
+            ValidateOutputPort(id, index);
+            return Nodes[id].Outputs[index];
         }
 
-        public bool SetPort((string, int) port, float value)
+        public void SetPort((int, int) port, float value)
         {
-            return SetPort(port.Item1, port.Item2, value);
+            SetPort(port.Item1, port.Item2, value);
         }
 
-        public bool SetPort(string id, int index, float value)
+        public void SetPort(int id, int index, float value)
         {
-            if (!ContainsInputPort(id, index)) return false;
+            ValidateInputPort(id, index);
             Nodes[id].Inputs[index] = value;
-            return true;
         }
 
-        public bool ContainsInputPort(string id, int index)
+        public bool ContainsInputPort(int id, int index)
         {
             return ContainsNode(id) && index >= 0 && index < Nodes[id].Inputs.Length;
         }
 
-        public bool ContainsOutputPort(string id, int index)
+        public bool ContainsOutputPort(int id, int index)
         {
             return ContainsNode(id) && index >= 0 && index < Nodes[id].Outputs.Length;
         }
 
-        [CanBeNull]
-        public BsNode GetNode(string id)
+        public void ValidateInputPort(int id, int index)
         {
-            return ContainsNode(id) ? Nodes[id] : null;
+            if (!ContainsNode(id)) throw Errors.NoNodeFound(id);
+            if (!ContainsInputPort(id, index)) throw Errors.NoPortFound("input", id, index);
         }
 
-        public bool AddNode(BsNode node)
+        public void ValidateOutputPort(int id, int index)
         {
-            if (ContainsNode(node)) return false;
-            Nodes[node.Id] = node;
-            return true;
+            if (!ContainsNode(id)) throw Errors.NoNodeFound(id);
+            if (!ContainsOutputPort(id, index)) throw Errors.NoPortFound("output", id, index);
         }
 
-        public bool RemoveNode(BsNode node)
+        public bool ContainsNode(int id)
         {
-            return RemoveNode(node.Id);
+            return id >= 0 && id < Nodes.Count;
         }
 
-        public bool RemoveNode(string id)
-        {
-            return Nodes.Remove(id);
-        }
-
-        public bool ContainsNode(BsNode node)
-        {
-            return ContainsNode(node.Id);
-        }
-
-        public bool ContainsNode(string id)
-        {
-            return Nodes.ContainsKey(id);
-        }
-
-        public (string, int) GetLink((string, int) toPort)
-        {
-            return ContainsLink(toPort) ? Links[toPort] : ("", -1);
-        }
-
-        public bool AddLink((string, int) fromPort, (string, int) toPort)
-        {
-            if (ContainsLink(toPort)) return false;
-            Links[toPort] = fromPort;
-            _buffer[toPort] = float.NaN;
-            return true;
-        }
-
-        public bool RemoveLink((string, int) toPort)
-        {
-            if (!ContainsLink(toPort)) return false;
-            Links.Remove(toPort);
-            _buffer.Remove(toPort);
-            return true;
-        }
-
-        public bool RemoveLink((string, int) fromPort, (string, int) toPort)
-        {
-            return ContainsLink(fromPort, toPort) && Links.Remove(toPort);
-        }
-
-        public bool ContainsLink((string, int) toPort)
+        public bool ContainsLink((int, int) toPort)
         {
             return Links.ContainsKey(toPort);
-        }
-
-        public bool ContainsLink((string, int) fromPort, (string, int) toPort)
-        {
-            return ContainsLink(toPort) && Equals(Links[toPort], fromPort);
-        }
-
-        public void ClearLinks()
-        {
-            Links.Clear();
         }
 
         public static float Bool2Logic(bool value)
@@ -141,16 +98,6 @@ namespace Brutalsky.Logic
         public static bool Logic2Bool(float logic)
         {
             return logic >= .5f;
-        }
-
-        public static float Int2Logic(int value)
-        {
-            return value;
-        }
-
-        public static int Logic2Int(float logic)
-        {
-            return Mathf.RoundToInt(logic);
         }
     }
 }
