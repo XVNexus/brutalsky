@@ -7,45 +7,21 @@ namespace Brutalsky.Logic
     {
         public string Id { get => _id; set => _id = MapSystem.CleanId(value); }
         private string _id;
-        public BsPort[] Inputs { get; private set; }
-        public BsPort[] Outputs { get; private set; }
-        private Func<BsPort[], float[]> _update;
+        public float[] Inputs { get; set; }
+        public float[] Outputs { get; private set; }
+        private Func<float[], float[]> _update;
 
-        public BsNode(string id, int inputCount, int outputCount, Func<BsPort[], float[]> update)
+        public BsNode(string id, float[] inputs, float[] outputs, Func<float[], float[]> update)
         {
             Id = id;
-            Inputs = new BsPort[inputCount];
-            for (var i = 0; i < inputCount; i++)
-            {
-                Inputs[i] = new BsPort(id, $"i{i}", false);
-            }
-            Outputs = new BsPort[outputCount];
-            for (var i = 0; i < outputCount; i++)
-            {
-                Outputs[i] = new BsPort(id, $"o{i}", false);
-            }
+            Inputs = inputs;
+            Outputs = outputs;
             _update = update;
-        }
-
-        public void RegisterLogic(BsMatrix matrix)
-        {
-            foreach (var port in Inputs)
-            {
-                matrix.AddPort(port);
-            }
-            foreach (var port in Outputs)
-            {
-                matrix.AddPort(port);
-            }
         }
 
         public void Update()
         {
-            var values = _update(Inputs);
-            for (var i = 0; i < values.Length; i++)
-            {
-                Outputs[i].Value = values[i];
-            }
+            Outputs = _update(Inputs);
         }
     }
 }

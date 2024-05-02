@@ -39,8 +39,10 @@ namespace Brutalsky.Base
 
         protected abstract BsBehavior _Init(GameObject gameObject, BsMap map);
 
-        protected virtual void _RegisterLogic(BsMatrix matrix)
+        [CanBeNull]
+        protected virtual BsNode _RegisterLogic()
         {
+            return null;
         }
 
         protected abstract string[] _ToLcs();
@@ -56,7 +58,11 @@ namespace Brutalsky.Base
             {
                 addon.Activate(InstanceObject, this, map);
             }
-            _RegisterLogic(map.Matrix);
+            var logicNode = _RegisterLogic();
+            if (logicNode != null)
+            {
+                map.Matrix.AddNode(logicNode);
+            }
         }
 
         public void Deactivate()

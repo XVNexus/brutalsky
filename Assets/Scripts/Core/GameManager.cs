@@ -1,3 +1,4 @@
+using System;
 using Brutalsky;
 using Brutalsky.Addon;
 using Brutalsky.Logic;
@@ -62,11 +63,16 @@ namespace Core
                 false,
                 float.PositiveInfinity,
                 float.PositiveInfinity
-            )
-            .HingeJoint(true, 10f, 10000f, false, 0f, 0f)));
-            map.Matrix.AddNode(new BsNode("testing", 1, 1, inputs => new[] { -inputs[0].Value }));
-            map.Matrix.AddLink("spinner-motor.motor-force", "testing.i0");
-            map.Matrix.AddLink("testing.o0", "spinner-motor.motor-speed");
+            ).HingeJoint(
+                true,
+                100f,
+                10000f,
+                false,
+                0f,
+                0f
+            )));
+            // map.Matrix.AddNode(new BsNode("testing", Array.Empty<float>(), new float[1], _ => new[] { Time.timeSinceLevelLoad * 10f }));
+            // map.Matrix.AddLink(("testing", 0), ("spinner-motor", 4));
             MapSystem._.BuildMap(map);
             MapSystem._.RegisterPlayers(new[]
             {

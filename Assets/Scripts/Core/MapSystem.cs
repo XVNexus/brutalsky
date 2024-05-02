@@ -175,7 +175,6 @@ namespace Core
             EventSystem._.EmitMapBuild(map);
 
             // Start the logic system
-            ActiveMap.Matrix.Init();
             InvokeRepeating(nameof(UpdateLogic), 0f, LogicInterval);
         }
 
@@ -190,10 +189,8 @@ namespace Core
                 DeleteObject(obj);
             }
             ActiveMap.ResetSpawns();
-            ActiveMap.Matrix.Reset();
 
             // Stop the logic system
-            ActiveMap.Matrix.Reset();
             CancelInvoke();
 
             // Note map as inactive
