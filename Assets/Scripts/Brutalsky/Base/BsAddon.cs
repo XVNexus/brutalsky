@@ -1,5 +1,4 @@
-using System.Collections.Generic;
-using Brutalsky.Map;
+using Brutalsky.Logic;
 using Core;
 using JetBrains.Annotations;
 using UnityEngine;
@@ -17,7 +16,6 @@ namespace Brutalsky.Base
 
         [CanBeNull] public Component InstanceComponent { get; private set; }
         public bool Active { get; private set; }
-        public Dictionary<string, BsProp> Props { get; private set; }
 
         protected BsAddon(string id, ObjectTransform transform)
         {
@@ -31,13 +29,25 @@ namespace Brutalsky.Base
 
         protected abstract Component _Init(GameObject gameObject, BsObject parentObject, BsMap map);
 
+        protected virtual void _RegisterLogic(BsMatrix matrix)
+        {
+        }
+
         protected abstract string[] _ToLcs();
 
         protected abstract void _FromLcs(string[] properties);
 
-        public Component Init(GameObject gameObject, BsObject parentObject, BsMap map)
+        public void Activate(GameObject gameObject, BsObject parentObject, BsMap map)
         {
-            return _Init(gameObject, parentObject, map);
+            InstanceComponent = _Init(gameObject, parentObject, map);
+            Active = true;
+            _RegisterLogic(map.Matrix);
+        }
+
+        public void Deactivate()
+        {
+            InstanceComponent = null;
+            Active = false;
         }
 
         public LcsLine ToLcs()
@@ -54,18 +64,6 @@ namespace Brutalsky.Base
         {
             Id = LcsParser.ParseString(line.Header[1]);
             _FromLcs(line.Properties);
-        }
-
-        public void Activate(Component instanceComponent)
-        {
-            InstanceComponent = instanceComponent;
-            Active = true;
-        }
-
-        public void Deactivate()
-        {
-            InstanceComponent = null;
-            Active = false;
         }
     }
 }

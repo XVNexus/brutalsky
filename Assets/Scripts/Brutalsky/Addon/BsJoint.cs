@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Brutalsky.Base;
+using Brutalsky.Logic;
 using Brutalsky.Object;
 using UnityEngine;
 using Utils.Constants;
@@ -171,6 +172,234 @@ namespace Brutalsky.Addon
             }
 
             return component;
+        }
+
+        protected override void _RegisterLogic(BsMatrix matrix)
+        {
+            var joint = (AnchoredJoint2D)InstanceComponent;
+            matrix.AddPort(new BsPort(Id, "enable-collision",
+                () => BsMatrix.Bool2Logic(joint.enableCollision),
+                value => joint.enableCollision = BsMatrix.Logic2Bool(value)
+            ));
+            matrix.AddPort(new BsPort(Id, "break-force",
+                () => joint.breakForce,
+                value => joint.breakForce = value
+            ));
+            matrix.AddPort(new BsPort(Id, "break-torque",
+                () => joint.breakTorque,
+                value => joint.breakTorque = value
+            ));
+
+            switch (JointType)
+            {
+                case JointType.Fixed:
+                    var fixedJoint = (FixedJoint2D)joint;
+                    matrix.AddPort(new BsPort(Id, "damping-ratio",
+                        () => fixedJoint.dampingRatio,
+                        value => fixedJoint.dampingRatio = value
+                    ));
+                    matrix.AddPort(new BsPort(Id, "damping-frequency",
+                        () => fixedJoint.frequency,
+                        value => fixedJoint.frequency = value
+                    ));
+                    break;
+
+                case JointType.Distance:
+                    var distanceJoint = (DistanceJoint2D)joint;
+                    matrix.AddPort(new BsPort(Id, "distance-value",
+                        () => distanceJoint.distance,
+                        value => distanceJoint.distance = value
+                    ));
+                    matrix.AddPort(new BsPort(Id, "distance-auto",
+                        () => BsMatrix.Bool2Logic(distanceJoint.autoConfigureDistance),
+                        value => distanceJoint.autoConfigureDistance = BsMatrix.Logic2Bool(value)
+                    ));
+                    matrix.AddPort(new BsPort(Id, "distance-max",
+                        () => BsMatrix.Bool2Logic(distanceJoint.maxDistanceOnly),
+                        value => distanceJoint.maxDistanceOnly = BsMatrix.Logic2Bool(value)
+                    ));
+                    break;
+
+                case JointType.Spring:
+                    var springJoint = (SpringJoint2D)joint;
+                    matrix.AddPort(new BsPort(Id, "distance-value",
+                        () => springJoint.distance,
+                        value => springJoint.distance = value
+                    ));
+                    matrix.AddPort(new BsPort(Id, "distance-auto",
+                        () => BsMatrix.Bool2Logic(springJoint.autoConfigureDistance),
+                        value => springJoint.autoConfigureDistance = BsMatrix.Logic2Bool(value)
+                    ));
+                    matrix.AddPort(new BsPort(Id, "damping-ratio",
+                        () => springJoint.dampingRatio,
+                        value => springJoint.dampingRatio = value
+                    ));
+                    matrix.AddPort(new BsPort(Id, "damping-frequency",
+                        () => springJoint.frequency,
+                        value => springJoint.frequency = value
+                    ));
+                    break;
+
+                case JointType.Hinge:
+                    var hingeJoint = (HingeJoint2D)joint;
+                    matrix.AddPort(new BsPort(Id, "motor-enabled",
+                        () => BsMatrix.Bool2Logic(hingeJoint.useMotor),
+                        value => hingeJoint.useMotor = BsMatrix.Logic2Bool(value)
+                    ));
+                    matrix.AddPort(new BsPort(Id, "motor-speed",
+                        () => hingeJoint.motor.motorSpeed,
+                        value =>
+                        {
+                            var motor = hingeJoint.motor;
+                            motor.motorSpeed = value;
+                            hingeJoint.motor = motor;
+                        }
+                    ));
+                    matrix.AddPort(new BsPort(Id, "motor-force",
+                        () => hingeJoint.motor.maxMotorTorque,
+                        value =>
+                        {
+                            var motor = hingeJoint.motor;
+                            motor.maxMotorTorque = value;
+                            hingeJoint.motor = motor;
+                        }
+                    ));
+                    matrix.AddPort(new BsPort(Id, "limit-enabled",
+                        () => BsMatrix.Bool2Logic(hingeJoint.useLimits),
+                        value => hingeJoint.useLimits = BsMatrix.Logic2Bool(value)
+                    ));
+                    matrix.AddPort(new BsPort(Id, "limit-min",
+                        () => hingeJoint.limits.min,
+                        value =>
+                        {
+                            var limits = hingeJoint.limits;
+                            limits.min = value;
+                            hingeJoint.limits = limits;
+                        }
+                    ));
+                    matrix.AddPort(new BsPort(Id, "limit-max",
+                        () => hingeJoint.limits.max,
+                        value =>
+                        {
+                            var limits = hingeJoint.limits;
+                            limits.max = value;
+                            hingeJoint.limits = limits;
+                        }
+                    ));
+                    break;
+
+                case JointType.Slider:
+                    var sliderJoint = (SliderJoint2D)joint;
+                    matrix.AddPort(new BsPort(Id, "angle-value",
+                        () => sliderJoint.angle,
+                        value => sliderJoint.angle = value
+                    ));
+                    matrix.AddPort(new BsPort(Id, "angle-auto",
+                        () => BsMatrix.Bool2Logic(sliderJoint.autoConfigureAngle),
+                        value => sliderJoint.autoConfigureAngle = BsMatrix.Logic2Bool(value)
+                    ));
+                    matrix.AddPort(new BsPort(Id, "motor-enabled",
+                        () => BsMatrix.Bool2Logic(sliderJoint.useMotor),
+                        value => sliderJoint.useMotor = BsMatrix.Logic2Bool(value)
+                    ));
+                    matrix.AddPort(new BsPort(Id, "motor-speed",
+                        () => sliderJoint.motor.motorSpeed,
+                        value =>
+                        {
+                            var motor = sliderJoint.motor;
+                            motor.motorSpeed = value;
+                            sliderJoint.motor = motor;
+                        }
+                    ));
+                    matrix.AddPort(new BsPort(Id, "motor-force",
+                        () => sliderJoint.motor.maxMotorTorque,
+                        value =>
+                        {
+                            var motor = sliderJoint.motor;
+                            motor.maxMotorTorque = value;
+                            sliderJoint.motor = motor;
+                        }
+                    ));
+                    matrix.AddPort(new BsPort(Id, "limit-enabled",
+                        () => BsMatrix.Bool2Logic(sliderJoint.useLimits),
+                        value => sliderJoint.useLimits = BsMatrix.Logic2Bool(value)
+                    ));
+                    matrix.AddPort(new BsPort(Id, "limit-min",
+                        () => sliderJoint.limits.min,
+                        value =>
+                        {
+                            var limits = sliderJoint.limits;
+                            limits.min = value;
+                            sliderJoint.limits = limits;
+                        }
+                    ));
+                    matrix.AddPort(new BsPort(Id, "limit-max",
+                        () => sliderJoint.limits.max,
+                        value =>
+                        {
+                            var limits = sliderJoint.limits;
+                            limits.max = value;
+                            sliderJoint.limits = limits;
+                        }
+                    ));
+                    break;
+
+                case JointType.Wheel:
+                    var wheelJoint = (WheelJoint2D)joint;
+                    matrix.AddPort(new BsPort(Id, "damping-ratio",
+                        () => wheelJoint.suspension.dampingRatio,
+                        value =>
+                        {
+                            var suspension = wheelJoint.suspension;
+                            suspension.dampingRatio = value;
+                            wheelJoint.suspension = suspension;
+                        }
+                    ));
+                    matrix.AddPort(new BsPort(Id, "damping-frequency",
+                        () => wheelJoint.suspension.frequency,
+                        value =>
+                        {
+                            var suspension = wheelJoint.suspension;
+                            suspension.frequency = value;
+                            wheelJoint.suspension = suspension;
+                        }
+                    ));
+                    matrix.AddPort(new BsPort(Id, "angle-value",
+                        () => wheelJoint.suspension.angle,
+                        value =>
+                        {
+                            var suspension = wheelJoint.suspension;
+                            suspension.angle = value;
+                            wheelJoint.suspension = suspension;
+                        }
+                    ));
+                    matrix.AddPort(new BsPort(Id, "motor-enabled",
+                        () => BsMatrix.Bool2Logic(wheelJoint.useMotor),
+                        value => wheelJoint.useMotor = BsMatrix.Logic2Bool(value)
+                    ));
+                    matrix.AddPort(new BsPort(Id, "motor-speed",
+                        () => wheelJoint.motor.motorSpeed,
+                        value =>
+                        {
+                            var motor = wheelJoint.motor;
+                            motor.motorSpeed = value;
+                            wheelJoint.motor = motor;
+                        }
+                    ));
+                    matrix.AddPort(new BsPort(Id, "motor-force",
+                        () => wheelJoint.motor.maxMotorTorque,
+                        value =>
+                        {
+                            var motor = wheelJoint.motor;
+                            motor.maxMotorTorque = value;
+                            wheelJoint.motor = motor;
+                        }
+                    ));
+                    break;
+
+                default:
+                    throw Errors.InvalidJointType(JointType);
+            }
         }
 
         protected override string[] _ToLcs()

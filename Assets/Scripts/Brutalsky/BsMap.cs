@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Brutalsky.Base;
+using Brutalsky.Logic;
 using Brutalsky.Map;
 using Core;
 using UnityEngine;
@@ -23,6 +24,7 @@ namespace Brutalsky
         public float PlayerHealth { get; set; }
         public List<BsSpawn> Spawns { get; } = new();
         public Dictionary<string, BsObject> Objects { get; } = new();
+        public BsMatrix Matrix { get; } = new();
 
         public BsMap(string title = "Untitled Map", string author = "Anonymous Marble")
         {

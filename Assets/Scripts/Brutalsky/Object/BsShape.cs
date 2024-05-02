@@ -1,5 +1,6 @@
 using System.Linq;
 using Brutalsky.Base;
+using Brutalsky.Logic;
 using Controllers;
 using Controllers.Base;
 using Core;
@@ -30,6 +31,12 @@ namespace Brutalsky.Object
 
         public BsShape()
         {
+        }
+
+        public BsShape AttachAddon(BsAddon addon)
+        {
+            Addons.Add(addon);
+            return this;
         }
 
         protected override BsBehavior _Init(GameObject gameObject, BsMap map)

@@ -22,7 +22,7 @@ namespace Core
         private void Awake() => _ = this;
 
         // Local constants
-        public const float LogicInterval = .1f;
+        public const float LogicInterval = .5f;
         public const string SaveFormat = "txt";
         public const float BackgroundFade = 10f;
         public const float BackgroundField = 1000f;
@@ -92,7 +92,7 @@ namespace Core
 
         public void BuildMap([CanBeNull] BsMap map = null)
         {
-            // If the map parameter is null, rebuild the current map
+            // If the map parameter is null, build the current map
             if (map == null)
             {
                 map = ActiveMap ?? throw Errors.BuildNullMap();
@@ -167,7 +167,7 @@ namespace Core
             cLight2D.intensity = map.LightingColor.Alpha;
             Physics2D.gravity = Gravity2Vector(map.GravityDirection, map.GravityStrength);
 
-            // Instantiate the map container and create all objects
+            // Create all objects
             foreach (var obj in map.Objects.Values)
             {
                 CreateObject(obj);
@@ -175,6 +175,7 @@ namespace Core
             EventSystem._.EmitMapBuild(map);
 
             // Start the logic system
+            ActiveMap.Matrix.Init();
             InvokeRepeating(nameof(UpdateLogic), 0f, LogicInterval);
         }
 
@@ -189,14 +190,16 @@ namespace Core
                 DeleteObject(obj);
             }
             ActiveMap.ResetSpawns();
+            ActiveMap.Matrix.Reset();
+
+            // Stop the logic system
+            ActiveMap.Matrix.Reset();
+            CancelInvoke();
 
             // Note map as inactive
             EventSystem._.EmitMapUnbuild(ActiveMap);
             ActiveMap = null;
             MapLoaded = false;
-
-            // Stop the logic system
-            CancelInvoke();
         }
 
         public void CreateObject(BsObject obj)
@@ -233,7 +236,7 @@ namespace Core
         // Event functions
         private void UpdateLogic()
         {
-            // TODO: ADD LOGIC
+            ActiveMap.Matrix.Update();
         }
 
         // Utility functions
@@ -296,7 +299,7 @@ namespace Core
 
         public static string CleanId(string id)
         {
-            return Regex.Replace(id.Replace(' ', '-').ToLower(), "[^a-z0-9-]|-(?=-)", "");
+            return Regex.Replace(id.Replace(' ', '-').ToLower(), "[^a-z0-9-.]|-(?=-)", "");
         }
 
         public static uint GenerateId(string title, string author)

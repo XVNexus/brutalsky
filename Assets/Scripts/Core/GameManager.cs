@@ -1,4 +1,6 @@
 using Brutalsky;
+using Brutalsky.Addon;
+using Brutalsky.Logic;
 using Brutalsky.Map;
 using Brutalsky.Object;
 using Controllers.Base;
@@ -22,12 +24,64 @@ namespace Core
         // Init functions
         protected override void OnLoad()
         {
-            StartGame(new[] { "Brutalsky", "Doomring" },
-                MapSystem.GenerateId("Brutalsky", "Xveon"), new[]
-                {
-                    new BsPlayer("Player 1", 100f, new ObjectColor(1f, .5f, 0f)),
-                    new BsPlayer("Player 2", 100f, new ObjectColor(0f, .5f, 1f), true)
-                });
+            var map = new BsMap("Testing", "Dev")
+            {
+                PlayArea = new Vector2(40f, 20f),
+                BackgroundColor = new ObjectColor(.3f, .3f, .3f),
+                LightingColor = new ObjectColor(1f, 1f, 1f, .8f),
+                GravityDirection = Direction.Down,
+                GravityStrength = 20f,
+                PlayerHealth = 100f
+            };
+            map.AddSpawn(new BsSpawn(new Vector2(0f, -8.5f)));
+            map.AddObject(new BsShape
+            (
+                "floor",
+                new ObjectTransform(0f, -9.5f),
+                ObjectLayer.Midground,
+                true,
+                Form.Rectangle(20f, 1f),
+                ShapeMaterial.Stone(),
+                ObjectColor.Stone()
+            ));
+            map.AddObject(new BsShape
+            (
+                "spinner",
+                new ObjectTransform(0f, 0f),
+                ObjectLayer.Midground,
+                true,
+                Form.Star(6, 5f, 3f),
+                ShapeMaterial.Metal(true),
+                ObjectColor.Metal()
+            )
+            .AttachAddon(new BsJoint
+            (
+                "spinner-motor",
+                new ObjectTransform(),
+                "",
+                false,
+                float.PositiveInfinity,
+                float.PositiveInfinity
+            )
+            .HingeJoint(true, 10f, 10000f, false, 0f, 0f)));
+            map.Matrix.AddNode(new BsNode("testing", 1, 1, inputs => new[] { -inputs[0].Value }));
+            map.Matrix.AddLink("spinner-motor.motor-force", "testing.i0");
+            map.Matrix.AddLink("testing.o0", "spinner-motor.motor-speed");
+            MapSystem._.BuildMap(map);
+            MapSystem._.RegisterPlayers(new[]
+            {
+                new BsPlayer("Player 1", 100f, new ObjectColor(1f, .5f, 0f)),
+                new BsPlayer("Player 2", 100f, new ObjectColor(0f, .5f, 1f), true)
+            });
+            MapSystem._.SpawnAllPlayers();
+
+            /*
+            StartGame(new[] { "Brutalsky", "Doomring" }, MapSystem.GenerateId("Brutalsky", "Xveon"), new[]
+            {
+                new BsPlayer("Player 1", 100f, new ObjectColor(1f, .5f, 0f)),
+                new BsPlayer("Player 2", 100f, new ObjectColor(0f, .5f, 1f), true)
+            });
+            */
         }
 
         // System functions

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using Brutalsky.Map;
+using Brutalsky.Logic;
 using Controllers.Base;
 using Core;
 using JetBrains.Annotations;
@@ -24,7 +24,6 @@ namespace Brutalsky.Base
         [CanBeNull] public GameObject InstanceObject { get; private set; }
         [CanBeNull] public BsBehavior InstanceController { get; private set; }
         public bool Active { get; private set; }
-        public Dictionary<string, BsProp> Props { get; private set; }
 
         protected BsObject(string id, ObjectTransform transform, ObjectLayer layer, bool simulated)
         {
@@ -40,6 +39,10 @@ namespace Brutalsky.Base
 
         protected abstract BsBehavior _Init(GameObject gameObject, BsMap map);
 
+        protected virtual void _RegisterLogic(BsMatrix matrix)
+        {
+        }
+
         protected abstract string[] _ToLcs();
 
         protected abstract void _FromLcs(string[] properties);
@@ -51,9 +54,9 @@ namespace Brutalsky.Base
             Active = true;
             foreach (var addon in Addons)
             {
-                var instanceComponent = addon.Init(InstanceObject, this, map);
-                addon.Activate(instanceComponent);
+                addon.Activate(InstanceObject, this, map);
             }
+            _RegisterLogic(map.Matrix);
         }
 
         public void Deactivate()
