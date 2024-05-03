@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Brutalsky.Base;
@@ -193,8 +194,10 @@ namespace Brutalsky
             };
             lines.AddRange(Spawns.Select(spawn => spawn.ToLcs()));
             lines.AddRange(Objects.Values.Select(obj => obj.ToLcs()));
-            lines.AddRange(Nodes.Select(node => node.ToLcs()));
-            lines.AddRange(Links.Values.Select(link => link.ToLcs()));
+            lines.Add(new LcsLine('%', Array.Empty<string>(),
+                Nodes.Select(node => LcsParser.CompressFields(node.ToLcs())).ToArray()));
+            lines.Add(new LcsLine('^', Array.Empty<string>(),
+                Links.Values.Select(link => LcsParser.CompressFields(link.ToLcs())).ToArray()));
             return new LcsDocument(1, lines, new[] { "!$#%^", "@" });
         }
 
@@ -230,10 +233,18 @@ namespace Brutalsky
                         result. AddObject(BsObject.FromLcs(line));
                         break;
                     case '%':
-                        result.AddNode(BsNode.FromLcs(line));
+                        var nodeStrings = line.Properties;
+                        foreach (var nodeString in nodeStrings)
+                        {
+                            result.AddNode(BsNode.FromLcs(LcsParser.ExpandFields(nodeString)));
+                        }
                         break;
                     case '^':
-                        result.AddLink(BsLink.FromLcs(line));
+                        var linkStrings = line.Properties;
+                        foreach (var linkString in linkStrings)
+                        {
+                            result.AddLink(BsLink.FromLcs(LcsParser.ExpandFields(linkString)));
+                        }
                         break;
                     default:
                         throw Errors.InvalidLcsLine(line, $"Unrecognized line prefix: '{line.Prefix}'");
