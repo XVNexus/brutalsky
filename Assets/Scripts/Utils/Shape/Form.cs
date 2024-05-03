@@ -132,7 +132,7 @@ namespace Utils.Shape
         public static Form Star(int points, float outerDiameter, float innerDiameter)
         {
             var args = new float[points * 4];
-            var scales = new[] { outerDiameter * .5f, innerDiameter * .5f };
+            var scales = new[] { innerDiameter * .5f, outerDiameter * .5f };
             for (var i = 0; i < points * 2; i++)
             {
                 var vertexAngle = (i / (float)(points * 2) * 2f + .5f) * Mathf.PI;
