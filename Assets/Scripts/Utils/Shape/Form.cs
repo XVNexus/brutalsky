@@ -142,7 +142,7 @@ namespace Utils.Shape
             }
             var result = Polygon(args);
             result.Type = FormType.Star;
-            result.Args = new[] { points, innerDiameter, outerDiameter };
+            result.Args = new[] { points, outerDiameter, innerDiameter };
             return result;
         }
 
