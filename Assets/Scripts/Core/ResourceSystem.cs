@@ -37,9 +37,9 @@ namespace Core
         {
             return tag switch
             {
-                Tags.Player => new BsPlayer(),
-                Tags.Shape => new BsShape(),
-                Tags.Pool => new BsPool(),
+                Tags.PlayerLTag => new BsPlayer(),
+                Tags.ShapeLTag => new BsShape(),
+                Tags.PoolLTag => new BsPool(),
                 _ => throw Errors.InvalidTag("object", tag)
             };
         }
@@ -48,7 +48,7 @@ namespace Core
         {
             return tag switch
             {
-                Tags.Joint => new BsJoint(),
+                Tags.JointLTag => new BsJoint(),
                 _ => throw Errors.InvalidTag("addon", tag)
             };
         }

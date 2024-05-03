@@ -10,7 +10,7 @@ namespace Controllers
         // Event functions
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (!other.CompareTag(Tags.Player)) return;
+            if (!other.CompareTag(Tags.PlayerGTag)) return;
 
             // Kill any players that enter the void
             var mHealth = other.GetComponent<PlayerController>().GetSub<PlayerHealthController>("health");

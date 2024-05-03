@@ -23,7 +23,7 @@ namespace Controllers.Shape
         // Event functions
         private void OnCollisionExit2D(Collision2D other)
         {
-            if (!other.gameObject.CompareTag(Tags.Player)) return;
+            if (!other.gameObject.CompareTag(Tags.PlayerGTag)) return;
 
             // Allow players to unstick from low to moderate adhesion
             var playerRigidbody = other.rigidbody;
@@ -38,8 +38,8 @@ namespace Controllers.Shape
             // Get collision info
             var otherRigidbody = other.rigidbody;
             var thisDynamic = Master.Object.Material.Dynamic;
-            var otherDynamic = other.gameObject.CompareTag(Tags.Player)
-                || (other.gameObject.CompareTag(Tags.Shape)
+            var otherDynamic = other.gameObject.CompareTag(Tags.PlayerGTag)
+                || (other.gameObject.CompareTag(Tags.ShapeGTag)
                     && other.gameObject.GetComponent<ShapeController>().Object.Material.Dynamic);
 
             // Apply adhesion force

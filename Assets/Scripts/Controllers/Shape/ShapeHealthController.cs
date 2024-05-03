@@ -18,7 +18,7 @@ namespace Controllers.Shape
             if (!IsInitialized) return;
 
             // Apply health to player
-            if (!other.gameObject.CompareTag(Tags.Player)) return;
+            if (!other.gameObject.CompareTag(Tags.PlayerGTag)) return;
             var health = Master.Object.Material.Health;
             var playerController = other.gameObject.GetComponent<PlayerController>();
             if (health > 0f)

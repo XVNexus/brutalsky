@@ -13,7 +13,7 @@ namespace Brutalsky.Object
     public class BsPool : BsObject
     {
         public override GameObject Prefab => ResourceSystem._.pPool;
-        public override string Tag => Tags.Pool;
+        public override string Tag => Tags.PoolLTag;
 
         public Vector2 Size { get; set; }
         public PoolChemical Chemical { get; set; }

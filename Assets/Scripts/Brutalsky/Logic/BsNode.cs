@@ -145,10 +145,10 @@ namespace Brutalsky.Logic
                 });
         }
 
-        // Timing nodes
+        // Flow nodes
         public static BsNode Timer()
         {
-            return new BsNode("ttmr", Array.Empty<float>(), new float[1],
+            return new BsNode("ftmr", Array.Empty<float>(), new float[1],
                 () => new[] { Time.timeSinceLevelLoad }, (_, state) =>
                 {
                     return new[] { Time.timeSinceLevelLoad - state[0] };
@@ -157,7 +157,7 @@ namespace Brutalsky.Logic
 
         public static BsNode Clock(int interval)
         {
-            return new BsNode("tclk", Array.Empty<float>(), new float[1],
+            return new BsNode("fclk", Array.Empty<float>(), new float[1],
                 () => new float[2], (_, state) =>
                 {
                     var counter = BsMatrix.ToInt(state[0]);
@@ -174,7 +174,7 @@ namespace Brutalsky.Logic
 
         public static BsNode Onchanged()
         {
-            return new BsNode("toch", new float[1], new float[1],
+            return new BsNode("foch", new float[1], new float[1],
                 () => new float[1], (inputs, state) =>
                 {
                     if (Mathf.Approximately(inputs[0], state[0])) return new[] { 0f };
@@ -183,7 +183,6 @@ namespace Brutalsky.Logic
                 });
         }
 
-        // Flow nodes
         public static BsNode Mux(int inputCount)
         {
             return new BsNode("fmux", new float[inputCount + 1], new float[1], (inputs, _) =>
@@ -403,11 +402,10 @@ namespace Brutalsky.Logic
                 "brin" => Randint(BsMatrix.ToInt(config[0]), BsMatrix.ToInt(config[1])),
                 "brfl" => Randfloat(config[0], config[1]),
                 "bmem" => Mem(),
-                // Timing nodes
-                "ttmr" => Timer(),
-                "tclk" => Clock(BsMatrix.ToInt(config[0])),
-                "toch" => Onchanged(),
                 // Flow nodes
+                "ftmr" => Timer(),
+                "fclk" => Clock(BsMatrix.ToInt(config[0])),
+                "foch" => Onchanged(),
                 "fmux" => Mux(BsMatrix.ToInt(config[0])),
                 "fdmx" => Demux(BsMatrix.ToInt(config[0])),
                 // Logic nodes

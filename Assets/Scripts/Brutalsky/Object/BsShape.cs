@@ -14,7 +14,7 @@ namespace Brutalsky.Object
     public class BsShape : BsObject
     {
         public override GameObject Prefab => ResourceSystem._.pShape;
-        public override string Tag => Tags.Shape;
+        public override string Tag => Tags.ShapeLTag;
 
         public Form Form { get; set; }
         public ShapeMaterial Material { get; set; }

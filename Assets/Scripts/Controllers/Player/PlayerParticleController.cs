@@ -142,14 +142,14 @@ namespace Controllers.Player
         private void OnCollisionEnter2D(Collision2D other)
         {
             DisplayImpactParticles(other.TotalNormalImpulse());
-            if (!other.gameObject.CompareTag(Tags.Shape) || other.DirectnessFactor() < .5f) return;
+            if (!other.gameObject.CompareTag(Tags.ShapeGTag) || other.DirectnessFactor() < .5f) return;
             DisplayTouchParticles(MathfExt.Atan2(
                 other.GetContact(0).point - (Vector2)transform.position) * Mathf.Rad2Deg);
         }
 
         private void OnCollisionStay2D(Collision2D other)
         {
-            if (!other.gameObject.CompareTag(Tags.Shape) || other.relativeVelocity.magnitude < 3f) return;
+            if (!other.gameObject.CompareTag(Tags.ShapeGTag) || other.relativeVelocity.magnitude < 3f) return;
             DisplaySlideParticles(MathfExt.Atan2(
                 other.GetContact(0).point - (Vector2)transform.position) * Mathf.Rad2Deg);
         }

@@ -12,7 +12,7 @@ namespace Brutalsky.Addon
 {
     public class BsJoint : BsAddon
     {
-        public override string Tag => Tags.Joint;
+        public override string Tag => Tags.JointLTag;
 
         public JointType JointType { get; private set; }
         public string MountShape { get; set; }
@@ -162,7 +162,7 @@ namespace Brutalsky.Addon
             // Set up connected rigidbody
             if (MountShape.Length > 0)
             {
-                var mountShape = map.GetObject<BsShape>(Tags.Shape, MountShape);
+                var mountShape = map.GetObject<BsShape>(Tags.ShapeLTag, MountShape);
                 if (mountShape.InstanceObject == null)
                 {
                     throw Errors.JointMountShapeUnbuilt(this);
