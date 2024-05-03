@@ -130,7 +130,7 @@ namespace Brutalsky.Logic
             return new BsNode("brfl", new[] { min, max }, new float[1],
                 (inputs, _) =>
                 {
-                    return new[] { Random.Range(min, max) };
+                    return new[] { Random.Range(inputs[0], inputs[1]) };
                 }, min, max);
         }
 
@@ -234,8 +234,7 @@ namespace Brutalsky.Logic
 
         public static BsNode And(int inputCount)
         {
-            return new BsNode("land", new float[inputCount], new float[1],
-                () => new[] { BsMatrix.ToLogic(inputCount) }, (inputs, _) =>
+            return new BsNode("land", new float[inputCount], new float[1], (inputs, _) =>
             {
                 return new[] { BsMatrix.ToLogic(inputs.Aggregate(true, (current, input) => current & BsMatrix.ToBool(input))) };
             }, inputCount);
@@ -243,8 +242,7 @@ namespace Brutalsky.Logic
 
         public static BsNode Or(int inputCount)
         {
-            return new BsNode("lgor", new float[inputCount], new float[1],
-                () => new[] { BsMatrix.ToLogic(inputCount) }, (inputs, _) =>
+            return new BsNode("lgor", new float[inputCount], new float[1], (inputs, _) =>
             {
                 return new[] { BsMatrix.ToLogic(inputs.Aggregate(false, (current, input) => current | BsMatrix.ToBool(input))) };
             },inputCount);
@@ -252,8 +250,7 @@ namespace Brutalsky.Logic
 
         public static BsNode Xor(int inputCount)
         {
-            return new BsNode("lxor", new float[inputCount], new float[1],
-                () => new[] { BsMatrix.ToLogic(inputCount) }, (inputs, _) =>
+            return new BsNode("lxor", new float[inputCount], new float[1], (inputs, _) =>
             {
                 return new[] { BsMatrix.ToLogic(inputs.Aggregate(false, (current, input) => current ^ BsMatrix.ToBool(input))) };
             }, inputCount);
@@ -261,8 +258,7 @@ namespace Brutalsky.Logic
 
         public static BsNode Nand(int inputCount)
         {
-            return new BsNode("lnan", new float[inputCount], new float[1],
-                () => new[] { BsMatrix.ToLogic(inputCount) }, (inputs, _) =>
+            return new BsNode("lnan", new float[inputCount], new float[1], (inputs, _) =>
             {
                 return new[] { BsMatrix.ToLogic(!inputs.Aggregate(true, (current, input) => current & BsMatrix.ToBool(input))) };
             }, inputCount);
@@ -270,8 +266,7 @@ namespace Brutalsky.Logic
 
         public static BsNode Nor(int inputCount)
         {
-            return new BsNode("lnor", new float[inputCount], new float[1],
-                () => new[] { BsMatrix.ToLogic(inputCount) }, (inputs, _) =>
+            return new BsNode("lnor", new float[inputCount], new float[1], (inputs, _) =>
             {
                 return new[] { BsMatrix.ToLogic(!inputs.Aggregate(false, (current, input) => current | BsMatrix.ToBool(input))) };
             }, inputCount);
@@ -279,8 +274,7 @@ namespace Brutalsky.Logic
 
         public static BsNode Xnor(int inputCount)
         {
-            return new BsNode("lxnr", new float[inputCount], new float[1],
-                () => new[] { BsMatrix.ToLogic(inputCount) }, (inputs, _) =>
+            return new BsNode("lxnr", new float[inputCount], new float[1], (inputs, _) =>
             {
                 return new[] { BsMatrix.ToLogic(!inputs.Aggregate(false, (current, input) => current ^ BsMatrix.ToBool(input))) };
             }, inputCount);
@@ -289,8 +283,7 @@ namespace Brutalsky.Logic
         // Math nodes
         public static BsNode Add(int inputCount)
         {
-            return new BsNode("madd", new float[inputCount], new float[1],
-                () => new[] { BsMatrix.ToLogic(inputCount) }, (inputs, _) =>
+            return new BsNode("madd", new float[inputCount], new float[1], (inputs, _) =>
             {
                 return new[] { inputs.Sum() };
             }, inputCount);
@@ -298,8 +291,7 @@ namespace Brutalsky.Logic
 
         public static BsNode Subtract(int inputCount)
         {
-            return new BsNode("msub", new float[inputCount], new float[1],
-                () => new[] { BsMatrix.ToLogic(inputCount) }, (inputs, _) =>
+            return new BsNode("msub", new float[inputCount], new float[1], (inputs, _) =>
             {
                 return new[] { inputs.Aggregate(0f, (current, input) => current - input) };
             }, inputCount);
@@ -307,8 +299,7 @@ namespace Brutalsky.Logic
 
         public static BsNode Multiply(int inputCount)
         {
-            return new BsNode("mmul", new float[inputCount], new float[1],
-                () => new[] { BsMatrix.ToLogic(inputCount) }, (inputs, _) =>
+            return new BsNode("mmul", new float[inputCount], new float[1], (inputs, _) =>
             {
                 return new[] { inputs.Aggregate(1f, (current, input) => current * input) };
             }, inputCount);
@@ -316,8 +307,7 @@ namespace Brutalsky.Logic
 
         public static BsNode Divide(int inputCount)
         {
-            return new BsNode("mdiv", new float[inputCount], new float[1],
-                () => new[] { BsMatrix.ToLogic(inputCount) }, (inputs, _) =>
+            return new BsNode("mdiv", new float[inputCount], new float[1], (inputs, _) =>
             {
                 return new[] { inputs.Aggregate(1f, (current, input) => current / input) };
             }, inputCount);
