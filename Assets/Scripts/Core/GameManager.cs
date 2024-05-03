@@ -21,7 +21,7 @@ namespace Core
         // Init functions
         protected override void OnLoad()
         {
-            // GenerateDefaultMaps();
+            GenerateDefaultMaps();
             StartGame(new[] { "Brutalsky", "Doomring", "Fidget" }, MapSystem.GenerateId("Fidget", "Xveon"), new[]
             {
                 new BsPlayer("Player 1", 100f, new ObjectColor(1f, .5f, 0f)),

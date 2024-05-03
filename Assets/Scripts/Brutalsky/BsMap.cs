@@ -194,10 +194,16 @@ namespace Brutalsky
             };
             lines.AddRange(Spawns.Select(spawn => spawn.ToLcs()));
             lines.AddRange(Objects.Values.Select(obj => obj.ToLcs()));
-            lines.Add(new LcsLine('%', Array.Empty<string>(),
-                Nodes.Select(node => LcsParser.CompressFields(node.ToLcs())).ToArray()));
-            lines.Add(new LcsLine('^', Array.Empty<string>(),
-                Links.Values.Select(link => LcsParser.CompressFields(link.ToLcs())).ToArray()));
+            if (Nodes.Count > 0)
+            {
+                lines.Add(new LcsLine('%', Array.Empty<string>(),
+                    Nodes.Select(node => LcsParser.CompressFields(node.ToLcs())).ToArray()));
+            }
+            if (Links.Count > 0)
+            {
+                lines.Add(new LcsLine('^', Array.Empty<string>(),
+                    Links.Values.Select(link => LcsParser.CompressFields(link.ToLcs())).ToArray()));
+            }
             return new LcsDocument(1, lines, new[] { "!$#%^", "@" });
         }
 
