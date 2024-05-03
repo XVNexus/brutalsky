@@ -19,6 +19,7 @@ namespace Controllers.Player
         public const float BoostThreshold = 30f;
         public const float BoostCap = 1000f;
         public const float ParticleMultiplier = 3f;
+        public const float DeathParticleClamp = 2.5f;
 
         // Local variables
         private float _lastSpeed;
@@ -117,7 +118,7 @@ namespace Controllers.Player
         {
             if (!MapSystem._.MapLoaded) return;
             cDeathParticleSystem.gameObject.SetActive(true);
-            var mapBounds = MapSystem._.ActiveMap.PlayArea * .5f + Vector2.one;
+            var mapBounds = MapSystem._.ActiveMap.PlayArea * .5f + Vector2.one * DeathParticleClamp;
             cDeathParticleSystem.transform.position = new Vector2
             (
                 Mathf.Clamp(transform.position.x, -mapBounds.x, mapBounds.x),

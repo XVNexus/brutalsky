@@ -1,7 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using UnityEditor.UIElements;
 using UnityEngine;
 using Utils.Constants;
 using Utils.Joint;
@@ -21,7 +21,7 @@ namespace Utils.Lcs
         // Basic types
         public static string Stringify(bool value)
         {
-            return value ? "1" : "";
+            return value ? "1" : "0";
         }
 
         public static bool ParseBool(string raw)
@@ -31,19 +31,18 @@ namespace Utils.Lcs
 
         public static string Stringify(int value)
         {
-            return value != 0 ? value.ToString() : "";
+            return value.ToString();
         }
 
         public static int ParseInt(string raw)
         {
-            return raw.Length > 0 ? int.Parse(raw) : 0;
+            return int.Parse(raw);
         }
 
         public static string Stringify(float value)
         {
             return value switch
             {
-                0f => "",
                 float.NegativeInfinity => "-.",
                 float.PositiveInfinity => ".",
                 _ => value.ToString()
@@ -54,7 +53,6 @@ namespace Utils.Lcs
         {
             return raw switch
             {
-                "" => 0f,
                 "-." => float.NegativeInfinity,
                 "." => float.PositiveInfinity,
                 _ => float.Parse(raw)
@@ -86,8 +84,7 @@ namespace Utils.Lcs
                 {HeaderSeparator, 'h'},
                 {' ', 's'},
                 {'\t', 't'},
-                {'\n', 'n'},
-                {'#', 'g'}
+                {'\n', 'n'}
             };
             result = specialChars.Keys.Aggregate(result, (current, specialChar)
                 => current.Replace($"{specialChar}", $@"\{specialChars[specialChar]}"));
@@ -108,8 +105,7 @@ namespace Utils.Lcs
                 {'h', HeaderSeparator},
                 {'s', ' '},
                 {'t', '\t'},
-                {'n', '\n'},
-                {'g', '#'}
+                {'n', '\n'}
             };
             result = specialChars.Keys.Aggregate(result, (current, specialChar)
                 => current.Replace($@"\{specialChar}", $"{specialChars[specialChar]}"));
@@ -147,15 +143,14 @@ namespace Utils.Lcs
 
         public static string Stringify(ObjectColor color)
         {
-            return (color.Alpha < 1f ? ColorUtility.ToHtmlStringRGBA(color.Color)
-                : ColorUtility.ToHtmlStringRGB(color.Color)) + Stringify(color.Glow);
+            return ColorUtility.ToHtmlStringRGBA(color.Color) + Stringify(color.Glow);
         }
 
         public static ObjectColor ParseColor(string raw)
         {
-            var hexString = raw[..^(raw.Length % 2)];
-            ColorUtility.TryParseHtmlString('#' + raw[..^(raw.Length % 2)], out var tint);
-            var glow = ParseBool(raw[hexString.Length..]);
+            var hexString = raw[..8];
+            ColorUtility.TryParseHtmlString('#' + hexString, out var tint);
+            var glow = ParseBool(raw[7..8]);
             return new ObjectColor(tint, glow);
         }
 
@@ -187,15 +182,13 @@ namespace Utils.Lcs
 
         public static string Stringify(Form form)
         {
-            return Stringify((int)form.FormType) + (' ' + form.FormString).Replace(" 0", " ")
-                .Replace(' ', FieldSeperator);
+            return Stringify((int)form.FormType) + (' ' + form.FormString).Replace(' ', FieldSeperator);
         }
 
         public static Form ParseForm(string raw)
         {
-            raw = Regex.Replace(' ' + raw.Replace(FieldSeperator, ' '), " (?= |$)", " 0")[1..];
             var type = (FormType)ParseInt(raw[..1]);
-            var parts = raw[2..].Split(' ').Select(part => float.Parse(part)).ToArray();
+            var parts = raw[2..].Split(FieldSeperator).Select(part => float.Parse(part)).ToArray();
             return type switch
             {
                 FormType.Vector => Form.Vector(parts),
@@ -278,13 +271,12 @@ namespace Utils.Lcs
         public static string CompressList(string[] items, char separator)
         {
             return items.Length > 0
-                ? items.Aggregate("", (current, property) => current + $"{separator}{property}")[1..]
-                : "";
+                ? items.Aggregate("", (current, property) => current + $"{separator}{property}")[1..] : "";
         }
 
         public static string[] ExpandList(string items, char separator)
         {
-            return items.Split(separator);
+            return items.Length > 0 ? items.Split(separator) : Array.Empty<string>();
         }
 
         public static string CompressProperties(string[] items)

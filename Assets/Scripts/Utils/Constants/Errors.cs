@@ -11,14 +11,17 @@ namespace Utils.Constants
         public static InvalidDataException EmptyLcsDocument()
             => new("Cannot parse an empty LCS document");
 
-        public static InvalidDataException InvalidLcsLine(LcsLine line, int index)
-            => new($"Invalid LCS data on line {index + 1}: '{line}'");
+        public static InvalidDataException InvalidLcsLine(LcsLine line, string message)
+            => new($"Error while parsing LCS line '{line.Stringify().Trim()}': {message}");
 
         public static ArgumentOutOfRangeException InvalidGuiElementType()
             => new("", "Unrecognized GUI element query type");
 
         public static ArgumentNullException BuildNullMap()
             => new("", "Cannot rebuild the map when no map is currently loaded");
+
+        public static ArgumentOutOfRangeException NoObjectFound(string tag, string id)
+            => new("", $"No {tag} object found with id '{id}'");
 
         public static InvalidOperationException PortCountMismatch(int updateResultCount, int outputPortCount)
             => new($"Cannot apply logic node update of length {updateResultCount} to output ports of length {outputPortCount}");

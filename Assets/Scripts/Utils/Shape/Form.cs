@@ -122,7 +122,7 @@ namespace Utils.Shape
             var scale = diameter * .5f;
             for (var i = 0; i < sides; i++)
             {
-                var vertexAngle = i / (float)sides * 2f * Mathf.PI;
+                var vertexAngle = (i / (float)sides * 2f + .5f) * Mathf.PI;
                 args[i * 2] = Mathf.Cos(vertexAngle) * scale;
                 args[i * 2 + 1] = Mathf.Sin(vertexAngle) * scale;
             }
@@ -138,7 +138,7 @@ namespace Utils.Shape
             var scales = new[] { outerDiameter * .5f, innerDiameter * .5f };
             for (var i = 0; i < points * 2; i++)
             {
-                var vertexAngle = i / (float)(points * 2) * 2f * Mathf.PI;
+                var vertexAngle = (i / (float)(points * 2) * 2f + .5f) * Mathf.PI;
                 var scale = scales[i % 2];
                 args[i * 2] = Mathf.Cos(vertexAngle) * scale;
                 args[i * 2 + 1] = Mathf.Sin(vertexAngle) * scale;

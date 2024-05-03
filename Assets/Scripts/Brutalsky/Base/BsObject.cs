@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Brutalsky.Logic;
@@ -5,6 +6,7 @@ using Controllers.Base;
 using Core;
 using JetBrains.Annotations;
 using UnityEngine;
+using Utils.Constants;
 using Utils.Lcs;
 using Utils.Object;
 
@@ -114,7 +116,14 @@ namespace Brutalsky.Base
         private void ParseLcs(LcsLine line)
         {
             Id = LcsParser.ParseString(line.Header[1]);
-            _FromLcs(line.Properties);
+            try
+            {
+                _FromLcs(line.Properties);
+            }
+            catch (Exception ex)
+            {
+                throw Errors.InvalidLcsLine(line, ex.Message);
+            }
             foreach (var child in line.Children)
             {
                 Addons.Add(BsAddon.FromLcs(child));

@@ -24,7 +24,7 @@ namespace Brutalsky
         public float GravityStrength { get; set; }
         public float PlayerHealth { get; set; }
         public List<BsSpawn> Spawns { get; } = new();
-        public Dictionary<string, BsObject> Objects { get; } = new();
+        public Dictionary<(string, string), BsObject> Objects { get; } = new();
         public List<BsNode> Nodes { get; } = new();
         public Dictionary<(int, int), BsLink> Links { get; } = new();
 
@@ -81,13 +81,13 @@ namespace Brutalsky
 
         public T GetObject<T>(string tag, string id) where T : BsObject
         {
-            return ContainsObject(tag, id) ? (T)Objects[tag + id] : null;
+            return ContainsObject(tag, id) ? (T)Objects[(tag, id)] : throw Errors.NoObjectFound(tag, id);
         }
 
         public bool AddObject(BsObject obj)
         {
             if (ContainsObject(obj)) return false;
-            Objects[obj.Tag + obj.Id] = obj;
+            Objects[(obj.Tag, obj.Id)] = obj;
             return true;
         }
 
@@ -98,7 +98,7 @@ namespace Brutalsky
 
         public bool RemoveObject(string tag, string id)
         {
-            return Objects.Remove(tag + id);
+            return Objects.Remove((tag, id));
         }
 
         public bool ContainsObject(BsObject obj)
@@ -108,7 +108,7 @@ namespace Brutalsky
 
         public bool ContainsObject(string tag, string id)
         {
-            return Objects.ContainsKey(tag + id);
+            return Objects.ContainsKey((tag, id));
         }
 
         [CanBeNull]
@@ -208,7 +208,7 @@ namespace Brutalsky
             var metadataLine = document.Lines[0];
             if (document.Lines[0].Prefix != '!')
             {
-                throw Errors.InvalidLcsLine(metadataLine, 0);
+                throw Errors.InvalidLcsLine(metadataLine, "First line does not contain map metadata");
             }
             result.Title = LcsParser.ParseString(metadataLine.Header[0]);
             result.Author = LcsParser.ParseString(metadataLine.Header[1]);
@@ -236,7 +236,7 @@ namespace Brutalsky
                         result.AddLink(BsLink.FromLcs(line));
                         break;
                     default:
-                        throw Errors.InvalidLcsLine(line, i);
+                        throw Errors.InvalidLcsLine(line, $"Unrecognized line prefix: '{line.Prefix}'");
                 }
             }
             return result;
