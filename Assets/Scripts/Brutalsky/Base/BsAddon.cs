@@ -12,6 +12,7 @@ namespace Brutalsky.Base
     public abstract class BsAddon
     {
         public abstract string Tag { get; }
+        public abstract bool HasLogic { get; }
         public string Id { get => _id; set => _id = MapSystem.CleanId(value); }
         private string _id;
         public ObjectTransform Transform { get; set; }

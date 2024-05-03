@@ -13,19 +13,16 @@ namespace Brutalsky.Logic
             ToPort = toPort;
         }
 
-        public string[] ToLcs()
+        public string ToLcs(int hexWidth)
         {
-            return new[]
-            {
-                LcsParser.Stringify(FromPort.Item1), LcsParser.Stringify(FromPort.Item2),
-                LcsParser.Stringify(ToPort.Item1), LcsParser.Stringify(ToPort.Item2)
-            };
+            return LcsParser.IntToHex(FromPort.Item1, hexWidth) + LcsParser.IntToHex(FromPort.Item2, hexWidth)
+                 + LcsParser.IntToHex(ToPort.Item1, hexWidth) + LcsParser.IntToHex(ToPort.Item2, hexWidth);
         }
 
-        public static BsLink FromLcs(string[] fields)
+        public static BsLink FromLcs(string property, int hexWidth)
         {
-            return new BsLink((LcsParser.ParseInt(fields[0]), LcsParser.ParseInt(fields[1])),
-                (LcsParser.ParseInt(fields[2]), LcsParser.ParseInt(fields[3])));
+            return new BsLink((LcsParser.HexToInt(property[..hexWidth]), LcsParser.HexToInt(property[hexWidth..(hexWidth * 2)])),
+                (LcsParser.HexToInt(property[(hexWidth * 2)..(hexWidth * 3)]), LcsParser.HexToInt(property[(hexWidth * 3)..(hexWidth * 4)])));
         }
     }
 }

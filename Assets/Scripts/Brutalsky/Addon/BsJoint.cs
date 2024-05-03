@@ -13,6 +13,7 @@ namespace Brutalsky.Addon
     public class BsJoint : BsAddon
     {
         public override string Tag => Tags.JointLTag;
+        public override bool HasLogic => true;
 
         public JointType JointType { get; private set; }
         public string MountShape { get; set; }

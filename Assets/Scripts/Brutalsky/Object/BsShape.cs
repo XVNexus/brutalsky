@@ -15,6 +15,7 @@ namespace Brutalsky.Object
     {
         public override GameObject Prefab => ResourceSystem._.pShape;
         public override string Tag => Tags.ShapeLTag;
+        public override bool HasLogic => false;
 
         public Form Form { get; set; }
         public ShapeMaterial Material { get; set; }
@@ -64,7 +65,7 @@ namespace Brutalsky.Object
             var meshRenderer = gameObject.GetComponent<MeshRenderer>();
             meshRenderer.material = Color.Glow ? ResourceSystem._.aUnlitMaterial : ResourceSystem._.aLitMaterial;
             meshRenderer.material.color = Color.Color;
-            meshRenderer.sortingOrder = MapSystem.Layer2Order(Layer);
+            meshRenderer.sortingOrder = MapSystem.LayerToOrder(Layer);
 
             // Apply material
             var rigidbody = gameObject.GetComponent<Rigidbody2D>();

@@ -13,6 +13,7 @@ namespace Brutalsky.Object
     {
         public override GameObject Prefab => ResourceSystem._.pPlayer;
         public override string Tag => Tags.PlayerLTag;
+        public override bool HasLogic => false;
 
         public string Name { get; set; }
         public float Health { get; set; }

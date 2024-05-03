@@ -14,14 +14,15 @@ namespace Brutalsky.Base
 {
     public abstract class BsObject
     {
-        public List<BsAddon> Addons { get; } = new();
         public abstract GameObject Prefab { get; }
         public abstract string Tag { get; }
+        public abstract bool HasLogic { get; }
         public string Id { get => _id; set => _id = MapSystem.CleanId(value); }
         private string _id;
         public ObjectTransform Transform { get; set; }
         public ObjectLayer Layer { get; set; }
         public bool Simulated { get; set; }
+        public List<BsAddon> Addons { get; } = new();
 
         [CanBeNull] public GameObject InstanceObject { get; private set; }
         [CanBeNull] public BsBehavior InstanceController { get; private set; }

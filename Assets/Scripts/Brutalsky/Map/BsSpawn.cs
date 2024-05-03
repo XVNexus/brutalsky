@@ -9,7 +9,7 @@ namespace Brutalsky.Map
         public int Priority { get; set; }
         public int Usages { get; private set; }
 
-        public BsSpawn(Vector2 position, int priority = 0)
+        public BsSpawn(Vector2 position, int priority)
         {
             Position = position;
             Priority = priority;

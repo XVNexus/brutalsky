@@ -1,7 +1,4 @@
-using System;
 using Brutalsky;
-using Brutalsky.Addon;
-using Brutalsky.Logic;
 using Brutalsky.Map;
 using Brutalsky.Object;
 using Controllers.Base;
@@ -22,7 +19,8 @@ namespace Core
         protected override void OnLoad()
         {
             GenerateDefaultMaps();
-            StartGame(new[] { "Brutalsky", "Doomring", "Fidget" }, MapSystem.GenerateId("Fidget", "Xveon"), new[]
+            MapSystem._.ResaveBuiltinMaps(new[] { "Brutalsky", "Doomring", "Fidget" });
+            StartGame(MapSystem.GenerateId("Fidget", "Xveon"), new[]
             {
                 new BsPlayer("Player 1", 100f, new ObjectColor(1f, .5f, 0f)),
                 new BsPlayer("Player 2", 100f, new ObjectColor(0f, .5f, 1f), true)
@@ -30,9 +28,9 @@ namespace Core
         }
 
         // System functions
-        public void StartGame(string[] builtinMapFilenames, uint starterMapId, BsPlayer[] activePlayers)
+        public void StartGame(uint starterMapId, BsPlayer[] activePlayers)
         {
-            MapSystem._.ScanMapFiles(builtinMapFilenames);
+            MapSystem._.ScanMapFiles();
             MapSystem._.RegisterPlayers(activePlayers);
             MapSystem._.BuildMap(starterMapId);
             MapSystem._.SpawnAllPlayers();
@@ -53,36 +51,38 @@ namespace Core
         // TODO: TEMPORARY FUNCTIONS
         private static void GenerateDefaultMaps()
         {
+            var shapes = new[] { 0b1000, 0b1011, 0b1111, 0b1100 };
             var sizes = new[] { 20f, 40f, 80f };
-            var names = new[] { "Small", "Medium", "Large" };
-            for (var i = 0; i < sizes.Length; i++)
+            var shapeNames = new[] { "Platform", "Box", "Cage", "Tunnel" };
+            var sizeNames = new[] { "Small", "Medium", "Large" };
+            for (var i = 0; i < shapes.Length; i++) for (var j = 0; j < sizes.Length; j++)
             {
-                GenerateBoxMap("Platform", sizes[i], names[i], true, false, false, false);
-                GenerateBoxMap("Box", sizes[i], names[i], true, false, true, true);
-                GenerateBoxMap("Cage", sizes[i], names[i], true, true, true, true);
-                GenerateBoxMap("Tunnel", sizes[i], names[i], true, true, false, false);
+                var shape = shapes[i];
+                var size = sizes[j];
+                var title = $"{sizeNames[j]} {shapeNames[i]}";
+                GenerateBoxMap(title, shape, size);
             }
         }
 
-        private static void GenerateBoxMap(string title, float size, string name, bool bottom, bool top, bool left, bool right)
+        private static void GenerateBoxMap(string title, int shape, float size)
         {
-            var baseColor = title switch
-            {
-                "Platform" => new ObjectColor(1f, .1f, .1f),
-                "Box" => new ObjectColor(.1f, 1f, .1f),
-                "Cage" => new ObjectColor(.1f, 1f, 1f),
-                "Tunnel" => new ObjectColor(1f, 1f, .1f),
-                _ => ObjectColor.Ether()
-            };
-            var map = new BsMap($"{name} {title}", "Brutalsky")
+            var bottom = (shape & 0b1000) > 0;
+            var top = (shape & 0b0100) > 0;
+            var left = (shape & 0b0010) > 0;
+            var right = (shape & 0b0001) > 0;
+            var map = new BsMap(title, "Brutalsky")
             {
                 PlayArea = new Vector2(size, size * .5f),
-                BackgroundColor = new ObjectColor(baseColor.Color.r, baseColor.Color.g, baseColor.Color.b, .25f),
-                LightingColor = new ObjectColor(baseColor.Color.r, baseColor.Color.g, baseColor.Color.b, .9f),
+                BackgroundColor = new ObjectColor(.1f, 1f, .1f, .25f),
+                LightingColor = new ObjectColor(.1f, 1f, .1f, .9f),
                 GravityDirection = Direction.Down,
                 GravityStrength = 20f,
                 PlayerHealth = 100f
             };
+            map.AddSpawn(new BsSpawn(new Vector2(-3f, -size * .25f + 1.5f), 0));
+            map.AddSpawn(new BsSpawn(new Vector2(-1f, -size * .25f + 1.5f), 0));
+            map.AddSpawn(new BsSpawn(new Vector2(1f, -size * .25f + 1.5f), 0));
+            map.AddSpawn(new BsSpawn(new Vector2(3f, -size * .25f + 1.5f), 0));
             if (bottom) map.AddObject(new BsShape
             (
                 "wall-bottom",
@@ -163,8 +163,6 @@ namespace Core
                 ShapeMaterial.Stone(),
                 ObjectColor.Ether()
             ));
-            map.AddSpawn(new BsSpawn(new Vector2(-1f, -size * .25f + 1.5f)));
-            map.AddSpawn(new BsSpawn(new Vector2(1f, -size * .25f + 1.5f)));
             MapSystem.SaveMap(map);
         }
     }

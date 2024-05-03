@@ -192,19 +192,25 @@ namespace Brutalsky
                         LcsParser.Stringify(GravityStrength), LcsParser.Stringify(PlayerHealth) }
                 )
             };
+            var logicNodeCount = 0;
             lines.AddRange(Spawns.Select(spawn => spawn.ToLcs()));
-            lines.AddRange(Objects.Values.Select(obj => obj.ToLcs()));
+            foreach (var obj in Objects.Values)
+            {
+                lines.Add(obj.ToLcs());
+                if (obj.HasLogic)
+                {
+                    logicNodeCount++;
+                }
+            }
+            logicNodeCount += Nodes.Count;
             if (Nodes.Count > 0)
             {
-                lines.Add(new LcsLine('%', Array.Empty<string>(),
-                    Nodes.Select(node => LcsParser.CompressFields(node.ToLcs())).ToArray()));
+                var header = Nodes.Select(node => node.ToLcs()).ToArray();
+                var hexWidth = Mathf.CeilToInt(Mathf.Log(logicNodeCount) / Mathf.Log(16f));
+                var properties = Links.Values.Select(link => link.ToLcs(hexWidth)).ToArray();
+                lines.Add(new LcsLine('%', header, properties));
             }
-            if (Links.Count > 0)
-            {
-                lines.Add(new LcsLine('^', Array.Empty<string>(),
-                    Links.Values.Select(link => LcsParser.CompressFields(link.ToLcs())).ToArray()));
-            }
-            return new LcsDocument(1, lines, new[] { "!$#%^", "@" });
+            return new LcsDocument(1, lines, new[] { "!$#%", "@" });
         }
 
         public static BsMap FromLcs(LcsDocument document)
@@ -227,6 +233,7 @@ namespace Brutalsky
             result.GravityDirection = LcsParser.ParseDirection(metadataLine.Properties[3]);
             result.GravityStrength = LcsParser.ParseFloat(metadataLine.Properties[4]);
             result.PlayerHealth = LcsParser.ParseFloat(metadataLine.Properties[5]);
+            var logicNodeCount = 0;
             for (var i = 1; i < document.Lines.Count; i++)
             {
                 var line = document.Lines[i];
@@ -236,20 +243,26 @@ namespace Brutalsky
                         result.AddSpawn(BsSpawn.FromLcs(line));
                         break;
                     case '#':
-                        result. AddObject(BsObject.FromLcs(line));
+                        var obj = BsObject.FromLcs(line);
+                        result.AddObject(obj);
+                        if (obj.HasLogic)
+                        {
+                            logicNodeCount++;
+                        }
+                        logicNodeCount += obj.Addons.Count(addon => addon.HasLogic);
                         break;
                     case '%':
-                        var nodeStrings = line.Properties;
+                        logicNodeCount += line.Header.Length;
+                        var nodeStrings = line.Header;
                         foreach (var nodeString in nodeStrings)
                         {
-                            result.AddNode(BsNode.FromLcs(LcsParser.ExpandFields(nodeString)));
+                            result.AddNode(BsNode.FromLcs(nodeString));
                         }
-                        break;
-                    case '^':
                         var linkStrings = line.Properties;
+                        var hexWidth = Mathf.CeilToInt(Mathf.Log(logicNodeCount) / Mathf.Log(16f));
                         foreach (var linkString in linkStrings)
                         {
-                            result.AddLink(BsLink.FromLcs(LcsParser.ExpandFields(linkString)));
+                            result.AddLink(BsLink.FromLcs(linkString, hexWidth));
                         }
                         break;
                     default:

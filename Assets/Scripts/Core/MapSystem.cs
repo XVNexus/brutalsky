@@ -43,15 +43,19 @@ namespace Core
         public Light2D cLight2D;
 
         // System functions
-        public void ScanMapFiles(string[] builtinMapFilenames)
+        public void ResaveBuiltinMaps(IEnumerable<string> filenames)
+        {
+            foreach (var filename in filenames)
+            {
+                var rawMap = LoadInternalMap(filename);
+                var map = BsMap.Parse(rawMap);
+                SaveMap(map);
+            }
+        }
+
+        public void ScanMapFiles()
         {
             RawMapList.Clear();
-            foreach (var builtinMapFilename in builtinMapFilenames)
-            {
-                var builtinRawMap = LoadInternalMap(builtinMapFilename);
-                var builtinMap = BsMap.Parse(builtinRawMap);
-                RawMapList[builtinMap.Id] = builtinRawMap;
-            }
             var path = $"{ResourceSystem.DataPath}/{Paths.Maps}";
             if (!Directory.Exists(path)) return;
             foreach (var mapPath in Directory.GetFiles(path, $"*.{SaveFormat}"))
@@ -166,7 +170,7 @@ namespace Core
             }
             cLight2D.color = map.LightingColor.Tint;
             cLight2D.intensity = map.LightingColor.Alpha;
-            Physics2D.gravity = Gravity2Vector(map.GravityDirection, map.GravityStrength);
+            Physics2D.gravity = GravityToVector(map.GravityDirection, map.GravityStrength);
 
             // Create all objects
             var logicNodes = new List<BsNode>();
@@ -276,7 +280,7 @@ namespace Core
             writer.Write(raw);
         }
 
-        public static int Layer2Order(ObjectLayer layer)
+        public static int LayerToOrder(ObjectLayer layer)
         {
             return layer switch
             {
@@ -286,7 +290,7 @@ namespace Core
             };
         }
 
-        public static Vector2 Gravity2Vector(Direction direction, float strength)
+        public static Vector2 GravityToVector(Direction direction, float strength)
         {
             return direction switch
             {

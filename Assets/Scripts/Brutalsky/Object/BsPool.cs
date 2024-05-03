@@ -14,6 +14,7 @@ namespace Brutalsky.Object
     {
         public override GameObject Prefab => ResourceSystem._.pPool;
         public override string Tag => Tags.PoolLTag;
+        public override bool HasLogic => false;
 
         public Vector2 Size { get; set; }
         public PoolChemical Chemical { get; set; }
@@ -44,7 +45,7 @@ namespace Brutalsky.Object
             var spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
             spriteRenderer.material = Color.Glow ? ResourceSystem._.aUnlitMaterial : ResourceSystem._.aLitMaterial;
             spriteRenderer.material.color = Color.Color;
-            spriteRenderer.sortingOrder = MapSystem.Layer2Order(Layer);
+            spriteRenderer.sortingOrder = MapSystem.LayerToOrder(Layer);
 
             // Apply chemical
             if (!Simulated)

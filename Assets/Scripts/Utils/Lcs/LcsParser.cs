@@ -1,14 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using UnityEngine;
 using Utils.Constants;
 using Utils.Joint;
 using Utils.Object;
 using Utils.Pool;
 using Utils.Shape;
-using ColorUtility = UnityEngine.ColorUtility;
 
 namespace Utils.Lcs
 {
@@ -41,22 +39,12 @@ namespace Utils.Lcs
 
         public static string Stringify(float value)
         {
-            return value switch
-            {
-                float.NegativeInfinity => "-.",
-                float.PositiveInfinity => ".",
-                _ => value.ToString()
-            };
+            return value.ToString();
         }
 
         public static float ParseFloat(string raw)
         {
-            return raw switch
-            {
-                "-." => float.NegativeInfinity,
-                "." => float.PositiveInfinity,
-                _ => float.Parse(raw)
-            };
+            return float.Parse(raw);
         }
 
         public static string Stringify(char value)
@@ -143,15 +131,14 @@ namespace Utils.Lcs
 
         public static string Stringify(ObjectColor color)
         {
-            return ColorUtility.ToHtmlStringRGBA(color.Color) + Stringify(color.Glow);
+            return Float01ToHex(color.Color.r) + Float01ToHex(color.Color.g) + Float01ToHex(color.Color.b) +
+                Float01ToHex(color.Color.a) + Stringify(color.Glow);
         }
 
         public static ObjectColor ParseColor(string raw)
         {
-            var hexString = raw[..8];
-            ColorUtility.TryParseHtmlString('#' + hexString, out var tint);
-            var glow = ParseBool(raw[7..8]);
-            return new ObjectColor(tint, glow);
+            return new ObjectColor(HexToFloat01(raw[..2]), HexToFloat01(raw[2..4]), HexToFloat01(raw[4..6]),
+                HexToFloat01(raw[6..8]), ParseBool(raw[8..9]));
         }
 
         public static string Stringify(ObjectLayer layer)
@@ -205,7 +192,7 @@ namespace Utils.Lcs
 
         public static string Stringify(ShapeMaterial material)
         {
-            var result = CompressFields(new[]
+            return CompressFields(new[]
             {
                 Stringify(material.Friction),
                 Stringify(material.Restitution),
@@ -214,15 +201,10 @@ namespace Utils.Lcs
                 Stringify(material.Health),
                 Stringify(material.Dynamic)
             });
-            return result.Length > 5 ? result : "";
         }
 
         public static ShapeMaterial ParseMaterial(string raw)
         {
-            if (raw.Length == 0)
-            {
-                return new ShapeMaterial(0f, 0f, 0f, 0f);
-            }
             var parts = ExpandFields(raw);
             var friction = ParseFloat(parts[0]);
             var restitution = ParseFloat(parts[1]);
@@ -235,21 +217,16 @@ namespace Utils.Lcs
 
         public static string Stringify(PoolChemical chemical)
         {
-            var result = CompressFields(new[]
+            return CompressFields(new[]
             {
                 Stringify(chemical.Buoyancy),
                 Stringify(chemical.Viscosity),
                 Stringify(chemical.Health)
             });
-            return result.Length > 2 ? result : "";
         }
 
         public static PoolChemical ParseChemical(string raw)
         {
-            if (raw.Length == 0)
-            {
-                return new PoolChemical(0f, 0f);
-            }
             var parts = ExpandFields(raw);
             var buoyancy = ParseFloat(parts[0]);
             var viscosity = ParseFloat(parts[1]);
@@ -268,6 +245,26 @@ namespace Utils.Lcs
         }
 
         // Utilities
+        public static string IntToHex(int value, int digits)
+        {
+            return value.ToString($"X{digits}");
+        }
+
+        public static int HexToInt(string hex)
+        {
+            return Convert.ToInt32(hex, 16);
+        }
+
+        public static string Float01ToHex(float value)
+        {
+            return IntToHex((int)(value * 255), 2);
+        }
+
+        public static float HexToFloat01(string hex)
+        {
+            return HexToInt(hex) / 255f;
+        }
+
         public static string CompressList(string[] items, char separator)
         {
             return items.Length > 0

@@ -377,7 +377,7 @@ namespace Brutalsky.Logic
             });
         }
 
-        public string[] ToLcs()
+        public string ToLcs()
         {
             var result = new string[Config.Length + 1];
             result[0] = LcsParser.Stringify(Tag);
@@ -385,11 +385,12 @@ namespace Brutalsky.Logic
             {
                 result[i + 1] = LcsParser.Stringify(Config[i]);
             }
-            return result;
+            return LcsParser.CompressFields(result);
         }
 
-        public static BsNode FromLcs(string[] fields)
+        public static BsNode FromLcs(string property)
         {
+            var fields = LcsParser.ExpandFields(property);
             var tag = LcsParser.ParseString(fields[0]);
             var config = new float[fields.Length - 1];
             for (var i = 1; i < fields.Length; i++)
