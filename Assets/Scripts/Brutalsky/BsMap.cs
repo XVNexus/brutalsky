@@ -223,7 +223,7 @@ namespace Brutalsky
             var metadataLine = document.Lines[0];
             if (document.Lines[0].Prefix != '!')
             {
-                throw Errors.InvalidLcsLine(metadataLine, "First line does not contain map metadata");
+                throw Errors.NoLcsMetadataLine(metadataLine);
             }
             result.Title = LcsParser.ParseString(metadataLine.Header[0]);
             result.Author = LcsParser.ParseString(metadataLine.Header[1]);
@@ -266,7 +266,7 @@ namespace Brutalsky
                         }
                         break;
                     default:
-                        throw Errors.InvalidLcsLine(line, $"Unrecognized line prefix: '{line.Prefix}'");
+                        throw Errors.InvalidLcsLinePrefix(line);
                 }
             }
             return result;

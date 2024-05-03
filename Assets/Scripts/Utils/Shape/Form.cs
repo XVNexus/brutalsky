@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using Utils.Ext;
 
@@ -7,9 +6,8 @@ namespace Utils.Shape
 {
     public class Form
     {
-        public FormType FormType { get; private set; }
-        public string FormString { get; private set; } = "";
-
+        public FormType Type { get; private set; }
+        public float[] Args { get; private set; }
         public FormNode StartNode { get; set; }
 
         public Form(Vector2 startPoint, IEnumerable<FormNode> nodes)
@@ -48,8 +46,8 @@ namespace Utils.Shape
             }
             var result = new Form(startPoint, nodes)
             {
-                FormType = FormType.Vector,
-                FormString = args.Aggregate("", (current, arg) => current + $" {arg}")[1..]
+                Type = FormType.Vector,
+                Args = args
             };
             return result;
         }
@@ -64,8 +62,8 @@ namespace Utils.Shape
             }
             var result = new Form(startPoint, nodes)
             {
-                FormType = FormType.Polygon,
-                FormString = args.Aggregate("", (current, arg) => current + $" {arg}")[1..]
+                Type = FormType.Polygon,
+                Args = args
             };
             return result;
         }
@@ -73,8 +71,8 @@ namespace Utils.Shape
         public static Form Square(float diameter)
         {
             var result = Rectangle(diameter, diameter);
-            result.FormType = FormType.Square;
-            result.FormString = $"{diameter}";
+            result.Type = FormType.Square;
+            result.Args = new[] { diameter };
             return result;
         }
 
@@ -87,32 +85,31 @@ namespace Utils.Shape
                 width * .5f, -height * .5f,
                 -width * .5f, -height * .5f
             });
-            result.FormType = FormType.Rectangle;
-            result.FormString = $"{width} {height}";
+            result.Type = FormType.Rectangle;
+            result.Args = new[] { width, height };
             return result;
         }
 
         public static Form Circle(float diameter)
         {
             var result = Ellipse(diameter, diameter);
-            result.FormType = FormType.Circle;
-            result.FormString = $"{diameter}";
+            result.Type = FormType.Circle;
+            result.Args = new[] { diameter };
             return result;
         }
 
         public static Form Ellipse(float width, float height)
         {
-            var result = new Form(new Vector2(0f, height * .5f), new FormNode[]
+            var result = Vector(new[]
             {
-                new FormArc(width * .5f, height * .5f, width * .5f, 0f),
-                new FormArc(width * .5f, -height * .5f, 0f, -height * .5f),
-                new FormArc(-width * .5f, -height * .5f, -width * .5f, 0f),
-                new FormArc(-width * .5f, height * .5f, 0f, height * .5f)
-            })
-            {
-                FormType = FormType.Ellipse,
-                FormString = $"{width} {height}"
-            };
+                0f, height * .5f,
+                1f, width * .5f, height * .5f, width * .5f, 0f,
+                1f, width * .5f, -height * .5f, 0f, -height * .5f,
+                1f, -width * .5f, -height * .5f, -width * .5f, 0f,
+                1f, -width * .5f, height * .5f, 0f, height * .5f
+            });
+            result.Type = FormType.Ellipse;
+            result.Args = new[] { width, height };
             return result;
         }
 
@@ -127,8 +124,8 @@ namespace Utils.Shape
                 args[i * 2 + 1] = Mathf.Sin(vertexAngle) * scale;
             }
             var result = Polygon(args);
-            result.FormType = FormType.Ngon;
-            result.FormString = $"{sides} {diameter}";
+            result.Type = FormType.Ngon;
+            result.Args = new[] { sides, diameter };
             return result;
         }
 
@@ -144,8 +141,8 @@ namespace Utils.Shape
                 args[i * 2 + 1] = Mathf.Sin(vertexAngle) * scale;
             }
             var result = Polygon(args);
-            result.FormType = FormType.Star;
-            result.FormString = $"{points} {outerDiameter} {innerDiameter}";
+            result.Type = FormType.Star;
+            result.Args = new[] { points, innerDiameter, outerDiameter };
             return result;
         }
 

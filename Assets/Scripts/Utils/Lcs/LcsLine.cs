@@ -34,5 +34,10 @@ namespace Utils.Lcs
             result = Children.Aggregate(result, (current, child) => current + child.Stringify());
             return result;
         }
+
+        public override string ToString()
+        {
+            return $"{Prefix}{LcsParser.CompressProperties(Header)}:{LcsParser.CompressProperties(Properties)}";
+        }
     }
 }

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Utils.Constants;
 
 namespace Utils.Lcs
 {
@@ -33,6 +34,10 @@ namespace Utils.Lcs
             {
                 var rawLine = rawLines[i];
                 var line = LcsLine.Parse(rawLine);
+                if (!lineLevelMap.ContainsKey(line.Prefix))
+                {
+                    throw Errors.InvalidLcsLinePrefix(line);
+                }
                 var lineLevel = lineLevelMap[line.Prefix];
                 lineCache[lineLevel] = line;
                 if (lineLevel > 0)

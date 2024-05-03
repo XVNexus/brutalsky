@@ -169,7 +169,8 @@ namespace Utils.Lcs
 
         public static string Stringify(Form form)
         {
-            return Stringify((int)form.FormType) + (' ' + form.FormString).Replace(' ', FieldSeperator);
+            return form.Args.Aggregate(Stringify((int)form.Type),
+                (current, arg) => current + (FieldSeperator + Stringify(arg)));
         }
 
         public static Form ParseForm(string raw)

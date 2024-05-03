@@ -11,7 +11,13 @@ namespace Utils.Constants
         public static InvalidDataException EmptyLcsDocument()
             => new("Cannot parse an empty LCS document");
 
-        public static InvalidDataException InvalidLcsLine(LcsLine line, string message)
+        public static InvalidDataException NoLcsMetadataLine(LcsLine line)
+            => new($"'{line}' is not valid map metadata");
+
+        public static InvalidDataException InvalidLcsLinePrefix(LcsLine line)
+            => new($"Unrecognized LCS line prefix '{line.Prefix}' on line '{line}'");
+
+        public static InvalidDataException ErrorParsingLcsLine(LcsLine line, string message)
             => new($"Error while parsing LCS line '{line.Stringify().Trim()}': {message}");
 
         public static ArgumentOutOfRangeException InvalidGuiElementType()
