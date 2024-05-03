@@ -1,10 +1,12 @@
 using System;
 using Brutalsky.Addon;
 using Brutalsky.Base;
+using Brutalsky.Logic;
 using Brutalsky.Object;
 using Controllers.Base;
 using UnityEngine;
 using Utils.Constants;
+using Utils.Lcs;
 using Random = Unity.Mathematics.Random;
 
 namespace Core
@@ -30,24 +32,24 @@ namespace Core
         public Material aLitMaterial;
         public Material aUnlitMaterial;
 
-        // System functions
-        public BsObject GetTemplateObject(string objectPrefix)
+        // Utility functions
+        public static BsObject GetTemplateObject(string tag)
         {
-            return objectPrefix switch
+            return tag switch
             {
                 Tags.Player => new BsPlayer(),
                 Tags.Shape => new BsShape(),
                 Tags.Pool => new BsPool(),
-                _ => throw Errors.InvalidObjectOrAddonTag("object", objectPrefix)
+                _ => throw Errors.InvalidTag("object", tag)
             };
         }
 
-        public BsAddon GetTemplateAddon(string addonPrefix)
+        public static BsAddon GetTemplateAddon(string tag)
         {
-            return addonPrefix switch
+            return tag switch
             {
                 Tags.Joint => new BsJoint(),
-                _ => throw Errors.InvalidObjectOrAddonTag("addon", addonPrefix)
+                _ => throw Errors.InvalidTag("addon", tag)
             };
         }
     }

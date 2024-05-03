@@ -167,8 +167,13 @@ namespace Brutalsky.Addon
                 {
                     throw Errors.JointMountShapeUnbuilt(this);
                 }
-                component.connectedBody = mountShape.InstanceObject.GetComponent<Rigidbody2D>();
                 component.autoConfigureConnectedAnchor = true;
+                component.connectedBody = mountShape.InstanceObject.GetComponent<Rigidbody2D>();
+            }
+            else
+            {
+                component.autoConfigureConnectedAnchor = false;
+                component.connectedAnchor = parentObject.Transform.Position;
             }
 
             return component;
@@ -195,19 +200,19 @@ namespace Brutalsky.Addon
             (
                 new[]
                 {
-                    BsMatrix.Bool2Logic(SelfCollision), BreakForce, BreakTorque, DampingRatio, DampingFrequency
+                    BsMatrix.ToLogic(SelfCollision), BreakForce, BreakTorque, DampingRatio, DampingFrequency
                 },
                 new float[5],
-                inputs =>
+                (inputs, _) =>
                 {
-                    fixedJoint.enableCollision = BsMatrix.Logic2Bool(inputs[0]);
+                    fixedJoint.enableCollision = BsMatrix.ToBool(inputs[0]);
                     fixedJoint.breakForce = inputs[1];
                     fixedJoint.breakTorque = inputs[2];
                     fixedJoint.dampingRatio = inputs[3];
                     fixedJoint.frequency = inputs[4];
                     return new[]
                     {
-                        BsMatrix.Bool2Logic(fixedJoint.enableCollision), fixedJoint.breakForce, fixedJoint.breakTorque,
+                        BsMatrix.ToLogic(fixedJoint.enableCollision), fixedJoint.breakForce, fixedJoint.breakTorque,
                         fixedJoint.dampingRatio, fixedJoint.frequency
                     };
                 }
@@ -221,24 +226,24 @@ namespace Brutalsky.Addon
             (
                 new[]
                 {
-                    BsMatrix.Bool2Logic(SelfCollision), BreakForce, BreakTorque, DistanceValue,
-                    BsMatrix.Bool2Logic(DistanceAuto), BsMatrix.Bool2Logic(DistanceMax)
+                    BsMatrix.ToLogic(SelfCollision), BreakForce, BreakTorque, DistanceValue,
+                    BsMatrix.ToLogic(DistanceAuto), BsMatrix.ToLogic(DistanceMax)
                 },
                 new float[6],
-                inputs =>
+                (inputs, _) =>
                 {
-                    distanceJoint.enableCollision = BsMatrix.Logic2Bool(inputs[0]);
+                    distanceJoint.enableCollision = BsMatrix.ToBool(inputs[0]);
                     distanceJoint.breakForce = inputs[1];
                     distanceJoint.breakTorque = inputs[2];
                     distanceJoint.distance = inputs[3];
-                    distanceJoint.autoConfigureDistance = BsMatrix.Logic2Bool(inputs[4]);
-                    distanceJoint.maxDistanceOnly = BsMatrix.Logic2Bool(inputs[5]);
+                    distanceJoint.autoConfigureDistance = BsMatrix.ToBool(inputs[4]);
+                    distanceJoint.maxDistanceOnly = BsMatrix.ToBool(inputs[5]);
                     return new[]
                     {
-                        BsMatrix.Bool2Logic(distanceJoint.enableCollision), distanceJoint.breakForce,
+                        BsMatrix.ToLogic(distanceJoint.enableCollision), distanceJoint.breakForce,
                         distanceJoint.breakTorque, distanceJoint.distance,
-                        BsMatrix.Bool2Logic(distanceJoint.autoConfigureDistance),
-                        BsMatrix.Bool2Logic(distanceJoint.maxDistanceOnly)
+                        BsMatrix.ToLogic(distanceJoint.autoConfigureDistance),
+                        BsMatrix.ToLogic(distanceJoint.maxDistanceOnly)
                     };
                 }
             );
@@ -251,24 +256,24 @@ namespace Brutalsky.Addon
             (
                 new[]
                 {
-                    BsMatrix.Bool2Logic(SelfCollision), BreakForce, BreakTorque, DistanceValue,
-                    BsMatrix.Bool2Logic(DistanceAuto), DampingRatio, DampingFrequency
+                    BsMatrix.ToLogic(SelfCollision), BreakForce, BreakTorque, DistanceValue,
+                    BsMatrix.ToLogic(DistanceAuto), DampingRatio, DampingFrequency
                 },
                 new float[7],
-                inputs =>
+                (inputs, _) =>
                 {
-                    springJoint.enableCollision = BsMatrix.Logic2Bool(inputs[0]);
+                    springJoint.enableCollision = BsMatrix.ToBool(inputs[0]);
                     springJoint.breakForce = inputs[1];
                     springJoint.breakTorque = inputs[2];
                     springJoint.distance = inputs[3];
-                    springJoint.autoConfigureDistance = BsMatrix.Logic2Bool(inputs[4]);
+                    springJoint.autoConfigureDistance = BsMatrix.ToBool(inputs[4]);
                     springJoint.dampingRatio = inputs[5];
                     springJoint.frequency = inputs[6];
                     return new[]
                     {
-                        BsMatrix.Bool2Logic(springJoint.enableCollision), springJoint.breakForce,
+                        BsMatrix.ToLogic(springJoint.enableCollision), springJoint.breakForce,
                         springJoint.breakTorque, springJoint.distance,
-                        BsMatrix.Bool2Logic(springJoint.autoConfigureDistance), springJoint.dampingRatio,
+                        BsMatrix.ToLogic(springJoint.autoConfigureDistance), springJoint.dampingRatio,
                         springJoint.frequency
                     };
                 }
@@ -282,16 +287,16 @@ namespace Brutalsky.Addon
             (
                 new[]
                 {
-                    BsMatrix.Bool2Logic(SelfCollision), BreakForce, BreakTorque, BsMatrix.Bool2Logic(MotorEnabled),
-                    MotorSpeed, MotorForce, BsMatrix.Bool2Logic(LimitEnabled), LimitMin, LimitMax
+                    BsMatrix.ToLogic(SelfCollision), BreakForce, BreakTorque, BsMatrix.ToLogic(MotorEnabled),
+                    MotorSpeed, MotorForce, BsMatrix.ToLogic(LimitEnabled), LimitMin, LimitMax
                 },
                 new float[9],
-                inputs =>
+                (inputs, _) =>
                 {
-                    hingeJoint.enableCollision = BsMatrix.Logic2Bool(inputs[0]);
+                    hingeJoint.enableCollision = BsMatrix.ToBool(inputs[0]);
                     hingeJoint.breakForce = inputs[1];
                     hingeJoint.breakTorque = inputs[2];
-                    hingeJoint.useMotor = BsMatrix.Logic2Bool(inputs[3]);
+                    hingeJoint.useMotor = BsMatrix.ToBool(inputs[3]);
                     if (hingeJoint.useMotor)
                     {
                         var motor = hingeJoint.motor;
@@ -299,7 +304,7 @@ namespace Brutalsky.Addon
                         motor.maxMotorTorque = inputs[5];
                         hingeJoint.motor = motor;
                     }
-                    hingeJoint.useLimits = BsMatrix.Logic2Bool(inputs[6]);
+                    hingeJoint.useLimits = BsMatrix.ToBool(inputs[6]);
                     if (hingeJoint.useLimits)
                     {
                         var limits = hingeJoint.limits;
@@ -309,9 +314,9 @@ namespace Brutalsky.Addon
                     }
                     return new[]
                     {
-                        BsMatrix.Bool2Logic(hingeJoint.enableCollision), hingeJoint.breakForce, hingeJoint.breakTorque,
-                        BsMatrix.Bool2Logic(hingeJoint.useMotor), hingeJoint.motor.motorSpeed,
-                        hingeJoint.motor.maxMotorTorque, BsMatrix.Bool2Logic(hingeJoint.useLimits),
+                        BsMatrix.ToLogic(hingeJoint.enableCollision), hingeJoint.breakForce, hingeJoint.breakTorque,
+                        BsMatrix.ToLogic(hingeJoint.useMotor), hingeJoint.motor.motorSpeed,
+                        hingeJoint.motor.maxMotorTorque, BsMatrix.ToLogic(hingeJoint.useLimits),
                         hingeJoint.limits.min, hingeJoint.limits.max
                     };
                 }
@@ -325,19 +330,19 @@ namespace Brutalsky.Addon
             (
                 new[]
                 {
-                    BsMatrix.Bool2Logic(SelfCollision), BreakForce, BreakTorque, AngleValue,
-                    BsMatrix.Bool2Logic(AngleAuto), BsMatrix.Bool2Logic(MotorEnabled), MotorSpeed, MotorForce,
-                    BsMatrix.Bool2Logic(LimitEnabled), LimitMin, LimitMax
+                    BsMatrix.ToLogic(SelfCollision), BreakForce, BreakTorque, AngleValue,
+                    BsMatrix.ToLogic(AngleAuto), BsMatrix.ToLogic(MotorEnabled), MotorSpeed, MotorForce,
+                    BsMatrix.ToLogic(LimitEnabled), LimitMin, LimitMax
                 },
                 new float[11],
-                inputs =>
+                (inputs, _) =>
                 {
-                    sliderJoint.enableCollision = BsMatrix.Logic2Bool(inputs[0]);
+                    sliderJoint.enableCollision = BsMatrix.ToBool(inputs[0]);
                     sliderJoint.breakForce = inputs[1];
                     sliderJoint.breakTorque = inputs[2];
                     sliderJoint.angle = inputs[3];
-                    sliderJoint.autoConfigureAngle = BsMatrix.Logic2Bool(inputs[4]);
-                    sliderJoint.useMotor = BsMatrix.Logic2Bool(inputs[5]);
+                    sliderJoint.autoConfigureAngle = BsMatrix.ToBool(inputs[4]);
+                    sliderJoint.useMotor = BsMatrix.ToBool(inputs[5]);
                     if (sliderJoint.useMotor)
                     {
                         var motor = sliderJoint.motor;
@@ -345,7 +350,7 @@ namespace Brutalsky.Addon
                         motor.maxMotorTorque = inputs[7];
                         sliderJoint.motor = motor;
                     }
-                    sliderJoint.useLimits = BsMatrix.Logic2Bool(inputs[8]);
+                    sliderJoint.useLimits = BsMatrix.ToBool(inputs[8]);
                     if (sliderJoint.useLimits)
                     {
                         var limits = sliderJoint.limits;
@@ -355,10 +360,10 @@ namespace Brutalsky.Addon
                     }
                     return new[]
                     {
-                        BsMatrix.Bool2Logic(sliderJoint.enableCollision), sliderJoint.breakForce,
-                        sliderJoint.breakTorque, sliderJoint.angle, BsMatrix.Bool2Logic(sliderJoint.autoConfigureAngle),
-                        BsMatrix.Bool2Logic(sliderJoint.useMotor), sliderJoint.motor.motorSpeed,
-                        sliderJoint.motor.maxMotorTorque, BsMatrix.Bool2Logic(sliderJoint.useLimits),
+                        BsMatrix.ToLogic(sliderJoint.enableCollision), sliderJoint.breakForce,
+                        sliderJoint.breakTorque, sliderJoint.angle, BsMatrix.ToLogic(sliderJoint.autoConfigureAngle),
+                        BsMatrix.ToLogic(sliderJoint.useMotor), sliderJoint.motor.motorSpeed,
+                        sliderJoint.motor.maxMotorTorque, BsMatrix.ToLogic(sliderJoint.useLimits),
                         sliderJoint.limits.min, sliderJoint.limits.max
                     };
                 }
@@ -372,13 +377,13 @@ namespace Brutalsky.Addon
             (
                 new[]
                 {
-                    BsMatrix.Bool2Logic(SelfCollision), BreakForce, BreakTorque, DampingRatio, DampingFrequency,
-                    AngleValue, BsMatrix.Bool2Logic(MotorEnabled), MotorSpeed, MotorForce
+                    BsMatrix.ToLogic(SelfCollision), BreakForce, BreakTorque, DampingRatio, DampingFrequency,
+                    AngleValue, BsMatrix.ToLogic(MotorEnabled), MotorSpeed, MotorForce
                 },
                 new float[9],
-                inputs =>
+                (inputs, _) =>
                 {
-                    wheelJoint.enableCollision = BsMatrix.Logic2Bool(inputs[0]);
+                    wheelJoint.enableCollision = BsMatrix.ToBool(inputs[0]);
                     wheelJoint.breakForce = inputs[1];
                     wheelJoint.breakTorque = inputs[2];
                     var suspension = wheelJoint.suspension;
@@ -386,7 +391,7 @@ namespace Brutalsky.Addon
                     suspension.frequency = inputs[4];
                     suspension.angle = inputs[5];
                     wheelJoint.suspension = suspension;
-                    wheelJoint.useMotor = BsMatrix.Logic2Bool(inputs[6]);
+                    wheelJoint.useMotor = BsMatrix.ToBool(inputs[6]);
                     if (wheelJoint.useMotor)
                     {
                         var motor = wheelJoint.motor;
@@ -396,9 +401,9 @@ namespace Brutalsky.Addon
                     }
                     return new[]
                     {
-                        BsMatrix.Bool2Logic(wheelJoint.enableCollision), wheelJoint.breakForce, wheelJoint.breakTorque,
+                        BsMatrix.ToLogic(wheelJoint.enableCollision), wheelJoint.breakForce, wheelJoint.breakTorque,
                         wheelJoint.suspension.dampingRatio, wheelJoint.suspension.frequency,
-                        wheelJoint.suspension.angle, BsMatrix.Bool2Logic(wheelJoint.useMotor),
+                        wheelJoint.suspension.angle, BsMatrix.ToLogic(wheelJoint.useMotor),
                         wheelJoint.motor.motorSpeed, wheelJoint.motor.maxMotorTorque
                     };
                 }

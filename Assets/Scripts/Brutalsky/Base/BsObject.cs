@@ -45,6 +45,10 @@ namespace Brutalsky.Base
             return null;
         }
 
+        protected abstract string[] _ToLcs();
+
+        protected abstract void _FromLcs(string[] properties);
+
         public List<BsNode> RegisterLogic()
         {
             var result = new List<BsNode>();
@@ -65,10 +69,6 @@ namespace Brutalsky.Base
             }
             return result;
         }
-
-        protected abstract string[] _ToLcs();
-
-        protected abstract void _FromLcs(string[] properties);
 
         public void Activate(Transform parent, BsMap map)
         {
@@ -104,15 +104,20 @@ namespace Brutalsky.Base
             );
         }
 
-        public void FromLcs(LcsLine line)
+        public static BsObject FromLcs(LcsLine line)
+        {
+            var result = ResourceSystem.GetTemplateObject(LcsParser.ParseString(line.Header[0]));
+            result.ParseLcs(line);
+            return result;
+        }
+
+        private void ParseLcs(LcsLine line)
         {
             Id = LcsParser.ParseString(line.Header[1]);
             _FromLcs(line.Properties);
             foreach (var child in line.Children)
             {
-                var addon = ResourceSystem._.GetTemplateAddon(LcsParser.ParseString(child.Header[0]));
-                addon.FromLcs(child);
-                Addons.Add(addon);
+                Addons.Add(BsAddon.FromLcs(child));
             }
         }
     }

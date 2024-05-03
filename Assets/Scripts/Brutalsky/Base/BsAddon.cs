@@ -29,15 +29,15 @@ namespace Brutalsky.Base
 
         protected abstract Component _Init(GameObject gameObject, BsObject parentObject, BsMap map);
 
+        protected abstract string[] _ToLcs();
+
+        protected abstract void _FromLcs(string[] properties);
+
         [CanBeNull]
         public virtual BsNode RegisterLogic()
         {
             return null;
         }
-
-        protected abstract string[] _ToLcs();
-
-        protected abstract void _FromLcs(string[] properties);
 
         public void Activate(GameObject gameObject, BsObject parentObject, BsMap map)
         {
@@ -61,7 +61,14 @@ namespace Brutalsky.Base
             );
         }
 
-        public void FromLcs(LcsLine line)
+        public static BsAddon FromLcs(LcsLine line)
+        {
+            var result = ResourceSystem.GetTemplateAddon(LcsParser.ParseString(line.Header[0]));
+            result.ParseLcs(line);
+            return result;
+        }
+
+        private void ParseLcs(LcsLine line)
         {
             Id = LcsParser.ParseString(line.Header[1]);
             _FromLcs(line.Properties);

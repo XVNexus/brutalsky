@@ -29,7 +29,7 @@ namespace Utils.Constants
         public static ArgumentOutOfRangeException NoPortFound(string type, int id, int index)
             => new("", $"No logic {type} port found on node '{id}' with index '{index}'");
 
-        public static ArgumentOutOfRangeException InvalidObjectOrAddonTag(string type, string tag)
+        public static ArgumentOutOfRangeException InvalidTag(string type, string tag)
             => new("", $"'{tag}' is not a valid {type} tag");
 
         public static ArgumentOutOfRangeException InvalidJointType(JointType jointType)

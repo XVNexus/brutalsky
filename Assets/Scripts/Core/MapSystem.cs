@@ -179,7 +179,7 @@ namespace Core
             EventSystem._.EmitMapBuild(map);
 
             // Start the logic system
-            Matrix = new BsMatrix(logicNodes, map.Links);
+            Matrix = new BsMatrix(logicNodes, map.Links.Values);
         }
 
         public void UnbuildMap()

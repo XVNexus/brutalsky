@@ -26,7 +26,7 @@ namespace Brutalsky
         public List<BsSpawn> Spawns { get; } = new();
         public Dictionary<string, BsObject> Objects { get; } = new();
         public List<BsNode> Nodes { get; } = new();
-        public Dictionary<(int, int), (int, int)> Links { get; } = new();
+        public Dictionary<(int, int), BsLink> Links { get; } = new();
 
         public BsMap(string title = "Untitled Map", string author = "Anonymous Marble")
         {
@@ -36,75 +36,6 @@ namespace Brutalsky
 
         public BsMap()
         {
-        }
-
-        public string Stringify()
-        {
-            return ToLcs().Stringify();
-        }
-
-        public static BsMap Parse(string lcs)
-        {
-            var result = new BsMap();
-            result.FromLcs(LcsDocument.Parse(lcs));
-            return result;
-        }
-
-        public LcsDocument ToLcs()
-        {
-            var lines = new List<LcsLine>
-            {
-                new(
-                    '!',
-                    new[] { LcsParser.Stringify(Title), LcsParser.Stringify(Author) },
-                    new[] { LcsParser.Stringify(PlayArea), LcsParser.Stringify(BackgroundColor),
-                        LcsParser.Stringify(LightingColor), LcsParser.Stringify(GravityDirection),
-                        LcsParser.Stringify(GravityStrength), LcsParser.Stringify(PlayerHealth) }
-                )
-            };
-            lines.AddRange(Spawns.Select(spawn => spawn.ToLcs()));
-            lines.AddRange(Objects.Values.Select(obj => obj.ToLcs()));
-            return new LcsDocument(1, lines, new[] { "!$#", "@" });
-        }
-
-        public void FromLcs(LcsDocument document)
-        {
-            if (document.Lines.Count == 0)
-            {
-                throw Errors.EmptyLcsDocument();
-            }
-            var metadataLine = document.Lines[0];
-            if (document.Lines[0].Prefix != '!')
-            {
-                throw Errors.InvalidLcsLine(metadataLine, 0);
-            }
-            Title = LcsParser.ParseString(metadataLine.Header[0]);
-            Author = LcsParser.ParseString(metadataLine.Header[1]);
-            PlayArea = LcsParser.ParseVector2(metadataLine.Properties[0]);
-            BackgroundColor = LcsParser.ParseColor(metadataLine.Properties[1]);
-            LightingColor = LcsParser.ParseColor(metadataLine.Properties[2]);
-            GravityDirection = LcsParser.ParseDirection(metadataLine.Properties[3]);
-            GravityStrength = LcsParser.ParseFloat(metadataLine.Properties[4]);
-            PlayerHealth = LcsParser.ParseFloat(metadataLine.Properties[5]);
-            for (var i = 1; i < document.Lines.Count; i++)
-            {
-                var line = document.Lines[i];
-                switch (line.Prefix)
-                {
-                    case '$':
-                        var spawn = new BsSpawn();
-                        spawn.FromLcs(line);
-                        AddSpawn(spawn);
-                        break;
-                    case '#':
-                        var obj = ResourceSystem._.GetTemplateObject(LcsParser.ParseString(line.Header[0]));
-                        obj.FromLcs(line);
-                        AddObject(obj);
-                        break;
-                    default:
-                        throw Errors.InvalidLcsLine(line, i);
-                }
-            }
         }
 
         public Vector2 SelectSpawn()
@@ -203,16 +134,22 @@ namespace Brutalsky
             return id >= 0 && id < Nodes.Count;
         }
 
-        public (int, int) GetLink((int, int) toPort)
+        [CanBeNull]
+        public BsLink GetLink((int, int) toPort)
         {
-            return ContainsLink(toPort) ? Links[toPort] : (-1, -1);
+            return ContainsLink(toPort) ? Links[toPort] : null;
         }
 
-        public bool AddLink((int, int) fromPort, (int, int) toPort)
+        public bool AddLink(BsLink link)
         {
-            if (ContainsLink(toPort)) return false;
-            Links[toPort] = fromPort;
+            if (ContainsLink(link)) return false;
+            Links[link.ToPort] = link;
             return true;
+        }
+
+        public bool RemoveLink(BsLink link)
+        {
+            return RemoveLink(link.ToPort);
         }
 
         public bool RemoveLink((int, int) toPort)
@@ -222,9 +159,9 @@ namespace Brutalsky
             return true;
         }
 
-        public bool RemoveLink((int, int) fromPort, (int, int) toPort)
+        public bool ContainsLink(BsLink link)
         {
-            return ContainsLink(fromPort, toPort) && Links.Remove(toPort);
+            return ContainsLink(link.ToPort);
         }
 
         public bool ContainsLink((int, int) toPort)
@@ -232,9 +169,77 @@ namespace Brutalsky
             return Links.ContainsKey(toPort);
         }
 
-        public bool ContainsLink((int, int) fromPort, (int, int) toPort)
+        public string Stringify()
         {
-            return ContainsLink(toPort) && Equals(Links[toPort], fromPort);
+            return ToLcs().Stringify();
+        }
+
+        public static BsMap Parse(string lcs)
+        {
+            return FromLcs(LcsDocument.Parse(lcs));
+        }
+
+        public LcsDocument ToLcs()
+        {
+            var lines = new List<LcsLine>
+            {
+                new(
+                    '!',
+                    new[] { LcsParser.Stringify(Title), LcsParser.Stringify(Author) },
+                    new[] { LcsParser.Stringify(PlayArea), LcsParser.Stringify(BackgroundColor),
+                        LcsParser.Stringify(LightingColor), LcsParser.Stringify(GravityDirection),
+                        LcsParser.Stringify(GravityStrength), LcsParser.Stringify(PlayerHealth) }
+                )
+            };
+            lines.AddRange(Spawns.Select(spawn => spawn.ToLcs()));
+            lines.AddRange(Objects.Values.Select(obj => obj.ToLcs()));
+            lines.AddRange(Nodes.Select(node => node.ToLcs()));
+            lines.AddRange(Links.Values.Select(link => link.ToLcs()));
+            return new LcsDocument(1, lines, new[] { "!$#%^", "@" });
+        }
+
+        public static BsMap FromLcs(LcsDocument document)
+        {
+            var result = new BsMap();
+            if (document.Lines.Count == 0)
+            {
+                throw Errors.EmptyLcsDocument();
+            }
+            var metadataLine = document.Lines[0];
+            if (document.Lines[0].Prefix != '!')
+            {
+                throw Errors.InvalidLcsLine(metadataLine, 0);
+            }
+            result.Title = LcsParser.ParseString(metadataLine.Header[0]);
+            result.Author = LcsParser.ParseString(metadataLine.Header[1]);
+            result.PlayArea = LcsParser.ParseVector2(metadataLine.Properties[0]);
+            result.BackgroundColor = LcsParser.ParseColor(metadataLine.Properties[1]);
+            result.LightingColor = LcsParser.ParseColor(metadataLine.Properties[2]);
+            result.GravityDirection = LcsParser.ParseDirection(metadataLine.Properties[3]);
+            result.GravityStrength = LcsParser.ParseFloat(metadataLine.Properties[4]);
+            result.PlayerHealth = LcsParser.ParseFloat(metadataLine.Properties[5]);
+            for (var i = 1; i < document.Lines.Count; i++)
+            {
+                var line = document.Lines[i];
+                switch (line.Prefix)
+                {
+                    case '$':
+                        result.AddSpawn(BsSpawn.FromLcs(line));
+                        break;
+                    case '#':
+                        result. AddObject(BsObject.FromLcs(line));
+                        break;
+                    case '%':
+                        result.AddNode(BsNode.FromLcs(line));
+                        break;
+                    case '^':
+                        result.AddLink(BsLink.FromLcs(line));
+                        break;
+                    default:
+                        throw Errors.InvalidLcsLine(line, i);
+                }
+            }
+            return result;
         }
     }
 }

@@ -6,15 +6,22 @@ namespace Brutalsky.Logic
 {
     public class BsMatrix
     {
-        public List<BsNode> Nodes { get; }
-        public Dictionary<(int, int), (int, int)> Links { get; }
-        private Dictionary<(int, int), float> _buffer = new();
+        private readonly List<BsNode> _nodes = new();
+        private readonly Dictionary<(int, int), (int, int)> _links = new();
+        private readonly Dictionary<(int, int), float> _buffer = new();
 
-        public BsMatrix(List<BsNode> nodes, Dictionary<(int, int), (int, int)> links)
+        public BsMatrix(IEnumerable<BsNode> nodes, IEnumerable<BsLink> links)
         {
-            Nodes = nodes;
-            Links = links;
-            foreach (var toPort in Links.Keys)
+            _nodes.AddRange(nodes);
+            foreach (var node in _nodes)
+            {
+                node.Init();
+            }
+            foreach (var link in links)
+            {
+                _links[link.ToPort] = link.FromPort;
+            }
+            foreach (var toPort in _links.Keys)
             {
                 _buffer[toPort] = float.NaN;
             }
@@ -22,13 +29,13 @@ namespace Brutalsky.Logic
 
         public void Update()
         {
-            foreach (var node in Nodes)
+            foreach (var node in _nodes)
             {
                 node.Update();
             }
-            foreach (var toPort in Links.Keys)
+            foreach (var toPort in _links.Keys)
             {
-                _buffer[toPort] = GetPort(Links[toPort]);
+                _buffer[toPort] = GetPort(_links[toPort]);
             }
             foreach (var toPort in _buffer.Keys)
             {
@@ -44,7 +51,7 @@ namespace Brutalsky.Logic
         public float GetPort(int id, int index)
         {
             ValidateOutputPort(id, index);
-            return Nodes[id].Outputs[index];
+            return _nodes[id].Outputs[index];
         }
 
         public void SetPort((int, int) port, float value)
@@ -55,17 +62,17 @@ namespace Brutalsky.Logic
         public void SetPort(int id, int index, float value)
         {
             ValidateInputPort(id, index);
-            Nodes[id].Inputs[index] = value;
+            _nodes[id].Inputs[index] = value;
         }
 
         public bool ContainsInputPort(int id, int index)
         {
-            return ContainsNode(id) && index >= 0 && index < Nodes[id].Inputs.Length;
+            return ContainsNode(id) && index >= 0 && index < _nodes[id].Inputs.Length;
         }
 
         public bool ContainsOutputPort(int id, int index)
         {
-            return ContainsNode(id) && index >= 0 && index < Nodes[id].Outputs.Length;
+            return ContainsNode(id) && index >= 0 && index < _nodes[id].Outputs.Length;
         }
 
         public void ValidateInputPort(int id, int index)
@@ -82,22 +89,32 @@ namespace Brutalsky.Logic
 
         public bool ContainsNode(int id)
         {
-            return id >= 0 && id < Nodes.Count;
+            return id >= 0 && id < _nodes.Count;
         }
 
         public bool ContainsLink((int, int) toPort)
         {
-            return Links.ContainsKey(toPort);
+            return _links.ContainsKey(toPort);
         }
 
-        public static float Bool2Logic(bool value)
+        public static float ToLogic(bool value)
         {
             return value ? 1f : 0f;
         }
 
-        public static bool Logic2Bool(float logic)
+        public static bool ToBool(float logic)
         {
             return logic >= .5f;
+        }
+
+        public static float ToLogic(int value)
+        {
+            return value;
+        }
+
+        public static int ToInt(float logic)
+        {
+            return Mathf.RoundToInt(logic);
         }
     }
 }

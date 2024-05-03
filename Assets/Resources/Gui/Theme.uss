@@ -41,7 +41,7 @@
 }
 
 .bs-pane {
-    background-color: rgba(38, 38, 38, 0.95);
+    background-color: rgba(26, 26, 26, 0.95);
     padding-top: 5px;
     padding-right: 5px;
     padding-bottom: 5px;
@@ -54,10 +54,10 @@
     border-top-right-radius: 20px;
     border-bottom-right-radius: 20px;
     border-bottom-left-radius: 20px;
-    border-left-color: rgb(26, 26, 26);
-    border-right-color: rgb(26, 26, 26);
     border-top-color: rgb(26, 26, 26);
-    border-bottom-color: rgb(26, 26, 26);
+    border-bottom-color: rgba(0, 0, 0, 0.5);
+    border-right-color: rgba(0, 0, 0, 0.1);
+    border-left-color: rgba(0, 0, 0, 0.1);
 }
 
 .bs-title {
@@ -65,18 +65,20 @@
     font-size: 120%;
     color: rgb(255, 170, 0);
     background-color: rgb(26, 26, 26);
-    margin-top: -8px;
-    margin-right: -8px;
+    margin-top: -10px;
+    margin-right: -10px;
     margin-bottom: 6px;
-    margin-left: -8px;
+    margin-left: -10px;
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;
     border-bottom-right-radius: 0;
     border-bottom-left-radius: 0;
-    border-top-width: 5px;
-    border-right-width: 5px;
-    border-bottom-width: 5px;
-    border-left-width: 5px;
+    border-top-width: 3px;
+    border-right-width: 3px;
+    border-bottom-width: 3px;
+    border-left-width: 3px;
+    border-bottom-color: rgb(20, 20, 20);
+    border-top-color: rgb(31, 31, 31);
 }
 
 .bs-box {

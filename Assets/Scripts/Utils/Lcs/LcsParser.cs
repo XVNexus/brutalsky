@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using UnityEditor.UIElements;
 using UnityEngine;
 using Utils.Constants;
 using Utils.Joint;
@@ -276,7 +277,9 @@ namespace Utils.Lcs
         // Utilities
         public static string CompressList(string[] items, char separator)
         {
-            return items.Aggregate("", (current, property) => current + $"{separator}{property}")[1..];
+            return items.Length > 0
+                ? items.Aggregate("", (current, property) => current + $"{separator}{property}")[1..]
+                : "";
         }
 
         public static string[] ExpandList(string items, char separator)

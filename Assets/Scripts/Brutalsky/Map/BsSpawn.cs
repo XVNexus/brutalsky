@@ -19,6 +19,17 @@ namespace Brutalsky.Map
         {
         }
 
+        public Vector2 Use()
+        {
+            Usages++;
+            return Position;
+        }
+
+        public void Reset()
+        {
+            Usages = 0;
+        }
+
         public LcsLine ToLcs()
         {
             return new LcsLine
@@ -29,21 +40,9 @@ namespace Brutalsky.Map
             );
         }
 
-        public void FromLcs(LcsLine line)
+        public static BsSpawn FromLcs(LcsLine line)
         {
-            Position = LcsParser.ParseVector2(line.Header[0]);
-            Priority = LcsParser.ParseInt(line.Properties[0]);
-        }
-
-        public Vector2 Use()
-        {
-            Usages++;
-            return Position;
-        }
-
-        public void Reset()
-        {
-            Usages = 0;
+            return new BsSpawn(LcsParser.ParseVector2(line.Header[0]), LcsParser.ParseInt(line.Properties[0]));
         }
     }
 }

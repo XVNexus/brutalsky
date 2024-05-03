@@ -23,75 +23,8 @@ namespace Core
         }
 
         // Init functions
-        private void Testing()
-        {
-            var map = new BsMap("Testing", "Dev")
-            {
-                PlayArea = new Vector2(40f, 20f),
-                BackgroundColor = new ObjectColor(.3f, .3f, .3f),
-                LightingColor = new ObjectColor(1f, 1f, 1f, .8f),
-                GravityDirection = Direction.Down,
-                GravityStrength = 20f,
-                PlayerHealth = 100f
-            };
-            map.AddSpawn(new BsSpawn(new Vector2(0f, -8.5f)));
-            map.AddObject(new BsShape
-            (
-                "floor",
-                new ObjectTransform(0f, -9.5f),
-                ObjectLayer.Midground,
-                true,
-                Form.Rectangle(30f, 1f),
-                ShapeMaterial.Stone(),
-                ObjectColor.Stone()
-            ));
-            map.AddObject(new BsShape
-            (
-                "spinner",
-                new ObjectTransform(0f, 0f),
-                ObjectLayer.Midground,
-                true,
-                Form.Square(1f),
-                ShapeMaterial.Glue(true).Modify(adhesion:20f),
-                ObjectColor.Glue()
-            )
-            .AttachAddon(new BsJoint
-            (
-                "spinner-motor",
-                new ObjectTransform(),
-                "",
-                false,
-                float.PositiveInfinity,
-                float.PositiveInfinity
-            ).HingeJoint(
-                true,
-                0f,
-                10000f,
-                false,
-                0f,
-                0f
-            )));
-            map.AddNode(BsNode.LevelTime());
-            map.AddNode(BsNode.Sin());
-            map.AddNode(BsNode.Constant(250f));
-            map.AddNode(BsNode.Multiply(2));
-            map.AddLink((1, 0), (2, 0));
-            map.AddLink((2, 0), (4, 0));
-            map.AddLink((3, 0), (4, 1));
-            map.AddLink((4, 0), (0, 4));
-            MapSystem._.BuildMap(map);
-            MapSystem._.RegisterPlayers(new[]
-            {
-                new BsPlayer("Player 1", 100f, new ObjectColor(1f, .5f, 0f)),
-                new BsPlayer("Player 2", 100f, new ObjectColor(0f, .5f, 1f), true)
-            });
-            MapSystem._.SpawnAllPlayers();
-        }
-
         protected override void OnLoad()
         {
-            Testing();
-            return;
             StartGame(new[] { "Brutalsky", "Doomring" }, MapSystem.GenerateId("Brutalsky", "Xveon"), new[]
             {
                 new BsPlayer("Player 1", 100f, new ObjectColor(1f, .5f, 0f)),
@@ -120,9 +53,9 @@ namespace Core
             MapSystem._.SpawnAllPlayers();
         }
 
-        // Utility functions
-        // TODO: THIS FUNCTION IS DOGSHIT
-        private void GenerateDefaultMaps()
+        // Temporary functions
+        // TODO: THEY ARE ALL TERRIBLE PLZ FIX THEM
+        private static void GenerateDefaultMaps()
         {
             var sizes = new[] { 20f, 40f, 80f };
             var names = new[] { "Small", "Medium", "Large" };
@@ -133,10 +66,10 @@ namespace Core
                 GenerateBoxMap("Cage", sizes[i], names[i], true, true, true, true);
                 GenerateBoxMap("Tunnel", sizes[i], names[i], true, true, false, false);
             }
+            GenerateLogicTestMap();
         }
 
-        // TODO: THIS ONE IS TOO
-        private void GenerateBoxMap(string title, float size, string name, bool bottom, bool top, bool left, bool right)
+        private static void GenerateBoxMap(string title, float size, string name, bool bottom, bool top, bool left, bool right)
         {
             var baseColor = title switch
             {
@@ -237,6 +170,65 @@ namespace Core
             ));
             map.AddSpawn(new BsSpawn(new Vector2(-1f, -size * .25f + 1.5f)));
             map.AddSpawn(new BsSpawn(new Vector2(1f, -size * .25f + 1.5f)));
+            MapSystem.SaveMap(map);
+        }
+
+        private static void GenerateLogicTestMap()
+        {
+            var map = new BsMap("Logic Test", "Dev")
+            {
+                PlayArea = new Vector2(40f, 20f),
+                BackgroundColor = new ObjectColor(.3f, .3f, .3f),
+                LightingColor = new ObjectColor(1f, 1f, 1f, .8f),
+                GravityDirection = Direction.Down,
+                GravityStrength = 20f,
+                PlayerHealth = 100f
+            };
+            map.AddObject(new BsShape
+            (
+                "floor",
+                new ObjectTransform(0f, -9.5f),
+                ObjectLayer.Midground,
+                true,
+                Form.Rectangle(30f, 1f),
+                ShapeMaterial.Stone(),
+                ObjectColor.Stone()
+            ));
+            map.AddObject(new BsShape
+                (
+                    "spinner",
+                    new ObjectTransform(0f, 0f),
+                    ObjectLayer.Midground,
+                    true,
+                    Form.Star(4, 3f, 1f),
+                    ShapeMaterial.Glue(true).Modify(adhesion:20f),
+                    ObjectColor.Glue()
+                )
+                .AttachAddon(new BsJoint
+                (
+                    "spinner-motor",
+                    new ObjectTransform(),
+                    "",
+                    false,
+                    float.PositiveInfinity,
+                    float.PositiveInfinity
+                ).HingeJoint(
+                    true,
+                    0f,
+                    10000f,
+                    false,
+                    0f,
+                    0f
+                )));
+            map.AddNode(BsNode.Timer());
+            map.AddNode(BsNode.Sin());
+            map.AddNode(BsNode.Float(1000f));
+            map.AddNode(BsNode.Multiply(2));
+            map.AddLink(new BsLink((1, 0), (2, 0)));
+            map.AddLink(new BsLink((2, 0), (4, 0)));
+            map.AddLink(new BsLink((3, 0), (4, 1)));
+            map.AddLink(new BsLink((4, 0), (0, 4)));
+            map.AddSpawn(new BsSpawn(new Vector2(0f, -8.5f)));
             MapSystem.SaveMap(map);
         }
     }
