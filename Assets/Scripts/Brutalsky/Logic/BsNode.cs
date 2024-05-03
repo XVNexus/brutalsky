@@ -155,6 +155,20 @@ namespace Brutalsky.Logic
                 });
         }
 
+        public static BsNode Delay(int time)
+        {
+            return new BsNode("fdly", new float[1], new float[1],
+                () => new float[time], (inputs, state) =>
+                {
+                    for (var i = time - 1; i >= 1; i--)
+                    {
+                        state[i] = state[i - 1];
+                    }
+                    state[0] = inputs[0];
+                    return new[] { state[^1] };
+                }, time);
+        }
+
         public static BsNode Clock(int interval)
         {
             return new BsNode("fclk", Array.Empty<float>(), new float[1],
@@ -404,6 +418,7 @@ namespace Brutalsky.Logic
                 "bmem" => Mem(),
                 // Flow nodes
                 "ftmr" => Timer(),
+                "fdly" => Delay(BsMatrix.ToInt(config[0])),
                 "fclk" => Clock(BsMatrix.ToInt(config[0])),
                 "foch" => Onchanged(),
                 "fmux" => Mux(BsMatrix.ToInt(config[0])),
