@@ -58,7 +58,7 @@ namespace Controllers.Gui
 
         private void OnButtonPressCont()
         {
-            GuiSystem._.Escape();
+            GuiSystem._.DeactivatePane(PaneId);
         }
 
         private void OnButtonPressLvls()
@@ -68,7 +68,8 @@ namespace Controllers.Gui
 
         private void OnButtonPressRest()
         {
-            GameManager.RestartRound();
+            GameManager._.RestartRound();
+            GuiSystem._.EscapeAll();
         }
 
         private void OnButtonPressCnfg()

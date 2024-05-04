@@ -19,9 +19,9 @@ namespace Core
         // Init functions
         protected override void OnLoad()
         {
-            GenerateDefaultMaps();
-            MapSystem._.ResaveBuiltinMaps(new[] { "Brutalsky", "Doomring", "Tossup" });
-            StartGame(MapSystem.GenerateId("Tossup", "Xveon"), new[]
+            // GenerateDefaultMaps();
+            MapSystem._.ResaveBuiltinMaps(new[] { "Void" });
+            StartGame(MapSystem.GenerateId("Brutalsky", "Xveon"), new[]
             {
                 new BsPlayer("Player 1", 100f, new Color(1f, .5f, 0f)),
                 new BsPlayer("Player 2", 100f, new Color(0f, .5f, 1f), true)
@@ -29,7 +29,7 @@ namespace Core
         }
 
         // System functions
-        public static void StartGame(uint starterMapId, BsPlayer[] activePlayers)
+        public void StartGame(uint starterMapId, BsPlayer[] activePlayers)
         {
             MapSystem._.ScanMapFiles();
             MapSystem._.RegisterPlayers(activePlayers);
@@ -37,41 +37,51 @@ namespace Core
             MapSystem._.SpawnAllPlayers();
         }
 
-        public static void StartRound(uint mapId)
+        public void StartRound(uint mapId)
         {
             ChangeMap(mapId, true, 2f);
         }
 
-        public static void RestartRound()
+        public void RestartRound()
         {
-            ChangeMap(MapSystem._.ActiveMap.Id, false, 1f);
+            ChangeMap(MapSystem._.ActiveMap.Id, false, 2f);
         }
 
-        public static void ChangeMap(uint mapId, bool moveCam, float animTime)
+        public void ChangeMap(uint mapId, bool moveCam, float animTime)
         {
+            // Disable player physics for the animation
+            MapSystem._.FreezePlayers();
+            LeanTween.delayedCall(MapSystem._.gPlayerParent, animTime, () =>
+            {
+                MapSystem._.UnfreezePlayers();
+            });
+
+            // Fade out view to hide level loading and fade back in with new level
             var camCover = CameraSystem._.cCameraCover.gameObject;
-            camCover.LeanColor(MapSystem._.ActiveMap.BackgroundColor, animTime * .4f)
+            camCover.LeanColor(MapSystem._.ActiveMap.BackgroundColor.MultiplyTint(.75f), animTime * .4f)
                 .setEaseInOutCubic()
                 .setOnComplete(() =>
                 {
                     MapSystem._.BuildMap(mapId);
                     MapSystem._.SpawnAllPlayers();
-                    camCover.LeanColor(MapSystem._.ActiveMap.BackgroundColor, animTime * .2f)
+                    camCover.LeanColor(MapSystem._.ActiveMap.BackgroundColor.MultiplyTint(.75f), animTime * .2f)
                         .setEaseInOutCubic()
                         .setOnComplete(() =>
                         {
-                            camCover.LeanColor(MapSystem._.ActiveMap.BackgroundColor.SetAlpha(0f), animTime * .4f)
+                            camCover.LeanColor(MapSystem._.ActiveMap.BackgroundColor.SetAlpha(0f).MultiplyTint(.75f), animTime * .4f)
                                 .setEaseInOutCubic();
                         });
                 });
+
+            // Move camera down as if the old level ascends into the sky and is replaced by the new level from below
             if (!moveCam) return;
             var camMount = CameraSystem._.gCameraMount;
-            camMount.LeanMove(new Vector2(0f, CameraSystem._.orthoSize * -2f - 15f), animTime * .5f)
+            camMount.LeanMoveLocal(new Vector2(0f, CameraSystem._.orthoSize * -3f), animTime * .5f)
                 .setEaseInQuint()
                 .setOnComplete(() =>
                 {
-                    camMount.transform.position = new Vector2(0f, CameraSystem._.orthoSize * 2f + 15f);
-                    camMount.LeanMove(new Vector2(0f, 0f), animTime * .5f)
+                    camMount.transform.localPosition = new Vector2(0f, CameraSystem._.orthoSize * 3f);
+                    camMount.LeanMoveLocal(new Vector2(0f, 0f), animTime * .5f)
                         .setEaseOutQuint();
                 });
         }

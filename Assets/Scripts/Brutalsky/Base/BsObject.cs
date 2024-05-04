@@ -84,12 +84,12 @@ namespace Brutalsky.Base
             }
         }
 
-        public void Deactivate(BsMap map)
+        public void Deactivate()
         {
             UnityEngine.Object.Destroy(InstanceObject);
             foreach (var addon in Addons)
             {
-                addon.Deactivate(map);
+                addon.Deactivate();
             }
             InstanceObject = null;
             InstanceController = null;

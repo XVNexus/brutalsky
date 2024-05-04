@@ -12,7 +12,6 @@ using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using Utils.Constants;
-using Utils.Ext;
 using Utils.Object;
 
 namespace Core
@@ -31,12 +30,13 @@ namespace Core
         // Local variables
         public Dictionary<uint, string> RawMapList { get; private set; } = new();
         [CanBeNull] public BsMap ActiveMap { get; private set; }
-        public Dictionary<string, BsPlayer> ActivePlayers { get; private set; } = new();
+        public List<BsPlayer> ActivePlayers { get; private set; } = new();
         [CanBeNull] public BsMatrix Matrix { get; private set; }
         public bool MapLoaded { get; private set; }
 
         // External references
         public GameObject gMapParent;
+        public GameObject gPlayerParent;
         public SpriteRenderer gBackgroundMain;
         public SpriteRenderer[] gBackgroundEdges;
         public SpriteRenderer[] gBackgroundCorners;
@@ -72,17 +72,16 @@ namespace Core
         {
             foreach (var player in players)
             {
-                player.Activate(gMapParent.transform, ActiveMap);
-                ActivePlayers[player.Id] = player;
+                player.Activate(gPlayerParent.transform, ActiveMap);
+                ActivePlayers.Add(player);
             }
         }
 
         public void UnregisterPlayers()
         {
-            foreach (var id in ActivePlayers.Keys)
+            foreach (var player in ActivePlayers)
             {
-                ActivePlayers[id].Deactivate(ActiveMap);
-                ActivePlayers.Remove(id);
+                player.Deactivate();
             }
         }
 
@@ -217,12 +216,13 @@ namespace Core
         public void DeleteObject(BsObject obj)
         {
             if (!obj.Active) return;
-            obj.Deactivate(ActiveMap);
+            obj.Deactivate();
         }
 
         public void SpawnAllPlayers()
         {
-            var playerList = ActivePlayers.Values.ToList();
+            var playerList = new List<BsPlayer>();
+            playerList.AddRange(ActivePlayers);
             while (playerList.Count > 0)
             {
                 var index = ResourceSystem.Random.NextInt(playerList.Count);
@@ -235,8 +235,26 @@ namespace Core
         {
             if (!MapLoaded || !player.Active) return;
             player.Health = ActiveMap.PlayerHealth;
-            player.InstanceObject.transform.position = ActiveMap.SelectSpawn();
+            player.InstanceObject.transform.localPosition = ActiveMap.SelectSpawn();
             EventSystem._.EmitPlayerSpawn(ActiveMap, player);
+        }
+
+        public void FreezePlayers()
+        {
+            foreach (var player in ActivePlayers)
+            {
+                player.InstanceObject.GetComponent<Rigidbody2D>().simulated = false;
+                player.InstanceObject.GetComponent<CircleCollider2D>().enabled = false;
+            }
+        }
+
+        public void UnfreezePlayers()
+        {
+            foreach (var player in ActivePlayers)
+            {
+                player.InstanceObject.GetComponent<Rigidbody2D>().simulated = true;
+                player.InstanceObject.GetComponent<CircleCollider2D>().enabled = true;
+            }
         }
 
         // Event functions

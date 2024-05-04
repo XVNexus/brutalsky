@@ -145,7 +145,7 @@ namespace Controllers.Player
             // Update ground status
             onGround = _onGroundFrames > 0;
             _onGroundFrames = Mathf.Max(_onGroundFrames - 1, 0);
-            _lastPosition = transform.position;
+            _lastPosition = transform.localPosition;
 
             // Get movement data
             var velocity = _cRigidbody2D.velocity;

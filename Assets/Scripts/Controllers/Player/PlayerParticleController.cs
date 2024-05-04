@@ -121,8 +121,8 @@ namespace Controllers.Player
             var mapBounds = MapSystem._.ActiveMap.PlayArea * .5f + Vector2.one * DeathParticleClamp;
             cDeathParticleSystem.transform.position = new Vector2
             (
-                Mathf.Clamp(transform.position.x, -mapBounds.x, mapBounds.x),
-                Mathf.Clamp(transform.position.y, -mapBounds.y, mapBounds.y)
+                Mathf.Clamp(transform.localPosition.x, -mapBounds.x, mapBounds.x),
+                Mathf.Clamp(transform.localPosition.y, -mapBounds.y, mapBounds.y)
             );
             cDeathParticleSystem.Play();
         }
@@ -144,14 +144,14 @@ namespace Controllers.Player
             DisplayImpactParticles(other.TotalNormalImpulse());
             if (!other.gameObject.CompareTag(Tags.ShapeGTag) || other.DirectnessFactor() < .5f) return;
             DisplayTouchParticles(MathfExt.Atan2(
-                other.GetContact(0).point - (Vector2)transform.position) * Mathf.Rad2Deg);
+                other.GetContact(0).point - (Vector2)transform.localPosition) * Mathf.Rad2Deg);
         }
 
         private void OnCollisionStay2D(Collision2D other)
         {
             if (!other.gameObject.CompareTag(Tags.ShapeGTag) || other.relativeVelocity.magnitude < 3f) return;
             DisplaySlideParticles(MathfExt.Atan2(
-                other.GetContact(0).point - (Vector2)transform.position) * Mathf.Rad2Deg);
+                other.GetContact(0).point - (Vector2)transform.localPosition) * Mathf.Rad2Deg);
         }
 
         private void FixedUpdate()

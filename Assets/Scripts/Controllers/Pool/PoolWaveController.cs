@@ -79,7 +79,7 @@ namespace Controllers.Pool
         private void OnTrigger2D(Component other)
         {
             // Trigger wave splash effect
-            var splashPoint = transform.InverseTransformPoint(other.transform.position).x * Master.Object.Size.x;
+            var splashPoint = transform.InverseTransformPoint(other.transform.localPosition).x * Master.Object.Size.x;
             _waves.Add(new PoolWave(splashPoint, 50f, 2.5f, 5f));
         }
 

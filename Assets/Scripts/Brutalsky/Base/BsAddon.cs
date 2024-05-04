@@ -48,7 +48,7 @@ namespace Brutalsky.Base
             Active = true;
         }
 
-        public void Deactivate(BsMap map)
+        public void Deactivate()
         {
             InstanceComponent = null;
             Active = false;

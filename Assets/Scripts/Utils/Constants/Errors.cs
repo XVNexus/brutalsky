@@ -23,6 +23,10 @@ namespace Utils.Constants
         public static ArgumentOutOfRangeException InvalidGuiElementType()
             => new("", "Unrecognized GUI element query type");
 
+        // TODO: COMBINE ALL NO FOUND ERRORS AND INVALID ERRORS INTO ONE
+        public static ArgumentOutOfRangeException NoGuiPaneFound(string id)
+            => new("", $"No gui pane found with id '{id}'");
+
         public static ArgumentNullException BuildNullMap()
             => new("", "Cannot rebuild the map when no map is currently loaded");
 

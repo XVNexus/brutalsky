@@ -96,7 +96,7 @@ namespace Brutalsky.Object
             }
 
             // Apply position
-            gameObject.transform.position = Transform.Position;
+            gameObject.transform.localPosition = Transform.Position;
 
             return controller;
         }

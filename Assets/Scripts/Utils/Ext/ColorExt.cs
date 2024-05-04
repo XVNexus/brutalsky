@@ -20,6 +20,11 @@ namespace Utils.Ext
         public static readonly Color Void = new(0f, 0f, 0f, 1f);
         public static readonly Color Ether = new(1f, 1f, 1f, 1f);
 
+        public static Color MultiplyTint(this Color _, float value)
+        {
+            return new Color(_.r * value, _.g * value, _.b * value, _.a);
+        }
+
         public static Color SetAlpha(this Color _, float a)
         {
             return new Color(_.r, _.g, _.b, a);

@@ -44,19 +44,42 @@ namespace Core
         }
 
         // System functions
-        public void Escape()
+        public void EscapeOne()
         {
-            if (GetVisiblePane()?.Deactivate() ?? false)
+            if (DeactivatePane())
             {
                 if (!ContainsVisiblePane())
                 {
                     TimeSystem.Unpause();
                 }
             }
-            else if (GetPane(PauseMenuId)?.Activate() ?? false)
+            else
             {
+                ActivatePane(PauseMenuId);
                 TimeSystem.Pause();
             }
+        }
+
+        public void EscapeAll()
+        {
+            if (!ContainsVisiblePane()) return;
+            while (DeactivatePane()) {}
+            TimeSystem.Unpause();
+        }
+
+        public bool ActivatePane(string id)
+        {
+            return GetPane(id).Activate();
+        }
+
+        public bool DeactivatePane(string id)
+        {
+            return GetPane(id).Deactivate();
+        }
+
+        public bool DeactivatePane()
+        {
+            return GetVisiblePane()?.Deactivate() ?? false;
         }
 
         [CanBeNull]
@@ -73,7 +96,13 @@ namespace Core
         [CanBeNull]
         public GuiPane GetPane(string id)
         {
-            return _panes.GetValueOrDefault(id, null);
+            if (!ContainsPane(id)) throw Errors.NoGuiPaneFound(id);
+            return _panes[id];
+        }
+
+        public bool ContainsPane(string id)
+        {
+            return _panes.ContainsKey(id);
         }
 
         public bool RegisterPane(string id, MonoBehaviour controller, string parentId = "")
@@ -108,21 +137,6 @@ namespace Core
             if (!ContainsPane(id)) return false;
             _panes.Remove(id);
             return true;
-        }
-
-        public bool ContainsPane(string id)
-        {
-            return _panes.ContainsKey(id);
-        }
-
-        public bool ActivatePane(string id)
-        {
-            return GetPane(id)?.Activate() ?? false;
-        }
-
-        public bool DeactivatePane(string id)
-        {
-            return GetPane(id)?.Deactivate() ?? false;
         }
 
         public void RegisterButtons(string paneId, IEnumerable<string> itemIds)
@@ -168,7 +182,7 @@ namespace Core
         // Event functions
         private void OnIEscape(InputAction.CallbackContext context)
         {
-            Escape();
+            EscapeOne();
         }
     }
 }

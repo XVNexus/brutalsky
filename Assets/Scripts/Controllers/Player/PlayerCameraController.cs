@@ -44,7 +44,7 @@ namespace Controllers.Player
             // Get collision info
             if (other.gameObject.CompareTag(Tags.PlayerGTag)) return;
             var impactForce = other.TotalNormalImpulse();
-            var impactDirection = ((Vector2)transform.position - other.contacts[0].point).normalized;
+            var impactDirection = ((Vector2)transform.localPosition - other.contacts[0].point).normalized;
 
             // Apply camera shake
             var shakeForce = Mathf.Min(PlayerHealthController.CalculateDamage(impactForce) * .05f, 5f);

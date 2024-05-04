@@ -60,8 +60,8 @@ namespace Brutalsky.Object
             }
 
             // Apply position and rotation
-            gameObject.transform.position = Transform.Position;
-            gameObject.transform.rotation = Quaternion.Euler(0f, 0f, Transform.Rotation);
+            gameObject.transform.localPosition = Transform.Position;
+            gameObject.transform.localRotation = Quaternion.Euler(0f, 0f, Transform.Rotation);
 
             return controller;
         }

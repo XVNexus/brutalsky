@@ -154,7 +154,8 @@ namespace Controllers.Gui
 
         private void OnButtonPressLoad(uint mapId)
         {
-            GameManager.StartRound(mapId);
+            GameManager._.StartRound(mapId);
+            GuiSystem._.EscapeAll();
         }
     }
 }
