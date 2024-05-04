@@ -3,8 +3,10 @@ using Brutalsky.Base;
 using Controllers;
 using Controllers.Base;
 using Core;
+using JetBrains.Annotations;
 using UnityEngine;
 using Utils.Constants;
+using Utils.Ext;
 using Utils.Lcs;
 using Utils.Object;
 using Utils.Shape;
@@ -19,14 +21,18 @@ namespace Brutalsky.Object
 
         public Form Form { get; set; }
         public ShapeMaterial Material { get; set; }
-        public ObjectColor Color { get; set; }
+        public bool Dynamic { get; set; }
+        public Color Color { get; set; }
+        public bool Glow { get; set; }
 
-        public BsShape(string id, ObjectTransform transform, ObjectLayer layer, bool simulated,
-            Form form, ShapeMaterial material, ObjectColor color) : base(id, transform, layer, simulated)
+        public BsShape(string id, ObjectTransform transform, ObjectLayer layer, bool simulated, Form form,
+            [CanBeNull] ShapeMaterial material = null, Color? color = null, bool glow = false)
+            : base(id, transform, layer, simulated)
         {
             Form = form;
-            Material = material;
-            Color = color;
+            Material = material ?? ShapeMaterial.Metal;
+            Color = color ?? ColorExt.Ether;
+            Glow = glow;
         }
 
         public BsShape()
@@ -63,8 +69,8 @@ namespace Brutalsky.Object
 
             // Apply color and layer
             var meshRenderer = gameObject.GetComponent<MeshRenderer>();
-            meshRenderer.material = Color.Glow ? ResourceSystem._.aUnlitMaterial : ResourceSystem._.aLitMaterial;
-            meshRenderer.material.color = Color.Color;
+            meshRenderer.material = Glow ? ResourceSystem._.aUnlitMaterial : ResourceSystem._.aLitMaterial;
+            meshRenderer.material.color = Color;
             meshRenderer.sortingOrder = MapSystem.LayerToOrder(Layer);
 
             // Apply material
@@ -78,7 +84,7 @@ namespace Brutalsky.Object
                 };
                 polygonCollider.sharedMaterial = physicsMaterial;
                 rigidbody.sharedMaterial = physicsMaterial;
-                if (Material.Dynamic)
+                if (Dynamic)
                 {
                     rigidbody.bodyType = RigidbodyType2D.Dynamic;
                     polygonCollider.density = Material.Density;
@@ -102,7 +108,9 @@ namespace Brutalsky.Object
                 LcsParser.Stringify(Transform),
                 LcsParser.Stringify(Form),
                 LcsParser.Stringify(Material),
+                LcsParser.Stringify(Dynamic),
                 LcsParser.Stringify(Color),
+                LcsParser.Stringify(Glow),
                 LcsParser.Stringify(Layer),
                 LcsParser.Stringify(Simulated)
             };
@@ -113,9 +121,11 @@ namespace Brutalsky.Object
             Transform = LcsParser.ParseTransform(properties[0]);
             Form = LcsParser.ParseForm(properties[1]);
             Material = LcsParser.ParseMaterial(properties[2]);
-            Color = LcsParser.ParseColor(properties[3]);
-            Layer = LcsParser.ParseLayer(properties[4]);
-            Simulated = LcsParser.ParseBool(properties[5]);
+            Dynamic = LcsParser.ParseBool(properties[3]);
+            Color = LcsParser.ParseColor(properties[4]);
+            Glow = LcsParser.ParseBool(properties[5]);
+            Layer = LcsParser.ParseLayer(properties[6]);
+            Simulated = LcsParser.ParseBool(properties[7]);
         }
     }
 }

@@ -129,16 +129,15 @@ namespace Utils.Lcs
             return (Direction)ParseInt(raw);
         }
 
-        public static string Stringify(ObjectColor color)
+        public static string Stringify(Color color)
         {
-            return Float01ToHex(color.Color.r) + Float01ToHex(color.Color.g) + Float01ToHex(color.Color.b) +
-                Float01ToHex(color.Color.a) + Stringify(color.Glow);
+            return Float01ToHex(color.r) + Float01ToHex(color.g) + Float01ToHex(color.b) + Float01ToHex(color.a);
         }
 
-        public static ObjectColor ParseColor(string raw)
+        public static Color ParseColor(string raw)
         {
-            return new ObjectColor(HexToFloat01(raw[..2]), HexToFloat01(raw[2..4]), HexToFloat01(raw[4..6]),
-                HexToFloat01(raw[6..8]), ParseBool(raw[8..9]));
+            return new Color(HexToFloat01(raw[..2]), HexToFloat01(raw[2..4]), HexToFloat01(raw[4..6]),
+                HexToFloat01(raw[6..8]));
         }
 
         public static string Stringify(ObjectLayer layer)
@@ -199,8 +198,7 @@ namespace Utils.Lcs
                 Stringify(material.Restitution),
                 Stringify(material.Adhesion),
                 Stringify(material.Density),
-                Stringify(material.Health),
-                Stringify(material.Dynamic)
+                Stringify(material.Health)
             });
         }
 
@@ -212,8 +210,7 @@ namespace Utils.Lcs
             var adhesion = ParseFloat(parts[2]);
             var density = ParseFloat(parts[3]);
             var health = ParseFloat(parts[4]);
-            var dynamic = ParseBool(parts[5]);
-            return new ShapeMaterial(friction, restitution, adhesion, density, health, dynamic);
+            return new ShapeMaterial(friction, restitution, adhesion, density, health);
         }
 
         public static string Stringify(PoolChemical chemical)

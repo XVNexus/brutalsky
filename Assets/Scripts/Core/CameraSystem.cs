@@ -11,7 +11,6 @@ namespace Core
         private void Awake() => _ = this;
 
         // Local variables
-        public GameObject gCameraMount;
         public Vector2 viewSize;
         public float orthoSize;
         public float dampening;
@@ -25,6 +24,8 @@ namespace Core
         private float _lastCameraAspect;
 
         // External references
+        public GameObject gCameraMount;
+        public SpriteRenderer cCameraCover;
         private Camera _cCamera;
 
         // Init functions

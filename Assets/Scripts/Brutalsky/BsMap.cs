@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Brutalsky.Base;
@@ -8,8 +7,8 @@ using Core;
 using JetBrains.Annotations;
 using UnityEngine;
 using Utils.Constants;
+using Utils.Ext;
 using Utils.Lcs;
-using Utils.Object;
 
 namespace Brutalsky
 {
@@ -19,8 +18,19 @@ namespace Brutalsky
         public string Title { get; set; }
         public string Author { get; set; }
         public Vector2 PlayArea { get; set; }
-        public ObjectColor BackgroundColor { get; set; }
-        public ObjectColor LightingColor { get; set; }
+        public Color BackgroundColor { get => _backgroundColor; set => _backgroundColor = value.StripAlpha(); }
+        private Color _backgroundColor;
+        public Color LightingTint
+        {
+            get => LightingColor.MergeAlpha();
+            set => LightingColor = new Color(value.r, value.g, value.b, LightingColor.a);
+        }
+        public float LightingIntensity
+        {
+            get => LightingColor.a;
+            set => LightingColor = new Color(LightingColor.r, LightingColor.g, LightingColor.b, value);
+        }
+        public Color LightingColor;
         public Direction GravityDirection { get; set; }
         public float GravityStrength { get; set; }
         public float PlayerHealth { get; set; }

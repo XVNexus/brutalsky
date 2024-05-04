@@ -37,10 +37,10 @@ namespace Controllers.Shape
         {
             // Get collision info
             var otherRigidbody = other.rigidbody;
-            var thisDynamic = Master.Object.Material.Dynamic;
+            var thisDynamic = Master.Object.Dynamic;
             var otherDynamic = other.gameObject.CompareTag(Tags.PlayerGTag)
                 || (other.gameObject.CompareTag(Tags.ShapeGTag)
-                    && other.gameObject.GetComponent<ShapeController>().Object.Material.Dynamic);
+                    && other.gameObject.GetComponent<ShapeController>().Object.Dynamic);
 
             // Apply adhesion force
             var contact = other.GetContact(0);

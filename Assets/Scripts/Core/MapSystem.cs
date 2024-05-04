@@ -12,6 +12,7 @@ using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using Utils.Constants;
+using Utils.Ext;
 using Utils.Object;
 
 namespace Core
@@ -115,7 +116,7 @@ namespace Core
 
             // Apply config
             CameraSystem._.ResizeView(map.PlayArea);
-            var backgroundColor = map.BackgroundColor.Tint * map.LightingColor.Tint;
+            var backgroundColor = map.BackgroundColor;
             var halfArea = map.PlayArea * .5f;
             const float halfFade = BackgroundFade * .5f;
             const float halfField = BackgroundField * .5f;
@@ -168,8 +169,8 @@ namespace Core
                 };
                 gBackgroundOob.transform.localScale = new Vector2(BackgroundField, BackgroundField);
             }
-            cLight2D.color = map.LightingColor.Tint;
-            cLight2D.intensity = map.LightingColor.Alpha;
+            cLight2D.color = map.LightingTint;
+            cLight2D.intensity = map.LightingIntensity;
             Physics2D.gravity = GravityToVector(map.GravityDirection, map.GravityStrength);
 
             // Create all objects

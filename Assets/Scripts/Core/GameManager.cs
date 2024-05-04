@@ -4,6 +4,7 @@ using Brutalsky.Object;
 using Controllers.Base;
 using UnityEngine;
 using Utils.Constants;
+using Utils.Ext;
 using Utils.Object;
 using Utils.Shape;
 
@@ -15,9 +16,6 @@ namespace Core
         public static GameManager _ { get; private set; }
         private void Awake() => _ = this;
 
-        // Local constants
-        public const float AnimationTime = 2f;
-
         // Init functions
         protected override void OnLoad()
         {
@@ -25,8 +23,8 @@ namespace Core
             MapSystem._.ResaveBuiltinMaps(new[] { "Brutalsky", "Doomring", "Tossup" });
             StartGame(MapSystem.GenerateId("Tossup", "Xveon"), new[]
             {
-                new BsPlayer("Player 1", 100f, new ObjectColor(1f, .5f, 0f)),
-                new BsPlayer("Player 2", 100f, new ObjectColor(0f, .5f, 1f), true)
+                new BsPlayer("Player 1", 100f, new Color(1f, .5f, 0f)),
+                new BsPlayer("Player 2", 100f, new Color(0f, .5f, 1f), true)
             });
         }
 
@@ -39,22 +37,41 @@ namespace Core
             MapSystem._.SpawnAllPlayers();
         }
 
-        public static void RestartRound()
+        public static void StartRound(uint mapId)
         {
-            ChangeMap(MapSystem._.ActiveMap.Id);
+            ChangeMap(mapId, true, 2f);
         }
 
-        public static void ChangeMap(uint mapId)
+        public static void RestartRound()
         {
-            var camMount = CameraSystem._.gCameraMount;
-            camMount.LeanMove(new Vector2(0f, CameraSystem._.orthoSize * -2f - 15f), AnimationTime * .5f)
-                .setEaseInBack()
+            ChangeMap(MapSystem._.ActiveMap.Id, false, 1f);
+        }
+
+        public static void ChangeMap(uint mapId, bool moveCam, float animTime)
+        {
+            var camCover = CameraSystem._.cCameraCover.gameObject;
+            camCover.LeanColor(MapSystem._.ActiveMap.BackgroundColor, animTime * .4f)
+                .setEaseInOutCubic()
                 .setOnComplete(() =>
                 {
                     MapSystem._.BuildMap(mapId);
                     MapSystem._.SpawnAllPlayers();
+                    camCover.LeanColor(MapSystem._.ActiveMap.BackgroundColor, animTime * .2f)
+                        .setEaseInOutCubic()
+                        .setOnComplete(() =>
+                        {
+                            camCover.LeanColor(MapSystem._.ActiveMap.BackgroundColor.SetAlpha(0f), animTime * .4f)
+                                .setEaseInOutCubic();
+                        });
+                });
+            if (!moveCam) return;
+            var camMount = CameraSystem._.gCameraMount;
+            camMount.LeanMove(new Vector2(0f, CameraSystem._.orthoSize * -2f - 15f), animTime * .5f)
+                .setEaseInQuint()
+                .setOnComplete(() =>
+                {
                     camMount.transform.position = new Vector2(0f, CameraSystem._.orthoSize * 2f + 15f);
-                    camMount.LeanMove(new Vector2(0f, 0f), AnimationTime * .5f)
+                    camMount.LeanMove(new Vector2(0f, 0f), animTime * .5f)
                         .setEaseOutQuint();
                 });
         }
@@ -81,8 +98,8 @@ namespace Core
             var map = new BsMap(title, "Brutalsky")
             {
                 PlayArea = new Vector2(size, size * .5f),
-                BackgroundColor = new ObjectColor(.1f, 1f, .1f, .25f),
-                LightingColor = new ObjectColor(.1f, 1f, .1f, .9f),
+                BackgroundColor = new Color(.025f, .25f, .025f),
+                LightingColor = new Color(.1f, 1f, .1f, .8f),
                 GravityDirection = Direction.Down,
                 GravityStrength = 20f,
                 PlayerHealth = 100f
@@ -97,9 +114,7 @@ namespace Core
                 new ObjectTransform(0f, -size * .25f + .5f),
                 ObjectLayer.Midground,
                 true,
-                Form.Rectangle(size, 1f),
-                ShapeMaterial.Stone(),
-                ObjectColor.Ether()
+                Form.Rectangle(size, 1f)
             ));
             if (top) map.AddObject(new BsShape
             (
@@ -107,9 +122,7 @@ namespace Core
                 new ObjectTransform(0f, size * .25f - .5f),
                 ObjectLayer.Midground,
                 true,
-                Form.Rectangle(size, 1f),
-                ShapeMaterial.Stone(),
-                ObjectColor.Ether()
+                Form.Rectangle(size, 1f)
             ));
             if (left) map.AddObject(new BsShape
             (
@@ -117,9 +130,7 @@ namespace Core
                 new ObjectTransform(-size * .5f + .5f, 0f),
                 ObjectLayer.Midground,
                 true,
-                Form.Rectangle(1f, size * .5f),
-                ShapeMaterial.Stone(),
-                ObjectColor.Ether()
+                Form.Rectangle(1f, size * .5f)
             ));
             if (right) map.AddObject(new BsShape
             (
@@ -127,9 +138,7 @@ namespace Core
                 new ObjectTransform(size * .5f - .5f, 0f),
                 ObjectLayer.Midground,
                 true,
-                Form.Rectangle(1f, size * .5f),
-                ShapeMaterial.Stone(),
-                ObjectColor.Ether()
+                Form.Rectangle(1f, size * .5f)
             ));
             if (top && left) map.AddObject(new BsShape
             (
@@ -137,9 +146,7 @@ namespace Core
                 new ObjectTransform(-size * .5f + 1f, size * .25f - 1f),
                 ObjectLayer.Midground,
                 true,
-                Form.Vector(new[] { 0f, 0f, 0f, 3f, 0f, 1f, 0f, 0f, 0f, -3f }),
-                ShapeMaterial.Stone(),
-                ObjectColor.Ether()
+                Form.Vector(new[] { 0f, 0f, 0f, 3f, 0f, 1f, 0f, 0f, 0f, -3f })
             ));
             if (top && right) map.AddObject(new BsShape
             (
@@ -147,9 +154,7 @@ namespace Core
                 new ObjectTransform(size * .5f - 1f, size * .25f - 1f),
                 ObjectLayer.Midground,
                 true,
-                Form.Vector(new[] { 0f, 0f, 0f, -3f, 0f, 1f, 0f, 0f, 0f, -3f }),
-                ShapeMaterial.Stone(),
-                ObjectColor.Ether()
+                Form.Vector(new[] { 0f, 0f, 0f, -3f, 0f, 1f, 0f, 0f, 0f, -3f })
             ));
             if (bottom && left) map.AddObject(new BsShape
             (
@@ -157,9 +162,7 @@ namespace Core
                 new ObjectTransform(-size * .5f + 1f, -size * .25f + 1f),
                 ObjectLayer.Midground,
                 true,
-                Form.Vector(new[] { 0f, 0f, 0f, 3f, 0f, 1f, 0f, 0f, 0f, 3f }),
-                ShapeMaterial.Stone(),
-                ObjectColor.Ether()
+                Form.Vector(new[] { 0f, 0f, 0f, 3f, 0f, 1f, 0f, 0f, 0f, 3f })
             ));
             if (bottom && right) map.AddObject(new BsShape
             (
@@ -167,9 +170,7 @@ namespace Core
                 new ObjectTransform(size * .5f - 1f, -size * .25f + 1f),
                 ObjectLayer.Midground,
                 true,
-                Form.Vector(new[] { 0f, 0f, 0f, -3f, 0f, 1f, 0f, 0f, 0f, 3f }),
-                ShapeMaterial.Stone(),
-                ObjectColor.Ether()
+                Form.Vector(new[] { 0f, 0f, 0f, -3f, 0f, 1f, 0f, 0f, 0f, 3f })
             ));
             MapSystem.SaveMap(map);
         }

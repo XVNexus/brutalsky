@@ -2,6 +2,12 @@ namespace Utils.Pool
 {
     public class PoolChemical
     {
+        public static readonly PoolChemical Oil = new(2.5f, 1f);
+        public static readonly PoolChemical Water = new(25f, 1f);
+        public static readonly PoolChemical Honey = new(25f, 10f);
+        public static readonly PoolChemical Medicine = new(25f, 1f, 50f);
+        public static readonly PoolChemical Lava = new(25f, 1f, -50f);
+
         public float Buoyancy { get; private set; }
         public float Viscosity { get; private set; }
         public float Health { get; private set; }
@@ -26,20 +32,5 @@ namespace Utils.Pool
                 health ?? Health
             );
         }
-
-        // Thin
-        public static PoolChemical Oil() => new(2.5f, 1f);
-
-        // Medium
-        public static PoolChemical Water() => new(25f, 1f);
-
-        // Thick
-        public static PoolChemical Honey() => new(25f, 10f);
-
-        // Healing
-        public static PoolChemical Medicine() => new(25f, 1f, 50f);
-
-        // Harmful
-        public static PoolChemical Lava() => new(25f, 1f, -50f);
     }
 }

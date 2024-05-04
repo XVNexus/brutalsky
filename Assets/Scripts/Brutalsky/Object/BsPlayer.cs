@@ -17,10 +17,10 @@ namespace Brutalsky.Object
 
         public string Name { get; set; }
         public float Health { get; set; }
-        public ObjectColor Color { get; set; }
+        public Color Color { get; set; }
         public bool Dummy { get; set; }
 
-        public BsPlayer(string name, float health, ObjectColor color, bool dummy = false)
+        public BsPlayer(string name, float health, Color color, bool dummy = false)
             : base(name, new ObjectTransform(), ObjectLayer.Midground, true)
         {
             Name = name;
@@ -40,7 +40,7 @@ namespace Brutalsky.Object
             controller.Object = this;
 
             // Apply config
-            controller.GetComponent<SpriteRenderer>().color = Color.Color;
+            controller.GetComponent<SpriteRenderer>().color = Color;
 
             return controller;
         }

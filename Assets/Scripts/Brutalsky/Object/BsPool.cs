@@ -2,8 +2,10 @@ using Brutalsky.Base;
 using Controllers;
 using Controllers.Base;
 using Core;
+using JetBrains.Annotations;
 using UnityEngine;
 using Utils.Constants;
+using Utils.Ext;
 using Utils.Lcs;
 using Utils.Object;
 using Utils.Pool;
@@ -18,14 +20,17 @@ namespace Brutalsky.Object
 
         public Vector2 Size { get; set; }
         public PoolChemical Chemical { get; set; }
-        public ObjectColor Color { get; set; }
+        public Color Color { get; set; }
+        public bool Glow { get; set; }
 
         public BsPool(string id, ObjectTransform transform, Vector2 size, ObjectLayer layer, bool simulated,
-            PoolChemical chemical, ObjectColor color) : base(id, transform, layer, simulated)
+            [CanBeNull] PoolChemical chemical = null, Color? color = null, bool glow = false)
+            : base(id, transform, layer, simulated)
         {
             Size = size;
-            Chemical = chemical;
-            Color = color;
+            Chemical = chemical ?? PoolChemical.Water;
+            Color = color ?? ColorExt.Ether;
+            Glow = glow;
         }
 
         public BsPool()
@@ -43,8 +48,8 @@ namespace Brutalsky.Object
 
             // Apply color and layer
             var spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
-            spriteRenderer.material = Color.Glow ? ResourceSystem._.aUnlitMaterial : ResourceSystem._.aLitMaterial;
-            spriteRenderer.material.color = Color.Color;
+            spriteRenderer.material = Glow ? ResourceSystem._.aUnlitMaterial : ResourceSystem._.aLitMaterial;
+            spriteRenderer.material.color = Color;
             spriteRenderer.sortingOrder = MapSystem.LayerToOrder(Layer);
 
             // Apply chemical
@@ -69,6 +74,7 @@ namespace Brutalsky.Object
                 LcsParser.Stringify(Size),
                 LcsParser.Stringify(Chemical),
                 LcsParser.Stringify(Color),
+                LcsParser.Stringify(Glow),
                 LcsParser.Stringify(Layer),
                 LcsParser.Stringify(Simulated)
             };
@@ -80,8 +86,9 @@ namespace Brutalsky.Object
             Size = LcsParser.ParseVector2(properties[1]);
             Chemical = LcsParser.ParseChemical(properties[2]);
             Color = LcsParser.ParseColor(properties[3]);
-            Layer = LcsParser.ParseLayer(properties[4]);
-            Simulated = LcsParser.ParseBool(properties[5]);
+            Glow = LcsParser.ParseBool(properties[4]);
+            Layer = LcsParser.ParseLayer(properties[5]);
+            Simulated = LcsParser.ParseBool(properties[6]);
         }
     }
 }

@@ -67,7 +67,7 @@ namespace Controllers.Gui
             // Paint background and frame
             painter.AutoTransform = false;
             painter.DrawRoundedRect(new Rect(-3f, -3f, 206f, 106f), 3f);
-            painter.Fill(map.BackgroundColor.Tint * map.LightingColor.Tint);
+            painter.Fill(map.BackgroundColor);
             painter.DrawRoundedRect(new Rect(-2f, -2f, 204f, 104f), 2f);
             painter.Stroke(new Color(1f, 1f, 1f, .25f), 2f);
             painter.AutoTransform = true;
@@ -90,7 +90,7 @@ namespace Controllers.Gui
                 case Tags.ShapeLTag:
                     var shape = (BsShape)obj;
                     PaintObjectPreview(painter, shape.Transform, shape.Form.ToFillPoints(shape.Transform.Rotation),
-                        shape.Color.Color * map.LightingColor.Tint);
+                        shape.Color * map.LightingTint);
                     break;
                 case Tags.PoolLTag:
                     var pool = (BsPool)obj;
@@ -102,7 +102,7 @@ namespace Controllers.Gui
                         MathfExt.RotateVector(new Vector2(pool.Size.x * .5f, pool.Size.y * .5f), rotation),
                         MathfExt.RotateVector(new Vector2(-pool.Size.x * .5f, pool.Size.y * .5f), rotation)
                     };
-                    PaintObjectPreview(painter, pool.Transform, points, pool.Color.Color * map.LightingColor.Tint);
+                    PaintObjectPreview(painter, pool.Transform, points, pool.Color * map.LightingTint);
                     break;
             }
 
@@ -154,7 +154,7 @@ namespace Controllers.Gui
 
         private void OnButtonPressLoad(uint mapId)
         {
-            GameManager.ChangeMap(mapId);
+            GameManager.StartRound(mapId);
         }
     }
 }
