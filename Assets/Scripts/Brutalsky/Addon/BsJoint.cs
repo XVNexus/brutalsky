@@ -161,6 +161,7 @@ namespace Brutalsky.Addon
             }
 
             // Set up connected rigidbody
+            component.autoConfigureConnectedAnchor = false;
             if (MountShape.Length > 0)
             {
                 var mountShape = map.GetObject<BsShape>(Tags.ShapeLTag, MountShape);
@@ -168,12 +169,11 @@ namespace Brutalsky.Addon
                 {
                     throw Errors.JointMountShapeUnbuilt(this);
                 }
-                component.autoConfigureConnectedAnchor = true;
                 component.connectedBody = mountShape.InstanceObject.GetComponent<Rigidbody2D>();
+                component.connectedAnchor = parentObject.Transform.Position - mountShape.Transform.Position;
             }
             else
             {
-                component.autoConfigureConnectedAnchor = false;
                 component.connectedAnchor = parentObject.Transform.Position;
             }
 
