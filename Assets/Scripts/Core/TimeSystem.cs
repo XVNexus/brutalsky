@@ -1,4 +1,3 @@
-using System;
 using Controllers.Base;
 using UnityEngine;
 
@@ -20,24 +19,14 @@ namespace Core
         }
 
         // System functions
-        public void Pause()
+        public static void Pause()
         {
             Time.timeScale = 0f;
         }
 
-        public void Unpause()
+        public static void Unpause()
         {
             Time.timeScale = 1f;
-        }
-
-        public void Slowdown()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Speedup()
-        {
-            throw new NotImplementedException();
         }
     }
 }

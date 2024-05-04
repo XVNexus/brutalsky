@@ -36,10 +36,10 @@ namespace Core
 
         // External references
         public GameObject gMapParent;
-        public GameObject gBackgroundMain;
-        public GameObject[] gBackgroundEdges;
-        public GameObject[] gBackgroundCorners;
-        public GameObject[] gBackgroundOobs;
+        public SpriteRenderer gBackgroundMain;
+        public SpriteRenderer[] gBackgroundEdges;
+        public SpriteRenderer[] gBackgroundCorners;
+        public SpriteRenderer[] gBackgroundOobs;
         public Light2D cLight2D;
 
         // System functions
@@ -119,12 +119,12 @@ namespace Core
             var halfArea = map.PlayArea * .5f;
             const float halfFade = BackgroundFade * .5f;
             const float halfField = BackgroundField * .5f;
-            gBackgroundMain.GetComponent<SpriteRenderer>().color = backgroundColor;
+            gBackgroundMain.color = backgroundColor;
             gBackgroundMain.transform.localScale = map.PlayArea;
             for (var i = 0; i < 8; i++)
             {
                 var gBackgroundEdge = gBackgroundEdges[i];
-                gBackgroundEdge.GetComponent<SpriteRenderer>().color = backgroundColor;
+                gBackgroundEdge.color = backgroundColor;
                 gBackgroundEdge.transform.localPosition = (i % 4) switch
                 {
                     0 => new Vector2(0f, halfArea.y + halfFade),
@@ -143,7 +143,7 @@ namespace Core
             for (var i = 0; i < 8; i++)
             {
                 var gBackgroundCorner = gBackgroundCorners[i];
-                gBackgroundCorner.GetComponent<SpriteRenderer>().color = backgroundColor;
+                gBackgroundCorner.color = backgroundColor;
                 gBackgroundCorner.transform.localPosition = (i % 4) switch
                 {
                     0 => new Vector2(halfArea.x + halfFade, halfArea.y + halfFade),
@@ -157,7 +157,7 @@ namespace Core
             for (var i = 0; i < 4; i++)
             {
                 var gBackgroundOob = gBackgroundOobs[i];
-                gBackgroundOob.GetComponent<SpriteRenderer>().color = backgroundColor;
+                gBackgroundOob.color = backgroundColor;
                 gBackgroundOob.transform.localPosition = i switch
                 {
                     0 => new Vector2(0f, halfArea.y + BackgroundFade + halfField),

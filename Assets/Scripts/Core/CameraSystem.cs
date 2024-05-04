@@ -11,6 +11,7 @@ namespace Core
         private void Awake() => _ = this;
 
         // Local variables
+        public GameObject gCameraMount;
         public Vector2 viewSize;
         public float orthoSize;
         public float dampening;
@@ -75,17 +76,15 @@ namespace Core
             // Apply shove offset
             var cameraTransform = _cCamera.transform;
             var scaledOffset = _offset * _offsetMultiplier;
-            cameraTransform.position = new Vector3(scaledOffset.x, scaledOffset.y, cameraTransform.position.z);
+            cameraTransform.localPosition = new Vector3(scaledOffset.x, scaledOffset.y, cameraTransform.localPosition.z);
         }
 
         private void RareUpdate()
         {
             // Configure the viewport to fit the screen
-            if (!Mathf.Approximately(_cCamera.aspect, _lastCameraAspect))
-            {
-                ResizeView(viewSize);
-                _lastCameraAspect = _cCamera.aspect;
-            }
+            if (Mathf.Approximately(_cCamera.aspect, _lastCameraAspect)) return;
+            ResizeView(viewSize);
+            _lastCameraAspect = _cCamera.aspect;
         }
     }
 }

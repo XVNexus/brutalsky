@@ -41,29 +41,34 @@ namespace Core
 
         public static void RestartRound()
         {
-            MapSystem._.BuildMap();
-            MapSystem._.SpawnAllPlayers();
+            ChangeMap(MapSystem._.ActiveMap.Id);
         }
 
         public static void ChangeMap(uint mapId)
         {
-            MapSystem._.BuildMap(mapId);
-            MapSystem._.SpawnAllPlayers();
+            var camMount = CameraSystem._.gCameraMount;
+            camMount.LeanMove(new Vector2(0f, CameraSystem._.orthoSize * -2f - 15f), AnimationTime * .5f)
+                .setEaseInBack()
+                .setOnComplete(() =>
+                {
+                    MapSystem._.BuildMap(mapId);
+                    MapSystem._.SpawnAllPlayers();
+                    camMount.transform.position = new Vector2(0f, CameraSystem._.orthoSize * 2f + 15f);
+                    camMount.LeanMove(new Vector2(0f, 0f), AnimationTime * .5f)
+                        .setEaseOutQuint();
+                });
         }
 
         // TODO: TEMPORARY FUNCTIONS
         private static void GenerateDefaultMaps()
         {
             var shapes = new[] { 0b1000, 0b1011, 0b1111, 0b1100 };
-            var sizes = new[] { 20f, 40f, 80f };
             var shapeNames = new[] { "Platform", "Box", "Cage", "Tunnel" };
+            var sizes = new[] { 20f, 40f, 80f };
             var sizeNames = new[] { "Small", "Medium", "Large" };
             for (var i = 0; i < shapes.Length; i++) for (var j = 0; j < sizes.Length; j++)
             {
-                var shape = shapes[i];
-                var size = sizes[j];
-                var title = $"{sizeNames[j]} {shapeNames[i]}";
-                GenerateBoxMap(title, shape, size);
+                GenerateBoxMap($"{sizeNames[j]} {shapeNames[i]}", shapes[i], sizes[j]);
             }
         }
 

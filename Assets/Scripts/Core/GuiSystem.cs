@@ -7,7 +7,6 @@ using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 using Utils.Constants;
 using Utils.Gui;
-using Cursor = UnityEngine.Cursor;
 
 namespace Core
 {
@@ -51,12 +50,12 @@ namespace Core
             {
                 if (!ContainsVisiblePane())
                 {
-                    TimeSystem._.Unpause();
+                    TimeSystem.Unpause();
                 }
             }
             else if (GetPane(PauseMenuId)?.Activate() ?? false)
             {
-                TimeSystem._.Pause();
+                TimeSystem.Pause();
             }
         }
 
