@@ -23,9 +23,9 @@ namespace Core
         private void Awake() => _ = this;
 
         // Local constants
-        public const string SaveFormat = "txt";
         public const float BackgroundFade = 10f;
         public const float BackgroundField = 1000f;
+        public const string SaveFormat = "txt";
 
         // Local variables
         public Dictionary<uint, string> RawMapList { get; private set; } = new();

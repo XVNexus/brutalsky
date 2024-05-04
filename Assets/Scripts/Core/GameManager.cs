@@ -15,6 +15,9 @@ namespace Core
         public static GameManager _ { get; private set; }
         private void Awake() => _ = this;
 
+        // Local constants
+        public const float AnimationTime = 2f;
+
         // Init functions
         protected override void OnLoad()
         {
@@ -28,7 +31,7 @@ namespace Core
         }
 
         // System functions
-        public void StartGame(uint starterMapId, BsPlayer[] activePlayers)
+        public static void StartGame(uint starterMapId, BsPlayer[] activePlayers)
         {
             MapSystem._.ScanMapFiles();
             MapSystem._.RegisterPlayers(activePlayers);
@@ -36,13 +39,13 @@ namespace Core
             MapSystem._.SpawnAllPlayers();
         }
 
-        public void RestartRound()
+        public static void RestartRound()
         {
             MapSystem._.BuildMap();
             MapSystem._.SpawnAllPlayers();
         }
 
-        public void ChangeMap(uint mapId)
+        public static void ChangeMap(uint mapId)
         {
             MapSystem._.BuildMap(mapId);
             MapSystem._.SpawnAllPlayers();

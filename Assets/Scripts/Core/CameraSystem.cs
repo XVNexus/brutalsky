@@ -12,6 +12,7 @@ namespace Core
 
         // Local variables
         public Vector2 viewSize;
+        public float orthoSize;
         public float dampening;
         public float shakeInterval;
         public float simSpeed;
@@ -38,8 +39,8 @@ namespace Core
         {
             this.viewSize = viewSize;
             _offsetMultiplier = Mathf.Min(viewSize.x, viewSize.y);
-            _cCamera.orthographicSize =
-                Mathf.Max(viewSize.y * .5f * (viewSize.x / viewSize.y) / _cCamera.aspect, viewSize.y * .5f);
+            orthoSize = Mathf.Max(viewSize.y * .5f * (viewSize.x / viewSize.y) / _cCamera.aspect, viewSize.y * .5f);
+            _cCamera.orthographicSize = orthoSize;
         }
 
         public void Shove(Vector2 force)

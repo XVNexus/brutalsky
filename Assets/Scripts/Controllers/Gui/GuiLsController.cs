@@ -154,7 +154,7 @@ namespace Controllers.Gui
 
         private void OnButtonPressLoad(uint mapId)
         {
-            GameManager._.ChangeMap(mapId);
+            GameManager.ChangeMap(mapId);
         }
     }
 }

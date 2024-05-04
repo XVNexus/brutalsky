@@ -68,7 +68,7 @@ namespace Controllers.Gui
 
         private void OnButtonPressRest()
         {
-            GameManager._.RestartRound();
+            GameManager.RestartRound();
         }
 
         private void OnButtonPressCnfg()
