@@ -16,4 +16,4 @@ $7,-8.5:1
 #sh;spinner-right-bg:17,-7,0;4,4;0,0,0,0,0,0;3F3FFF0D0;0;0
 #sh;spinner-right:17,-7,0;7,3,4,1;5,0,20,1,0,1;3F3FFFFF0;1;1
 @jn;spinner-right-motor:0,0,0;3;;0;Infinity;Infinity;1;0;10000;0;0;0
-%ftmr;msin;bcfl,1000;mmul,2;brin,0,2;fclk,50;foch;bmem;fdmx,3;bcfl,3.141593;mmul,2:30D0;C0D1;D040;4060;5061;60B1;70A0;8090;90A1;A0B0;B004;B114;B224
+%ftmr;bcfl,3.141593;mmul,2;msin;bcfl,1000;mmul,2;fclk,50;fchl;brin,0,2;fdmx,3:3050;4051;5060;6080;7081;80C1;90A0;A0B0;B0C0;C004;C114;C224

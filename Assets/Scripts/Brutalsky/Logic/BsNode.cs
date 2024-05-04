@@ -87,54 +87,66 @@ namespace Brutalsky.Logic
         }
 
         // Basic nodes
-        public static BsNode Bool(bool value)
+        public static BsNode ConstantBool(bool value)
         {
             var logicValue = BsMatrix.ToLogic(value);
             return new BsNode("bcbl", Array.Empty<float>(), new[] { logicValue },
                 (_, _) => new[] { logicValue }, logicValue);
         }
 
-        public static BsNode Int(int value)
+        public static BsNode ConstantInt(int value)
         {
             var logicValue = BsMatrix.ToLogic(value);
             return new BsNode("bcin", Array.Empty<float>(), new[] { logicValue },
                 (_, _) => new[] { logicValue }, logicValue);
         }
 
-        public static BsNode Float(float value)
+        public static BsNode ConstantFloat(float value)
         {
             return new BsNode("bcfl", Array.Empty<float>(), new[] { value },
                 (_, _) => new[] { value }, value);
         }
 
-        public static BsNode Randbool()
+        public static BsNode RandomBool()
         {
-            return new BsNode("brbl", Array.Empty<float>(), new float[1],
-                (_, _) =>
+            return new BsNode("brbl", new float[1], new float[1],
+                () => new[] { BsMatrix.ToLogic(Random.Range(0, 2)) }, (inputs, state) =>
                 {
-                    return new[] { BsMatrix.ToLogic(Random.Range(0, 2)) };
+                    if (BsMatrix.ToBool(inputs[0]))
+                    {
+                        state[0] = BsMatrix.ToLogic(Random.Range(0, 2));
+                    }
+                    return new[] { state[0] };
                 });
         }
 
-        public static BsNode Randint(int min, int max)
+        public static BsNode RandomInt(int min, int max)
         {
-            return new BsNode("brin", new[] { BsMatrix.ToLogic(min), BsMatrix.ToLogic(max) }, new float[1],
-                (inputs, _) =>
+            return new BsNode("brin", new[] { 0f, BsMatrix.ToLogic(min), BsMatrix.ToLogic(max) }, new float[1],
+                () => new[] { BsMatrix.ToLogic(Random.Range(min, max + 1)) }, (inputs, state) =>
                 {
-                    return new[] { BsMatrix.ToLogic(Random.Range(BsMatrix.ToInt(inputs[0]), BsMatrix.ToInt(inputs[1]) + 1)) };
+                    if (BsMatrix.ToBool(inputs[0]))
+                    {
+                        state[0] = BsMatrix.ToLogic(Random.Range(BsMatrix.ToInt(inputs[1]), BsMatrix.ToInt(inputs[2]) + 1));
+                    }
+                    return new[] { state[0] };
                 }, min, max);
         }
 
-        public static BsNode Randfloat(float min, float max)
+        public static BsNode RandomFloat(float min, float max)
         {
-            return new BsNode("brfl", new[] { min, max }, new float[1],
-                (inputs, _) =>
+            return new BsNode("brfl", new[] { 0f, min, max }, new float[1],
+                () => new[] { Random.Range(min, max) }, (inputs, state) =>
                 {
-                    return new[] { Random.Range(inputs[0], inputs[1]) };
+                    if (BsMatrix.ToBool(inputs[0]))
+                    {
+                        state[0] = Random.Range(inputs[1], inputs[2]);
+                    }
+                    return new[] { state[0] };
                 }, min, max);
         }
 
-        public static BsNode Mem()
+        public static BsNode MemoryCell()
         {
             return new BsNode("bmem", new float[2], new float[1],
                 () => new float[1], (inputs, state) =>
@@ -146,7 +158,7 @@ namespace Brutalsky.Logic
         }
 
         // Flow nodes
-        public static BsNode Timer()
+        public static BsNode GameTime()
         {
             return new BsNode("ftmr", Array.Empty<float>(), new float[1],
                 () => new[] { Time.timeSinceLevelLoad }, (_, state) =>
@@ -155,7 +167,7 @@ namespace Brutalsky.Logic
                 });
         }
 
-        public static BsNode Delay(int time)
+        public static BsNode Delayer(int time)
         {
             return new BsNode("fdly", new float[1], new float[1],
                 () => new float[time], (inputs, state) =>
@@ -186,9 +198,9 @@ namespace Brutalsky.Logic
                 }, interval);
         }
 
-        public static BsNode Onchanged()
+        public static BsNode ChangeListener()
         {
-            return new BsNode("foch", new float[1], new float[1],
+            return new BsNode("fchl", new float[1], new float[1],
                 () => new float[1], (inputs, state) =>
                 {
                     if (Mathf.Approximately(inputs[0], state[0])) return new[] { 0f };
@@ -197,7 +209,7 @@ namespace Brutalsky.Logic
                 });
         }
 
-        public static BsNode Mux(int inputCount)
+        public static BsNode Multiplexer(int inputCount)
         {
             return new BsNode("fmux", new float[inputCount + 1], new float[1], (inputs, _) =>
             {
@@ -205,7 +217,7 @@ namespace Brutalsky.Logic
             }, inputCount);
         }
 
-        public static BsNode Demux(int outputCount)
+        public static BsNode Demultiplexer(int outputCount)
         {
             return new BsNode("fdmx", new float[2], new float[outputCount], (inputs, _) =>
             {
@@ -400,20 +412,20 @@ namespace Brutalsky.Logic
             return tag switch
             {
                 // Basic nodes
-                "bcbl" => Bool(BsMatrix.ToBool(config[0])),
-                "bcin" => Int(BsMatrix.ToInt(config[0])),
-                "bcfl" => Float(config[0]),
-                "brbl" => Randbool(),
-                "brin" => Randint(BsMatrix.ToInt(config[0]), BsMatrix.ToInt(config[1])),
-                "brfl" => Randfloat(config[0], config[1]),
-                "bmem" => Mem(),
+                "bcbl" => ConstantBool(BsMatrix.ToBool(config[0])),
+                "bcin" => ConstantInt(BsMatrix.ToInt(config[0])),
+                "bcfl" => ConstantFloat(config[0]),
+                "brbl" => RandomBool(),
+                "brin" => RandomInt(BsMatrix.ToInt(config[0]), BsMatrix.ToInt(config[1])),
+                "brfl" => RandomFloat(config[0], config[1]),
+                "bmem" => MemoryCell(),
                 // Flow nodes
-                "ftmr" => Timer(),
-                "fdly" => Delay(BsMatrix.ToInt(config[0])),
+                "ftmr" => GameTime(),
+                "fdly" => Delayer(BsMatrix.ToInt(config[0])),
                 "fclk" => Clock(BsMatrix.ToInt(config[0])),
-                "foch" => Onchanged(),
-                "fmux" => Mux(BsMatrix.ToInt(config[0])),
-                "fdmx" => Demux(BsMatrix.ToInt(config[0])),
+                "fchl" => ChangeListener(),
+                "fmux" => Multiplexer(BsMatrix.ToInt(config[0])),
+                "fdmx" => Demultiplexer(BsMatrix.ToInt(config[0])),
                 // Logic nodes
                 "lbuf" => Buffer(),
                 "lnot" => Not(),
