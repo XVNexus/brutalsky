@@ -25,10 +25,12 @@ namespace Core
         // Local constants
         public const float BackgroundFade = 10f;
         public const float BackgroundField = 1000f;
-        public const string SaveFormat = "txt";
+        public const string SaveFormatString = "txt";
+        public const string SaveFormatBinary = "bin";
+        public const bool UseBinaryFormat = false;
 
         // Local variables
-        public Dictionary<uint, string> RawMapList { get; private set; } = new();
+        public Dictionary<uint, BsMap> MapList { get; private set; } = new();
         [CanBeNull] public BsMap ActiveMap { get; private set; }
         public Dictionary<string, BsPlayer> ActivePlayers { get; private set; } = new();
         [CanBeNull] public BsMatrix Matrix { get; private set; }
@@ -104,63 +106,72 @@ namespace Core
             playerInstanceObject.GetComponent<CircleCollider2D>().enabled = !frozen;
         }
 
-        public void ResaveBuiltinMaps(IEnumerable<string> filenames)
+        public static void ResaveBuiltinMaps(IEnumerable<string> filenames)
         {
             foreach (var filename in filenames)
             {
-                var rawMap = LoadInternalMap(filename);
-                var map = BsMap.Parse(rawMap);
-                SaveMap(map);
+                SaveMap(LoadMapAsset(filename));
             }
         }
 
         public void ScanMapFiles()
         {
-            RawMapList.Clear();
+            MapList.Clear();
             var path = $"{ResourceSystem.DataPath}/{Paths.Maps}";
             if (!Directory.Exists(path)) return;
-            foreach (var mapPath in Directory.GetFiles(path, $"*.{SaveFormat}"))
+            foreach (var mapPath in Directory.GetFiles(path, $"*.{SaveFormatString}"))
             {
-                var mapFilename = Regex.Match(mapPath, $@"\w+(?=\.{SaveFormat})").Value;
-                var rawMap = LoadMap(mapFilename);
-                var map = BsMap.Parse(rawMap);
-                RawMapList[map.Id] = rawMap;
+                var mapFilename = Regex.Match(mapPath, $@"\w+(?=\.{SaveFormatString})").Value;
+                var map = LoadMap(mapFilename);
+                MapList[map.Id] = map;
             }
         }
 
-        public static string LoadInternalMap(string filename)
+        public static BsMap LoadMapAsset(string filename)
         {
-            return Resources.Load<TextAsset>($"{Paths.Content}/{Paths.Maps}/{filename}").text;
+            return BsMap.Parse(Resources.Load<TextAsset>($"{Paths.Content}/{Paths.Maps}/{filename}").text);
         }
 
-        public static string LoadMap(string title, string author)
+        public static BsMap LoadMap(string title, string author)
         {
             return LoadMap(GenerateId(title, author).ToString());
         }
 
-        public static string LoadMap(string filename)
+        public static BsMap LoadMap(string filename)
         {
-            var path = $"{ResourceSystem.DataPath}/{Paths.Maps}/{filename}.{SaveFormat}";
-            using var reader = new StreamReader(path);
-            return reader.ReadToEnd();
+            var pathString = $"{ResourceSystem.DataPath}/{Paths.Maps}/{filename}.{SaveFormatString}";
+            var pathBinary = $"{ResourceSystem.DataPath}/{Paths.Maps}/{filename}.{SaveFormatBinary}";
+            if (File.Exists(pathString))
+            {
+                using var reader = new StreamReader(pathString);
+                return BsMap.Parse(reader.ReadToEnd());
+            }
+            if (File.Exists(pathBinary))
+            {
+                using var stream = new FileStream(pathBinary, FileMode.Create);
+                using var reader = new BinaryReader(stream);
+                return BsMap.Parse(reader.ReadBytes((int)reader.BaseStream.Length));
+            }
+            throw Errors.NoItemFound("map file", filename);
         }
 
         public static void SaveMap(BsMap map)
         {
-            SaveMap(map.Stringify(), map.Id.ToString());
-        }
-
-        public static void SaveMap(string raw, string title, string author)
-        {
-            SaveMap(raw, GenerateId(title, author).ToString());
-        }
-
-        public static void SaveMap(string raw, string filename)
-        {
-            var path = $"{ResourceSystem.DataPath}/{Paths.Maps}/{filename}.{SaveFormat}";
-            new FileInfo(path).Directory?.Create();
-            using var writer = new StreamWriter(path);
-            writer.Write(raw);
+            if (UseBinaryFormat)
+            {
+                var path = $"{ResourceSystem.DataPath}/{Paths.Maps}/{map.Id}.{SaveFormatBinary}";
+                new FileInfo(path).Directory?.Create();
+                using var stream = new FileStream(path, FileMode.Create);
+                using var writer = new BinaryWriter(stream);
+                writer.Write(map.Binify());
+            }
+            else
+            {
+                var path = $"{ResourceSystem.DataPath}/{Paths.Maps}/{map.Id}.{SaveFormatString}";
+                new FileInfo(path).Directory?.Create();
+                using var writer = new StreamWriter(path);
+                writer.Write(map.Stringify());
+            }
         }
 
         public void BuildMap(string title, string author)
@@ -170,7 +181,7 @@ namespace Core
 
         public void BuildMap(uint id)
         {
-            BuildMap(BsMap.Parse(RawMapList[id]));
+            BuildMap(MapList[id]);
         }
 
         public void BuildMap([CanBeNull] BsMap map = null)

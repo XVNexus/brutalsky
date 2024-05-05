@@ -2,6 +2,7 @@ namespace Utils.Lcs
 {
     public enum LcsType
     {
+        Null,
         // Primitive types
         Bool,
         UShort,

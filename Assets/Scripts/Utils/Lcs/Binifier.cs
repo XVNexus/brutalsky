@@ -16,27 +16,27 @@ namespace Utils.Lcs
         {
             return type switch
             {
-                /*   1 */ LcsType.Bool => BinifyBool((bool)value),
-                /*   2 */ LcsType.UShort => BinifyUShort((ushort)value),
-                /*   4 */ LcsType.UInt => BinifyUInt((uint)value),
-                /*   8 */ LcsType.ULong => BinifyULong((ulong)value),
-                /*   2 */ LcsType.Short => BinifyShort((short)value),
-                /*   4 */ LcsType.Int => BinifyInt((int)value),
-                /*   8 */ LcsType.Long => BinifyLong((long)value),
-                /*   4 */ LcsType.Float => BinifyFloat((float)value),
-                /*   8 */ LcsType.Double => BinifyDouble((double)value),
-                /*   1 */ LcsType.Char => BinifyChar((char)value),
-                /* VAR */ LcsType.String => BinifyString((string)value),
-                /*   1 */ LcsType.Direction => BinifyDirection((Direction)value),
-                /*   1 */ LcsType.Layer => BinifyLayer((ObjectLayer)value),
-                /*   1 */ LcsType.FormType => BinifyFormType((FormType)value),
-                /*   1 */ LcsType.JointType => BinifyJointType((JointType)value),
-                /*   8 */ LcsType.Vector2 => BinifyVector2((Vector2)value),
-                /*   4 */ LcsType.Color => BinifyColor((Color)value),
-                /*  12 */ LcsType.Transform => BinifyTransform((ObjectTransform)value),
-                /* VAR */ LcsType.Form => BinifyForm((Form)value),
-                /*  20 */ LcsType.Material => BinifyMaterial((ShapeMaterial)value),
-                /*  12 */ LcsType.Chemical => BinifyChemical((PoolChemical)value),
+                LcsType.Bool => BinifyBool((bool)value),
+                LcsType.UShort => BinifyUShort((ushort)value),
+                LcsType.UInt => BinifyUInt((uint)value),
+                LcsType.ULong => BinifyULong((ulong)value),
+                LcsType.Short => BinifyShort((short)value),
+                LcsType.Int => BinifyInt((int)value),
+                LcsType.Long => BinifyLong((long)value),
+                LcsType.Float => BinifyFloat((float)value),
+                LcsType.Double => BinifyDouble((double)value),
+                LcsType.Char => BinifyChar((char)value),
+                LcsType.String => BinifyString((string)value),
+                LcsType.Direction => BinifyDirection((Direction)value),
+                LcsType.Layer => BinifyLayer((ObjectLayer)value),
+                LcsType.FormType => BinifyFormType((FormType)value),
+                LcsType.JointType => BinifyJointType((JointType)value),
+                LcsType.Vector2 => BinifyVector2((Vector2)value),
+                LcsType.Color => BinifyColor((Color)value),
+                LcsType.Transform => BinifyTransform((ObjectTransform)value),
+                LcsType.Form => BinifyForm((Form)value),
+                LcsType.Material => BinifyMaterial((ShapeMaterial)value),
+                LcsType.Chemical => BinifyChemical((PoolChemical)value),
                 _ => throw Errors.InvalidItem("LCS type", type)
             };
         }
@@ -68,16 +68,6 @@ namespace Utils.Lcs
                 LcsType.Chemical => ParseChemical(raw),
                 _ => throw Errors.InvalidItem("LCS type", type)
             };
-        }
-
-        public static byte[] Bin(LcsType type, object value)
-        {
-            return Binify(type, value);
-        }
-
-        public static object Par(LcsType type, byte[] raw)
-        {
-            return Parse(type, raw);
         }
 
         // Primitive types

@@ -1,9 +1,35 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Utils.Lcs
 {
     public class LcsProp
     {
+        public static readonly Dictionary<LcsType, int> TypeByteCountTable = new()
+        {
+            { LcsType.Bool, 1 },
+            { LcsType.UShort, 2 },
+            { LcsType.UInt, 4 },
+            { LcsType.ULong, 8 },
+            { LcsType.Short, 2 },
+            { LcsType.Int, 4 },
+            { LcsType.Long, 8 },
+            { LcsType.Float, 4 },
+            { LcsType.Double, 8 },
+            { LcsType.Char, 1 },
+            { LcsType.String, 0 },
+            { LcsType.Direction, 1 },
+            { LcsType.Layer, 1 },
+            { LcsType.FormType, 1 },
+            { LcsType.JointType, 1 },
+            { LcsType.Vector2, 8 },
+            { LcsType.Color, 4 },
+            { LcsType.Transform, 12 },
+            { LcsType.Form, 0 },
+            { LcsType.Material, 20 },
+            { LcsType.Chemical, 12 }
+        };
         public static readonly Dictionary<LcsType, char> TypeCharTable = new()
         {
             { LcsType.Bool, 'b' },
@@ -60,6 +86,24 @@ namespace Utils.Lcs
         {
             Type = type;
             Value = value;
+        }
+
+        public byte[] Binify()
+        {
+            var typeBytes = new[] { (byte)Type };
+            var valueBytes = Binifier.Binify(Type, Value);
+            var expectedByteCount = TypeByteCountTable[Type];
+            if (expectedByteCount > 0) return typeBytes.Concat(valueBytes).ToArray();
+            var byteCount = valueBytes.Length;
+            if (byteCount > 255) throw new NotImplementedException();
+            var headerBytes = new[] { (byte)byteCount };
+            return typeBytes.Concat(headerBytes).Concat(valueBytes).ToArray();
+        }
+
+        public static LcsProp Parse(LcsType type, byte[] raw)
+        {
+            var value = Binifier.Parse(type, raw);
+            return new LcsProp(type, value);
         }
 
         public string Stringify()

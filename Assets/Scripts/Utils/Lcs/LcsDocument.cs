@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Utils.Constants;
 
 namespace Utils.Lcs
@@ -17,9 +19,84 @@ namespace Utils.Lcs
             LineLevels = lineLevels;
         }
 
+        public byte[] Binify()
+        {
+            var result = new List<byte>();
+            result.AddRange(BitConverter.GetBytes(Version));
+            for (var i = 0; i < LineLevels.Length; i++)
+            {
+                result.AddRange(Encoding.UTF8.GetBytes(LineLevels[i]));
+                result.Add(i < LineLevels.Length - 1 ? (byte)1 : (byte)0);
+            }
+            foreach (var line in Lines)
+            {
+                result.AddRange(line.Binify());
+            }
+            return result.ToArray();
+        }
+
+        public static LcsDocument Parse(byte[] raw)
+        {
+            var lines = new List<LcsLine>();
+            var version = BitConverter.ToInt32(raw[..4]);
+            var lineLevels = new List<string> { "" };
+            var cursor = 4;
+            while (raw[cursor] > 0)
+            {
+                if (raw[cursor] > 1)
+                {
+                    lineLevels[^1] += (char)raw[cursor];
+                }
+                else
+                {
+                    lineLevels.Add("");
+                }
+                cursor++;
+            }
+            cursor++;
+            var lineLevelMap = new Dictionary<char, int>();
+            for (var i = 0; i < lineLevels.Count; i++) foreach (var linePrefix in lineLevels[i])
+            {
+                lineLevelMap[linePrefix] = i;
+            }
+            var lineCache = new Dictionary<int, LcsLine>();
+            while (cursor < raw.Length)
+            {
+                var lineBytes = new List<byte>();
+                while (raw[cursor] > 0)
+                {
+                    lineBytes.Add(raw[cursor]);
+                    cursor++;
+                }
+                var line = LcsLine.Parse(lineBytes.ToArray());
+                if (!lineLevelMap.ContainsKey(line.Prefix))
+                {
+                    throw Errors.InvalidItem("LCS line prefix", line.Prefix);
+                }
+                var lineLevel = lineLevelMap[line.Prefix];
+                lineCache[lineLevel] = line;
+                if (lineLevel == 0)
+                {
+                    lines.Add(line);
+                }
+                else
+                {
+                    lineCache[lineLevel - 1].Children.Add(line);
+                }
+                cursor++;
+            }
+            return new LcsDocument(version, lines, lineLevels.ToArray());
+        }
+
+        public string Stringify()
+        {
+            return Version.ToString() + Stringifier.PropertySeperator + Stringifier.CompressProps(LineLevels)
+                   + '\n' + Lines.Aggregate("", (current, line) => current + line.Stringify());
+        }
+
         public static LcsDocument Parse(string raw)
         {
-            var result = new List<LcsLine>();
+            var lines = new List<LcsLine>();
             var rawLines = raw.Trim().Split('\n');
             var headerParts = rawLines[0].Split(Stringifier.PropertySeperator);
             var version = int.Parse(headerParts[0]);
@@ -40,22 +117,21 @@ namespace Utils.Lcs
                 }
                 var lineLevel = lineLevelMap[line.Prefix];
                 lineCache[lineLevel] = line;
-                if (lineLevel > 0)
+                if (lineLevel == 0)
                 {
-                    lineCache[lineLevel - 1].Children.Add(line);
+                    lines.Add(line);
                 }
                 else
                 {
-                    result.Add(line);
+                    lineCache[lineLevel - 1].Children.Add(line);
                 }
             }
-            return new LcsDocument(version, result.ToList(), lineLevels);
+            return new LcsDocument(version, lines, lineLevels);
         }
 
-        public string Stringify()
+        public override string ToString()
         {
-            return Version.ToString() + Stringifier.PropertySeperator + Stringifier.CompressProps(LineLevels)
-                + '\n' + Lines.Aggregate("", (current, line) => current + line.Stringify());
+            return Stringify().TrimEnd();
         }
     }
 }

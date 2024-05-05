@@ -180,14 +180,24 @@ namespace Brutalsky
             return Links.ContainsKey(toPort);
         }
 
+        public byte[] Binify()
+        {
+            return ToLcs().Binify();
+        }
+
+        public static BsMap Parse(byte[] raw)
+        {
+            return FromLcs(LcsDocument.Parse(raw));
+        }
+
         public string Stringify()
         {
             return ToLcs().Stringify();
         }
 
-        public static BsMap Parse(string lcs)
+        public static BsMap Parse(string raw)
         {
-            return FromLcs(LcsDocument.Parse(lcs));
+            return FromLcs(LcsDocument.Parse(raw));
         }
 
         public LcsDocument ToLcs()

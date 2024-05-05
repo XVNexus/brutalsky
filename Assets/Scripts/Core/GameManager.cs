@@ -31,7 +31,7 @@ namespace Core
 
         protected override void OnLoad()
         {
-            MapSystem._.ResaveBuiltinMaps(new[] { "Brutalsky", "Doomring", "Tossup", "Void" });
+            MapSystem.ResaveBuiltinMaps(new[] { "Brutalsky", "Doomring", "Tossup", "Void" });
             GenerateDefaultMaps();
             StartGame(MapSystem.GenerateId("Medium Platform", "Brutalsky"), new[]
             {

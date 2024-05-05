@@ -32,10 +32,9 @@ namespace Controllers.Gui
             {
                 GuiSystem._.DeactivatePane(PaneId);
             });
-
-            foreach (var rawMap in MapSystem._.RawMapList.Values)
+            foreach (var map in MapSystem._.MapList.Values)
             {
-                AddMapTile(BsMap.Parse(rawMap));
+                AddMapTile(map);
             }
         }
 

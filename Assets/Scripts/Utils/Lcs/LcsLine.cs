@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
@@ -15,6 +16,46 @@ namespace Utils.Lcs
             Prefix = prefix;
             Props = props;
             Children = children ?? new List<LcsLine>();
+        }
+
+        public byte[] Binify()
+        {
+            var result = new List<byte> { (byte)Prefix };
+            foreach (var prop in Props)
+            {
+                result.AddRange(prop.Binify());
+            }
+            result.Add(0);
+            foreach (var child in Children)
+            {
+                result.AddRange(child.Binify());
+            }
+            return result.ToArray();
+        }
+
+        public static LcsLine Parse(byte[] raw)
+        {
+            var props = new List<LcsProp>();
+            var cursor = 1;
+            while (cursor < raw.Length)
+            {
+                var propType = (LcsType)raw[cursor];
+                var byteCount = LcsProp.TypeByteCountTable[propType];
+                if (byteCount == 0)
+                {
+                    byteCount = raw[cursor + 1];
+                    cursor++;
+                }
+                var propBytes = new byte[byteCount];
+                for (var i = 0; i < byteCount; i++)
+                {
+                    propBytes[i] = raw[cursor];
+                    cursor++;
+                }
+                props.Add(LcsProp.Parse(propType, propBytes.ToArray()));
+                cursor++;
+            }
+            return new LcsLine((char)raw[0], props.ToArray());
         }
 
         public string Stringify()
