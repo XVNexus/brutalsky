@@ -388,5 +388,67 @@ namespace Brutalsky.Logic
                 return new[] { Mathf.Atan(inputs[0]) };
             });
         }
+
+        public LcsLine ToLcs()
+        {
+            var properties = new string[Config.Length + 1];
+            properties[0] = Stringifier.GetString(Tag);
+            for (var i = 0; i < Config.Length; i++)
+            {
+                properties[i + 1] = Stringifier.GetString(Config[i]);
+            }
+            return new LcsLine('%', properties);
+        }
+
+        public static BsNode FromLcs(LcsLine line)
+        {
+            var tag = Stringifier.ToString(line.Properties[0]);
+            var config = new float[line.Properties.Length - 1];
+            for (var i = 1; i < line.Properties.Length; i++)
+            {
+                config[i - 1] = Stringifier.ToSingle(line.Properties[i]);
+            }
+            return tag switch
+            {
+                // Basic nodes
+                "bcbl" => ConstantBool(BsMatrix.ToBool(config[0])),
+                "bcin" => ConstantInt(BsMatrix.ToInt(config[0])),
+                "bcfl" => ConstantFloat(config[0]),
+                "brbl" => RandomBool(),
+                "brin" => RandomInt(BsMatrix.ToInt(config[0]), BsMatrix.ToInt(config[1])),
+                "brfl" => RandomFloat(config[0], config[1]),
+                "bmem" => MemoryCell(),
+                // Flow nodes
+                "ftmr" => GameTime(),
+                "fdly" => Delayer(BsMatrix.ToInt(config[0])),
+                "fclk" => Clock(BsMatrix.ToInt(config[0])),
+                "fchl" => ChangeListener(),
+                "fmux" => Multiplexer(BsMatrix.ToInt(config[0])),
+                "fdmx" => Demultiplexer(BsMatrix.ToInt(config[0])),
+                // Logic nodes
+                "lbuf" => Buffer(),
+                "lnot" => Not(),
+                "land" => And(BsMatrix.ToInt(config[0])),
+                "lgor" => Or(BsMatrix.ToInt(config[0])),
+                "lxor" => Xor(BsMatrix.ToInt(config[0])),
+                "lnan" => Nand(BsMatrix.ToInt(config[0])),
+                "lnor" => Nor(BsMatrix.ToInt(config[0])),
+                "lxnr" => Xnor(BsMatrix.ToInt(config[0])),
+                // Math nodes
+                "madd" => Add(BsMatrix.ToInt(config[0])),
+                "msub" => Subtract(BsMatrix.ToInt(config[0])),
+                "mmul" => Multiply(BsMatrix.ToInt(config[0])),
+                "mdiv" => Divide(BsMatrix.ToInt(config[0])),
+                "mpow" => Pow(),
+                "mrot" => Root(),
+                "msin" => Sin(),
+                "mcos" => Cos(),
+                "mtan" => Tan(),
+                "masn" => Asin(),
+                "macs" => Acos(),
+                "matn" => Atan(),
+                _ => throw Errors.InvalidItem("node tag", tag)
+            };
+        }
     }
 }

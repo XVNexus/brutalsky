@@ -26,9 +26,6 @@ namespace Controllers.Player
         private SpriteRenderer _cSpriteRenderer;
         private CircleCollider2D _cCircleCollider2D;
 
-        // Linked modules
-        [CanBeNull] private PlayerMovementController _mMovement;
-
         // Init functions
         protected override void OnInit()
         {
@@ -41,11 +38,6 @@ namespace Controllers.Player
             // Sync health with max health
             maxHealth = Master.Object.Health;
             health = maxHealth;
-        }
-
-        protected override void OnLink()
-        {
-            _mMovement = Master.GetSub<PlayerMovementController>("movement");
         }
 
         // Module functions

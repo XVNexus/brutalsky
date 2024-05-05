@@ -206,21 +206,12 @@ namespace Brutalsky
                     Stringifier.GetString(PlayerHealth)
                 })
             };
-            var logicNodeCount = 0;
             lines.AddRange(Spawns.Select(spawn => spawn.ToLcs()));
-            foreach (var obj in Objects.Values)
-            {
-                lines.Add(obj.ToLcs());
-                logicNodeCount += obj.LogicNodeCount;
-            }
-            logicNodeCount += Nodes.Count;
+            lines.AddRange(Objects.Values.Select(obj => obj.ToLcs()));
             if (Nodes.Count > 0)
             {
-                var hexWidth = Mathf.CeilToInt(Mathf.Log(logicNodeCount) / Mathf.Log(16f));
-                lines.Add(new LcsLine('%', Nodes.Select(node =>
-                    Stringifier.GetString(node)).ToArray()));
-                lines.Add(new LcsLine('^', Links.Values.Select(link =>
-                    Stringifier.GetString(link, hexWidth)).ToArray()));
+                lines.AddRange(Nodes.Select(node => node.ToLcs()).ToArray());
+                lines.AddRange(Links.Values.Select(link => link.ToLcs()).ToArray());
             }
             return new LcsDocument(1, lines, new[] { "!$#%^", "@" });
         }
@@ -245,7 +236,6 @@ namespace Brutalsky
             result.GravityDirection = Stringifier.ToDirection(metadataLine.Properties[5]);
             result.GravityStrength = Stringifier.ToSingle(metadataLine.Properties[6]);
             result.PlayerHealth = Stringifier.ToSingle(metadataLine.Properties[7]);
-            var logicNodeCount = 0;
             for (var i = 1; i < document.Lines.Count; i++)
             {
                 var line = document.Lines[i];
@@ -255,25 +245,13 @@ namespace Brutalsky
                         result.AddSpawn(BsSpawn.FromLcs(line));
                         break;
                     case '#':
-                        var obj = BsObject.FromLcs(line);
-                        result.AddObject(obj);
-                        logicNodeCount += obj.LogicNodeCount;
+                        result.AddObject(BsObject.FromLcs(line));
                         break;
                     case '%':
-                        logicNodeCount += line.Properties.Length;
-                        var nodeStrings = line.Properties;
-                        foreach (var nodeString in nodeStrings)
-                        {
-                            result.AddNode(Stringifier.ToNode(nodeString));
-                        }
+                        result.AddNode(BsNode.FromLcs(line));
                         break;
                     case '^':
-                        var linkStrings = line.Properties;
-                        var hexWidth = Mathf.CeilToInt(Mathf.Log(logicNodeCount) / Mathf.Log(16f));
-                        foreach (var linkString in linkStrings)
-                        {
-                            result.AddLink(Stringifier.ToLink(linkString, hexWidth));
-                        }
+                        result.AddLink(BsLink.FromLcs(line));
                         break;
                     default:
                         throw Errors.InvalidItem("LCS line prefix", line.Prefix);

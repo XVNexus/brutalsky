@@ -28,14 +28,12 @@ namespace Core
 
         protected override void OnLoad()
         {
-            // MapSystem._.ResaveBuiltinMaps(new[] { "Doomring", "Doomring", "Tossup", "Void" });
+            // MapSystem._.ResaveBuiltinMaps(new[] { "Brutalsky", "Doomring", "Tossup", "Void" });
             // GenerateDefaultMaps();
             StartGame(MapSystem.GenerateId("Void", "Xveon"), new[]
             {
                 new BsPlayer("Player 1", 100f, new Color(1f, .5f, 0f)),
-                new BsPlayer("Player 2", 100f, new Color(0f, .5f, 1f), true),
-                new BsPlayer("Player 3", 100f, new Color(1f, 1f, .5f), true),
-                new BsPlayer("Player 4", 100f, new Color(.5f, 1f, 1f), true)
+                new BsPlayer("Player 2", 100f, new Color(0f, .5f, 1f), true)
             });
         }
 
