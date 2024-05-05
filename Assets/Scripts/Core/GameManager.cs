@@ -48,10 +48,10 @@ namespace Core
         public void ChangeMap(uint mapId, bool moveCam, float animTime)
         {
             // Disable player physics for the animation
-            MapSystem._.FreezePlayers();
+            MapSystem._.SetAllPlayersFrozen(true);
             LeanTween.delayedCall(MapSystem._.gPlayerParent, animTime, () =>
             {
-                MapSystem._.UnfreezePlayers();
+                MapSystem._.SetAllPlayersFrozen(false);
             });
 
             // Fade out view to hide level loading and fade back in with new level
@@ -63,7 +63,6 @@ namespace Core
                     MapSystem._.BuildMap(mapId);
                     MapSystem._.SpawnAllPlayers();
                     camCover.LeanColor(MapSystem._.ActiveMap.BackgroundColor.MultiplyTint(.75f), animTime * .2f)
-                        .setEaseInOutCubic()
                         .setOnComplete(() =>
                         {
                             camCover.LeanColor(MapSystem._.ActiveMap.BackgroundColor.SetAlpha(0f).MultiplyTint(.75f), animTime * .4f)

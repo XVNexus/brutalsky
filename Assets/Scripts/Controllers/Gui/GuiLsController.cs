@@ -20,15 +20,13 @@ namespace Controllers.Gui
         public const string PaneId = "ls";
 
         // Init functions
-        protected override void OnStart()
-        {
-            EventSystem._.OnGuiAction += OnGuiAction;
-        }
-
         protected override void OnLoad()
         {
             GuiSystem._.RegisterPane(PaneId, this, GuiPmController.PaneId);
-            GuiSystem._.RegisterButton(PaneId, "back");
+            GuiSystem._.RegisterButton(PaneId, "back", () =>
+            {
+                GuiSystem._.DeactivatePane(PaneId);
+            });
 
             foreach (var rawMap in MapSystem._.RawMapList.Values)
             {
@@ -48,7 +46,11 @@ namespace Controllers.Gui
             mapTileCell.AddToClassList("bs-cell");
 
             // Register load map button
-            GuiSystem._.RegisterButton(mapTileCell.Q<Button>("button"), PaneId, $"load-{map.Id}");
+            GuiSystem._.RegisterButton(mapTileCell.Q<Button>("button"), () =>
+            {
+                GameManager._.StartRound(map.Id);
+                GuiSystem._.EscapeAll();
+            });
             mapTileCell.Q<Label>("title").text = $"<b>{map.Title}</b>\n{map.Author}";
 
             // Render map preview
@@ -130,32 +132,6 @@ namespace Controllers.Gui
             }
             painter.DrawPolygon(transformedPoints);
             painter.Fill(color);
-        }
-
-        // Event functions
-        private void OnGuiAction(GuiAction action, string paneId, string itemId)
-        {
-            if (paneId != PaneId) return;
-            switch (itemId[..4])
-            {
-                case "back":
-                    OnButtonPressBack();
-                    break;
-                case "load":
-                    OnButtonPressLoad(uint.Parse(itemId[5..]));
-                    break;
-            }
-        }
-
-        private void OnButtonPressBack()
-        {
-            GuiSystem._.DeactivatePane(PaneId);
-        }
-
-        private void OnButtonPressLoad(uint mapId)
-        {
-            GameManager._.StartRound(mapId);
-            GuiSystem._.EscapeAll();
         }
     }
 }

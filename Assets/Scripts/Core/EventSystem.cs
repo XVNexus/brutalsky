@@ -17,9 +17,6 @@ namespace Core
         public InputActionAsset aInputAction;
 
         // Event functions
-        public void EmitGuiAction(GuiAction action, string paneId, string itemId) => OnGuiAction?.Invoke(action, paneId, itemId);
-        public event Action<GuiAction, string, string> OnGuiAction;
-
         public void EmitMapBuild(BsMap map) => OnMapBuild?.Invoke(map);
         public event Action<BsMap> OnMapBuild;
 

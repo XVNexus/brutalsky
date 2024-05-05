@@ -1,6 +1,5 @@
 using Controllers.Base;
 using Core;
-using Utils.Gui;
 
 namespace Controllers.Gui
 {
@@ -10,32 +9,13 @@ namespace Controllers.Gui
         public const string PaneId = "cf";
 
         // Init functions
-        protected override void OnStart()
-        {
-            EventSystem._.OnGuiAction += OnGuiAction;
-        }
-
         protected override void OnLoad()
         {
             GuiSystem._.RegisterPane(PaneId, this, GuiPmController.PaneId);
-            GuiSystem._.RegisterButton(PaneId, "back");
-        }
-
-        // Event functions
-        private void OnGuiAction(GuiAction action, string paneId, string itemId)
-        {
-            if (paneId != PaneId) return;
-            switch (itemId)
+            GuiSystem._.RegisterButton(PaneId, "back", () =>
             {
-                case "back":
-                    OnButtonPressBack();
-                    break;
-            }
-        }
-
-        private void OnButtonPressBack()
-        {
-            GuiSystem._.DeactivatePane(PaneId);
+                GuiSystem._.DeactivatePane(PaneId);
+            });
         }
     }
 }

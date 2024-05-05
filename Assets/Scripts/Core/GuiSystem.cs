@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Controllers.Base;
@@ -139,25 +140,14 @@ namespace Core
             return true;
         }
 
-        public void RegisterButtons(string paneId, IEnumerable<string> itemIds)
+        public void RegisterButton(string paneId, string itemId, Action onClick)
         {
-            foreach (var itemId in itemIds)
-            {
-                RegisterButton(paneId, itemId);
-            }
+            RegisterButton(GetInputElement<Button>(paneId, itemId), onClick);
         }
 
-        public void RegisterButton(string paneId, string itemId)
+        public void RegisterButton(Button button, Action onClick)
         {
-            RegisterButton(GetInputElement<Button>(paneId, itemId), paneId, itemId);
-        }
-
-        public void RegisterButton(Button button, string paneId, string itemId)
-        {
-            button.clicked += () =>
-            {
-                EventSystem._.EmitGuiAction(GuiAction.ButtonPress, paneId, itemId);
-            };
+            button.clicked += onClick;
         }
 
         public VisualElement GetPaneElement(string paneId)

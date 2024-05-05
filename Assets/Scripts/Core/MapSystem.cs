@@ -30,7 +30,7 @@ namespace Core
         // Local variables
         public Dictionary<uint, string> RawMapList { get; private set; } = new();
         [CanBeNull] public BsMap ActiveMap { get; private set; }
-        public List<BsPlayer> ActivePlayers { get; private set; } = new();
+        public Dictionary<string, BsPlayer> ActivePlayers { get; private set; } = new();
         [CanBeNull] public BsMatrix Matrix { get; private set; }
         public bool MapLoaded { get; private set; }
 
@@ -44,6 +44,66 @@ namespace Core
         public Light2D cLight2D;
 
         // System functions
+        public void RegisterPlayers(IEnumerable<BsPlayer> players)
+        {
+            foreach (var player in players)
+            {
+                player.Activate(gPlayerParent.transform, ActiveMap);
+                ActivePlayers[player.Id] = player;
+            }
+        }
+
+        public void UnregisterPlayers()
+        {
+            foreach (var player in ActivePlayers.Values)
+            {
+                player.Deactivate();
+            }
+            ActivePlayers.Clear();
+        }
+
+        public void SpawnAllPlayers()
+        {
+            var playerList = ActivePlayers.Values.ToList();
+            while (playerList.Count > 0)
+            {
+                var index = ResourceSystem.Random.NextInt(playerList.Count);
+                SpawnPlayer(playerList[index]);
+                playerList.RemoveAt(index);
+            }
+        }
+
+        public void SpawnPlayer(BsPlayer player)
+        {
+            player.Health = ActiveMap.PlayerHealth;
+            player.InstanceObject.transform.localPosition = ActiveMap.SelectSpawn();
+            EventSystem._.EmitPlayerSpawn(ActiveMap, player);
+        }
+
+        public void SetAllPlayersFrozen(bool frozen)
+        {
+            foreach (var player in ActivePlayers.Values)
+            {
+                SetPlayerFrozen(player, frozen);
+            }
+        }
+
+        public void SetPlayerFrozen(string id, bool frozen)
+        {
+            SetPlayerFrozen(ActivePlayers[id], frozen);
+        }
+
+        public void SetPlayerFrozen(BsPlayer player, bool frozen)
+        {
+            SetPlayerFrozen(player.InstanceObject, frozen);
+        }
+
+        public void SetPlayerFrozen(GameObject playerInstanceObject, bool frozen)
+        {
+            playerInstanceObject.GetComponent<Rigidbody2D>().simulated = !frozen;
+            playerInstanceObject.GetComponent<CircleCollider2D>().enabled = !frozen;
+        }
+
         public void ResaveBuiltinMaps(IEnumerable<string> filenames)
         {
             foreach (var filename in filenames)
@@ -68,21 +128,39 @@ namespace Core
             }
         }
 
-        public void RegisterPlayers(IEnumerable<BsPlayer> players)
+        public static string LoadInternalMap(string filename)
         {
-            foreach (var player in players)
-            {
-                player.Activate(gPlayerParent.transform, ActiveMap);
-                ActivePlayers.Add(player);
-            }
+            return Resources.Load<TextAsset>($"{Paths.Content}/{Paths.Maps}/{filename}").text;
         }
 
-        public void UnregisterPlayers()
+        public static string LoadMap(string title, string author)
         {
-            foreach (var player in ActivePlayers)
-            {
-                player.Deactivate();
-            }
+            return LoadMap(GenerateId(title, author).ToString());
+        }
+
+        public static string LoadMap(string filename)
+        {
+            var path = $"{ResourceSystem.DataPath}/{Paths.Maps}/{filename}.{SaveFormat}";
+            using var reader = new StreamReader(path);
+            return reader.ReadToEnd();
+        }
+
+        public static void SaveMap(BsMap map)
+        {
+            SaveMap(map.Stringify(), map.Id.ToString());
+        }
+
+        public static void SaveMap(string raw, string title, string author)
+        {
+            SaveMap(raw, GenerateId(title, author).ToString());
+        }
+
+        public static void SaveMap(string raw, string filename)
+        {
+            var path = $"{ResourceSystem.DataPath}/{Paths.Maps}/{filename}.{SaveFormat}";
+            new FileInfo(path).Directory?.Create();
+            using var writer = new StreamWriter(path);
+            writer.Write(raw);
         }
 
         public void BuildMap(string title, string author)
@@ -219,44 +297,6 @@ namespace Core
             obj.Deactivate();
         }
 
-        public void SpawnAllPlayers()
-        {
-            var playerList = new List<BsPlayer>();
-            playerList.AddRange(ActivePlayers);
-            while (playerList.Count > 0)
-            {
-                var index = ResourceSystem.Random.NextInt(playerList.Count);
-                SpawnPlayer(playerList[index]);
-                playerList.RemoveAt(index);
-            }
-        }
-
-        public void SpawnPlayer(BsPlayer player)
-        {
-            if (!MapLoaded || !player.Active) return;
-            player.Health = ActiveMap.PlayerHealth;
-            player.InstanceObject.transform.localPosition = ActiveMap.SelectSpawn();
-            EventSystem._.EmitPlayerSpawn(ActiveMap, player);
-        }
-
-        public void FreezePlayers()
-        {
-            foreach (var player in ActivePlayers)
-            {
-                player.InstanceObject.GetComponent<Rigidbody2D>().simulated = false;
-                player.InstanceObject.GetComponent<CircleCollider2D>().enabled = false;
-            }
-        }
-
-        public void UnfreezePlayers()
-        {
-            foreach (var player in ActivePlayers)
-            {
-                player.InstanceObject.GetComponent<Rigidbody2D>().simulated = true;
-                player.InstanceObject.GetComponent<CircleCollider2D>().enabled = true;
-            }
-        }
-
         // Event functions
         private void FixedUpdate()
         {
@@ -264,41 +304,6 @@ namespace Core
         }
 
         // Utility functions
-        public static string LoadInternalMap(string filename)
-        {
-            return Resources.Load<TextAsset>($"{Paths.Content}/{Paths.Maps}/{filename}").text;
-        }
-
-        public static string LoadMap(string title, string author)
-        {
-            return LoadMap(GenerateId(title, author).ToString());
-        }
-
-        public static string LoadMap(string filename)
-        {
-            var path = $"{ResourceSystem.DataPath}/{Paths.Maps}/{filename}.{SaveFormat}";
-            using var reader = new StreamReader(path);
-            return reader.ReadToEnd();
-        }
-
-        public static void SaveMap(BsMap map)
-        {
-            SaveMap(map.Stringify(), map.Id.ToString());
-        }
-
-        public static void SaveMap(string raw, string title, string author)
-        {
-            SaveMap(raw, GenerateId(title, author).ToString());
-        }
-
-        public static void SaveMap(string raw, string filename)
-        {
-            var path = $"{ResourceSystem.DataPath}/{Paths.Maps}/{filename}.{SaveFormat}";
-            new FileInfo(path).Directory?.Create();
-            using var writer = new StreamWriter(path);
-            writer.Write(raw);
-        }
-
         public static int LayerToOrder(ObjectLayer layer)
         {
             return layer switch
