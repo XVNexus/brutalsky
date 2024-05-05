@@ -13,74 +13,72 @@ namespace Utils.Lcs
     public static class Binifier
     {
         // TODO: FOR THE LOVE OF ALL THAT IS HOLY AND UNHOLY THERE HAS TO BE A BETTER WAY TO DO THIS
-        public static byte[] Binify<T>(object value)
+        public static byte[] Binify(LcsType type, object value)
         {
-            var type = typeof(T);
             return type switch
             {
-                not null when type == typeof(bool) => BinifyBool((bool)value),
-                not null when type == typeof(ushort) => BinifyUShort((ushort)value),
-                not null when type == typeof(uint) => BinifyUInt((uint)value),
-                not null when type == typeof(ulong) => BinifyULong((ulong)value),
-                not null when type == typeof(short) => BinifyShort((short)value),
-                not null when type == typeof(int) => BinifyInt((int)value),
-                not null when type == typeof(long) => BinifyLong((long)value),
-                not null when type == typeof(float) => BinifyFloat((float)value),
-                not null when type == typeof(double) => BinifyDouble((double)value),
-                not null when type == typeof(char) => BinifyChar((char)value),
-                not null when type == typeof(string) => BinifyString((string)value),
-                not null when type == typeof(Direction) => BinifyDirection((Direction)value),
-                not null when type == typeof(ObjectLayer) => BinifyLayer((ObjectLayer)value),
-                not null when type == typeof(FormType) => BinifyFormType((FormType)value),
-                not null when type == typeof(JointType) => BinifyJointType((JointType)value),
-                not null when type == typeof(Vector2) => BinifyVector2((Vector2)value),
-                not null when type == typeof(Color) => BinifyColor((Color)value),
-                not null when type == typeof(ObjectTransform) => BinifyTransform((ObjectTransform)value),
-                not null when type == typeof(Form) => BinifyForm((Form)value),
-                not null when type == typeof(ShapeMaterial) => BinifyMaterial((ShapeMaterial)value),
-                not null when type == typeof(PoolChemical) => BinifyChemical((PoolChemical)value),
+                LcsType.Bool => BinifyBool((bool)value),
+                LcsType.UShort => BinifyUShort((ushort)value),
+                LcsType.UInt => BinifyUInt((uint)value),
+                LcsType.ULong => BinifyULong((ulong)value),
+                LcsType.Short => BinifyShort((short)value),
+                LcsType.Int => BinifyInt((int)value),
+                LcsType.Long => BinifyLong((long)value),
+                LcsType.Float => BinifyFloat((float)value),
+                LcsType.Double => BinifyDouble((double)value),
+                LcsType.Char => BinifyChar((char)value),
+                LcsType.String => BinifyString((string)value),
+                LcsType.Direction => BinifyDirection((Direction)value),
+                LcsType.Layer => BinifyLayer((ObjectLayer)value),
+                LcsType.FormType => BinifyFormType((FormType)value),
+                LcsType.JointType => BinifyJointType((JointType)value),
+                LcsType.Vector2 => BinifyVector2((Vector2)value),
+                LcsType.Color => BinifyColor((Color)value),
+                LcsType.Transform => BinifyTransform((ObjectTransform)value),
+                LcsType.Form => BinifyForm((Form)value),
+                LcsType.Material => BinifyMaterial((ShapeMaterial)value),
+                LcsType.Chemical => BinifyChemical((PoolChemical)value),
                 _ => throw Errors.InvalidItem("LCS type", type)
             };
         }
 
-        public static byte[] Bin<T>(object value)
+        public static T Parse<T>(LcsType type, byte[] raw)
         {
-            return Binify<T>(value);
-        }
-
-        public static T Parse<T>(byte[] raw)
-        {
-            var type = typeof(T);
             return (T)(object)(type switch
             {
-                not null when type == typeof(bool) => ParseBool(raw),
-                not null when type == typeof(ushort) => ParseUShort(raw),
-                not null when type == typeof(uint) => ParseUInt(raw),
-                not null when type == typeof(ulong) => ParseULong(raw),
-                not null when type == typeof(short) => ParseShort(raw),
-                not null when type == typeof(int) => ParseInt(raw),
-                not null when type == typeof(long) => ParseLong(raw),
-                not null when type == typeof(float) => ParseFloat(raw),
-                not null when type == typeof(double) => ParseDouble(raw),
-                not null when type == typeof(char) => ParseChar(raw),
-                not null when type == typeof(string) => ParseString(raw),
-                not null when type == typeof(Direction) => ParseDirection(raw),
-                not null when type == typeof(ObjectLayer) => ParseLayer(raw),
-                not null when type == typeof(FormType) => ParseFormType(raw),
-                not null when type == typeof(JointType) => ParseJointType(raw),
-                not null when type == typeof(Vector2) => ParseVector2(raw),
-                not null when type == typeof(Color) => ParseColor(raw),
-                not null when type == typeof(ObjectTransform) => ParseTransform(raw),
-                not null when type == typeof(Form) => ParseForm(raw),
-                not null when type == typeof(ShapeMaterial) => ParseMaterial(raw),
-                not null when type == typeof(PoolChemical) => ParseChemical(raw),
+                LcsType.Bool => ParseBool(raw),
+                LcsType.UShort => ParseUShort(raw),
+                LcsType.UInt => ParseUInt(raw),
+                LcsType.ULong => ParseULong(raw),
+                LcsType.Short => ParseShort(raw),
+                LcsType.Int => ParseInt(raw),
+                LcsType.Long => ParseLong(raw),
+                LcsType.Float => ParseFloat(raw),
+                LcsType.Double => ParseDouble(raw),
+                LcsType.Char => ParseChar(raw),
+                LcsType.String => ParseString(raw),
+                LcsType.Direction => ParseDirection(raw),
+                LcsType.Layer => ParseLayer(raw),
+                LcsType.FormType => ParseFormType(raw),
+                LcsType.JointType => ParseJointType(raw),
+                LcsType.Vector2 => ParseVector2(raw),
+                LcsType.Color => ParseColor(raw),
+                LcsType.Transform => ParseTransform(raw),
+                LcsType.Form => ParseForm(raw),
+                LcsType.Material => ParseMaterial(raw),
+                LcsType.Chemical => ParseChemical(raw),
                 _ => throw Errors.InvalidItem("LCS type", type)
             });
         }
 
-        public static T Par<T>(byte[] raw)
+        public static byte[] Bin(LcsType type, object value)
         {
-            return Parse<T>(raw);
+            return Binify(type, value);
+        }
+
+        public static T Par<T>(LcsType type, byte[] raw)
+        {
+            return Parse<T>(type, raw);
         }
 
         // Primitive types

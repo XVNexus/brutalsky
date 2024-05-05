@@ -16,74 +16,72 @@ namespace Utils.Lcs
         public const char FieldSeperator = ',';
 
         // TODO: FOR THE LOVE OF ALL THAT IS HOLY AND UNHOLY THERE HAS TO BE A BETTER WAY TO DO THIS
-        public static string Stringify<T>(object value)
+        public static string Stringify(LcsType type, object value)
         {
-            var type = typeof(T);
             return type switch
             {
-                not null when type == typeof(bool) => StringifyBool((bool)value),
-                not null when type == typeof(ushort) => StringifyUShort((ushort)value),
-                not null when type == typeof(uint) => StringifyUInt((uint)value),
-                not null when type == typeof(ulong) => StringifyULong((ulong)value),
-                not null when type == typeof(short) => StringifyShort((short)value),
-                not null when type == typeof(int) => StringifyInt((int)value),
-                not null when type == typeof(long) => StringifyLong((long)value),
-                not null when type == typeof(float) => StringifyFloat((float)value),
-                not null when type == typeof(double) => StringifyDouble((double)value),
-                not null when type == typeof(char) => StringifyChar((char)value),
-                not null when type == typeof(string) => StringifyString((string)value),
-                not null when type == typeof(Direction) => StringifyDirection((Direction)value),
-                not null when type == typeof(ObjectLayer) => StringifyObjectLayer((ObjectLayer)value),
-                not null when type == typeof(FormType) => StringifyFormType((FormType)value),
-                not null when type == typeof(JointType) => StringifyJointType((JointType)value),
-                not null when type == typeof(Vector2) => StringifyVector2((Vector2)value),
-                not null when type == typeof(Color) => StringifyColor((Color)value),
-                not null when type == typeof(ObjectTransform) => StringifyTransform((ObjectTransform)value),
-                not null when type == typeof(Form) => StringifyForm((Form)value),
-                not null when type == typeof(ShapeMaterial) => StringifyMaterial((ShapeMaterial)value),
-                not null when type == typeof(PoolChemical) => StringifyChemical((PoolChemical)value),
+                LcsType.Bool => StringifyBool((bool)value),
+                LcsType.UShort => StringifyUShort((ushort)value),
+                LcsType.UInt => StringifyUInt((uint)value),
+                LcsType.ULong => StringifyULong((ulong)value),
+                LcsType.Short => StringifyShort((short)value),
+                LcsType.Int => StringifyInt((int)value),
+                LcsType.Long => StringifyLong((long)value),
+                LcsType.Float => StringifyFloat((float)value),
+                LcsType.Double => StringifyDouble((double)value),
+                LcsType.Char => StringifyChar((char)value),
+                LcsType.String => StringifyString((string)value),
+                LcsType.Direction => StringifyDirection((Direction)value),
+                LcsType.Layer => StringifyLayer((ObjectLayer)value),
+                LcsType.FormType => StringifyFormType((FormType)value),
+                LcsType.JointType => StringifyJointType((JointType)value),
+                LcsType.Vector2 => StringifyVector2((Vector2)value),
+                LcsType.Color => StringifyColor((Color)value),
+                LcsType.Transform => StringifyTransform((ObjectTransform)value),
+                LcsType.Form => StringifyForm((Form)value),
+                LcsType.Material => StringifyMaterial((ShapeMaterial)value),
+                LcsType.Chemical => StringifyChemical((PoolChemical)value),
                 _ => throw Errors.InvalidItem("LCS type", type)
             };
         }
 
-        public static string Str<T>(object value)
+        public static T Parse<T>(LcsType type, string raw)
         {
-            return Stringify<T>(value);
-        }
-
-        public static T Parse<T>(string raw)
-        {
-            var type = typeof(T);
             return (T)(object)(type switch
             {
-                not null when type == typeof(bool) => ParseBool(raw),
-                not null when type == typeof(ushort) => ParseUShort(raw),
-                not null when type == typeof(uint) => ParseUInt(raw),
-                not null when type == typeof(ulong) => ParseULong(raw),
-                not null when type == typeof(short) => ParseShort(raw),
-                not null when type == typeof(int) => ParseInt(raw),
-                not null when type == typeof(long) => ParseLong(raw),
-                not null when type == typeof(float) => ParseFloat(raw),
-                not null when type == typeof(double) => ParseDouble(raw),
-                not null when type == typeof(char) => ParseChar(raw),
-                not null when type == typeof(string) => ParseString(raw),
-                not null when type == typeof(Direction) => ParseDirection(raw),
-                not null when type == typeof(ObjectLayer) => ParseLayer(raw),
-                not null when type == typeof(FormType) => ParseFormType(raw),
-                not null when type == typeof(JointType) => ParseJointType(raw),
-                not null when type == typeof(Vector2) => ParseVector2(raw),
-                not null when type == typeof(Color) => ParseColor(raw),
-                not null when type == typeof(ObjectTransform) => ParseTransform(raw),
-                not null when type == typeof(Form) => ParseForm(raw),
-                not null when type == typeof(ShapeMaterial) => ParseMaterial(raw),
-                not null when type == typeof(PoolChemical) => ParseChemical(raw),
+                LcsType.Bool => ParseBool(raw),
+                LcsType.UShort => ParseUShort(raw),
+                LcsType.UInt => ParseUInt(raw),
+                LcsType.ULong => ParseULong(raw),
+                LcsType.Short => ParseShort(raw),
+                LcsType.Int => ParseInt(raw),
+                LcsType.Long => ParseLong(raw),
+                LcsType.Float => ParseFloat(raw),
+                LcsType.Double => ParseDouble(raw),
+                LcsType.Char => ParseChar(raw),
+                LcsType.String => ParseString(raw),
+                LcsType.Direction => ParseDirection(raw),
+                LcsType.Layer => ParseLayer(raw),
+                LcsType.FormType => ParseFormType(raw),
+                LcsType.JointType => ParseJointType(raw),
+                LcsType.Vector2 => ParseVector2(raw),
+                LcsType.Color => ParseColor(raw),
+                LcsType.Transform => ParseTransform(raw),
+                LcsType.Form => ParseForm(raw),
+                LcsType.Material => ParseMaterial(raw),
+                LcsType.Chemical => ParseChemical(raw),
                 _ => throw Errors.InvalidItem("LCS type", type)
             });
         }
 
-        public static T Par<T>(string raw)
+        public static string Str(LcsType type, object value)
         {
-            return Parse<T>(raw);
+            return Stringify(type, value);
+        }
+
+        public static T Par<T>(LcsType type, string raw)
+        {
+            return Parse<T>(type, raw);
         }
 
         // Primitive types
@@ -243,7 +241,7 @@ namespace Utils.Lcs
             return (Direction)ParseInt(raw);
         }
 
-        private static string StringifyObjectLayer(ObjectLayer layer)
+        private static string StringifyLayer(ObjectLayer layer)
         {
             return StringifyInt((int)layer);
         }

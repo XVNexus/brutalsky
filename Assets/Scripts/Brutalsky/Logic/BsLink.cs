@@ -23,17 +23,19 @@ namespace Brutalsky.Logic
         {
             return new LcsLine('^', new[]
             {
-                Stringifier.Str<int>(FromPort.Item1),
-                Stringifier.Str<int>(FromPort.Item2),
-                Stringifier.Str<int>(ToPort.Item1),
-                Stringifier.Str<int>(ToPort.Item2),
+                Stringifier.Str(LcsType.Int, FromPort.Item1),
+                Stringifier.Str(LcsType.Int, FromPort.Item2),
+                Stringifier.Str(LcsType.Int, ToPort.Item1),
+                Stringifier.Str(LcsType.Int, ToPort.Item2),
             });
         }
 
         public static BsLink FromLcs(LcsLine line)
         {
-            return new BsLink(Stringifier.Par<int>(line.Properties[0]), Stringifier.Par<int>(line.Properties[1]),
-                Stringifier.Par<int>(line.Properties[2]), Stringifier.Par<int>(line.Properties[3]));
+            return new BsLink(Stringifier.Par<int>(LcsType.Int, line.Properties[0]),
+                Stringifier.Par<int>(LcsType.Int, line.Properties[1]),
+                Stringifier.Par<int>(LcsType.Int, line.Properties[2]),
+                Stringifier.Par<int>(LcsType.Int, line.Properties[3]));
         }
     }
 }

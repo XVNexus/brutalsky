@@ -105,27 +105,27 @@ namespace Brutalsky.Object
         {
             return new[]
             {
-                Stringifier.Str<ObjectTransform>(Transform),
-                Stringifier.Str<Form>(Form),
-                Stringifier.Str<ShapeMaterial>(Material),
-                Stringifier.Str<bool>(Dynamic),
-                Stringifier.Str<Color>(Color),
-                Stringifier.Str<bool>(Glow),
-                Stringifier.Str<ObjectLayer>(Layer),
-                Stringifier.Str<bool>(Simulated)
+                Stringifier.Str(LcsType.Transform, Transform),
+                Stringifier.Str(LcsType.Form, Form),
+                Stringifier.Str(LcsType.Material, Material),
+                Stringifier.Str(LcsType.Bool, Dynamic),
+                Stringifier.Str(LcsType.Color, Color),
+                Stringifier.Str(LcsType.Bool, Glow),
+                Stringifier.Str(LcsType.Layer, Layer),
+                Stringifier.Str(LcsType.Bool, Simulated)
             };
         }
 
         protected override void _FromLcs(string[] properties)
         {
-            Transform = Stringifier.Par<ObjectTransform>(properties[0]);
-            Form = Stringifier.Par<Form>(properties[1]);
-            Material = Stringifier.Par<ShapeMaterial>(properties[2]);
-            Dynamic = Stringifier.Par<bool>(properties[3]);
-            Color = Stringifier.Par<Color>(properties[4]);
-            Glow = Stringifier.Par<bool>(properties[5]);
-            Layer = Stringifier.Par<ObjectLayer>(properties[6]);
-            Simulated = Stringifier.Par<bool>(properties[7]);
+            Transform = Stringifier.Par<ObjectTransform>(LcsType.Transform, properties[0]);
+            Form = Stringifier.Par<Form>(LcsType.Form, properties[1]);
+            Material = Stringifier.Par<ShapeMaterial>(LcsType.Material, properties[2]);
+            Dynamic = Stringifier.Par<bool>(LcsType.Bool, properties[3]);
+            Color = Stringifier.Par<Color>(LcsType.Color, properties[4]);
+            Glow = Stringifier.Par<bool>(LcsType.Bool, properties[5]);
+            Layer = Stringifier.Par<ObjectLayer>(LcsType.Layer, properties[6]);
+            Simulated = Stringifier.Par<bool>(LcsType.Bool, properties[7]);
         }
     }
 }

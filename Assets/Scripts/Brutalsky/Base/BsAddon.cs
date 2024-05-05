@@ -57,21 +57,21 @@ namespace Brutalsky.Base
 
         public LcsLine ToLcs()
         {
-            var properties = new List<string> { Stringifier.Str<string>(Tag), Stringifier.Str<string>(Id) };
+            var properties = new List<string> { Stringifier.Str(LcsType.String, Tag), Stringifier.Str(LcsType.String, Id) };
             properties.AddRange(_ToLcs());
             return new LcsLine('@', properties.ToArray());
         }
 
         public static BsAddon FromLcs(LcsLine line)
         {
-            var result = ResourceSystem.GetTemplateAddon(Stringifier.Par<string>(line.Properties[0]));
+            var result = ResourceSystem.GetTemplateAddon(Stringifier.Par<string>(LcsType.String, line.Properties[0]));
             result.ParseLcs(line);
             return result;
         }
 
         private void ParseLcs(LcsLine line)
         {
-            Id = Stringifier.Par<string>(line.Properties[1]);
+            Id = Stringifier.Par<string>(LcsType.String, line.Properties[1]);
             try
             {
                 _FromLcs(line.Properties[2..]);

@@ -70,25 +70,25 @@ namespace Brutalsky.Object
         {
             return new[]
             {
-                Stringifier.Str<ObjectTransform>(Transform),
-                Stringifier.Str<Vector2>(Size),
-                Stringifier.Str<PoolChemical>(Chemical),
-                Stringifier.Str<Color>(Color),
-                Stringifier.Str<bool>(Glow),
-                Stringifier.Str<ObjectLayer>(Layer),
-                Stringifier.Str<bool>(Simulated)
+                Stringifier.Str(LcsType.Transform, Transform),
+                Stringifier.Str(LcsType.Vector2, Size),
+                Stringifier.Str(LcsType.Chemical, Chemical),
+                Stringifier.Str(LcsType.Color, Color),
+                Stringifier.Str(LcsType.Bool, Glow),
+                Stringifier.Str(LcsType.Layer, Layer),
+                Stringifier.Str(LcsType.Bool, Simulated)
             };
         }
 
         protected override void _FromLcs(string[] properties)
         {
-            Transform = Stringifier.Par<ObjectTransform>(properties[0]);
-            Size = Stringifier.Par<Vector2>(properties[1]);
-            Chemical = Stringifier.Par<PoolChemical>(properties[2]);
-            Color = Stringifier.Par<Color>(properties[3]);
-            Glow = Stringifier.Par<bool>(properties[4]);
-            Layer = Stringifier.Par<ObjectLayer>(properties[5]);
-            Simulated = Stringifier.Par<bool>(properties[6]);
+            Transform = Stringifier.Par<ObjectTransform>(LcsType.Transform, properties[0]);
+            Size = Stringifier.Par<Vector2>(LcsType.Vector2, properties[1]);
+            Chemical = Stringifier.Par<PoolChemical>(LcsType.Chemical, properties[2]);
+            Color = Stringifier.Par<Color>(LcsType.Color, properties[3]);
+            Glow = Stringifier.Par<bool>(LcsType.Bool, properties[4]);
+            Layer = Stringifier.Par<ObjectLayer>(LcsType.Layer, properties[5]);
+            Simulated = Stringifier.Par<bool>(LcsType.Bool, properties[6]);
         }
     }
 }
