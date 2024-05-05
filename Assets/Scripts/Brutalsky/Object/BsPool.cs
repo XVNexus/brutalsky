@@ -70,25 +70,25 @@ namespace Brutalsky.Object
         {
             return new[]
             {
-                LcsParser.Stringify(Transform),
-                LcsParser.Stringify(Size),
-                LcsParser.Stringify(Chemical),
-                LcsParser.Stringify(Color),
-                LcsParser.Stringify(Glow),
-                LcsParser.Stringify(Layer),
-                LcsParser.Stringify(Simulated)
+                Stringifier.GetString(Transform),
+                Stringifier.GetString(Size),
+                Stringifier.GetString(Chemical),
+                Stringifier.GetString(Color),
+                Stringifier.GetString(Glow),
+                Stringifier.GetString(Layer),
+                Stringifier.GetString(Simulated)
             };
         }
 
         protected override void _FromLcs(string[] properties)
         {
-            Transform = LcsParser.ParseTransform(properties[0]);
-            Size = LcsParser.ParseVector2(properties[1]);
-            Chemical = LcsParser.ParseChemical(properties[2]);
-            Color = LcsParser.ParseColor(properties[3]);
-            Glow = LcsParser.ParseBool(properties[4]);
-            Layer = LcsParser.ParseLayer(properties[5]);
-            Simulated = LcsParser.ParseBool(properties[6]);
+            Transform = Stringifier.ToTransform(properties[0]);
+            Size = Stringifier.ToVector2(properties[1]);
+            Chemical = Stringifier.ToChemical(properties[2]);
+            Color = Stringifier.ToColor(properties[3]);
+            Glow = Stringifier.ToBoolean(properties[4]);
+            Layer = Stringifier.ToLayer(properties[5]);
+            Simulated = Stringifier.ToBoolean(properties[6]);
         }
     }
 }

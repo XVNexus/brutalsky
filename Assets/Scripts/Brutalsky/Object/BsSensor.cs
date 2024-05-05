@@ -59,17 +59,17 @@ namespace Brutalsky.Object
         {
             return new[]
             {
-                LcsParser.Stringify(Transform),
-                LcsParser.Stringify(Size),
-                LcsParser.Stringify(Simulated)
+                Stringifier.GetString(Transform),
+                Stringifier.GetString(Size),
+                Stringifier.GetString(Simulated)
             };
         }
 
         protected override void _FromLcs(string[] properties)
         {
-            Transform = LcsParser.ParseTransform(properties[0]);
-            Size = LcsParser.ParseVector2(properties[1]);
-            Simulated = LcsParser.ParseBool(properties[2]);
+            Transform = Stringifier.ToTransform(properties[0]);
+            Size = Stringifier.ToVector2(properties[1]);
+            Simulated = Stringifier.ToBoolean(properties[2]);
         }
     }
 }

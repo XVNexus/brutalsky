@@ -49,19 +49,19 @@ namespace Brutalsky.Object
         {
             return new[]
             {
-                LcsParser.Stringify(Name),
-                LcsParser.Stringify(Health),
-                LcsParser.Stringify(Color),
-                LcsParser.Stringify(Dummy)
+                Stringifier.GetString(Name),
+                Stringifier.GetString(Health),
+                Stringifier.GetString(Color),
+                Stringifier.GetString(Dummy)
             };
         }
 
         protected override void _FromLcs(string[] properties)
         {
-            Name = LcsParser.ParseString(properties[0]);
-            Health = LcsParser.ParseFloat(properties[1]);
-            Color = LcsParser.ParseColor(properties[2]);
-            Dummy = LcsParser.ParseBool(properties[3]);
+            Name = Stringifier.ToString(properties[0]);
+            Health = Stringifier.ToSingle(properties[1]);
+            Color = Stringifier.ToColor(properties[2]);
+            Dummy = Stringifier.ToBoolean(properties[3]);
         }
     }
 }

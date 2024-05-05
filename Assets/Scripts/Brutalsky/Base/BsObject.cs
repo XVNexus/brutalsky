@@ -96,21 +96,21 @@ namespace Brutalsky.Base
 
         public LcsLine ToLcs()
         {
-            var properties = new List<string> { LcsParser.Stringify(Tag), LcsParser.Stringify(Id) };
+            var properties = new List<string> { Stringifier.GetString(Tag), Stringifier.GetString(Id) };
             properties.AddRange(_ToLcs());
             return new LcsLine('#', properties.ToArray(), Addons.Select(addon => addon.ToLcs()).ToList());
         }
 
         public static BsObject FromLcs(LcsLine line)
         {
-            var result = ResourceSystem.GetTemplateObject(LcsParser.ParseString(line.Properties[0]));
+            var result = ResourceSystem.GetTemplateObject(Stringifier.ToString(line.Properties[0]));
             result.ParseLcs(line);
             return result;
         }
 
         private void ParseLcs(LcsLine line)
         {
-            Id = LcsParser.ParseString(line.Properties[1]);
+            Id = Stringifier.ToString(line.Properties[1]);
             try
             {
                 _FromLcs(line.Properties[2..]);

@@ -1,5 +1,3 @@
-using Utils.Lcs;
-
 namespace Brutalsky.Logic
 {
     public class BsLink
@@ -13,16 +11,10 @@ namespace Brutalsky.Logic
             ToPort = toPort;
         }
 
-        public string ToLcs(int hexWidth)
+        public BsLink(int fromNode, int fromPort, int toNode, int toPort)
         {
-            return LcsParser.IntToHex(FromPort.Item1, hexWidth) + LcsParser.IntToHex(FromPort.Item2, hexWidth)
-                 + LcsParser.IntToHex(ToPort.Item1, hexWidth) + LcsParser.IntToHex(ToPort.Item2, hexWidth);
-        }
-
-        public static BsLink FromLcs(string property, int hexWidth)
-        {
-            return new BsLink((LcsParser.HexToInt(property[..hexWidth]), LcsParser.HexToInt(property[hexWidth..(hexWidth * 2)])),
-                (LcsParser.HexToInt(property[(hexWidth * 2)..(hexWidth * 3)]), LcsParser.HexToInt(property[(hexWidth * 3)..(hexWidth * 4)])));
+            FromPort = (fromNode, fromPort);
+            ToPort = (toNode, toPort);
         }
     }
 }

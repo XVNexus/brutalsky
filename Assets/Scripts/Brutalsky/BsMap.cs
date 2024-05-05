@@ -194,10 +194,17 @@ namespace Brutalsky
         {
             var lines = new List<LcsLine>
             {
-                new('!', new[] { LcsParser.Stringify(Title), LcsParser.Stringify(Author),
-                    LcsParser.Stringify(PlayArea), LcsParser.Stringify(BackgroundColor),
-                    LcsParser.Stringify(LightingColor), LcsParser.Stringify(GravityDirection),
-                    LcsParser.Stringify(GravityStrength), LcsParser.Stringify(PlayerHealth) })
+                new('!', new[]
+                {
+                    Stringifier.GetString(Title),
+                    Stringifier.GetString(Author),
+                    Stringifier.GetString(PlayArea),
+                    Stringifier.GetString(BackgroundColor),
+                    Stringifier.GetString(LightingColor),
+                    Stringifier.GetString(GravityDirection),
+                    Stringifier.GetString(GravityStrength),
+                    Stringifier.GetString(PlayerHealth)
+                })
             };
             var logicNodeCount = 0;
             lines.AddRange(Spawns.Select(spawn => spawn.ToLcs()));
@@ -210,8 +217,10 @@ namespace Brutalsky
             if (Nodes.Count > 0)
             {
                 var hexWidth = Mathf.CeilToInt(Mathf.Log(logicNodeCount) / Mathf.Log(16f));
-                lines.Add(new LcsLine('%', Nodes.Select(node => node.ToLcs()).ToArray()));
-                lines.Add(new LcsLine('^', Links.Values.Select(link => link.ToLcs(hexWidth)).ToArray()));
+                lines.Add(new LcsLine('%', Nodes.Select(node =>
+                    Stringifier.GetString(node)).ToArray()));
+                lines.Add(new LcsLine('^', Links.Values.Select(link =>
+                    Stringifier.GetString(link, hexWidth)).ToArray()));
             }
             return new LcsDocument(1, lines, new[] { "!$#%^", "@" });
         }
@@ -228,14 +237,14 @@ namespace Brutalsky
             {
                 throw Errors.InvalidItem("map LCS metadata line", metadataLine);
             }
-            result.Title = LcsParser.ParseString(metadataLine.Properties[0]);
-            result.Author = LcsParser.ParseString(metadataLine.Properties[1]);
-            result.PlayArea = LcsParser.ParseVector2(metadataLine.Properties[2]);
-            result.BackgroundColor = LcsParser.ParseColor(metadataLine.Properties[3]);
-            result.LightingColor = LcsParser.ParseColor(metadataLine.Properties[4]);
-            result.GravityDirection = LcsParser.ParseDirection(metadataLine.Properties[5]);
-            result.GravityStrength = LcsParser.ParseFloat(metadataLine.Properties[6]);
-            result.PlayerHealth = LcsParser.ParseFloat(metadataLine.Properties[7]);
+            result.Title = Stringifier.ToString(metadataLine.Properties[0]);
+            result.Author = Stringifier.ToString(metadataLine.Properties[1]);
+            result.PlayArea = Stringifier.ToVector2(metadataLine.Properties[2]);
+            result.BackgroundColor = Stringifier.ToColor(metadataLine.Properties[3]);
+            result.LightingColor = Stringifier.ToColor(metadataLine.Properties[4]);
+            result.GravityDirection = Stringifier.ToDirection(metadataLine.Properties[5]);
+            result.GravityStrength = Stringifier.ToSingle(metadataLine.Properties[6]);
+            result.PlayerHealth = Stringifier.ToSingle(metadataLine.Properties[7]);
             var logicNodeCount = 0;
             for (var i = 1; i < document.Lines.Count; i++)
             {
@@ -255,7 +264,7 @@ namespace Brutalsky
                         var nodeStrings = line.Properties;
                         foreach (var nodeString in nodeStrings)
                         {
-                            result.AddNode(BsNode.FromLcs(nodeString));
+                            result.AddNode(Stringifier.ToNode(nodeString));
                         }
                         break;
                     case '^':
@@ -263,7 +272,7 @@ namespace Brutalsky
                         var hexWidth = Mathf.CeilToInt(Mathf.Log(logicNodeCount) / Mathf.Log(16f));
                         foreach (var linkString in linkStrings)
                         {
-                            result.AddLink(BsLink.FromLcs(linkString, hexWidth));
+                            result.AddLink(Stringifier.ToLink(linkString, hexWidth));
                         }
                         break;
                     default:
