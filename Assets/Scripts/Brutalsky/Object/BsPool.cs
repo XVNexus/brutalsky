@@ -66,29 +66,29 @@ namespace Brutalsky.Object
             return controller;
         }
 
-        protected override string[] _ToLcs()
+        protected override LcsProp[] _ToLcs()
         {
-            return new[]
+            return new LcsProp[]
             {
-                Stringifier.Str(LcsType.Transform, Transform),
-                Stringifier.Str(LcsType.Vector2, Size),
-                Stringifier.Str(LcsType.Chemical, Chemical),
-                Stringifier.Str(LcsType.Color, Color),
-                Stringifier.Str(LcsType.Bool, Glow),
-                Stringifier.Str(LcsType.Layer, Layer),
-                Stringifier.Str(LcsType.Bool, Simulated)
+                new(LcsType.Transform, Transform),
+                new(LcsType.Vector2, Size),
+                new(LcsType.Chemical, Chemical),
+                new(LcsType.Color, Color),
+                new(LcsType.Bool, Glow),
+                new(LcsType.Layer, Layer),
+                new(LcsType.Bool, Simulated)
             };
         }
 
-        protected override void _FromLcs(string[] properties)
+        protected override void _FromLcs(LcsProp[] props)
         {
-            Transform = Stringifier.Par<ObjectTransform>(LcsType.Transform, properties[0]);
-            Size = Stringifier.Par<Vector2>(LcsType.Vector2, properties[1]);
-            Chemical = Stringifier.Par<PoolChemical>(LcsType.Chemical, properties[2]);
-            Color = Stringifier.Par<Color>(LcsType.Color, properties[3]);
-            Glow = Stringifier.Par<bool>(LcsType.Bool, properties[4]);
-            Layer = Stringifier.Par<ObjectLayer>(LcsType.Layer, properties[5]);
-            Simulated = Stringifier.Par<bool>(LcsType.Bool, properties[6]);
+            Transform = (ObjectTransform)props[0].Value;
+            Size = (Vector2)props[1].Value;
+            Chemical = (PoolChemical)props[2].Value;
+            Color = (Color)props[3].Value;
+            Glow = (bool)props[4].Value;
+            Layer = (ObjectLayer)props[5].Value;
+            Simulated = (bool)props[6].Value;
         }
     }
 }

@@ -101,31 +101,31 @@ namespace Brutalsky.Object
             return controller;
         }
 
-        protected override string[] _ToLcs()
+        protected override LcsProp[] _ToLcs()
         {
-            return new[]
+            return new LcsProp[]
             {
-                Stringifier.Str(LcsType.Transform, Transform),
-                Stringifier.Str(LcsType.Form, Form),
-                Stringifier.Str(LcsType.Material, Material),
-                Stringifier.Str(LcsType.Bool, Dynamic),
-                Stringifier.Str(LcsType.Color, Color),
-                Stringifier.Str(LcsType.Bool, Glow),
-                Stringifier.Str(LcsType.Layer, Layer),
-                Stringifier.Str(LcsType.Bool, Simulated)
+                new(LcsType.Transform, Transform),
+                new(LcsType.Form, Form),
+                new(LcsType.Material, Material),
+                new(LcsType.Bool, Dynamic),
+                new(LcsType.Color, Color),
+                new(LcsType.Bool, Glow),
+                new(LcsType.Layer, Layer),
+                new(LcsType.Bool, Simulated)
             };
         }
 
-        protected override void _FromLcs(string[] properties)
+        protected override void _FromLcs(LcsProp[] props)
         {
-            Transform = Stringifier.Par<ObjectTransform>(LcsType.Transform, properties[0]);
-            Form = Stringifier.Par<Form>(LcsType.Form, properties[1]);
-            Material = Stringifier.Par<ShapeMaterial>(LcsType.Material, properties[2]);
-            Dynamic = Stringifier.Par<bool>(LcsType.Bool, properties[3]);
-            Color = Stringifier.Par<Color>(LcsType.Color, properties[4]);
-            Glow = Stringifier.Par<bool>(LcsType.Bool, properties[5]);
-            Layer = Stringifier.Par<ObjectLayer>(LcsType.Layer, properties[6]);
-            Simulated = Stringifier.Par<bool>(LcsType.Bool, properties[7]);
+            Transform = (ObjectTransform)props[0].Value;
+            Form = (Form)props[1].Value;
+            Material = (ShapeMaterial)props[2].Value;
+            Dynamic = (bool)props[3].Value;
+            Color = (Color)props[4].Value;
+            Glow = (bool)props[5].Value;
+            Layer = (ObjectLayer)props[6].Value;
+            Simulated = (bool)props[7].Value;
         }
     }
 }

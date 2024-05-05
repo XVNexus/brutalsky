@@ -11,6 +11,9 @@ namespace Core
 
         // Local variables
         public int maxFps;
+        private bool _userPaused;
+        private bool _forcePaused;
+        private bool _forcePauseActive;
 
         // Init functions
         protected override void OnStart()
@@ -19,14 +22,41 @@ namespace Core
         }
 
         // System functions
-        public static void Pause()
+        public void Pause()
         {
-            Time.timeScale = 0f;
+            _userPaused = true;
+            UpdateTimeScale();
         }
 
-        public static void Unpause()
+        public void Unpause()
         {
-            Time.timeScale = 1f;
+            _userPaused = false;
+            UpdateTimeScale();
+        }
+
+        public void ForcePause()
+        {
+            _forcePauseActive = true;
+            _forcePaused = true;
+            UpdateTimeScale();
+        }
+
+        public void ForceUnpause()
+        {
+            _forcePauseActive = true;
+            _forcePaused = false;
+            UpdateTimeScale();
+        }
+
+        public void RemoveForcePause()
+        {
+            _forcePauseActive = false;
+            UpdateTimeScale();
+        }
+
+        public void UpdateTimeScale()
+        {
+            Time.timeScale = (_forcePauseActive ? _forcePaused : _userPaused) ? 0f : 1f;
         }
     }
 }

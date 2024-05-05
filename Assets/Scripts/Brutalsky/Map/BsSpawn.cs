@@ -34,14 +34,14 @@ namespace Brutalsky.Map
         {
             return new LcsLine('$', new[]
             {
-                Stringifier.Str(LcsType.Vector2, Position), Stringifier.Str(LcsType.Int, Priority)
+                new LcsProp(LcsType.Vector2, Position),
+                new LcsProp(LcsType.Int, Priority)
             });
         }
 
         public static BsSpawn FromLcs(LcsLine line)
         {
-            return new BsSpawn(Stringifier.Par<Vector2>(LcsType.Vector2, line.Properties[0]),
-                Stringifier.Par<int>(LcsType.Int, line.Properties[1]));
+            return new BsSpawn((Vector2)line.Props[0].Value, (int)line.Props[1].Value);
         }
     }
 }

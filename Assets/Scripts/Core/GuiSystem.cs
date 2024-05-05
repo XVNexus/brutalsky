@@ -51,13 +51,13 @@ namespace Core
             {
                 if (!ContainsVisiblePane())
                 {
-                    TimeSystem.Unpause();
+                    TimeSystem._.Unpause();
                 }
             }
             else
             {
                 ActivatePane(PauseMenuId);
-                TimeSystem.Pause();
+                TimeSystem._.Pause();
             }
         }
 
@@ -65,7 +65,7 @@ namespace Core
         {
             if (!ContainsVisiblePane()) return;
             while (DeactivatePane()) {}
-            TimeSystem.Unpause();
+            TimeSystem._.Unpause();
         }
 
         public bool ActivatePane(string id)

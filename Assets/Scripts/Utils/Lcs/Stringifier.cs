@@ -15,7 +15,6 @@ namespace Utils.Lcs
         public const char PropertySeperator = ';';
         public const char FieldSeperator = ',';
 
-        // TODO: FOR THE LOVE OF ALL THAT IS HOLY AND UNHOLY THERE HAS TO BE A BETTER WAY TO DO THIS
         public static string Stringify(LcsType type, object value)
         {
             return type switch
@@ -45,9 +44,9 @@ namespace Utils.Lcs
             };
         }
 
-        public static T Parse<T>(LcsType type, string raw)
+        public static object Parse(LcsType type, string raw)
         {
-            return (T)(object)(type switch
+            return type switch
             {
                 LcsType.Bool => ParseBool(raw),
                 LcsType.UShort => ParseUShort(raw),
@@ -71,17 +70,7 @@ namespace Utils.Lcs
                 LcsType.Material => ParseMaterial(raw),
                 LcsType.Chemical => ParseChemical(raw),
                 _ => throw Errors.InvalidItem("LCS type", type)
-            });
-        }
-
-        public static string Str(LcsType type, object value)
-        {
-            return Stringify(type, value);
-        }
-
-        public static T Par<T>(LcsType type, string raw)
-        {
-            return Parse<T>(type, raw);
+            };
         }
 
         // Primitive types
@@ -287,7 +276,6 @@ namespace Utils.Lcs
             return new Vector2(ParseFloat(parts[0]), ParseFloat(parts[1]));
         }
 
-
         private static string StringifyColor(Color color)
         {
             return Float01ToHex(color.r) + Float01ToHex(color.g) + Float01ToHex(color.b) + Float01ToHex(color.a);
@@ -403,12 +391,12 @@ namespace Utils.Lcs
             return HexToInt(hex) / 255f;
         }
 
-        public static string CompressProperties(string[] items)
+        public static string CompressProps(string[] items)
         {
             return CompressList(items, PropertySeperator);
         }
 
-        public static string[] ExpandProperties(string items)
+        public static string[] ExpandProps(string items)
         {
             return ExpandList(items, PropertySeperator);
         }

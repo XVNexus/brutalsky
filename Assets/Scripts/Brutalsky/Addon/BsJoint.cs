@@ -411,60 +411,60 @@ namespace Brutalsky.Addon
             );
         }
 
-        protected override string[] _ToLcs()
+        protected override LcsProp[] _ToLcs()
         {
-            var result = new List<string>
+            var result = new List<LcsProp>
             {
-                Stringifier.Str(LcsType.Transform, Transform),
-                Stringifier.Str(LcsType.JointType, JointType),
-                Stringifier.Str(LcsType.String, MountShape),
-                Stringifier.Str(LcsType.Bool, SelfCollision),
-                Stringifier.Str(LcsType.Float, BreakForce),
-                Stringifier.Str(LcsType.Float, BreakTorque)
+                new(LcsType.Transform, Transform),
+                new(LcsType.JointType, JointType),
+                new(LcsType.String, MountShape),
+                new(LcsType.Bool, SelfCollision),
+                new(LcsType.Float, BreakForce),
+                new(LcsType.Float, BreakTorque)
             };
             switch (JointType)
             {
                 case JointType.Fixed:
-                    result.Add(Stringifier.Str(LcsType.Float, DampingRatio));
-                    result.Add(Stringifier.Str(LcsType.Float, DampingFrequency));
+                    result.Add(new LcsProp(LcsType.Float, DampingRatio));
+                    result.Add(new LcsProp(LcsType.Float, DampingFrequency));
                     break;
                 case JointType.Distance:
-                    result.Add(Stringifier.Str(LcsType.Float, DistanceValue));
-                    result.Add(Stringifier.Str(LcsType.Bool, DistanceAuto));
-                    result.Add(Stringifier.Str(LcsType.Bool, DistanceMax));
+                    result.Add(new LcsProp(LcsType.Float, DistanceValue));
+                    result.Add(new LcsProp(LcsType.Bool, DistanceAuto));
+                    result.Add(new LcsProp(LcsType.Bool, DistanceMax));
                     break;
                 case JointType.Spring:
-                    result.Add(Stringifier.Str(LcsType.Float, DistanceValue));
-                    result.Add(Stringifier.Str(LcsType.Bool, DistanceAuto));
-                    result.Add(Stringifier.Str(LcsType.Float, DampingRatio));
-                    result.Add(Stringifier.Str(LcsType.Float, DampingFrequency));
+                    result.Add(new LcsProp(LcsType.Float, DistanceValue));
+                    result.Add(new LcsProp(LcsType.Bool, DistanceAuto));
+                    result.Add(new LcsProp(LcsType.Float, DampingRatio));
+                    result.Add(new LcsProp(LcsType.Float, DampingFrequency));
                     break;
                 case JointType.Hinge:
-                    result.Add(Stringifier.Str(LcsType.Bool, MotorEnabled));
-                    result.Add(Stringifier.Str(LcsType.Float, MotorSpeed));
-                    result.Add(Stringifier.Str(LcsType.Float, MotorForce));
-                    result.Add(Stringifier.Str(LcsType.Bool, LimitEnabled));
-                    result.Add(Stringifier.Str(LcsType.Float, LimitMin));
-                    result.Add(Stringifier.Str(LcsType.Float, LimitMax));
+                    result.Add(new LcsProp(LcsType.Bool, MotorEnabled));
+                    result.Add(new LcsProp(LcsType.Float, MotorSpeed));
+                    result.Add(new LcsProp(LcsType.Float, MotorForce));
+                    result.Add(new LcsProp(LcsType.Bool, LimitEnabled));
+                    result.Add(new LcsProp(LcsType.Float, LimitMin));
+                    result.Add(new LcsProp(LcsType.Float, LimitMax));
                     break;
                 case JointType.Slider:
-                    result.Add(Stringifier.Str(LcsType.Float, AngleValue));
-                    result.Add(Stringifier.Str(LcsType.Bool, AngleAuto));
-                    result.Add(Stringifier.Str(LcsType.Bool, MotorEnabled));
-                    result.Add(Stringifier.Str(LcsType.Float, MotorSpeed));
-                    result.Add(Stringifier.Str(LcsType.Float, MotorForce));
-                    result.Add(Stringifier.Str(LcsType.Bool, LimitEnabled));
-                    result.Add(Stringifier.Str(LcsType.Float, LimitMin));
-                    result.Add(Stringifier.Str(LcsType.Float, LimitMax));
+                    result.Add(new LcsProp(LcsType.Float, AngleValue));
+                    result.Add(new LcsProp(LcsType.Bool, AngleAuto));
+                    result.Add(new LcsProp(LcsType.Bool, MotorEnabled));
+                    result.Add(new LcsProp(LcsType.Float, MotorSpeed));
+                    result.Add(new LcsProp(LcsType.Float, MotorForce));
+                    result.Add(new LcsProp(LcsType.Bool, LimitEnabled));
+                    result.Add(new LcsProp(LcsType.Float, LimitMin));
+                    result.Add(new LcsProp(LcsType.Float, LimitMax));
                     break;
                 case JointType.Wheel:
-                    result.Add(Stringifier.Str(LcsType.Float, DampingRatio));
-                    result.Add(Stringifier.Str(LcsType.Float, DampingFrequency));
-                    result.Add(Stringifier.Str(LcsType.Float, AngleValue));
-                    result.Add(Stringifier.Str(LcsType.Bool, AngleAuto));
-                    result.Add(Stringifier.Str(LcsType.Bool, MotorEnabled));
-                    result.Add(Stringifier.Str(LcsType.Float, MotorSpeed));
-                    result.Add(Stringifier.Str(LcsType.Float, MotorForce));
+                    result.Add(new LcsProp(LcsType.Float, DampingRatio));
+                    result.Add(new LcsProp(LcsType.Float, DampingFrequency));
+                    result.Add(new LcsProp(LcsType.Float, AngleValue));
+                    result.Add(new LcsProp(LcsType.Bool, AngleAuto));
+                    result.Add(new LcsProp(LcsType.Bool, MotorEnabled));
+                    result.Add(new LcsProp(LcsType.Float, MotorSpeed));
+                    result.Add(new LcsProp(LcsType.Float, MotorForce));
                     break;
                 default:
                     throw Errors.InvalidItem("joint type", JointType);
@@ -472,57 +472,57 @@ namespace Brutalsky.Addon
             return result.ToArray();
         }
 
-        protected override void _FromLcs(string[] properties)
+        protected override void _FromLcs(LcsProp[] props)
         {
-            Transform = Stringifier.Par<ObjectTransform>(LcsType.Transform, properties[0]);
-            JointType = Stringifier.Par<JointType>(LcsType.JointType, properties[1]);
-            MountShape = Stringifier.Par<string>(LcsType.String, properties[2]);
-            SelfCollision = Stringifier.Par<bool>(LcsType.Bool, properties[3]);
-            BreakForce = Stringifier.Par<float>(LcsType.Float, properties[4]);
-            BreakTorque = Stringifier.Par<float>(LcsType.Float, properties[5]);
+            Transform = (ObjectTransform)props[0].Value;
+            JointType = (JointType)props[1].Value;
+            MountShape = (string)props[2].Value;
+            SelfCollision = (bool)props[3].Value;
+            BreakForce = (float)props[4].Value;
+            BreakTorque = (float)props[5].Value;
             switch (JointType)
             {
                 case JointType.Fixed:
-                    DampingRatio = Stringifier.Par<float>(LcsType.Float, properties[6]);
-                    DampingFrequency = Stringifier.Par<float>(LcsType.Float, properties[7]);
+                    DampingRatio = (float)props[6].Value;
+                    DampingFrequency = (float)props[7].Value;
                     break;
                 case JointType.Distance:
-                    DistanceValue = Stringifier.Par<float>(LcsType.Float, properties[6]);
-                    DistanceAuto = Stringifier.Par<bool>(LcsType.Bool, properties[7]);
-                    DistanceMax = Stringifier.Par<bool>(LcsType.Bool, properties[8]);
+                    DistanceValue = (float)props[6].Value;
+                    DistanceAuto = (bool)props[7].Value;
+                    DistanceMax = (bool)props[8].Value;
                     break;
                 case JointType.Spring:
-                    DistanceValue = Stringifier.Par<float>(LcsType.Float, properties[6]);
-                    DistanceAuto = Stringifier.Par<bool>(LcsType.Bool, properties[7]);
-                    DampingRatio = Stringifier.Par<float>(LcsType.Float, properties[8]);
-                    DampingFrequency = Stringifier.Par<float>(LcsType.Float, properties[9]);
+                    DistanceValue = (float)props[6].Value;
+                    DistanceAuto = (bool)props[7].Value;
+                    DampingRatio = (float)props[8].Value;
+                    DampingFrequency = (float)props[9].Value;
                     break;
                 case JointType.Hinge:
-                    MotorEnabled = Stringifier.Par<bool>(LcsType.Bool, properties[6]);
-                    MotorSpeed = Stringifier.Par<float>(LcsType.Float, properties[7]);
-                    MotorForce = Stringifier.Par<float>(LcsType.Float, properties[8]);
-                    LimitEnabled = Stringifier.Par<bool>(LcsType.Bool, properties[9]);
-                    LimitMin = Stringifier.Par<float>(LcsType.Float, properties[10]);
-                    LimitMax = Stringifier.Par<float>(LcsType.Float, properties[11]);
+                    MotorEnabled = (bool)props[6].Value;
+                    MotorSpeed = (float)props[7].Value;
+                    MotorForce = (float)props[8].Value;
+                    LimitEnabled = (bool)props[9].Value;
+                    LimitMin = (float)props[10].Value;
+                    LimitMax = (float)props[11].Value;
                     break;
                 case JointType.Slider:
-                    AngleValue = Stringifier.Par<float>(LcsType.Float, properties[6]);
-                    AngleAuto = Stringifier.Par<bool>(LcsType.Bool, properties[7]);
-                    MotorEnabled = Stringifier.Par<bool>(LcsType.Bool, properties[8]);
-                    MotorSpeed = Stringifier.Par<float>(LcsType.Float, properties[9]);
-                    MotorForce = Stringifier.Par<float>(LcsType.Float, properties[10]);
-                    LimitEnabled = Stringifier.Par<bool>(LcsType.Bool, properties[11]);
-                    LimitMin = Stringifier.Par<float>(LcsType.Float, properties[12]);
-                    LimitMax = Stringifier.Par<float>(LcsType.Float, properties[13]);
+                    AngleValue = (float)props[6].Value;
+                    AngleAuto = (bool)props[7].Value;
+                    MotorEnabled = (bool)props[8].Value;
+                    MotorSpeed = (float)props[9].Value;
+                    MotorForce = (float)props[10].Value;
+                    LimitEnabled = (bool)props[11].Value;
+                    LimitMin = (float)props[12].Value;
+                    LimitMax = (float)props[13].Value;
                     break;
                 case JointType.Wheel:
-                    DampingRatio = Stringifier.Par<float>(LcsType.Float, properties[6]);
-                    DampingFrequency = Stringifier.Par<float>(LcsType.Float, properties[7]);
-                    AngleValue = Stringifier.Par<float>(LcsType.Float, properties[8]);
-                    AngleAuto = Stringifier.Par<bool>(LcsType.Bool, properties[9]);
-                    MotorEnabled = Stringifier.Par<bool>(LcsType.Bool, properties[10]);
-                    MotorSpeed = Stringifier.Par<float>(LcsType.Float, properties[11]);
-                    MotorForce = Stringifier.Par<float>(LcsType.Float, properties[12]);
+                    DampingRatio = (float)props[6].Value;
+                    DampingFrequency = (float)props[7].Value;
+                    AngleValue = (float)props[8].Value;
+                    AngleAuto = (bool)props[9].Value;
+                    MotorEnabled = (bool)props[10].Value;
+                    MotorSpeed = (float)props[11].Value;
+                    MotorForce = (float)props[12].Value;
                     break;
                 default:
                     throw Errors.InvalidItem("joint type", JointType);

@@ -55,21 +55,21 @@ namespace Brutalsky.Object
             });
         }
 
-        protected override string[] _ToLcs()
+        protected override LcsProp[] _ToLcs()
         {
-            return new[]
+            return new LcsProp[]
             {
-                Stringifier.Str(LcsType.Transform, Transform),
-                Stringifier.Str(LcsType.Vector2, Size),
-                Stringifier.Str(LcsType.Bool, Simulated)
+                new(LcsType.Transform, Transform),
+                new(LcsType.Vector2, Size),
+                new(LcsType.Bool, Simulated)
             };
         }
 
-        protected override void _FromLcs(string[] properties)
+        protected override void _FromLcs(LcsProp[] props)
         {
-            Transform = Stringifier.Par<ObjectTransform>(LcsType.Transform, properties[0]);
-            Size = Stringifier.Par<Vector2>(LcsType.Vector2, properties[1]);
-            Simulated = Stringifier.Par<bool>(LcsType.Bool, properties[2]);
+            Transform = (ObjectTransform)props[0].Value;
+            Size = (Vector2)props[1].Value;
+            Simulated = (bool)props[2].Value;
         }
     }
 }

@@ -21,6 +21,7 @@ namespace Controllers.Gui
                 GuiSystem._.ActivatePane(GuiLsController.PaneId);
             });
             GuiSystem._.RegisterButton(PaneId, "rest", () => {
+                if (GameManager._.mapChangeActive) return;
                 GameManager._.RestartRound();
                 GuiSystem._.EscapeAll();
             });

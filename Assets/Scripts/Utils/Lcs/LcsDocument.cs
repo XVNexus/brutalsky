@@ -54,7 +54,7 @@ namespace Utils.Lcs
 
         public string Stringify()
         {
-            return Version.ToString() + Stringifier.PropertySeperator + Stringifier.CompressProperties(LineLevels)
+            return Version.ToString() + Stringifier.PropertySeperator + Stringifier.CompressProps(LineLevels)
                 + '\n' + Lines.Aggregate("", (current, line) => current + line.Stringify());
         }
     }

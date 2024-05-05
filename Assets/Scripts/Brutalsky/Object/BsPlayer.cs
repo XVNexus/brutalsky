@@ -45,23 +45,23 @@ namespace Brutalsky.Object
             return controller;
         }
 
-        protected override string[] _ToLcs()
+        protected override LcsProp[] _ToLcs()
         {
-            return new[]
+            return new LcsProp[]
             {
-                Stringifier.Str(LcsType.String, Name),
-                Stringifier.Str(LcsType.Float, Health),
-                Stringifier.Str(LcsType.Color, Color),
-                Stringifier.Str(LcsType.Bool, Dummy)
+                new(LcsType.String, Name),
+                new(LcsType.Float, Health),
+                new(LcsType.Color, Color),
+                new(LcsType.Bool, Dummy)
             };
         }
 
-        protected override void _FromLcs(string[] properties)
+        protected override void _FromLcs(LcsProp[] props)
         {
-            Name = Stringifier.Par<string>(LcsType.String, properties[0]);
-            Health = Stringifier.Par<float>(LcsType.Float, properties[1]);
-            Color = Stringifier.Par<Color>(LcsType.Color, properties[2]);
-            Dummy = Stringifier.Par<bool>(LcsType.Bool, properties[3]);
+            Name = (string)props[0].Value;
+            Health = (float)props[1].Value;
+            Color = (Color)props[2].Value;
+            Dummy = (bool)props[3].Value;
         }
     }
 }

@@ -54,6 +54,7 @@ namespace Controllers.Gui
             mapTileCell.Q<Label>("title").text = $"<b>{map.Title}</b>\n{map.Author}";
             GuiSystem._.RegisterButton(mapTileCell.Q<Button>("button"), () =>
             {
+                if (GameManager._.mapChangeActive) return;
                 if (MapSystem._.MapLoaded && MapSystem._.ActiveMap.Id != map.Id)
                 {
                     GameManager._.StartRound(map.Id);

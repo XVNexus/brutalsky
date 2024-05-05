@@ -391,22 +391,22 @@ namespace Brutalsky.Logic
 
         public LcsLine ToLcs()
         {
-            var properties = new string[Config.Length + 1];
-            properties[0] = Stringifier.Str(LcsType.String, Tag);
+            var props = new LcsProp[Config.Length + 1];
+            props[0] = new LcsProp(LcsType.String, Tag);
             for (var i = 0; i < Config.Length; i++)
             {
-                properties[i + 1] = Stringifier.Str(LcsType.Float, Config[i]);
+                props[i + 1] = new LcsProp(LcsType.Float, Config[i]);
             }
-            return new LcsLine('%', properties);
+            return new LcsLine('%', props);
         }
 
         public static BsNode FromLcs(LcsLine line)
         {
-            var tag = Stringifier.Par<string>(LcsType.String, line.Properties[0]);
-            var config = new float[line.Properties.Length - 1];
-            for (var i = 1; i < line.Properties.Length; i++)
+            var tag = (string)line.Props[0].Value;
+            var config = new float[line.Props.Length - 1];
+            for (var i = 1; i < line.Props.Length; i++)
             {
-                config[i - 1] = Stringifier.Par<float>(LcsType.Float, line.Properties[i]);
+                config[i - 1] = (float)line.Props[i].Value;
             }
             return tag switch
             {

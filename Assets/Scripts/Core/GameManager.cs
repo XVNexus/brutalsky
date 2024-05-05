@@ -20,6 +20,9 @@ namespace Core
         public static GameManager _ { get; private set; }
         private void Awake() => _ = this;
 
+        // Local variables
+        public bool mapChangeActive = false;
+
         // Init functions
         protected override void OnStart()
         {
@@ -28,9 +31,9 @@ namespace Core
 
         protected override void OnLoad()
         {
-            // MapSystem._.ResaveBuiltinMaps(new[] { "Brutalsky", "Doomring", "Tossup", "Void" });
-            // GenerateDefaultMaps();
-            StartGame(MapSystem.GenerateId("Void", "Xveon"), new[]
+            MapSystem._.ResaveBuiltinMaps(new[] { "Brutalsky", "Doomring", "Tossup", "Void" });
+            GenerateDefaultMaps();
+            StartGame(MapSystem.GenerateId("Medium Platform", "Brutalsky"), new[]
             {
                 new BsPlayer("Player 1", 100f, new Color(1f, .5f, 0f)),
                 new BsPlayer("Player 2", 100f, new Color(0f, .5f, 1f), true)
@@ -60,26 +63,28 @@ namespace Core
 
         public void ChangeMap(uint mapId, bool moveCam, float animTime)
         {
-            // Disable player physics for the animation
-            MapSystem._.SetAllPlayersFrozen(true);
-            LeanTween.delayedCall(MapSystem._.gPlayerParent, animTime, () =>
-            {
-                MapSystem._.SetAllPlayersFrozen(false);
-            });
-
             // Fade out view to hide level loading and fade back in with new level
             var camCover = CameraSystem._.cCameraCover.gameObject;
+            mapChangeActive = true;
+            TimeSystem._.ForceUnpause();
             camCover.LeanColor(MapSystem._.ActiveMap.BackgroundColor.MultiplyTint(.75f), animTime * .4f)
                 .setEaseInOutCubic()
                 .setOnComplete(() =>
                 {
+                    MapSystem._.SetAllPlayersFrozen(true);
                     MapSystem._.BuildMap(mapId);
                     MapSystem._.SpawnAllPlayers();
                     camCover.LeanColor(MapSystem._.ActiveMap.BackgroundColor.MultiplyTint(.75f), animTime * .2f)
                         .setOnComplete(() =>
                         {
+                            MapSystem._.SetAllPlayersFrozen(false);
                             camCover.LeanColor(MapSystem._.ActiveMap.BackgroundColor.SetAlpha(0f).MultiplyTint(.75f), animTime * .4f)
-                                .setEaseInOutCubic();
+                                .setEaseInOutCubic()
+                                .setOnComplete(() =>
+                                {
+                                    mapChangeActive = false;
+                                    TimeSystem._.RemoveForcePause();
+                                });
                         });
                 });
 

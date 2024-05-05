@@ -33,9 +33,9 @@ namespace Brutalsky.Base
 
         protected abstract Component _Init(GameObject gameObject, BsObject parentObject, BsMap map);
 
-        protected abstract string[] _ToLcs();
+        protected abstract LcsProp[] _ToLcs();
 
-        protected abstract void _FromLcs(string[] properties);
+        protected abstract void _FromLcs(LcsProp[] props);
 
         [CanBeNull]
         public virtual BsNode RegisterLogic()
@@ -57,24 +57,24 @@ namespace Brutalsky.Base
 
         public LcsLine ToLcs()
         {
-            var properties = new List<string> { Stringifier.Str(LcsType.String, Tag), Stringifier.Str(LcsType.String, Id) };
-            properties.AddRange(_ToLcs());
-            return new LcsLine('@', properties.ToArray());
+            var props = new List<LcsProp> { new(LcsType.String, Tag), new(LcsType.String, Id) };
+            props.AddRange(_ToLcs());
+            return new LcsLine('@', props.ToArray());
         }
 
         public static BsAddon FromLcs(LcsLine line)
         {
-            var result = ResourceSystem.GetTemplateAddon(Stringifier.Par<string>(LcsType.String, line.Properties[0]));
+            var result = ResourceSystem.GetTemplateAddon((string)line.Props[0].Value);
             result.ParseLcs(line);
             return result;
         }
 
         private void ParseLcs(LcsLine line)
         {
-            Id = Stringifier.Par<string>(LcsType.String, line.Properties[1]);
+            Id = (string)line.Props[1].Value;
             try
             {
-                _FromLcs(line.Properties[2..]);
+                _FromLcs(line.Props[2..]);
             }
             catch (Exception ex)
             {
