@@ -105,27 +105,27 @@ namespace Brutalsky.Object
         {
             return new[]
             {
-                Stringifier.GetString(Transform),
-                Stringifier.GetString(Form),
-                Stringifier.GetString(Material),
-                Stringifier.GetString(Dynamic),
-                Stringifier.GetString(Color),
-                Stringifier.GetString(Glow),
-                Stringifier.GetString(Layer),
-                Stringifier.GetString(Simulated)
+                Stringifier.Stringify(Transform),
+                Stringifier.Stringify(Form),
+                Stringifier.Stringify(Material),
+                Stringifier.Stringify(Dynamic),
+                Stringifier.Stringify(Color),
+                Stringifier.Stringify(Glow),
+                Stringifier.Stringify(Layer),
+                Stringifier.Stringify(Simulated)
             };
         }
 
         protected override void _FromLcs(string[] properties)
         {
-            Transform = Stringifier.ToTransform(properties[0]);
-            Form = Stringifier.ToForm(properties[1]);
-            Material = Stringifier.ToMaterial(properties[2]);
-            Dynamic = Stringifier.ToBoolean(properties[3]);
-            Color = Stringifier.ToColor(properties[4]);
-            Glow = Stringifier.ToBoolean(properties[5]);
-            Layer = Stringifier.ToLayer(properties[6]);
-            Simulated = Stringifier.ToBoolean(properties[7]);
+            Transform = Stringifier.ParseTransform(properties[0]);
+            Form = Stringifier.ParseForm(properties[1]);
+            Material = Stringifier.ParseMaterial(properties[2]);
+            Dynamic = Stringifier.ParseBool(properties[3]);
+            Color = Stringifier.ParseColor(properties[4]);
+            Glow = Stringifier.ParseBool(properties[5]);
+            Layer = Stringifier.ParseLayer(properties[6]);
+            Simulated = Stringifier.ParseBool(properties[7]);
         }
     }
 }

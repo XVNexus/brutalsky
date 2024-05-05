@@ -21,7 +21,7 @@ namespace Utils.Lcs
         {
             var result = new List<LcsLine>();
             var rawLines = raw.Trim().Split('\n');
-            var headerParts = rawLines[0].Split(LcsParser.PropertySeperator);
+            var headerParts = rawLines[0].Split(Stringifier.PropertySeperator);
             var version = int.Parse(headerParts[0]);
             var lineLevels = headerParts[1..];
             var lineLevelMap = new Dictionary<char, int>();
@@ -54,8 +54,8 @@ namespace Utils.Lcs
 
         public string Stringify()
         {
-            return Version.ToString() + LcsParser.PropertySeperator + LcsParser.CompressProperties(LineLevels) + '\n'
-                + Lines.Aggregate("", (current, line) => current + line.Stringify());
+            return Version.ToString() + Stringifier.PropertySeperator + Stringifier.CompressProperties(LineLevels)
+                + '\n' + Lines.Aggregate("", (current, line) => current + line.Stringify());
         }
     }
 }

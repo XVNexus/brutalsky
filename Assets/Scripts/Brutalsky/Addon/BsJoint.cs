@@ -414,56 +414,56 @@ namespace Brutalsky.Addon
         {
             var result = new List<string>
             {
-                Stringifier.GetString(Transform),
-                Stringifier.GetString(JointType),
-                Stringifier.GetString(MountShape),
-                Stringifier.GetString(SelfCollision),
-                Stringifier.GetString(BreakForce),
-                Stringifier.GetString(BreakTorque)
+                Stringifier.Stringify(Transform),
+                Stringifier.Stringify(JointType),
+                Stringifier.Stringify(MountShape),
+                Stringifier.Stringify(SelfCollision),
+                Stringifier.Stringify(BreakForce),
+                Stringifier.Stringify(BreakTorque)
             };
             switch (JointType)
             {
                 case JointType.Fixed:
-                    result.Add(Stringifier.GetString(DampingRatio));
-                    result.Add(Stringifier.GetString(DampingFrequency));
+                    result.Add(Stringifier.Stringify(DampingRatio));
+                    result.Add(Stringifier.Stringify(DampingFrequency));
                     break;
                 case JointType.Distance:
-                    result.Add(Stringifier.GetString(DistanceValue));
-                    result.Add(Stringifier.GetString(DistanceAuto));
-                    result.Add(Stringifier.GetString(DistanceMax));
+                    result.Add(Stringifier.Stringify(DistanceValue));
+                    result.Add(Stringifier.Stringify(DistanceAuto));
+                    result.Add(Stringifier.Stringify(DistanceMax));
                     break;
                 case JointType.Spring:
-                    result.Add(Stringifier.GetString(DistanceValue));
-                    result.Add(Stringifier.GetString(DistanceAuto));
-                    result.Add(Stringifier.GetString(DampingRatio));
-                    result.Add(Stringifier.GetString(DampingFrequency));
+                    result.Add(Stringifier.Stringify(DistanceValue));
+                    result.Add(Stringifier.Stringify(DistanceAuto));
+                    result.Add(Stringifier.Stringify(DampingRatio));
+                    result.Add(Stringifier.Stringify(DampingFrequency));
                     break;
                 case JointType.Hinge:
-                    result.Add(Stringifier.GetString(MotorEnabled));
-                    result.Add(Stringifier.GetString(MotorSpeed));
-                    result.Add(Stringifier.GetString(MotorForce));
-                    result.Add(Stringifier.GetString(LimitEnabled));
-                    result.Add(Stringifier.GetString(LimitMin));
-                    result.Add(Stringifier.GetString(LimitMax));
+                    result.Add(Stringifier.Stringify(MotorEnabled));
+                    result.Add(Stringifier.Stringify(MotorSpeed));
+                    result.Add(Stringifier.Stringify(MotorForce));
+                    result.Add(Stringifier.Stringify(LimitEnabled));
+                    result.Add(Stringifier.Stringify(LimitMin));
+                    result.Add(Stringifier.Stringify(LimitMax));
                     break;
                 case JointType.Slider:
-                    result.Add(Stringifier.GetString(AngleValue));
-                    result.Add(Stringifier.GetString(AngleAuto));
-                    result.Add(Stringifier.GetString(MotorEnabled));
-                    result.Add(Stringifier.GetString(MotorSpeed));
-                    result.Add(Stringifier.GetString(MotorForce));
-                    result.Add(Stringifier.GetString(LimitEnabled));
-                    result.Add(Stringifier.GetString(LimitMin));
-                    result.Add(Stringifier.GetString(LimitMax));
+                    result.Add(Stringifier.Stringify(AngleValue));
+                    result.Add(Stringifier.Stringify(AngleAuto));
+                    result.Add(Stringifier.Stringify(MotorEnabled));
+                    result.Add(Stringifier.Stringify(MotorSpeed));
+                    result.Add(Stringifier.Stringify(MotorForce));
+                    result.Add(Stringifier.Stringify(LimitEnabled));
+                    result.Add(Stringifier.Stringify(LimitMin));
+                    result.Add(Stringifier.Stringify(LimitMax));
                     break;
                 case JointType.Wheel:
-                    result.Add(Stringifier.GetString(DampingRatio));
-                    result.Add(Stringifier.GetString(DampingFrequency));
-                    result.Add(Stringifier.GetString(AngleValue));
-                    result.Add(Stringifier.GetString(AngleAuto));
-                    result.Add(Stringifier.GetString(MotorEnabled));
-                    result.Add(Stringifier.GetString(MotorSpeed));
-                    result.Add(Stringifier.GetString(MotorForce));
+                    result.Add(Stringifier.Stringify(DampingRatio));
+                    result.Add(Stringifier.Stringify(DampingFrequency));
+                    result.Add(Stringifier.Stringify(AngleValue));
+                    result.Add(Stringifier.Stringify(AngleAuto));
+                    result.Add(Stringifier.Stringify(MotorEnabled));
+                    result.Add(Stringifier.Stringify(MotorSpeed));
+                    result.Add(Stringifier.Stringify(MotorForce));
                     break;
                 default:
                     throw Errors.InvalidItem("joint type", JointType);
@@ -473,55 +473,55 @@ namespace Brutalsky.Addon
 
         protected override void _FromLcs(string[] properties)
         {
-            Transform = Stringifier.ToTransform(properties[0]);
-            JointType = Stringifier.ToJointType(properties[1]);
-            MountShape = Stringifier.ToString(properties[2]);
-            SelfCollision = Stringifier.ToBoolean(properties[3]);
-            BreakForce = Stringifier.ToSingle(properties[4]);
-            BreakTorque = Stringifier.ToSingle(properties[5]);
+            Transform = Stringifier.ParseTransform(properties[0]);
+            JointType = Stringifier.ParseJointType(properties[1]);
+            MountShape = Stringifier.ParseString(properties[2]);
+            SelfCollision = Stringifier.ParseBool(properties[3]);
+            BreakForce = Stringifier.ParseFloat(properties[4]);
+            BreakTorque = Stringifier.ParseFloat(properties[5]);
             switch (JointType)
             {
                 case JointType.Fixed:
-                    DampingRatio = Stringifier.ToSingle(properties[6]);
-                    DampingFrequency = Stringifier.ToSingle(properties[7]);
+                    DampingRatio = Stringifier.ParseFloat(properties[6]);
+                    DampingFrequency = Stringifier.ParseFloat(properties[7]);
                     break;
                 case JointType.Distance:
-                    DistanceValue = Stringifier.ToSingle(properties[6]);
-                    DistanceAuto = Stringifier.ToBoolean(properties[7]);
-                    DistanceMax = Stringifier.ToBoolean(properties[8]);
+                    DistanceValue = Stringifier.ParseFloat(properties[6]);
+                    DistanceAuto = Stringifier.ParseBool(properties[7]);
+                    DistanceMax = Stringifier.ParseBool(properties[8]);
                     break;
                 case JointType.Spring:
-                    DistanceValue = Stringifier.ToSingle(properties[6]);
-                    DistanceAuto = Stringifier.ToBoolean(properties[7]);
-                    DampingRatio = Stringifier.ToSingle(properties[8]);
-                    DampingFrequency = Stringifier.ToSingle(properties[9]);
+                    DistanceValue = Stringifier.ParseFloat(properties[6]);
+                    DistanceAuto = Stringifier.ParseBool(properties[7]);
+                    DampingRatio = Stringifier.ParseFloat(properties[8]);
+                    DampingFrequency = Stringifier.ParseFloat(properties[9]);
                     break;
                 case JointType.Hinge:
-                    MotorEnabled = Stringifier.ToBoolean(properties[6]);
-                    MotorSpeed = Stringifier.ToSingle(properties[7]);
-                    MotorForce = Stringifier.ToSingle(properties[8]);
-                    LimitEnabled = Stringifier.ToBoolean(properties[9]);
-                    LimitMin = Stringifier.ToSingle(properties[10]);
-                    LimitMax = Stringifier.ToSingle(properties[11]);
+                    MotorEnabled = Stringifier.ParseBool(properties[6]);
+                    MotorSpeed = Stringifier.ParseFloat(properties[7]);
+                    MotorForce = Stringifier.ParseFloat(properties[8]);
+                    LimitEnabled = Stringifier.ParseBool(properties[9]);
+                    LimitMin = Stringifier.ParseFloat(properties[10]);
+                    LimitMax = Stringifier.ParseFloat(properties[11]);
                     break;
                 case JointType.Slider:
-                    AngleValue = Stringifier.ToSingle(properties[6]);
-                    AngleAuto = Stringifier.ToBoolean(properties[7]);
-                    MotorEnabled = Stringifier.ToBoolean(properties[8]);
-                    MotorSpeed = Stringifier.ToSingle(properties[9]);
-                    MotorForce = Stringifier.ToSingle(properties[10]);
-                    LimitEnabled = Stringifier.ToBoolean(properties[11]);
-                    LimitMin = Stringifier.ToSingle(properties[12]);
-                    LimitMax = Stringifier.ToSingle(properties[13]);
+                    AngleValue = Stringifier.ParseFloat(properties[6]);
+                    AngleAuto = Stringifier.ParseBool(properties[7]);
+                    MotorEnabled = Stringifier.ParseBool(properties[8]);
+                    MotorSpeed = Stringifier.ParseFloat(properties[9]);
+                    MotorForce = Stringifier.ParseFloat(properties[10]);
+                    LimitEnabled = Stringifier.ParseBool(properties[11]);
+                    LimitMin = Stringifier.ParseFloat(properties[12]);
+                    LimitMax = Stringifier.ParseFloat(properties[13]);
                     break;
                 case JointType.Wheel:
-                    DampingRatio = Stringifier.ToSingle(properties[6]);
-                    DampingFrequency = Stringifier.ToSingle(properties[7]);
-                    AngleValue = Stringifier.ToSingle(properties[8]);
-                    AngleAuto = Stringifier.ToBoolean(properties[9]);
-                    MotorEnabled = Stringifier.ToBoolean(properties[10]);
-                    MotorSpeed = Stringifier.ToSingle(properties[11]);
-                    MotorForce = Stringifier.ToSingle(properties[12]);
+                    DampingRatio = Stringifier.ParseFloat(properties[6]);
+                    DampingFrequency = Stringifier.ParseFloat(properties[7]);
+                    AngleValue = Stringifier.ParseFloat(properties[8]);
+                    AngleAuto = Stringifier.ParseBool(properties[9]);
+                    MotorEnabled = Stringifier.ParseBool(properties[10]);
+                    MotorSpeed = Stringifier.ParseFloat(properties[11]);
+                    MotorForce = Stringifier.ParseFloat(properties[12]);
                     break;
                 default:
                     throw Errors.InvalidItem("joint type", JointType);

@@ -5,7 +5,7 @@
         <ui:GroupBox class="bs bs-spacer" />
         <ui:GroupBox class="bs bs-box">
             <ui:GroupBox class="bs bs-row">
-                <ui:Button text="Back" parse-escape-sequences="true" display-tooltip-when-elided="true" name="cf-btn-back" class="bs bs-button" style="color: rgb(255, 191, 128);" />
+                <ui:Button text="Back" parse-escape-sequences="true" display-tooltip-when-elided="true" name="cf-btn-back" focusable="false" class="bs bs-button" style="color: rgb(255, 191, 128);" />
             </ui:GroupBox>
         </ui:GroupBox>
     </ui:VisualElement>

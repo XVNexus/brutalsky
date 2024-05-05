@@ -196,14 +196,14 @@ namespace Brutalsky
             {
                 new('!', new[]
                 {
-                    Stringifier.GetString(Title),
-                    Stringifier.GetString(Author),
-                    Stringifier.GetString(PlayArea),
-                    Stringifier.GetString(BackgroundColor),
-                    Stringifier.GetString(LightingColor),
-                    Stringifier.GetString(GravityDirection),
-                    Stringifier.GetString(GravityStrength),
-                    Stringifier.GetString(PlayerHealth)
+                    Stringifier.Stringify(Title),
+                    Stringifier.Stringify(Author),
+                    Stringifier.Stringify(PlayArea),
+                    Stringifier.Stringify(BackgroundColor),
+                    Stringifier.Stringify(LightingColor),
+                    Stringifier.Stringify(GravityDirection),
+                    Stringifier.Stringify(GravityStrength),
+                    Stringifier.Stringify(PlayerHealth)
                 })
             };
             lines.AddRange(Spawns.Select(spawn => spawn.ToLcs()));
@@ -228,14 +228,14 @@ namespace Brutalsky
             {
                 throw Errors.InvalidItem("map LCS metadata line", metadataLine);
             }
-            result.Title = Stringifier.ToString(metadataLine.Properties[0]);
-            result.Author = Stringifier.ToString(metadataLine.Properties[1]);
-            result.PlayArea = Stringifier.ToVector2(metadataLine.Properties[2]);
-            result.BackgroundColor = Stringifier.ToColor(metadataLine.Properties[3]);
-            result.LightingColor = Stringifier.ToColor(metadataLine.Properties[4]);
-            result.GravityDirection = Stringifier.ToDirection(metadataLine.Properties[5]);
-            result.GravityStrength = Stringifier.ToSingle(metadataLine.Properties[6]);
-            result.PlayerHealth = Stringifier.ToSingle(metadataLine.Properties[7]);
+            result.Title = Stringifier.ParseString(metadataLine.Properties[0]);
+            result.Author = Stringifier.ParseString(metadataLine.Properties[1]);
+            result.PlayArea = Stringifier.ParseVector2(metadataLine.Properties[2]);
+            result.BackgroundColor = Stringifier.ParseColor(metadataLine.Properties[3]);
+            result.LightingColor = Stringifier.ParseColor(metadataLine.Properties[4]);
+            result.GravityDirection = Stringifier.ParseDirection(metadataLine.Properties[5]);
+            result.GravityStrength = Stringifier.ParseFloat(metadataLine.Properties[6]);
+            result.PlayerHealth = Stringifier.ParseFloat(metadataLine.Properties[7]);
             for (var i = 1; i < document.Lines.Count; i++)
             {
                 var line = document.Lines[i];

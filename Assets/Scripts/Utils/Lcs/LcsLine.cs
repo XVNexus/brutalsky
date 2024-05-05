@@ -20,20 +20,20 @@ namespace Utils.Lcs
         public static LcsLine Parse(string raw)
         {
             var prefix = raw[0];
-            var properties = LcsParser.ExpandProperties(raw[1..]);
+            var properties = Stringifier.ExpandProperties(raw[1..]);
             return new LcsLine(prefix, properties);
         }
 
         public string Stringify()
         {
-            var result = $"{Prefix}{LcsParser.CompressProperties(Properties)}\n";
+            var result = $"{Prefix}{Stringifier.CompressProperties(Properties)}\n";
             result = Children.Aggregate(result, (current, child) => current + child.Stringify());
             return result;
         }
 
         public override string ToString()
         {
-            return $"{Prefix}{LcsParser.CompressProperties(Properties)}";
+            return $"{Prefix}{Stringifier.CompressProperties(Properties)}";
         }
     }
 }

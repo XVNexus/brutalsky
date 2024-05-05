@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Brutalsky.Logic;
 using UnityEngine;
 using Utils.Constants;
 using Utils.Joint;
@@ -13,47 +12,111 @@ namespace Utils.Lcs
 {
     public static class Stringifier
     {
-        public static string GetString(bool value)
+        public const char PropertySeperator = ';';
+        public const char FieldSeperator = ',';
+
+        // Primitive types
+        public static string Stringify(bool value)
         {
             return value ? "1" : "0";
         }
 
-        public static bool ToBoolean(string raw)
+        public static bool ParseBool(string raw)
         {
             return raw[0] == '1';
         }
 
-        public static string GetString(int value)
+        public static string Stringify(ushort value)
         {
             return value.ToString();
         }
 
-        public static int ToInt32(string raw)
+        public static ushort ParseUShort(string raw)
+        {
+            return ushort.Parse(raw);
+        }
+
+        public static string Stringify(uint value)
+        {
+            return value.ToString();
+        }
+
+        public static uint ParseUInt(string raw)
+        {
+            return uint.Parse(raw);
+        }
+
+        public static string Stringify(ulong value)
+        {
+            return value.ToString();
+        }
+
+        public static ulong ParseULong(string raw)
+        {
+            return ulong.Parse(raw);
+        }
+
+        public static string Stringify(short value)
+        {
+            return value.ToString();
+        }
+
+        public static short ParseShort(string raw)
+        {
+            return short.Parse(raw);
+        }
+
+        public static string Stringify(int value)
+        {
+            return value.ToString();
+        }
+
+        public static int ParseInt(string raw)
         {
             return int.Parse(raw);
         }
 
-        public static string GetString(float value)
+        public static string Stringify(long value)
         {
             return value.ToString();
         }
 
-        public static float ToSingle(string raw)
+        public static long ParseLong(string raw)
+        {
+            return long.Parse(raw);
+        }
+
+        public static string Stringify(float value)
+        {
+            return value.ToString();
+        }
+
+        public static float ParseFloat(string raw)
         {
             return float.Parse(raw);
         }
 
-        public static string GetString(char value)
+        public static string Stringify(double value)
         {
-            return GetString(value.ToString());
+            return value.ToString();
         }
 
-        public static char ToChar(string raw)
+        public static double ParseDouble(string raw)
         {
-            return ToString(raw)[0];
+            return double.Parse(raw);
         }
 
-        public static string GetString(string value)
+        public static string Stringify(char value)
+        {
+            return Stringify(value.ToString());
+        }
+
+        public static char ParseChar(string raw)
+        {
+            return ParseString(raw)[0];
+        }
+
+        public static string Stringify(string value)
         {
             var result = value;
 
@@ -63,8 +126,8 @@ namespace Utils.Lcs
             // Escape whitespace and special characters
             var specialChars = new Dictionary<char, char>
             {
-                {LcsParser.FieldSeperator, 'f'},
-                {LcsParser.PropertySeperator, 'p'},
+                {FieldSeperator, 'f'},
+                {PropertySeperator, 'p'},
                 {' ', 's'},
                 {'\t', 't'},
                 {'\n', 'n'}
@@ -75,7 +138,7 @@ namespace Utils.Lcs
             return result;
         }
 
-        public static string ToString(string raw)
+        public static string ParseString(string raw)
         {
             var result = raw;
 
@@ -83,8 +146,8 @@ namespace Utils.Lcs
             result = result.Replace(@"\\", @"\\ ");
             var specialChars = new Dictionary<char, char>
             {
-                {'f', LcsParser.FieldSeperator},
-                {'p', LcsParser.PropertySeperator},
+                {'f', FieldSeperator},
+                {'p', PropertySeperator},
                 {'s', ' '},
                 {'t', '\t'},
                 {'n', '\n'}
@@ -98,144 +161,159 @@ namespace Utils.Lcs
             return result;
         }
 
-        public static string GetString(Vector2 value)
+        // Enum types
+        public static string Stringify(Direction direction)
         {
-            return LcsParser.CompressFields(new[]
+            return Stringify((int)direction);
+        }
+
+        public static Direction ParseDirection(string raw)
+        {
+            return (Direction)ParseInt(raw);
+        }
+
+        public static string Stringify(ObjectLayer layer)
+        {
+            return Stringify((int)layer);
+        }
+
+        public static ObjectLayer ParseLayer(string raw)
+        {
+            return (ObjectLayer)ParseInt(raw);
+        }
+
+        public static string Stringify(FormType formType)
+        {
+            return Stringify((int)formType);
+        }
+
+        public static FormType ParseFormType(string raw)
+        {
+            return (FormType)ParseInt(raw);
+        }
+
+        public static string Stringify(JointType jointType)
+        {
+            return Stringify((int)jointType);
+        }
+
+        public static JointType ParseJointType(string raw)
+        {
+            return (JointType)ParseInt(raw);
+        }
+
+        // Compound types
+        public static string Stringify(Vector2 value)
+        {
+            return CompressFields(new[]
             {
-                GetString(value.x),
-                GetString(value.y)
+                Stringify(value.x),
+                Stringify(value.y)
             });
         }
 
-        public static Vector2 ToVector2(string raw)
+        public static Vector2 ParseVector2(string raw)
         {
-            var parts = LcsParser.ExpandFields(raw);
-            return new Vector2(ToSingle(parts[0]), ToSingle(parts[1]));
+            var parts = ExpandFields(raw);
+            return new Vector2(ParseFloat(parts[0]), ParseFloat(parts[1]));
         }
 
-        public static string GetString(Direction direction)
-        {
-            return GetString((int)direction);
-        }
 
-        public static Direction ToDirection(string raw)
-        {
-            return (Direction)ToInt32(raw);
-        }
-
-        public static string GetString(Color color)
+        public static string Stringify(Color color)
         {
             return Float01ToHex(color.r) + Float01ToHex(color.g) + Float01ToHex(color.b) + Float01ToHex(color.a);
         }
 
-        public static Color ToColor(string raw)
+        public static Color ParseColor(string raw)
         {
             return new Color(HexToFloat01(raw[..2]), HexToFloat01(raw[2..4]), HexToFloat01(raw[4..6]),
                 HexToFloat01(raw[6..8]));
         }
 
-        public static string GetString(ObjectLayer layer)
+        public static string Stringify(ObjectTransform transform)
         {
-            return GetString((int)layer);
-        }
-
-        public static ObjectLayer ToLayer(string raw)
-        {
-            return (ObjectLayer)ToInt32(raw);
-        }
-
-        public static string GetString(ObjectTransform transform)
-        {
-            return LcsParser.CompressFields(new[]
+            return CompressFields(new[]
             {
-                GetString(transform.Position.x),
-                GetString(transform.Position.y),
-                GetString(transform.Rotation)
+                Stringify(transform.Position.x),
+                Stringify(transform.Position.y),
+                Stringify(transform.Rotation)
             });
         }
 
-        public static ObjectTransform ToTransform(string raw)
+        public static ObjectTransform ParseTransform(string raw)
         {
-            var parts = LcsParser.ExpandFields(raw);
-            return new ObjectTransform(ToSingle(parts[0]), ToSingle(parts[1]), ToSingle(parts[2]));
+            var parts = ExpandFields(raw);
+            return new ObjectTransform(ParseFloat(parts[0]), ParseFloat(parts[1]), ParseFloat(parts[2]));
         }
 
-        public static string GetString(Form form)
+        public static string Stringify(Form form)
         {
-            return form.Args.Aggregate(GetString((int)form.Type),
-                (current, arg) => current + (LcsParser.FieldSeperator + GetString(arg)));
+            return form.Args.Aggregate(Stringify(form.Type),
+                (current, arg) => current + (FieldSeperator + Stringify(arg)));
         }
 
-        public static Form ToForm(string raw)
+        public static Form ParseForm(string raw)
         {
-            var type = (FormType)ToInt32(raw[..1]);
-            var parts = raw[2..].Split(LcsParser.FieldSeperator).Select(part => float.Parse(part)).ToArray();
+            var parts = raw.Split(FieldSeperator);
+            var type = ParseFormType(parts[0]);
+            var args = parts[1..].Select(part => float.Parse(part)).ToArray();
             return type switch
             {
-                FormType.Vector => Form.Vector(parts),
-                FormType.Polygon => Form.Polygon(parts),
-                FormType.Square => Form.Square(parts[0]),
-                FormType.Rectangle => Form.Rectangle(parts[0], parts[1]),
-                FormType.Circle => Form.Circle(parts[0]),
-                FormType.Ellipse => Form.Ellipse(parts[0], parts[1]),
-                FormType.Ngon => Form.Ngon(Mathf.RoundToInt(parts[0]), parts[1]),
-                FormType.Star => Form.Star(Mathf.RoundToInt(parts[0]), parts[1], parts[2]),
+                FormType.Vector => Form.Vector(args),
+                FormType.Polygon => Form.Polygon(args),
+                FormType.Square => Form.Square(args[0]),
+                FormType.Rectangle => Form.Rectangle(args[0], args[1]),
+                FormType.Circle => Form.Circle(args[0]),
+                FormType.Ellipse => Form.Ellipse(args[0], args[1]),
+                FormType.Ngon => Form.Ngon((int)args[0], args[1]),
+                FormType.Star => Form.Star((int)args[0], args[1], args[2]),
                 _ => Form.Invalid()
             };
         }
 
-        public static string GetString(ShapeMaterial material)
+        public static string Stringify(ShapeMaterial material)
         {
-            return LcsParser.CompressFields(new[]
+            return CompressFields(new[]
             {
-                GetString(material.Friction),
-                GetString(material.Restitution),
-                GetString(material.Adhesion),
-                GetString(material.Density),
-                GetString(material.Health)
+                Stringify(material.Friction),
+                Stringify(material.Restitution),
+                Stringify(material.Adhesion),
+                Stringify(material.Density),
+                Stringify(material.Health)
             });
         }
 
-        public static ShapeMaterial ToMaterial(string raw)
+        public static ShapeMaterial ParseMaterial(string raw)
         {
-            var parts = LcsParser.ExpandFields(raw);
-            var friction = ToSingle(parts[0]);
-            var restitution = ToSingle(parts[1]);
-            var adhesion = ToSingle(parts[2]);
-            var density = ToSingle(parts[3]);
-            var health = ToSingle(parts[4]);
+            var parts = ExpandFields(raw);
+            var friction = ParseFloat(parts[0]);
+            var restitution = ParseFloat(parts[1]);
+            var adhesion = ParseFloat(parts[2]);
+            var density = ParseFloat(parts[3]);
+            var health = ParseFloat(parts[4]);
             return new ShapeMaterial(friction, restitution, adhesion, density, health);
         }
 
-        public static string GetString(PoolChemical chemical)
+        public static string Stringify(PoolChemical chemical)
         {
-            return LcsParser.CompressFields(new[]
+            return CompressFields(new[]
             {
-                GetString(chemical.Buoyancy),
-                GetString(chemical.Viscosity),
-                GetString(chemical.Health)
+                Stringify(chemical.Buoyancy),
+                Stringify(chemical.Viscosity),
+                Stringify(chemical.Health)
             });
         }
 
-        public static PoolChemical ToChemical(string raw)
+        public static PoolChemical ParseChemical(string raw)
         {
-            var parts = LcsParser.ExpandFields(raw);
-            var buoyancy = ToSingle(parts[0]);
-            var viscosity = ToSingle(parts[1]);
-            var health = ToSingle(parts[2]);
+            var parts = ExpandFields(raw);
+            var buoyancy = ParseFloat(parts[0]);
+            var viscosity = ParseFloat(parts[1]);
+            var health = ParseFloat(parts[2]);
             return new PoolChemical(buoyancy, viscosity, health);
         }
 
-        public static string GetString(JointType jointType)
-        {
-            return GetString((int)jointType);
-        }
-
-        public static JointType ToJointType(string raw)
-        {
-            return (JointType)ToInt32(raw);
-        }
-
+        // Utility functions
         private static string IntToHex(int value, int digits)
         {
             return value.ToString($"X{digits}");
@@ -254,6 +332,37 @@ namespace Utils.Lcs
         private static float HexToFloat01(string hex)
         {
             return HexToInt(hex) / 255f;
+        }
+
+        public static string CompressProperties(string[] items)
+        {
+            return CompressList(items, PropertySeperator);
+        }
+
+        public static string[] ExpandProperties(string items)
+        {
+            return ExpandList(items, PropertySeperator);
+        }
+
+        public static string CompressFields(string[] items)
+        {
+            return CompressList(items, FieldSeperator);
+        }
+
+        public static string[] ExpandFields(string items)
+        {
+            return ExpandList(items, FieldSeperator);
+        }
+
+        private static string CompressList(string[] items, char separator)
+        {
+            return items.Length > 0
+                ? items.Aggregate("", (current, property) => current + $"{separator}{property}")[1..] : "";
+        }
+
+        private static string[] ExpandList(string items, char separator)
+        {
+            return items.Length > 0 ? items.Split(separator) : Array.Empty<string>();
         }
     }
 }

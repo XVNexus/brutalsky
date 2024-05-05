@@ -1,6 +1,6 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/Resources/Gui/Theme.uss?fileID=7433441132597879392&amp;guid=6528c61135849952387c3681c08489c6&amp;type=3#Theme" />
-    <ui:Button name="button" class="bs bs-button" style="border-bottom-width: 0; border-top-width: 0; width: auto; height: auto;">
+    <ui:Button name="button" focusable="false" class="bs bs-button" style="border-bottom-width: 0; border-top-width: 0; width: auto; height: auto;">
         <ui:VisualElement name="preview" class="bs bs-spacer" style="height: 110px; width: 210px;" />
         <ui:Label tabindex="-1" text="&lt;b&gt;Title&lt;/b&gt;\nAuthor" parse-escape-sequences="true" display-tooltip-when-elided="true" name="title" class="bs bs-label" style="white-space: normal; font-size: 16px; height: 50px;" />
     </ui:Button>

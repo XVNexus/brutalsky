@@ -4,28 +4,28 @@
         <ui:Label tabindex="-1" text="FIGHT PAUSED" parse-escape-sequences="true" display-tooltip-when-elided="true" class="bs bs-title" />
         <ui:GroupBox class="bs bs-box">
             <ui:GroupBox class="bs bs-row">
-                <ui:Button text="Continue" parse-escape-sequences="true" display-tooltip-when-elided="true" name="pm-btn-cont" class="bs bs-button" style="color: rgb(128, 255, 128);" />
+                <ui:Button text="Continue" parse-escape-sequences="true" display-tooltip-when-elided="true" name="pm-btn-cont" focusable="false" class="bs bs-button" style="color: rgb(128, 255, 128);" />
             </ui:GroupBox>
         </ui:GroupBox>
         <ui:GroupBox class="bs bs-box">
             <ui:GroupBox class="bs bs-row">
-                <ui:Button text="Select Level &gt;" parse-escape-sequences="true" display-tooltip-when-elided="true" name="pm-btn-lvls" class="bs bs-button" style="color: rgb(128, 255, 255); border-bottom-right-radius: 0; border-bottom-left-radius: 0;" />
+                <ui:Button text="Select Level &gt;" parse-escape-sequences="true" display-tooltip-when-elided="true" name="pm-btn-lvls" focusable="false" class="bs bs-button" style="color: rgb(128, 255, 255); border-bottom-right-radius: 0; border-bottom-left-radius: 0;" />
             </ui:GroupBox>
             <ui:GroupBox class="bs bs-row">
-                <ui:Button text="Restart Fight" parse-escape-sequences="true" display-tooltip-when-elided="true" name="pm-btn-rest" class="bs bs-button" style="color: rgb(128, 255, 255); border-top-right-radius: 0; border-top-left-radius: 0;" />
+                <ui:Button text="Restart Fight" parse-escape-sequences="true" display-tooltip-when-elided="true" name="pm-btn-rest" focusable="false" class="bs bs-button" style="color: rgb(128, 255, 255); border-top-right-radius: 0; border-top-left-radius: 0;" />
             </ui:GroupBox>
         </ui:GroupBox>
         <ui:GroupBox class="bs bs-box">
             <ui:GroupBox class="bs bs-row">
-                <ui:Button text="Options &gt;" parse-escape-sequences="true" display-tooltip-when-elided="true" name="pm-btn-cnfg" class="bs bs-button" style="color: rgb(128, 191, 255); border-top-right-radius: 0; border-bottom-right-radius: 0;" />
-                <ui:Button text="Guide &gt;" parse-escape-sequences="true" display-tooltip-when-elided="true" name="pm-btn-help" class="bs bs-button" style="color: rgb(128, 191, 255); border-top-left-radius: 0; border-bottom-left-radius: 0;" />
+                <ui:Button text="Options &gt;" parse-escape-sequences="true" display-tooltip-when-elided="true" name="pm-btn-cnfg" focusable="false" class="bs bs-button" style="color: rgb(128, 191, 255); border-top-right-radius: 0; border-bottom-right-radius: 0;" />
+                <ui:Button text="Guide &gt;" parse-escape-sequences="true" display-tooltip-when-elided="true" name="pm-btn-help" focusable="false" class="bs bs-button" style="color: rgb(128, 191, 255); border-top-left-radius: 0; border-bottom-left-radius: 0;" />
             </ui:GroupBox>
         </ui:GroupBox>
         <ui:VisualElement class="bs bs-spacer" />
         <ui:GroupBox class="bs bs-box">
             <ui:GroupBox class="bs bs-row">
-                <ui:Button text="Main Menu" parse-escape-sequences="true" display-tooltip-when-elided="true" name="pm-btn-menu" class="bs bs-button" style="color: rgb(255, 191, 128); border-top-right-radius: 0; border-bottom-right-radius: 0;" />
-                <ui:Button text="Exit" parse-escape-sequences="true" display-tooltip-when-elided="true" name="pm-btn-exit" class="bs bs-button" style="color: rgb(255, 191, 128); border-top-left-radius: 0; border-bottom-left-radius: 0;" />
+                <ui:Button text="Main Menu" parse-escape-sequences="true" display-tooltip-when-elided="true" name="pm-btn-menu" focusable="false" class="bs bs-button" style="color: rgb(255, 191, 128); border-top-right-radius: 0; border-bottom-right-radius: 0;" />
+                <ui:Button text="Exit" parse-escape-sequences="true" display-tooltip-when-elided="true" name="pm-btn-exit" focusable="false" class="bs bs-button" style="color: rgb(255, 191, 128); border-top-left-radius: 0; border-bottom-left-radius: 0;" />
             </ui:GroupBox>
         </ui:GroupBox>
     </ui:VisualElement>
