@@ -1,7 +1,11 @@
+using System.Collections.Generic;
+using System.Linq;
 using Brutalsky;
 using Brutalsky.Map;
 using Brutalsky.Object;
+using Controllers;
 using Controllers.Base;
+using Controllers.Player;
 using UnityEngine;
 using Utils.Constants;
 using Utils.Ext;
@@ -17,6 +21,11 @@ namespace Core
         private void Awake() => _ = this;
 
         // Init functions
+        protected override void OnStart()
+        {
+            EventSystem._.OnPlayerDie += OnPlayerDie;
+        }
+
         protected override void OnLoad()
         {
             // MapSystem._.ResaveBuiltinMaps(new[] { "Doomring", "Doomring", "Tossup", "Void" });
@@ -24,7 +33,9 @@ namespace Core
             StartGame(MapSystem.GenerateId("Void", "Xveon"), new[]
             {
                 new BsPlayer("Player 1", 100f, new Color(1f, .5f, 0f)),
-                new BsPlayer("Player 2", 100f, new Color(0f, .5f, 1f), true)
+                new BsPlayer("Player 2", 100f, new Color(0f, .5f, 1f), true),
+                new BsPlayer("Player 3", 100f, new Color(1f, 1f, .5f), true),
+                new BsPlayer("Player 4", 100f, new Color(.5f, 1f, 1f), true)
             });
         }
 
@@ -83,6 +94,17 @@ namespace Core
                     camMount.LeanMoveLocal(new Vector2(0f, 0f), animTime * .5f)
                         .setEaseOutQuint();
                 });
+        }
+
+        // Event functions
+        private void OnPlayerDie(BsMap map, BsPlayer player)
+        {
+            var livingPlayers = (from activePlayer in MapSystem._.ActivePlayers.Values
+                where ((PlayerController)activePlayer.InstanceController).GetSub<PlayerHealthController>("health").alive
+                select activePlayer).ToList();
+            if (livingPlayers.Count != 1) return;
+            Debug.Log($"{livingPlayers[0].Name} wins!");
+            Invoke(nameof(RestartRound), 3f);
         }
 
         // TODO: TEMPORARY FUNCTIONS

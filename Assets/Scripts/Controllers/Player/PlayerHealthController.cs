@@ -84,6 +84,7 @@ namespace Controllers.Player
             _cSpriteRenderer.enabled = false;
             _cCircleCollider2D.enabled = false;
             gameObject.SetChildrenActive(false);
+            EventSystem._.EmitPlayerDie(MapSystem._.ActiveMap, Master.Object);
         }
 
         // Event functions

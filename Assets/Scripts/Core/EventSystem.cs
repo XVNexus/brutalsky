@@ -25,5 +25,8 @@ namespace Core
 
         public void EmitPlayerSpawn(BsMap map, BsPlayer player) => OnPlayerSpawn?.Invoke(map, player);
         public event Action<BsMap, BsPlayer> OnPlayerSpawn;
+
+        public void EmitPlayerDie(BsMap map, BsPlayer player) => OnPlayerDie?.Invoke(map, player);
+        public event Action<BsMap, BsPlayer> OnPlayerDie;
     }
 }
