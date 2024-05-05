@@ -12,199 +12,270 @@ namespace Utils.Lcs
 {
     public static class Binifier
     {
+        // TODO: FOR THE LOVE OF ALL THAT IS HOLY AND UNHOLY THERE HAS TO BE A BETTER WAY TO DO THIS
+        public static byte[] Binify<T>(object value)
+        {
+            var type = typeof(T);
+            return type switch
+            {
+                not null when type == typeof(bool) => BinifyBool((bool)value),
+                not null when type == typeof(ushort) => BinifyUShort((ushort)value),
+                not null when type == typeof(uint) => BinifyUInt((uint)value),
+                not null when type == typeof(ulong) => BinifyULong((ulong)value),
+                not null when type == typeof(short) => BinifyShort((short)value),
+                not null when type == typeof(int) => BinifyInt((int)value),
+                not null when type == typeof(long) => BinifyLong((long)value),
+                not null when type == typeof(float) => BinifyFloat((float)value),
+                not null when type == typeof(double) => BinifyDouble((double)value),
+                not null when type == typeof(char) => BinifyChar((char)value),
+                not null when type == typeof(string) => BinifyString((string)value),
+                not null when type == typeof(Direction) => BinifyDirection((Direction)value),
+                not null when type == typeof(ObjectLayer) => BinifyLayer((ObjectLayer)value),
+                not null when type == typeof(FormType) => BinifyFormType((FormType)value),
+                not null when type == typeof(JointType) => BinifyJointType((JointType)value),
+                not null when type == typeof(Vector2) => BinifyVector2((Vector2)value),
+                not null when type == typeof(Color) => BinifyColor((Color)value),
+                not null when type == typeof(ObjectTransform) => BinifyTransform((ObjectTransform)value),
+                not null when type == typeof(Form) => BinifyForm((Form)value),
+                not null when type == typeof(ShapeMaterial) => BinifyMaterial((ShapeMaterial)value),
+                not null when type == typeof(PoolChemical) => BinifyChemical((PoolChemical)value),
+                _ => throw Errors.InvalidItem("LCS type", type)
+            };
+        }
+
+        public static byte[] Bin<T>(object value)
+        {
+            return Binify<T>(value);
+        }
+
+        public static T Parse<T>(byte[] raw)
+        {
+            var type = typeof(T);
+            return (T)(object)(type switch
+            {
+                not null when type == typeof(bool) => ParseBool(raw),
+                not null when type == typeof(ushort) => ParseUShort(raw),
+                not null when type == typeof(uint) => ParseUInt(raw),
+                not null when type == typeof(ulong) => ParseULong(raw),
+                not null when type == typeof(short) => ParseShort(raw),
+                not null when type == typeof(int) => ParseInt(raw),
+                not null when type == typeof(long) => ParseLong(raw),
+                not null when type == typeof(float) => ParseFloat(raw),
+                not null when type == typeof(double) => ParseDouble(raw),
+                not null when type == typeof(char) => ParseChar(raw),
+                not null when type == typeof(string) => ParseString(raw),
+                not null when type == typeof(Direction) => ParseDirection(raw),
+                not null when type == typeof(ObjectLayer) => ParseLayer(raw),
+                not null when type == typeof(FormType) => ParseFormType(raw),
+                not null when type == typeof(JointType) => ParseJointType(raw),
+                not null when type == typeof(Vector2) => ParseVector2(raw),
+                not null when type == typeof(Color) => ParseColor(raw),
+                not null when type == typeof(ObjectTransform) => ParseTransform(raw),
+                not null when type == typeof(Form) => ParseForm(raw),
+                not null when type == typeof(ShapeMaterial) => ParseMaterial(raw),
+                not null when type == typeof(PoolChemical) => ParseChemical(raw),
+                _ => throw Errors.InvalidItem("LCS type", type)
+            });
+        }
+
+        public static T Par<T>(byte[] raw)
+        {
+            return Parse<T>(raw);
+        }
+
         // Primitive types
-        public static byte[] Binify(bool value)
+        private static byte[] BinifyBool(bool value)
         {
             return BitConverter.GetBytes(value);
         }
 
-        public static bool ParseBool(byte[] raw)
+        private static bool ParseBool(byte[] raw)
         {
             return BitConverter.ToBoolean(raw);
         }
 
-        public static byte[] Binify(ushort value)
+        private static byte[] BinifyUShort(ushort value)
         {
             return BitConverter.GetBytes(value);
         }
 
-        public static ushort ParseUShort(byte[] raw)
+        private static ushort ParseUShort(byte[] raw)
         {
             return BitConverter.ToUInt16(raw);
         }
 
-        public static byte[] Binify(uint value)
+        private static byte[] BinifyUInt(uint value)
         {
             return BitConverter.GetBytes(value);
         }
 
-        public static uint ParseUInt(byte[] raw)
+        private static uint ParseUInt(byte[] raw)
         {
             return BitConverter.ToUInt32(raw);
         }
 
-        public static byte[] Binify(ulong value)
+        private static byte[] BinifyULong(ulong value)
         {
             return BitConverter.GetBytes(value);
         }
 
-        public static ulong ParseULong(byte[] raw)
+        private static ulong ParseULong(byte[] raw)
         {
             return BitConverter.ToUInt64(raw);
         }
 
-        public static byte[] Binify(short value)
+        private static byte[] BinifyShort(short value)
         {
             return BitConverter.GetBytes(value);
         }
 
-        public static short ParseShort(byte[] raw)
+        private static short ParseShort(byte[] raw)
         {
             return BitConverter.ToInt16(raw);
         }
 
-        public static byte[] Binify(int value)
+        private static byte[] BinifyInt(int value)
         {
             return BitConverter.GetBytes(value);
         }
 
-        public static int ParseInt(byte[] raw)
+        private static int ParseInt(byte[] raw)
         {
             return BitConverter.ToInt32(raw);
         }
 
-        public static byte[] Binify(long value)
+        private static byte[] BinifyLong(long value)
         {
             return BitConverter.GetBytes(value);
         }
 
-        public static long ParseLong(byte[] raw)
+        private static long ParseLong(byte[] raw)
         {
             return BitConverter.ToInt64(raw);
         }
 
-        public static byte[] Binify(float value)
+        private static byte[] BinifyFloat(float value)
         {
             return BitConverter.GetBytes(value);
         }
 
-        public static float ParseFloat(byte[] raw)
+        private static float ParseFloat(byte[] raw)
         {
             return BitConverter.ToSingle(raw);
         }
 
-        public static byte[] Binify(double value)
+        private static byte[] BinifyDouble(double value)
         {
             return BitConverter.GetBytes(value);
         }
 
-        public static double ParseDouble(byte[] raw)
+        private static double ParseDouble(byte[] raw)
         {
             return BitConverter.ToDouble(raw);
         }
 
-        public static byte[] Binify(char value)
+        private static byte[] BinifyChar(char value)
         {
             return BitConverter.GetBytes(value);
         }
 
-        public static char ParseChar(byte[] raw)
+        private static char ParseChar(byte[] raw)
         {
             return BitConverter.ToChar(raw);
         }
 
-        public static byte[] Binify(string value)
+        private static byte[] BinifyString(string value)
         {
             return Encoding.UTF8.GetBytes(value);
         }
 
-        public static string ParseString(byte[] raw)
+        private static string ParseString(byte[] raw)
         {
             return Encoding.UTF8.GetString(raw);
         }
 
         // Enum types
-        public static byte Binify(Direction direction)
+        private static byte[] BinifyDirection(Direction direction)
         {
-            return (byte)direction;
+            return new[] { (byte)direction };
         }
 
-        public static Direction ParseDirection(byte raw)
+        private static Direction ParseDirection(byte[] raw)
         {
-            return (Direction)raw;
+            return (Direction)raw[0];
         }
 
-        public static byte Binify(ObjectLayer layer)
+        private static byte[] BinifyLayer(ObjectLayer layer)
         {
-            return (byte)layer;
+            return new[] { (byte)layer };
         }
 
-        public static ObjectLayer ParseLayer(byte raw)
+        private static ObjectLayer ParseLayer(byte[] raw)
         {
-            return (ObjectLayer)raw;
+            return (ObjectLayer)raw[0];
         }
 
-        public static byte Binify(FormType formType)
+        private static byte[] BinifyFormType(FormType formType)
         {
-            return (byte)formType;
+            return new[] { (byte)formType };
         }
 
-        public static FormType ParseFormType(byte raw)
+        private static FormType ParseFormType(byte[] raw)
         {
-            return (FormType)raw;
+            return (FormType)raw[0];
         }
 
-        public static byte Binify(JointType jointType)
+        private static byte[] BinifyJointType(JointType jointType)
         {
-            return (byte)jointType;
+            return new[] { (byte)jointType };
         }
 
-        public static JointType ParseJointType(byte raw)
+        private static JointType ParseJointType(byte[] raw)
         {
-            return (JointType)raw;
+            return (JointType)raw[0];
         }
 
         // Compound types
-        public static byte[] Binify(Vector2 value)
+        private static byte[] BinifyVector2(Vector2 value)
         {
-            return Binify(value.x).Concat(Binify(value.y)).ToArray();
+            return BinifyFloat(value.x).Concat(BinifyFloat(value.y)).ToArray();
         }
 
-        public static Vector2 ParseVector2(byte[] raw)
+        private static Vector2 ParseVector2(byte[] raw)
         {
             return new Vector2(ParseFloat(raw[..4]), ParseFloat(raw[4..8]));
         }
 
-        public static byte[] Binify(Color color)
+        private static byte[] BinifyColor(Color color)
         {
             return new[] { Float01ToByte(color.r), Float01ToByte(color.g),
                 Float01ToByte(color.b), Float01ToByte(color.a) };
         }
 
-        public static Color ParseColor(byte[] raw)
+        private static Color ParseColor(byte[] raw)
         {
             return new Color(ByteToFloat01(raw[0]), ByteToFloat01(raw[1]),
                 ByteToFloat01(raw[2]), ByteToFloat01(raw[3]));
         }
 
-        public static byte[] Binify(ObjectTransform transform)
+        private static byte[] BinifyTransform(ObjectTransform transform)
         {
-            return Binify(transform.Position.x).Concat(Binify(transform.Position.y))
-                .Concat(Binify(transform.Rotation)).ToArray();
+            return BinifyFloat(transform.Position.x).Concat(BinifyFloat(transform.Position.y))
+                .Concat(BinifyFloat(transform.Rotation)).ToArray();
         }
 
-        public static ObjectTransform ParseTransform(byte[] raw)
+        private static ObjectTransform ParseTransform(byte[] raw)
         {
             return new ObjectTransform(ParseFloat(raw[..4]), ParseFloat(raw[4..8]), ParseFloat(raw[8..12]));
         }
 
-        public static byte[] Binify(Form form)
+        private static byte[] BinifyForm(Form form)
         {
             var result = new byte[form.Args.Length * 4 + 1];
-            result[0] = Binify(form.Type);
+            result[0] = BinifyFormType(form.Type)[0];
             for (var i = 0; i < form.Args.Length; i++)
             {
-                var argBytes = Binify(form.Args[i]);
+                var argBytes = BinifyFloat(form.Args[i]);
                 var bitIndex = i * 4 + 1;
                 for (var j = 0; j < 4; j++)
                 {
@@ -214,9 +285,9 @@ namespace Utils.Lcs
             return result;
         }
 
-        public static Form ParseForm(byte[] raw)
+        private static Form ParseForm(byte[] raw)
         {
-            var type = ParseFormType(raw[0]);
+            var type = ParseFormType(raw[..1]);
             var parts = new float[(raw.Length - 1) / 4];
             for (var i = 0; i < parts.Length; i++)
             {
@@ -237,26 +308,26 @@ namespace Utils.Lcs
             };
         }
 
-        public static byte[] Binify(ShapeMaterial material)
+        private static byte[] BinifyMaterial(ShapeMaterial material)
         {
-            return Binify(material.Friction).Concat(Binify(material.Restitution))
-                .Concat(Binify(material.Adhesion)).Concat(Binify(material.Density))
-                .Concat(Binify(material.Health)).ToArray();
+            return BinifyFloat(material.Friction).Concat(BinifyFloat(material.Restitution))
+                .Concat(BinifyFloat(material.Adhesion)).Concat(BinifyFloat(material.Density))
+                .Concat(BinifyFloat(material.Health)).ToArray();
         }
 
-        public static ShapeMaterial ParseMaterial(byte[] raw)
+        private static ShapeMaterial ParseMaterial(byte[] raw)
         {
             return new ShapeMaterial(ParseFloat(raw[..4]), ParseFloat(raw[4..8]),
                 ParseFloat(raw[8..12]), ParseFloat(raw[12..16]), ParseFloat(raw[16..20]));
         }
 
-        public static byte[] Binify(PoolChemical chemical)
+        private static byte[] BinifyChemical(PoolChemical chemical)
         {
-            return Binify(chemical.Buoyancy).Concat(Binify(chemical.Viscosity))
-                .Concat(Binify(chemical.Health)).ToArray();
+            return BinifyFloat(chemical.Buoyancy).Concat(BinifyFloat(chemical.Viscosity))
+                .Concat(BinifyFloat(chemical.Health)).ToArray();
         }
 
-        public static PoolChemical ParseChemical(byte[] raw)
+        private static PoolChemical ParseChemical(byte[] raw)
         {
             return new PoolChemical(ParseFloat(raw[..4]), ParseFloat(raw[4..8]), ParseFloat(raw[8..12]));
         }

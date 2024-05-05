@@ -15,108 +15,179 @@ namespace Utils.Lcs
         public const char PropertySeperator = ';';
         public const char FieldSeperator = ',';
 
+        // TODO: FOR THE LOVE OF ALL THAT IS HOLY AND UNHOLY THERE HAS TO BE A BETTER WAY TO DO THIS
+        public static string Stringify<T>(object value)
+        {
+            var type = typeof(T);
+            return type switch
+            {
+                not null when type == typeof(bool) => StringifyBool((bool)value),
+                not null when type == typeof(ushort) => StringifyUShort((ushort)value),
+                not null when type == typeof(uint) => StringifyUInt((uint)value),
+                not null when type == typeof(ulong) => StringifyULong((ulong)value),
+                not null when type == typeof(short) => StringifyShort((short)value),
+                not null when type == typeof(int) => StringifyInt((int)value),
+                not null when type == typeof(long) => StringifyLong((long)value),
+                not null when type == typeof(float) => StringifyFloat((float)value),
+                not null when type == typeof(double) => StringifyDouble((double)value),
+                not null when type == typeof(char) => StringifyChar((char)value),
+                not null when type == typeof(string) => StringifyString((string)value),
+                not null when type == typeof(Direction) => StringifyDirection((Direction)value),
+                not null when type == typeof(ObjectLayer) => StringifyObjectLayer((ObjectLayer)value),
+                not null when type == typeof(FormType) => StringifyFormType((FormType)value),
+                not null when type == typeof(JointType) => StringifyJointType((JointType)value),
+                not null when type == typeof(Vector2) => StringifyVector2((Vector2)value),
+                not null when type == typeof(Color) => StringifyColor((Color)value),
+                not null when type == typeof(ObjectTransform) => StringifyTransform((ObjectTransform)value),
+                not null when type == typeof(Form) => StringifyForm((Form)value),
+                not null when type == typeof(ShapeMaterial) => StringifyMaterial((ShapeMaterial)value),
+                not null when type == typeof(PoolChemical) => StringifyChemical((PoolChemical)value),
+                _ => throw Errors.InvalidItem("LCS type", type)
+            };
+        }
+
+        public static string Str<T>(object value)
+        {
+            return Stringify<T>(value);
+        }
+
+        public static T Parse<T>(string raw)
+        {
+            var type = typeof(T);
+            return (T)(object)(type switch
+            {
+                not null when type == typeof(bool) => ParseBool(raw),
+                not null when type == typeof(ushort) => ParseUShort(raw),
+                not null when type == typeof(uint) => ParseUInt(raw),
+                not null when type == typeof(ulong) => ParseULong(raw),
+                not null when type == typeof(short) => ParseShort(raw),
+                not null when type == typeof(int) => ParseInt(raw),
+                not null when type == typeof(long) => ParseLong(raw),
+                not null when type == typeof(float) => ParseFloat(raw),
+                not null when type == typeof(double) => ParseDouble(raw),
+                not null when type == typeof(char) => ParseChar(raw),
+                not null when type == typeof(string) => ParseString(raw),
+                not null when type == typeof(Direction) => ParseDirection(raw),
+                not null when type == typeof(ObjectLayer) => ParseLayer(raw),
+                not null when type == typeof(FormType) => ParseFormType(raw),
+                not null when type == typeof(JointType) => ParseJointType(raw),
+                not null when type == typeof(Vector2) => ParseVector2(raw),
+                not null when type == typeof(Color) => ParseColor(raw),
+                not null when type == typeof(ObjectTransform) => ParseTransform(raw),
+                not null when type == typeof(Form) => ParseForm(raw),
+                not null when type == typeof(ShapeMaterial) => ParseMaterial(raw),
+                not null when type == typeof(PoolChemical) => ParseChemical(raw),
+                _ => throw Errors.InvalidItem("LCS type", type)
+            });
+        }
+
+        public static T Par<T>(string raw)
+        {
+            return Parse<T>(raw);
+        }
+
         // Primitive types
-        public static string Stringify(bool value)
+        private static string StringifyBool(bool value)
         {
             return value ? "1" : "0";
         }
 
-        public static bool ParseBool(string raw)
+        private static bool ParseBool(string raw)
         {
             return raw[0] == '1';
         }
 
-        public static string Stringify(ushort value)
+        private static string StringifyUShort(ushort value)
         {
             return value.ToString();
         }
 
-        public static ushort ParseUShort(string raw)
+        private static ushort ParseUShort(string raw)
         {
             return ushort.Parse(raw);
         }
 
-        public static string Stringify(uint value)
+        private static string StringifyUInt(uint value)
         {
             return value.ToString();
         }
 
-        public static uint ParseUInt(string raw)
+        private static uint ParseUInt(string raw)
         {
             return uint.Parse(raw);
         }
 
-        public static string Stringify(ulong value)
+        private static string StringifyULong(ulong value)
         {
             return value.ToString();
         }
 
-        public static ulong ParseULong(string raw)
+        private static ulong ParseULong(string raw)
         {
             return ulong.Parse(raw);
         }
 
-        public static string Stringify(short value)
+        private static string StringifyShort(short value)
         {
             return value.ToString();
         }
 
-        public static short ParseShort(string raw)
+        private static short ParseShort(string raw)
         {
             return short.Parse(raw);
         }
 
-        public static string Stringify(int value)
+        private static string StringifyInt(int value)
         {
             return value.ToString();
         }
 
-        public static int ParseInt(string raw)
+        private static int ParseInt(string raw)
         {
             return int.Parse(raw);
         }
 
-        public static string Stringify(long value)
+        private static string StringifyLong(long value)
         {
             return value.ToString();
         }
 
-        public static long ParseLong(string raw)
+        private static long ParseLong(string raw)
         {
             return long.Parse(raw);
         }
 
-        public static string Stringify(float value)
+        private static string StringifyFloat(float value)
         {
             return value.ToString();
         }
 
-        public static float ParseFloat(string raw)
+        private static float ParseFloat(string raw)
         {
             return float.Parse(raw);
         }
 
-        public static string Stringify(double value)
+        private static string StringifyDouble(double value)
         {
             return value.ToString();
         }
 
-        public static double ParseDouble(string raw)
+        private static double ParseDouble(string raw)
         {
             return double.Parse(raw);
         }
 
-        public static string Stringify(char value)
+        private static string StringifyChar(char value)
         {
-            return Stringify(value.ToString());
+            return StringifyString(value.ToString());
         }
 
-        public static char ParseChar(string raw)
+        private static char ParseChar(string raw)
         {
             return ParseString(raw)[0];
         }
 
-        public static string Stringify(string value)
+        private static string StringifyString(string value)
         {
             var result = value;
 
@@ -138,7 +209,7 @@ namespace Utils.Lcs
             return result;
         }
 
-        public static string ParseString(string raw)
+        private static string ParseString(string raw)
         {
             var result = raw;
 
@@ -162,97 +233,97 @@ namespace Utils.Lcs
         }
 
         // Enum types
-        public static string Stringify(Direction direction)
+        private static string StringifyDirection(Direction direction)
         {
-            return Stringify((int)direction);
+            return StringifyInt((int)direction);
         }
 
-        public static Direction ParseDirection(string raw)
+        private static Direction ParseDirection(string raw)
         {
             return (Direction)ParseInt(raw);
         }
 
-        public static string Stringify(ObjectLayer layer)
+        private static string StringifyObjectLayer(ObjectLayer layer)
         {
-            return Stringify((int)layer);
+            return StringifyInt((int)layer);
         }
 
-        public static ObjectLayer ParseLayer(string raw)
+        private static ObjectLayer ParseLayer(string raw)
         {
             return (ObjectLayer)ParseInt(raw);
         }
 
-        public static string Stringify(FormType formType)
+        private static string StringifyFormType(FormType formType)
         {
-            return Stringify((int)formType);
+            return StringifyInt((int)formType);
         }
 
-        public static FormType ParseFormType(string raw)
+        private static FormType ParseFormType(string raw)
         {
             return (FormType)ParseInt(raw);
         }
 
-        public static string Stringify(JointType jointType)
+        private static string StringifyJointType(JointType jointType)
         {
-            return Stringify((int)jointType);
+            return StringifyInt((int)jointType);
         }
 
-        public static JointType ParseJointType(string raw)
+        private static JointType ParseJointType(string raw)
         {
             return (JointType)ParseInt(raw);
         }
 
         // Compound types
-        public static string Stringify(Vector2 value)
+        private static string StringifyVector2(Vector2 value)
         {
             return CompressFields(new[]
             {
-                Stringify(value.x),
-                Stringify(value.y)
+                StringifyFloat(value.x),
+                StringifyFloat(value.y)
             });
         }
 
-        public static Vector2 ParseVector2(string raw)
+        private static Vector2 ParseVector2(string raw)
         {
             var parts = ExpandFields(raw);
             return new Vector2(ParseFloat(parts[0]), ParseFloat(parts[1]));
         }
 
 
-        public static string Stringify(Color color)
+        private static string StringifyColor(Color color)
         {
             return Float01ToHex(color.r) + Float01ToHex(color.g) + Float01ToHex(color.b) + Float01ToHex(color.a);
         }
 
-        public static Color ParseColor(string raw)
+        private static Color ParseColor(string raw)
         {
             return new Color(HexToFloat01(raw[..2]), HexToFloat01(raw[2..4]), HexToFloat01(raw[4..6]),
                 HexToFloat01(raw[6..8]));
         }
 
-        public static string Stringify(ObjectTransform transform)
+        private static string StringifyTransform(ObjectTransform transform)
         {
             return CompressFields(new[]
             {
-                Stringify(transform.Position.x),
-                Stringify(transform.Position.y),
-                Stringify(transform.Rotation)
+                StringifyFloat(transform.Position.x),
+                StringifyFloat(transform.Position.y),
+                StringifyFloat(transform.Rotation)
             });
         }
 
-        public static ObjectTransform ParseTransform(string raw)
+        private static ObjectTransform ParseTransform(string raw)
         {
             var parts = ExpandFields(raw);
             return new ObjectTransform(ParseFloat(parts[0]), ParseFloat(parts[1]), ParseFloat(parts[2]));
         }
 
-        public static string Stringify(Form form)
+        private static string StringifyForm(Form form)
         {
-            return form.Args.Aggregate(Stringify(form.Type),
-                (current, arg) => current + (FieldSeperator + Stringify(arg)));
+            return form.Args.Aggregate(StringifyFormType(form.Type),
+                (current, arg) => current + (FieldSeperator + StringifyFloat(arg)));
         }
 
-        public static Form ParseForm(string raw)
+        private static Form ParseForm(string raw)
         {
             var parts = raw.Split(FieldSeperator);
             var type = ParseFormType(parts[0]);
@@ -271,19 +342,19 @@ namespace Utils.Lcs
             };
         }
 
-        public static string Stringify(ShapeMaterial material)
+        private static string StringifyMaterial(ShapeMaterial material)
         {
             return CompressFields(new[]
             {
-                Stringify(material.Friction),
-                Stringify(material.Restitution),
-                Stringify(material.Adhesion),
-                Stringify(material.Density),
-                Stringify(material.Health)
+                StringifyFloat(material.Friction),
+                StringifyFloat(material.Restitution),
+                StringifyFloat(material.Adhesion),
+                StringifyFloat(material.Density),
+                StringifyFloat(material.Health)
             });
         }
 
-        public static ShapeMaterial ParseMaterial(string raw)
+        private static ShapeMaterial ParseMaterial(string raw)
         {
             var parts = ExpandFields(raw);
             var friction = ParseFloat(parts[0]);
@@ -294,17 +365,17 @@ namespace Utils.Lcs
             return new ShapeMaterial(friction, restitution, adhesion, density, health);
         }
 
-        public static string Stringify(PoolChemical chemical)
+        private static string StringifyChemical(PoolChemical chemical)
         {
             return CompressFields(new[]
             {
-                Stringify(chemical.Buoyancy),
-                Stringify(chemical.Viscosity),
-                Stringify(chemical.Health)
+                StringifyFloat(chemical.Buoyancy),
+                StringifyFloat(chemical.Viscosity),
+                StringifyFloat(chemical.Health)
             });
         }
 
-        public static PoolChemical ParseChemical(string raw)
+        private static PoolChemical ParseChemical(string raw)
         {
             var parts = ExpandFields(raw);
             var buoyancy = ParseFloat(parts[0]);

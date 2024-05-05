@@ -49,19 +49,19 @@ namespace Brutalsky.Object
         {
             return new[]
             {
-                Stringifier.Stringify(Name),
-                Stringifier.Stringify(Health),
-                Stringifier.Stringify(Color),
-                Stringifier.Stringify(Dummy)
+                Stringifier.Str<string>(Name),
+                Stringifier.Str<float>(Health),
+                Stringifier.Str<Color>(Color),
+                Stringifier.Str<bool>(Dummy)
             };
         }
 
         protected override void _FromLcs(string[] properties)
         {
-            Name = Stringifier.ParseString(properties[0]);
-            Health = Stringifier.ParseFloat(properties[1]);
-            Color = Stringifier.ParseColor(properties[2]);
-            Dummy = Stringifier.ParseBool(properties[3]);
+            Name = Stringifier.Par<string>(properties[0]);
+            Health = Stringifier.Par<float>(properties[1]);
+            Color = Stringifier.Par<Color>(properties[2]);
+            Dummy = Stringifier.Par<bool>(properties[3]);
         }
     }
 }
