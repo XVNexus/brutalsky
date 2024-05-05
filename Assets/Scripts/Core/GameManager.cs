@@ -48,11 +48,13 @@ namespace Core
 
         public void StartRound(uint mapId)
         {
+            CancelInvoke();
             ChangeMap(mapId, true, 2f);
         }
 
         public void RestartRound()
         {
+            CancelInvoke();
             ChangeMap(MapSystem._.ActiveMap.Id, false, 2f);
         }
 
