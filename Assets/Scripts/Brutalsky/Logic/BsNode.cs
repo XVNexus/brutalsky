@@ -448,7 +448,7 @@ namespace Brutalsky.Logic
                 "masn" => Asin(),
                 "macs" => Acos(),
                 "matn" => Atan(),
-                _ => throw Errors.InvalidTag("node", tag)
+                _ => throw Errors.InvalidItem("node tag", tag)
             };
         }
     }

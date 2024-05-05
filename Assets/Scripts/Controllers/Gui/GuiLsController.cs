@@ -19,9 +19,14 @@ namespace Controllers.Gui
         // Gui metadata
         public const string PaneId = "ls";
 
+        // External references
+        private VisualTreeAsset _eMapTileCell;
+
         // Init functions
         protected override void OnLoad()
         {
+            _eMapTileCell = Resources.Load<VisualTreeAsset>("Gui/Elements/MapTile");
+
             GuiSystem._.RegisterPane(PaneId, this, GuiPmController.PaneId);
             GuiSystem._.RegisterButton(PaneId, "back", () =>
             {
@@ -41,17 +46,17 @@ namespace Controllers.Gui
             var mapTileBox = new VisualElement();
             mapTileBox.AddToClassList("bs");
             mapTileBox.AddToClassList("bs-box");
-            var mapTileCell = Resources.Load<VisualTreeAsset>("Gui/Elements/MapTile").Instantiate();
+            var mapTileCell = _eMapTileCell.Instantiate();
             mapTileCell.AddToClassList("bs");
             mapTileCell.AddToClassList("bs-cell");
 
             // Register load map button
+            mapTileCell.Q<Label>("title").text = $"<b>{map.Title}</b>\n{map.Author}";
             GuiSystem._.RegisterButton(mapTileCell.Q<Button>("button"), () =>
             {
                 GameManager._.StartRound(map.Id);
                 GuiSystem._.EscapeAll();
             });
-            mapTileCell.Q<Label>("title").text = $"<b>{map.Title}</b>\n{map.Author}";
 
             // Render map preview
             var preview = new GuiPainter(new Rect(map.PlayArea * -.5f, map.PlayArea), new Vector2(200f, 100f));

@@ -92,7 +92,7 @@ namespace Brutalsky
 
         public T GetObject<T>(string tag, string id) where T : BsObject
         {
-            return ContainsObject(tag, id) ? (T)Objects[(tag, id)] : throw Errors.NoObjectFound(tag, id);
+            return ContainsObject(tag, id) ? (T)Objects[(tag, id)] : throw Errors.NoItemFound("object", $"{tag}:{id}");
         }
 
         public bool AddObject(BsObject obj)

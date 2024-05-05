@@ -97,7 +97,7 @@ namespace Core
         [CanBeNull]
         public GuiPane GetPane(string id)
         {
-            if (!ContainsPane(id)) throw Errors.NoGuiPaneFound(id);
+            if (!ContainsPane(id)) throw Errors.NoItemFound("gui pane", id);
             return _panes[id];
         }
 
@@ -165,7 +165,7 @@ namespace Core
                 not null when type == typeof(TextField) => _root.Q<T>($"{paneId}-txt-{itemId}"),
                 not null when type == typeof(IntegerField) => _root.Q<T>($"{paneId}-int-{itemId}"),
                 not null when type == typeof(FloatField) => _root.Q<T>($"{paneId}-flt-{itemId}"),
-                _ => throw Errors.InvalidGuiElementType()
+                _ => throw Errors.InvalidItem("gui element type", type)
             };
         }
 

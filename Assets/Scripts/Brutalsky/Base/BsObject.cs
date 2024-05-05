@@ -55,20 +55,17 @@ namespace Brutalsky.Base
         public List<BsNode> RegisterLogic()
         {
             var result = new List<BsNode>();
-            var objNode = _RegisterLogic();
-            if (objNode != null)
+            if (HasLogic)
             {
-                objNode.Tag = Tag;
-                result.Add(objNode);
+                var objectNode = _RegisterLogic();
+                objectNode.Tag = Tag;
+                result.Add(objectNode);
             }
-            foreach (var addon in Addons)
+            foreach (var addon in Addons.Where(addon => addon.HasLogic))
             {
                 var addonNode = addon.RegisterLogic();
-                if (addonNode != null)
-                {
-                    addonNode.Tag = addon.Tag;
-                    result.Add(addonNode);
-                }
+                addonNode.Tag = addon.Tag;
+                result.Add(addonNode);
             }
             return result;
         }

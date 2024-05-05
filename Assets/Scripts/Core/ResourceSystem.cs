@@ -27,6 +27,8 @@ namespace Core
         public GameObject pPlayer;
         public GameObject pShape;
         public GameObject pPool;
+        public GameObject pSensor;
+        public GameObject pMount;
         public Material aLitMaterial;
         public Material aUnlitMaterial;
 
@@ -38,7 +40,8 @@ namespace Core
                 Tags.PlayerLTag => new BsPlayer(),
                 Tags.ShapeLTag => new BsShape(),
                 Tags.PoolLTag => new BsPool(),
-                _ => throw Errors.InvalidTag("object", tag)
+                Tags.SensorLTag => new BsSensor(),
+                _ => throw Errors.InvalidItem("object tag", tag)
             };
         }
 
@@ -47,7 +50,7 @@ namespace Core
             return tag switch
             {
                 Tags.JointLTag => new BsJoint(),
-                _ => throw Errors.InvalidTag("addon", tag)
+                _ => throw Errors.InvalidItem("addon tag", tag)
             };
         }
     }

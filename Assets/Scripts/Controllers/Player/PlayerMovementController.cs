@@ -5,6 +5,7 @@ using Controllers.Base;
 using Core;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 using Utils.Constants;
 using Utils.Ext;
 
@@ -23,7 +24,7 @@ namespace Controllers.Player
         public float movementForce;
         public float jumpForce;
         public bool dummy;
-        public bool onGround;
+        public bool grounded;
         public float boostCharge;
         public float boostCooldown;
         private Vector2 _movementScale;
@@ -31,7 +32,7 @@ namespace Controllers.Player
         private int _jumpCooldown;
         private bool _lastBoostInput;
         private float _lastSpeed;
-        private int _onGroundFrames;
+        private int _groundedFrames;
         private Vector2 _lastPosition;
 
         // Local functions
@@ -134,8 +135,8 @@ namespace Controllers.Player
             // Update ground status
             if (!other.gameObject.CompareTag(Tags.ShapeGTag) && !other.gameObject.CompareTag(Tags.PlayerGTag)) return;
             if (!TestOnGround(other.GetContact(0).point, _lastPosition)) return;
-            _onGroundFrames = MaxOnGroundFrames;
-            onGround = true;
+            _groundedFrames = MaxOnGroundFrames;
+            grounded = true;
         }
 
         private void FixedUpdate()
@@ -143,8 +144,8 @@ namespace Controllers.Player
             if (dummy) return;
 
             // Update ground status
-            onGround = _onGroundFrames > 0;
-            _onGroundFrames = Mathf.Max(_onGroundFrames - 1, 0);
+            grounded = _groundedFrames > 0;
+            _groundedFrames = Mathf.Max(_groundedFrames - 1, 0);
             _lastPosition = transform.localPosition;
 
             // Get movement data
@@ -153,10 +154,10 @@ namespace Controllers.Player
 
             // Apply directional movement
             var movementInput = iMovement.ReadValue<Vector2>();
-            _cRigidbody2D.AddForce(movementInput * _movementScale * (onGround ? 1.5f : .5f));
+            _cRigidbody2D.AddForce(movementInput * _movementScale * (grounded ? 1.5f : .5f));
 
             // Apply jump movement
-            var jumpInput = onGround && TestJumpInput(movementInput) && _jumpCooldown == 0;
+            var jumpInput = grounded && TestJumpInput(movementInput) && _jumpCooldown == 0;
             if (jumpInput)
             {
                 _cRigidbody2D.AddForce(_jumpVector, ForceMode2D.Impulse);

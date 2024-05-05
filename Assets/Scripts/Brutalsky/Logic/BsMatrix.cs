@@ -77,14 +77,14 @@ namespace Brutalsky.Logic
 
         public void ValidateInputPort(int id, int index)
         {
-            if (!ContainsNode(id)) throw Errors.NoNodeFound(id);
-            if (!ContainsInputPort(id, index)) throw Errors.NoPortFound("input", id, index);
+            if (!ContainsNode(id)) throw Errors.NoItemFound("node", id);
+            if (!ContainsInputPort(id, index)) throw Errors.NoItemFound("input port", $"{id}:{index}");
         }
 
         public void ValidateOutputPort(int id, int index)
         {
-            if (!ContainsNode(id)) throw Errors.NoNodeFound(id);
-            if (!ContainsOutputPort(id, index)) throw Errors.NoPortFound("output", id, index);
+            if (!ContainsNode(id)) throw Errors.NoItemFound("node", id);
+            if (!ContainsOutputPort(id, index)) throw Errors.NoItemFound("output port", $"{id}:{index}");
         }
 
         public bool ContainsNode(int id)

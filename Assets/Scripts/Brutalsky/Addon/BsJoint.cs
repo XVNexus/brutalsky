@@ -64,7 +64,7 @@ namespace Brutalsky.Addon
                 JointType.Hinge => gameObject.AddComponent<HingeJoint2D>(),
                 JointType.Slider => gameObject.AddComponent<SliderJoint2D>(),
                 JointType.Wheel => gameObject.AddComponent<WheelJoint2D>(),
-                _ => throw Errors.InvalidJointType(JointType)
+                _ => throw Errors.InvalidItem("joint type", JointType)
             };
 
             // Apply universal joint config
@@ -157,7 +157,7 @@ namespace Brutalsky.Addon
                     break;
 
                 default:
-                    throw Errors.InvalidJointType(JointType);
+                    throw Errors.InvalidItem("joint type", JointType);
             }
 
             // Set up connected rigidbody
@@ -190,7 +190,7 @@ namespace Brutalsky.Addon
                 JointType.Hinge => RegisterLogicHinge(),
                 JointType.Slider => RegisterLogicSlider(),
                 JointType.Wheel => RegisterLogicWheel(),
-                _ => throw Errors.InvalidJointType(JointType)
+                _ => throw Errors.InvalidItem("joint type", JointType)
             };
         }
 
@@ -203,8 +203,7 @@ namespace Brutalsky.Addon
                 {
                     BsMatrix.ToLogic(SelfCollision), BreakForce, BreakTorque, DampingRatio, DampingFrequency
                 },
-                new float[5],
-                (inputs, _) =>
+                new float[5], (inputs, _) =>
                 {
                     fixedJoint.enableCollision = BsMatrix.ToBool(inputs[0]);
                     fixedJoint.breakForce = inputs[1];
@@ -467,7 +466,7 @@ namespace Brutalsky.Addon
                     result.Add(LcsParser.Stringify(MotorForce));
                     break;
                 default:
-                    throw Errors.InvalidJointType(JointType);
+                    throw Errors.InvalidItem("joint type", JointType);
             }
             return result.ToArray();
         }
@@ -525,7 +524,7 @@ namespace Brutalsky.Addon
                     MotorForce = LcsParser.ParseFloat(properties[12]);
                     break;
                 default:
-                    throw Errors.InvalidJointType(JointType);
+                    throw Errors.InvalidItem("joint type", JointType);
             }
         }
 

@@ -251,17 +251,25 @@ namespace Core
             Physics2D.gravity = GravityToVector(map.GravityDirection, map.GravityStrength);
 
             // Create all objects
-            var logicNodes = new List<BsNode>();
             foreach (var obj in map.Objects.Values)
             {
                 CreateObject(obj);
+            }
+
+            Invoke(nameof(StartMap), 0f);
+        }
+
+        private void StartMap()
+        {
+            // Start the logic system
+            var logicNodes = new List<BsNode>();
+            logicNodes.AddRange(ActiveMap.Nodes);
+            EventSystem._.EmitMapBuild(ActiveMap);
+            foreach (var obj in ActiveMap.Objects.Values)
+            {
                 logicNodes.AddRange(obj.RegisterLogic());
             }
-            logicNodes.AddRange(map.Nodes);
-            EventSystem._.EmitMapBuild(map);
-
-            // Start the logic system
-            Matrix = new BsMatrix(logicNodes, map.Links.Values);
+            Matrix = new BsMatrix(logicNodes, ActiveMap.Links.Values);
         }
 
         public void UnbuildMap()

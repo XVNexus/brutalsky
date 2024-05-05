@@ -15,7 +15,7 @@ namespace Controllers.Gui
         {
             GuiSystem._.RegisterPane(PaneId, this);
             GuiSystem._.RegisterButton(PaneId, "cont", () => {
-                GuiSystem._.DeactivatePane(PaneId);
+                GuiSystem._.EscapeOne();
             });
             GuiSystem._.RegisterButton(PaneId, "lvls", () => {
                 GuiSystem._.ActivatePane(GuiLsController.PaneId);
