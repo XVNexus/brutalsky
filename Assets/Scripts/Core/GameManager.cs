@@ -19,7 +19,8 @@ namespace Core
         // Init functions
         protected override void OnLoad()
         {
-            // MapSystem._.ResaveBuiltinMaps(new[] { "Brutalsky", "Doomring", "Tossup", "Void" });
+            // MapSystem._.ResaveBuiltinMaps(new[] { "Doomring", "Doomring", "Tossup", "Void" });
+            // GenerateDefaultMaps();
             StartGame(MapSystem.GenerateId("Void", "Xveon"), new[]
             {
                 new BsPlayer("Player 1", 100f, new Color(1f, .5f, 0f)),

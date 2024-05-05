@@ -12,7 +12,6 @@ namespace Utils.Lcs
 {
     public static class LcsParser
     {
-        public const char HeaderSeparator = ':';
         public const char PropertySeperator = ';';
         public const char FieldSeperator = ',';
 
@@ -24,7 +23,7 @@ namespace Utils.Lcs
 
         public static bool ParseBool(string raw)
         {
-            return raw == "1";
+            return raw[0] == '1';
         }
 
         public static string Stringify(int value)
@@ -69,7 +68,6 @@ namespace Utils.Lcs
             {
                 {FieldSeperator, 'f'},
                 {PropertySeperator, 'p'},
-                {HeaderSeparator, 'h'},
                 {' ', 's'},
                 {'\t', 't'},
                 {'\n', 'n'}
@@ -90,7 +88,6 @@ namespace Utils.Lcs
             {
                 {'f', FieldSeperator},
                 {'p', PropertySeperator},
-                {'h', HeaderSeparator},
                 {'s', ' '},
                 {'t', '\t'},
                 {'n', '\n'}

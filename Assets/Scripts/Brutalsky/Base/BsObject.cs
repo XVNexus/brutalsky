@@ -17,6 +17,7 @@ namespace Brutalsky.Base
         public abstract GameObject Prefab { get; }
         public abstract string Tag { get; }
         public abstract bool HasLogic { get; }
+        public int LogicNodeCount => (HasLogic ? 1 : 0) + Addons.Count(addon => addon.HasLogic);
         public string Id { get => _id; set => _id = MapSystem.CleanId(value); }
         private string _id;
         public ObjectTransform Transform { get; set; }
@@ -95,28 +96,24 @@ namespace Brutalsky.Base
 
         public LcsLine ToLcs()
         {
-            return new LcsLine
-            (
-                '#',
-                new[] { LcsParser.Stringify(Tag), LcsParser.Stringify(Id) },
-                _ToLcs(),
-                Addons.Select(addon => addon.ToLcs()).ToList()
-            );
+            var properties = new List<string> { LcsParser.Stringify(Tag), LcsParser.Stringify(Id) };
+            properties.AddRange(_ToLcs());
+            return new LcsLine('#', properties.ToArray(), Addons.Select(addon => addon.ToLcs()).ToList());
         }
 
         public static BsObject FromLcs(LcsLine line)
         {
-            var result = ResourceSystem.GetTemplateObject(LcsParser.ParseString(line.Header[0]));
+            var result = ResourceSystem.GetTemplateObject(LcsParser.ParseString(line.Properties[0]));
             result.ParseLcs(line);
             return result;
         }
 
         private void ParseLcs(LcsLine line)
         {
-            Id = LcsParser.ParseString(line.Header[1]);
+            Id = LcsParser.ParseString(line.Properties[1]);
             try
             {
-                _FromLcs(line.Properties);
+                _FromLcs(line.Properties[2..]);
             }
             catch (Exception ex)
             {

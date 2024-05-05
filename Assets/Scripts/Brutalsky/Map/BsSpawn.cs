@@ -32,17 +32,12 @@ namespace Brutalsky.Map
 
         public LcsLine ToLcs()
         {
-            return new LcsLine
-            (
-                '$',
-                new[] { LcsParser.Stringify(Position) },
-                new[] { LcsParser.Stringify(Priority) }
-            );
+            return new LcsLine('$', new[] { LcsParser.Stringify(Position), LcsParser.Stringify(Priority) });
         }
 
         public static BsSpawn FromLcs(LcsLine line)
         {
-            return new BsSpawn(LcsParser.ParseVector2(line.Header[0]), LcsParser.ParseInt(line.Properties[0]));
+            return new BsSpawn(LcsParser.ParseVector2(line.Properties[0]), LcsParser.ParseInt(line.Properties[1]));
         }
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Brutalsky.Logic;
 using Core;
 using JetBrains.Annotations;
@@ -56,27 +57,24 @@ namespace Brutalsky.Base
 
         public LcsLine ToLcs()
         {
-            return new LcsLine
-            (
-                '@',
-                new[] { LcsParser.Stringify(Tag), LcsParser.Stringify(Id) },
-                _ToLcs()
-            );
+            var properties = new List<string> { LcsParser.Stringify(Tag), LcsParser.Stringify(Id) };
+            properties.AddRange(_ToLcs());
+            return new LcsLine('@', properties.ToArray());
         }
 
         public static BsAddon FromLcs(LcsLine line)
         {
-            var result = ResourceSystem.GetTemplateAddon(LcsParser.ParseString(line.Header[0]));
+            var result = ResourceSystem.GetTemplateAddon(LcsParser.ParseString(line.Properties[0]));
             result.ParseLcs(line);
             return result;
         }
 
         private void ParseLcs(LcsLine line)
         {
-            Id = LcsParser.ParseString(line.Header[1]);
+            Id = LcsParser.ParseString(line.Properties[1]);
             try
             {
-                _FromLcs(line.Properties);
+                _FromLcs(line.Properties[2..]);
             }
             catch (Exception ex)
             {

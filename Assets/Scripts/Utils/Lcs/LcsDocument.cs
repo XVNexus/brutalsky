@@ -21,9 +21,9 @@ namespace Utils.Lcs
         {
             var result = new List<LcsLine>();
             var rawLines = raw.Trim().Split('\n');
-            var headerParts = rawLines[0].Split(LcsParser.HeaderSeparator);
+            var headerParts = rawLines[0].Split(LcsParser.PropertySeperator);
             var version = int.Parse(headerParts[0]);
-            var lineLevels = LcsParser.ExpandProperties(headerParts[1]);
+            var lineLevels = headerParts[1..];
             var lineLevelMap = new Dictionary<char, int>();
             for (var i = 0; i < lineLevels.Length; i++) foreach (var linePrefix in lineLevels[i])
             {
@@ -36,7 +36,7 @@ namespace Utils.Lcs
                 var line = LcsLine.Parse(rawLine);
                 if (!lineLevelMap.ContainsKey(line.Prefix))
                 {
-                    throw Errors.InvalidLcsLinePrefix(line);
+                    throw Errors.InvalidItem("LCS line prefix", line.Prefix);
                 }
                 var lineLevel = lineLevelMap[line.Prefix];
                 lineCache[lineLevel] = line;
@@ -54,8 +54,7 @@ namespace Utils.Lcs
 
         public string Stringify()
         {
-            return Version.ToString().PadLeft(3, '0') + ':'
-                + LcsParser.CompressProperties(LineLevels) + '\n'
+            return Version.ToString() + LcsParser.PropertySeperator + LcsParser.CompressProperties(LineLevels) + '\n'
                 + Lines.Aggregate("", (current, line) => current + line.Stringify());
         }
     }

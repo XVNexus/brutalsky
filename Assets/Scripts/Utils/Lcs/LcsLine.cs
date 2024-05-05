@@ -7,14 +7,12 @@ namespace Utils.Lcs
     public class LcsLine
     {
         public char Prefix { get; set; }
-        public string[] Header { get; set; }
         public string[] Properties { get; set; }
         public List<LcsLine> Children { get; set; }
 
-        public LcsLine(char prefix, string[] header, string[] properties, [CanBeNull] List<LcsLine> children = null)
+        public LcsLine(char prefix, string[] properties, [CanBeNull] List<LcsLine> children = null)
         {
             Prefix = prefix;
-            Header = header;
             Properties = properties;
             Children = children ?? new List<LcsLine>();
         }
@@ -22,22 +20,20 @@ namespace Utils.Lcs
         public static LcsLine Parse(string raw)
         {
             var prefix = raw[0];
-            var parts = raw[1..].Trim().Split(LcsParser.HeaderSeparator);
-            var header = LcsParser.ExpandProperties(parts[0]);
-            var properties = LcsParser.ExpandProperties(parts[1]);
-            return new LcsLine(prefix, header, properties);
+            var properties = LcsParser.ExpandProperties(raw[1..]);
+            return new LcsLine(prefix, properties);
         }
 
         public string Stringify()
         {
-            var result = $"{Prefix}{LcsParser.CompressProperties(Header)}:{LcsParser.CompressProperties(Properties)}\n";
+            var result = $"{Prefix}{LcsParser.CompressProperties(Properties)}\n";
             result = Children.Aggregate(result, (current, child) => current + child.Stringify());
             return result;
         }
 
         public override string ToString()
         {
-            return $"{Prefix}{LcsParser.CompressProperties(Header)}:{LcsParser.CompressProperties(Properties)}";
+            return $"{Prefix}{LcsParser.CompressProperties(Properties)}";
         }
     }
 }
