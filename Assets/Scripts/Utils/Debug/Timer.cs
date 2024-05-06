@@ -19,7 +19,7 @@ namespace Utils.Debug
         {
             end = DateTime.Now.Ticks;
             var duration = TimeSpan.FromTicks(end - start);
-            UnityEngine.Debug.Log($"Operation '{name}' took {duration.Milliseconds} ms");
+            UnityEngine.Debug.Log($"Operation '{name}' took {duration.TotalMilliseconds} ms");
         }
 
         public static void Lag(int amount)

@@ -7,7 +7,6 @@ using Controllers.Base;
 using Controllers.Player;
 using UnityEngine;
 using Utils.Constants;
-using Utils.Ext;
 using Utils.Object;
 using Utils.Shape;
 
@@ -61,7 +60,7 @@ namespace Core
         public void RestartRound()
         {
             CancelInvoke();
-            ChangeMap(MapSystem._.ActiveMap.Id, false, 1f);
+            ChangeMap(0, false, 1f);
         }
 
         public void ChangeMap(uint mapId, bool moveCam, float animTime)

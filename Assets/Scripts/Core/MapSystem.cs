@@ -12,7 +12,6 @@ using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using Utils.Constants;
-using Utils.Debug;
 using Utils.Object;
 
 namespace Core
@@ -184,7 +183,14 @@ namespace Core
 
         public void BuildMap(uint id)
         {
-            BuildMap(LoadMap(MapList[id]));
+            if (id > 0)
+            {
+                BuildMap(LoadMap(MapList[id]));
+            }
+            else
+            {
+                BuildMap();
+            }
         }
 
         public void BuildMap([CanBeNull] BsMap map = null)
