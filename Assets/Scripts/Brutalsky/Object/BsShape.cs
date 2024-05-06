@@ -89,6 +89,10 @@ namespace Brutalsky.Object
                     rigidbody.bodyType = RigidbodyType2D.Dynamic;
                     polygonCollider.density = Material.Density;
                 }
+                if (ParentTag == Tags.ShapePrefix && ParentId.Length > 0)
+                {
+                    rigidbody.bodyType = RigidbodyType2D.Kinematic;
+                }
             }
             else
             {
@@ -105,27 +109,21 @@ namespace Brutalsky.Object
         {
             return new LcsProp[]
             {
-                new(LcsType.Transform, Transform),
                 new(LcsType.Form, Form),
                 new(LcsType.Material, Material),
                 new(LcsType.Bool, Dynamic),
                 new(LcsType.Color, Color),
-                new(LcsType.Bool, Glow),
-                new(LcsType.Layer, Layer),
-                new(LcsType.Bool, Simulated)
+                new(LcsType.Bool, Glow)
             };
         }
 
         protected override void _FromLcs(LcsProp[] props)
         {
-            Transform = (ObjectTransform)props[0].Value;
-            Form = (Form)props[1].Value;
-            Material = (ShapeMaterial)props[2].Value;
-            Dynamic = (bool)props[3].Value;
-            Color = (Color)props[4].Value;
-            Glow = (bool)props[5].Value;
-            Layer = (ObjectLayer)props[6].Value;
-            Simulated = (bool)props[7].Value;
+            Form = (Form)props[0].Value;
+            Material = (ShapeMaterial)props[1].Value;
+            Dynamic = (bool)props[2].Value;
+            Color = (Color)props[3].Value;
+            Glow = (bool)props[4].Value;
         }
     }
 }

@@ -70,25 +70,19 @@ namespace Brutalsky.Object
         {
             return new LcsProp[]
             {
-                new(LcsType.Transform, Transform),
                 new(LcsType.Vector2, Size),
                 new(LcsType.Chemical, Chemical),
                 new(LcsType.Color, Color),
-                new(LcsType.Bool, Glow),
-                new(LcsType.Layer, Layer),
-                new(LcsType.Bool, Simulated)
+                new(LcsType.Bool, Glow)
             };
         }
 
         protected override void _FromLcs(LcsProp[] props)
         {
-            Transform = (ObjectTransform)props[0].Value;
-            Size = (Vector2)props[1].Value;
-            Chemical = (PoolChemical)props[2].Value;
-            Color = (Color)props[3].Value;
-            Glow = (bool)props[4].Value;
-            Layer = (ObjectLayer)props[5].Value;
-            Simulated = (bool)props[6].Value;
+            Size = (Vector2)props[0].Value;
+            Chemical = (PoolChemical)props[1].Value;
+            Color = (Color)props[2].Value;
+            Glow = (bool)props[3].Value;
         }
     }
 }

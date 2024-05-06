@@ -56,17 +56,13 @@ namespace Brutalsky.Object
         {
             return new LcsProp[]
             {
-                new(LcsType.Transform, Transform),
-                new(LcsType.Vector2, Exit),
-                new(LcsType.Bool, Simulated)
+                new(LcsType.Vector2, Exit)
             };
         }
 
         protected override void _FromLcs(LcsProp[] props)
         {
-            Transform = (ObjectTransform)props[0].Value;
-            Exit = (Vector2)props[1].Value;
-            Simulated = (bool)props[2].Value;
+            Exit = (Vector2)props[0].Value;
         }
     }
 }

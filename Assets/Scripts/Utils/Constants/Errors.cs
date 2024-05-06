@@ -19,8 +19,8 @@ namespace Utils.Constants
         public static NullReferenceException MissingSubController(string masterTag, string requireeId, string requirementId)
             => new($"Subcontroller '{requireeId}' of object '{masterTag}' requires '{requirementId}'");
 
-        public static ArgumentNullException JointMountUnbuilt(BsJoint joint)
-            => new(nameof(joint), "Cannot create a joint attached to an unbuilt shape");
+        public static ArgumentNullException ParentObjectUnbuilt()
+            => new("", "Cannot create a child object when the parent object is unbuilt");
 
         public static InvalidOperationException PortCountMismatch(int updateResultCount, int outputPortCount)
             => new($"Cannot apply logic node update of length {updateResultCount} to output ports of length {outputPortCount}");
@@ -28,10 +28,10 @@ namespace Utils.Constants
         public static InvalidDataException EmptyLcsDocument()
             => new("Cannot parse an empty LCS document");
 
-        public static InvalidOperationException ErrorWhile(string action, string message)
-            => new($"Error while {action}: {message}");
+        public static InvalidOperationException ErrorWhile(string action, Exception ex)
+            => new($"Error while {action}: {ex.Message}\n{ex.StackTrace}\n");
 
-        public static InvalidDataException ErrorWhile(string action, object context, string message)
-            => new($"Error while {action} '{context}': {message}");
+        public static InvalidDataException ErrorWhile(string action, object context, Exception ex)
+            => new($"Error while {action} '{context}': {ex.Message}\n{ex.StackTrace}\n");
     }
 }

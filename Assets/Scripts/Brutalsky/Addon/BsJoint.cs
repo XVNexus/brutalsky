@@ -166,7 +166,7 @@ namespace Brutalsky.Addon
             if (MountShape.Length > 0)
             {
                 var mountShape = map.GetObject<BsShape>(Tags.ShapePrefix, MountShape);
-                if (mountShape.InstanceObject == null) throw Errors.JointMountUnbuilt(this);
+                if (!mountShape.InstanceObject) throw Errors.ParentObjectUnbuilt();
                 component.connectedBody = mountShape.InstanceObject.GetComponent<Rigidbody2D>();
                 component.connectedAnchor = parentObject.Transform.Position - mountShape.Transform.Position;
             }
@@ -412,7 +412,6 @@ namespace Brutalsky.Addon
         {
             var result = new List<LcsProp>
             {
-                new(LcsType.Transform, Transform),
                 new(LcsType.JointType, Type),
                 new(LcsType.String, MountShape),
                 new(LcsType.Bool, SelfCollision),
@@ -471,55 +470,54 @@ namespace Brutalsky.Addon
 
         protected override void _FromLcs(LcsProp[] props)
         {
-            Transform = (ObjectTransform)props[0].Value;
-            Type = (JointType)props[1].Value;
-            MountShape = (string)props[2].Value;
-            SelfCollision = (bool)props[3].Value;
-            BreakForce = (float)props[4].Value;
-            BreakTorque = (float)props[5].Value;
+            Type = (JointType)props[0].Value;
+            MountShape = (string)props[1].Value;
+            SelfCollision = (bool)props[2].Value;
+            BreakForce = (float)props[3].Value;
+            BreakTorque = (float)props[4].Value;
             switch (Type)
             {
                 case JointType.Fixed:
-                    DampingRatio = (float)props[6].Value;
-                    DampingFrequency = (float)props[7].Value;
+                    DampingRatio = (float)props[5].Value;
+                    DampingFrequency = (float)props[6].Value;
                     break;
                 case JointType.Distance:
-                    DistanceValue = (float)props[6].Value;
-                    DistanceAuto = (bool)props[7].Value;
-                    DistanceMax = (bool)props[8].Value;
+                    DistanceValue = (float)props[5].Value;
+                    DistanceAuto = (bool)props[6].Value;
+                    DistanceMax = (bool)props[7].Value;
                     break;
                 case JointType.Spring:
-                    DistanceValue = (float)props[6].Value;
-                    DistanceAuto = (bool)props[7].Value;
-                    DampingRatio = (float)props[8].Value;
-                    DampingFrequency = (float)props[9].Value;
+                    DistanceValue = (float)props[5].Value;
+                    DistanceAuto = (bool)props[6].Value;
+                    DampingRatio = (float)props[7].Value;
+                    DampingFrequency = (float)props[8].Value;
                     break;
                 case JointType.Hinge:
-                    MotorEnabled = (bool)props[6].Value;
-                    MotorSpeed = (float)props[7].Value;
-                    MotorForce = (float)props[8].Value;
-                    LimitEnabled = (bool)props[9].Value;
-                    LimitMin = (float)props[10].Value;
-                    LimitMax = (float)props[11].Value;
+                    MotorEnabled = (bool)props[5].Value;
+                    MotorSpeed = (float)props[6].Value;
+                    MotorForce = (float)props[7].Value;
+                    LimitEnabled = (bool)props[8].Value;
+                    LimitMin = (float)props[9].Value;
+                    LimitMax = (float)props[10].Value;
                     break;
                 case JointType.Slider:
-                    AngleValue = (float)props[6].Value;
-                    AngleAuto = (bool)props[7].Value;
-                    MotorEnabled = (bool)props[8].Value;
-                    MotorSpeed = (float)props[9].Value;
-                    MotorForce = (float)props[10].Value;
-                    LimitEnabled = (bool)props[11].Value;
-                    LimitMin = (float)props[12].Value;
-                    LimitMax = (float)props[13].Value;
+                    AngleValue = (float)props[5].Value;
+                    AngleAuto = (bool)props[6].Value;
+                    MotorEnabled = (bool)props[7].Value;
+                    MotorSpeed = (float)props[8].Value;
+                    MotorForce = (float)props[9].Value;
+                    LimitEnabled = (bool)props[10].Value;
+                    LimitMin = (float)props[11].Value;
+                    LimitMax = (float)props[12].Value;
                     break;
                 case JointType.Wheel:
-                    DampingRatio = (float)props[6].Value;
-                    DampingFrequency = (float)props[7].Value;
-                    AngleValue = (float)props[8].Value;
-                    AngleAuto = (bool)props[9].Value;
-                    MotorEnabled = (bool)props[10].Value;
-                    MotorSpeed = (float)props[11].Value;
-                    MotorForce = (float)props[12].Value;
+                    DampingRatio = (float)props[5].Value;
+                    DampingFrequency = (float)props[6].Value;
+                    AngleValue = (float)props[7].Value;
+                    AngleAuto = (bool)props[8].Value;
+                    MotorEnabled = (bool)props[9].Value;
+                    MotorSpeed = (float)props[10].Value;
+                    MotorForce = (float)props[11].Value;
                     break;
                 default:
                     throw Errors.InvalidItem("joint type", Type);

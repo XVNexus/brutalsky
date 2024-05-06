@@ -44,6 +44,7 @@ namespace Controllers.Player
         protected override void OnInit()
         {
             EventSystem._.OnPlayerSpawn += OnPlayerSpawn;
+            EventSystem._.OnPlayerDie += OnPlayerDie;
 
             _cRigidbody2D = GetComponent<Rigidbody2D>();
             _cSpriteRenderer = GetComponent<SpriteRenderer>();
@@ -139,6 +140,12 @@ namespace Controllers.Player
             _lastHealth = -1;
         }
 
+        private void OnPlayerDie(BsMap map, BsPlayer player)
+        {
+            if (player.Id != Master.Object.Id) return;
+            DisplayDeathParticles();
+        }
+
         private void OnCollisionEnter2D(Collision2D other)
         {
             DisplayImpactParticles(other.TotalNormalImpulse());
@@ -162,7 +169,7 @@ namespace Controllers.Player
             _lastSpeed = speed;
 
             // Display heal/hurt particles
-            if (!_mHealth) return;
+            if (!_mHealth || !_mHealth.alive) return;
             var health = Mathf.CeilToInt(_mHealth.health * ParticleMultiplier);
             if (_lastHealth < 0)
             {
@@ -172,10 +179,6 @@ namespace Controllers.Player
             var deltaHealth = health - _lastHealth;
             if (deltaHealth == 0) return;
             DisplayHealHurtParticles(deltaHealth);
-            if (health == 0 && _lastHealth > 0)
-            {
-                DisplayDeathParticles();
-            }
             _lastHealth = health;
         }
     }

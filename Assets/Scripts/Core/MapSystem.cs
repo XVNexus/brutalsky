@@ -82,22 +82,29 @@ namespace Core
             EventSystem._.EmitPlayerSpawn(ActiveMap, player);
         }
 
+        public void SetAllPlayersLocked(bool locked, bool resetVelocity = false)
+        {
+            foreach (var player in ActivePlayers.Values)
+            {
+                SetPlayerLocked(player.InstanceObject, locked, resetVelocity);
+            }
+        }
+
+        public void SetPlayerLocked(GameObject playerInstanceObject, bool locked, bool resetVelocity = false)
+        {
+            var rigidbody = playerInstanceObject.GetComponent<Rigidbody2D>();
+            rigidbody.bodyType = locked ? RigidbodyType2D.Kinematic : RigidbodyType2D.Dynamic;
+            if (!resetVelocity) return;
+            rigidbody.velocity = Vector2.zero;
+            rigidbody.angularVelocity = 0f;
+        }
+
         public void SetAllPlayersFrozen(bool frozen, bool resetVelocity = false)
         {
             foreach (var player in ActivePlayers.Values)
             {
-                SetPlayerFrozen(player, frozen, resetVelocity);
+                SetPlayerFrozen(player.InstanceObject, frozen, resetVelocity);
             }
-        }
-
-        public void SetPlayerFrozen(string id, bool frozen, bool resetVelocity = false)
-        {
-            SetPlayerFrozen(ActivePlayers[id].InstanceObject, frozen, resetVelocity);
-        }
-
-        public void SetPlayerFrozen(BsPlayer player, bool frozen, bool resetVelocity = false)
-        {
-            SetPlayerFrozen(player.InstanceObject, frozen, resetVelocity);
         }
 
         public void SetPlayerFrozen(GameObject playerInstanceObject, bool frozen, bool resetVelocity = false)
@@ -168,7 +175,7 @@ namespace Core
             }
             catch (Exception ex)
             {
-                throw Errors.ErrorWhile("loading map", filename, ex.Message);
+                throw Errors.ErrorWhile("loading map", filename, ex);
             }
         }
 
@@ -194,7 +201,7 @@ namespace Core
             }
             catch (Exception ex)
             {
-                throw Errors.ErrorWhile("saving map", map, ex.Message);
+                throw Errors.ErrorWhile("saving map", map, ex);
             }
         }
 

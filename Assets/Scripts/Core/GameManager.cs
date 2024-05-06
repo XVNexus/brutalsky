@@ -16,6 +16,9 @@ namespace Core
         public static GameManager _ { get; private set; }
         private void Awake() => _ = this;
 
+        // Local constants
+        public bool RegenerateMaps = false;
+
         // Local variables
         public bool mapChangeActive;
 
@@ -27,6 +30,8 @@ namespace Core
 
         protected override void OnLoad()
         {
+            if (!RegenerateMaps) return;
+
             // Generate builtin custom maps
             MapSystem.ResaveBuiltinMaps(new[] { "Brutalsky", "Doomring", "Tossup", "Void" });
 

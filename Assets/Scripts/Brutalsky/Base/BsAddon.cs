@@ -57,7 +57,12 @@ namespace Brutalsky.Base
 
         public LcsLine ToLcs()
         {
-            var props = new List<LcsProp> { new(LcsType.String, Tag), new(LcsType.String, Id) };
+            var props = new List<LcsProp>
+            {
+                new(LcsType.String, Tag),
+                new(LcsType.String, Id),
+                new(LcsType.Transform, Transform)
+            };
             props.AddRange(_ToLcs());
             return new LcsLine('@', props.ToArray());
         }
@@ -72,13 +77,14 @@ namespace Brutalsky.Base
         private void ParseLcs(LcsLine line)
         {
             Id = (string)line.Props[1].Value;
+            Transform = (ObjectTransform)line.Props[2].Value;
             try
             {
-                _FromLcs(line.Props[2..]);
+                _FromLcs(line.Props[3..]);
             }
             catch (Exception ex)
             {
-                throw Errors.ErrorWhile("parsing LCS line", line, ex.Message);
+                throw Errors.ErrorWhile("parsing LCS line", line, ex);
             }
         }
     }
