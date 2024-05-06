@@ -4,9 +4,9 @@ using Utils.Constants;
 
 namespace Controllers
 {
-    public class PoolController : ControllerBase<BsPool>
+    public class MountController : ControllerBase<BsMount>
     {
         // Controller metadata
-        public override string Tag => Tags.PoolTag;
+        public override string Tag => Tags.MountTag;
     }
 }

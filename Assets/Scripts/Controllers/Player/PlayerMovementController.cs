@@ -5,10 +5,9 @@ using Controllers.Base;
 using Core;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Serialization;
 using Utils.Constants;
-using Utils.Debug;
 using Utils.Ext;
+using Utils.Player;
 
 namespace Controllers.Player
 {
@@ -28,6 +27,8 @@ namespace Controllers.Player
         public bool grounded;
         public float boostCharge;
         public float boostCooldown;
+        public Vector2 movementInput;
+        public bool boostInput;
         private Vector2 _movementScale;
         private Vector2 _jumpVector;
         private int _jumpCooldown;
@@ -40,12 +41,8 @@ namespace Controllers.Player
         public Func<Vector2, Vector2, bool> TestOnGround = (_, _) => false;
         public Func<Vector2, bool> TestJumpInput = _ => false;
 
-        // Component references
+        // External references
         private Rigidbody2D _cRigidbody2D;
-
-        // Player input
-        public InputAction iMovement;
-        public InputAction iBoost;
 
         // Init functions
         protected override void OnInit()
@@ -55,16 +52,18 @@ namespace Controllers.Player
 
             _cRigidbody2D = GetComponent<Rigidbody2D>();
 
-            iMovement = EventSystem._.aInputAction.FindAction("Movement");
-            iMovement.Enable();
-            iBoost = EventSystem._.aInputAction.FindAction("Boost");
-            iBoost.Enable();
-
             // Disable movement if dummy is set to true
-            dummy = Master.Object.Dummy;
+            dummy = Master.Object.Type == PlayerType.Dummy;
 
             // Force scanning map settings
             OnMapBuild(MapSystem._.ActiveMap);
+        }
+
+        // System functions
+        public void SendInput(Vector2 movement, bool boost)
+        {
+            movementInput = movement;
+            boostInput = boost;
         }
 
         // Event functions
@@ -118,7 +117,7 @@ namespace Controllers.Player
             OnCollision(other);
 
             // Get collision info
-            if (!other.gameObject.CompareTag(Tags.PlayerGTag) || other.relativeVelocity.magnitude < 5f) return;
+            if (!other.gameObject.CompareTag(Tags.PlayerTag) || other.relativeVelocity.magnitude < 5f) return;
             var impactSpeed = _lastSpeed * other.DirectnessFactor();
 
             // Reduce velocity based on collision force
@@ -134,7 +133,7 @@ namespace Controllers.Player
         private void OnCollision(Collision2D other)
         {
             // Update ground status
-            if (!other.gameObject.CompareTag(Tags.ShapeGTag) && !other.gameObject.CompareTag(Tags.PlayerGTag)) return;
+            if (!other.gameObject.CompareTag(Tags.ShapeTag) && !other.gameObject.CompareTag(Tags.PlayerTag)) return;
             if (!TestOnGround(other.GetContact(0).point, _lastPosition)) return;
             _groundedFrames = MaxOnGroundFrames;
             grounded = true;
@@ -154,7 +153,6 @@ namespace Controllers.Player
             var speed = velocity.magnitude;
 
             // Apply directional movement
-            var movementInput = iMovement.ReadValue<Vector2>();
             _cRigidbody2D.AddForce(movementInput * _movementScale * (grounded ? 1.5f : .5f));
 
             // Apply jump movement
@@ -166,8 +164,8 @@ namespace Controllers.Player
             }
 
             // Apply boost movement
-            var boostInput = iBoost.IsPressed() && boostCooldown == 0f;
-            if (boostInput)
+            var safeBoostInput = boostInput && boostCooldown == 0f;
+            if (safeBoostInput)
             {
                 boostCharge = Mathf.Min(boostCharge + Time.fixedDeltaTime, 3f);
             }
@@ -183,7 +181,7 @@ namespace Controllers.Player
             {
                 boostCooldown = Mathf.Max(boostCooldown - Time.fixedDeltaTime, 0f);
             }
-            _lastBoostInput = boostInput;
+            _lastBoostInput = safeBoostInput;
 
             // Save the current speed for future reference and update jump cooldown
             _lastSpeed = _cRigidbody2D.velocity.magnitude;

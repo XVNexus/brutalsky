@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Brutalsky.Base;
 using JetBrains.Annotations;
+using Utils.Constants;
 
 namespace Controllers.Base
 {
@@ -15,6 +16,12 @@ namespace Controllers.Base
         public TC GetSub<TC>(string id) where TC : SubControllerBase<TO>
         {
             return (TC)Subs.GetValueOrDefault(id);
+        }
+
+        public TC RequireSub<TC>(string id, string callerId) where TC : SubControllerBase<TO>
+        {
+            if (!Subs.ContainsKey(id)) throw Errors.MissingSubController(Tag, callerId, id);
+            return (TC)Subs[id];
         }
 
         public bool AddSub(SubControllerBase<TO> sub)

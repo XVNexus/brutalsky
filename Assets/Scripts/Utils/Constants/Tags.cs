@@ -3,19 +3,19 @@ namespace Utils.Constants
     public static class Tags
     {
         // Objects
-        public const string PlayerLTag = "py";
-        public const string PlayerGTag = "Player";
-        public const string ShapeLTag = "sh";
-        public const string ShapeGTag = "Shape";
-        public const string PoolLTag = "pl";
-        public const string PoolGTag = "Pool";
-        public const string SensorLTag = "sn";
-        public const string SensorGTag = "Sensor";
-        public const string MountLTag = "mn";
-        public const string MountGTag = "Mount";
+        public const string PlayerPrefix = "py";
+        public const string PlayerTag = "Player";
+        public const string ShapePrefix = "sh";
+        public const string ShapeTag = "Shape";
+        public const string PoolPrefix = "pl";
+        public const string PoolTag = "Pool";
+        public const string SensorPrefix = "sn";
+        public const string SensorTag = "Sensor";
+        public const string MountPrefix = "mn";
+        public const string MountTag = "Mount";
 
         // Addons
-        public const string JointLTag = "jn";
-        public const string JointGTag = "Joint";
+        public const string JointPrefix = "jn";
+        public const string JointTag = "Joint";
     }
 }

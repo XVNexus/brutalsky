@@ -82,28 +82,32 @@ namespace Core
             EventSystem._.EmitPlayerSpawn(ActiveMap, player);
         }
 
-        public void SetAllPlayersFrozen(bool frozen)
+        public void SetAllPlayersFrozen(bool frozen, bool resetVelocity = false)
         {
             foreach (var player in ActivePlayers.Values)
             {
-                SetPlayerFrozen(player, frozen);
+                SetPlayerFrozen(player, frozen, resetVelocity);
             }
         }
 
-        public void SetPlayerFrozen(string id, bool frozen)
+        public void SetPlayerFrozen(string id, bool frozen, bool resetVelocity = false)
         {
-            SetPlayerFrozen(ActivePlayers[id], frozen);
+            SetPlayerFrozen(ActivePlayers[id].InstanceObject, frozen, resetVelocity);
         }
 
-        public void SetPlayerFrozen(BsPlayer player, bool frozen)
+        public void SetPlayerFrozen(BsPlayer player, bool frozen, bool resetVelocity = false)
         {
-            SetPlayerFrozen(player.InstanceObject, frozen);
+            SetPlayerFrozen(player.InstanceObject, frozen, resetVelocity);
         }
 
-        public void SetPlayerFrozen(GameObject playerInstanceObject, bool frozen)
+        public void SetPlayerFrozen(GameObject playerInstanceObject, bool frozen, bool resetVelocity = false)
         {
-            playerInstanceObject.GetComponent<Rigidbody2D>().simulated = !frozen;
+            var rigidbody = playerInstanceObject.GetComponent<Rigidbody2D>();
+            rigidbody.simulated = !frozen;
             playerInstanceObject.GetComponent<CircleCollider2D>().enabled = !frozen;
+            if (!resetVelocity) return;
+            rigidbody.velocity = Vector2.zero;
+            rigidbody.angularVelocity = 0f;
         }
 
         public static void ResaveBuiltinMaps(IEnumerable<string> filenames)
@@ -143,7 +147,6 @@ namespace Core
             return BsMap.Parse(Resources.Load<TextAsset>($"{Paths.Content}/{Paths.Maps}/{filename}").text);
         }
 
-        [CanBeNull]
         public static BsMap LoadMap(string filename)
         {
             try
@@ -171,20 +174,27 @@ namespace Core
 
         public static void SaveMap(BsMap map)
         {
-            if (UseBinaryFormat)
+            try
             {
-                var path = $"{ResourceSystem.DataPath}/{Paths.Maps}/{map.Id}.{SaveFormatBinary}";
-                new FileInfo(path).Directory?.Create();
-                using var stream = new FileStream(path, FileMode.Create);
-                using var writer = new BinaryWriter(stream);
-                writer.Write(map.Binify());
+                if (UseBinaryFormat)
+                {
+                    var path = $"{ResourceSystem.DataPath}/{Paths.Maps}/{map.Id}.{SaveFormatBinary}";
+                    new FileInfo(path).Directory?.Create();
+                    using var stream = new FileStream(path, FileMode.Create);
+                    using var writer = new BinaryWriter(stream);
+                    writer.Write(map.Binify());
+                }
+                else
+                {
+                    var path = $"{ResourceSystem.DataPath}/{Paths.Maps}/{map.Id}.{SaveFormatString}";
+                    new FileInfo(path).Directory?.Create();
+                    using var writer = new StreamWriter(path);
+                    writer.Write(map.Stringify());
+                }
             }
-            else
+            catch (Exception ex)
             {
-                var path = $"{ResourceSystem.DataPath}/{Paths.Maps}/{map.Id}.{SaveFormatString}";
-                new FileInfo(path).Directory?.Create();
-                using var writer = new StreamWriter(path);
-                writer.Write(map.Stringify());
+                throw Errors.ErrorWhile("saving map", map, ex.Message);
             }
         }
 

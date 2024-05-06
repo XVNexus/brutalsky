@@ -7,6 +7,7 @@ using UnityEngine;
 using Utils.Constants;
 using Utils.Joint;
 using Utils.Object;
+using Utils.Player;
 using Utils.Pool;
 using Utils.Shape;
 
@@ -29,6 +30,7 @@ namespace Utils.Lcs
                 LcsType.Double => BinifyDouble((double)value),
                 LcsType.Char => BinifyChar((char)value),
                 LcsType.String => BinifyString((string)value),
+                LcsType.PlayerType => BinifyPlayerType((PlayerType)value),
                 LcsType.Direction => BinifyDirection((Direction)value),
                 LcsType.Layer => BinifyLayer((ObjectLayer)value),
                 LcsType.FormType => BinifyFormType((FormType)value),
@@ -58,6 +60,7 @@ namespace Utils.Lcs
                 LcsType.Double => ParseDouble(raw),
                 LcsType.Char => ParseChar(raw),
                 LcsType.String => ParseString(raw),
+                LcsType.PlayerType => ParsePlayerType(raw),
                 LcsType.Direction => ParseDirection(raw),
                 LcsType.Layer => ParseLayer(raw),
                 LcsType.FormType => ParseFormType(raw),
@@ -184,6 +187,16 @@ namespace Utils.Lcs
         }
 
         // Enum types
+        private static byte[] BinifyPlayerType(PlayerType playerType)
+        {
+            return new[] { (byte)playerType };
+        }
+
+        private static PlayerType ParsePlayerType(byte[] raw)
+        {
+            return (PlayerType)raw[0];
+        }
+
         private static byte[] BinifyDirection(Direction direction)
         {
             return new[] { (byte)direction };

@@ -32,7 +32,7 @@ namespace Controllers.Sensor
         private void OnTrigger(Collider2D other)
         {
             // Update triggered status
-            if (!other.CompareTag(Tags.PlayerGTag)) return;
+            if (!other.CompareTag(Tags.PlayerTag)) return;
             _triggeredFrames = MaxTriggeredFrames;
             triggered = true;
         }

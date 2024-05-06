@@ -5,6 +5,7 @@ using UnityEngine;
 using Utils.Constants;
 using Utils.Joint;
 using Utils.Object;
+using Utils.Player;
 using Utils.Pool;
 using Utils.Shape;
 
@@ -30,6 +31,7 @@ namespace Utils.Lcs
                 LcsType.Double => StringifyDouble((double)value),
                 LcsType.Char => StringifyChar((char)value),
                 LcsType.String => StringifyString((string)value),
+                LcsType.PlayerType => StringifyPlayerType((PlayerType)value),
                 LcsType.Direction => StringifyDirection((Direction)value),
                 LcsType.Layer => StringifyLayer((ObjectLayer)value),
                 LcsType.FormType => StringifyFormType((FormType)value),
@@ -59,6 +61,7 @@ namespace Utils.Lcs
                 LcsType.Double => ParseDouble(raw),
                 LcsType.Char => ParseChar(raw),
                 LcsType.String => ParseString(raw),
+                LcsType.PlayerType => ParsePlayerType(raw),
                 LcsType.Direction => ParseDirection(raw),
                 LcsType.Layer => ParseLayer(raw),
                 LcsType.FormType => ParseFormType(raw),
@@ -220,6 +223,16 @@ namespace Utils.Lcs
         }
 
         // Enum types
+        private static string StringifyPlayerType(PlayerType playerType)
+        {
+            return StringifyInt((int)playerType);
+        }
+
+        private static PlayerType ParsePlayerType(string raw)
+        {
+            return (PlayerType)ParseInt(raw);
+        }
+
         private static string StringifyDirection(Direction direction)
         {
             return StringifyInt((int)direction);

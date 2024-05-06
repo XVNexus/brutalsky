@@ -15,7 +15,7 @@ namespace Brutalsky.Object
     public class BsPool : BsObject
     {
         public override GameObject Prefab => ResourceSystem._.pPool;
-        public override string Tag => Tags.PoolLTag;
+        public override string Tag => Tags.PoolPrefix;
         public override bool HasLogic => false;
 
         public Vector2 Size { get; set; }

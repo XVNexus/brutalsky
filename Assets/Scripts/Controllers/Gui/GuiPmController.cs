@@ -14,27 +14,34 @@ namespace Controllers.Gui
         protected override void OnLoad()
         {
             GuiSystem._.RegisterPane(PaneId, this);
-            GuiSystem._.RegisterButton(PaneId, "cont", () => {
+            GuiSystem._.RegisterButton(PaneId, "cont", () =>
+            {
                 GuiSystem._.EscapeOne();
             });
-            GuiSystem._.RegisterButton(PaneId, "lvls", () => {
+            GuiSystem._.RegisterButton(PaneId, "lvls", () =>
+            {
                 GuiSystem._.ActivatePane(GuiLsController.PaneId);
             });
-            GuiSystem._.RegisterButton(PaneId, "rest", () => {
+            GuiSystem._.RegisterButton(PaneId, "rest", () =>
+            {
                 if (GameManager._.mapChangeActive) return;
                 GameManager._.RestartRound();
                 GuiSystem._.EscapeAll();
             });
-            GuiSystem._.RegisterButton(PaneId, "cnfg", () => {
+            GuiSystem._.RegisterButton(PaneId, "cnfg", () =>
+            {
                 GuiSystem._.ActivatePane(GuiCfController.PaneId);
             });
-            GuiSystem._.RegisterButton(PaneId, "help", () => {
+            GuiSystem._.RegisterButton(PaneId, "help", () =>
+            {
                 GuiSystem._.ActivatePane(GuiHeController.PaneId);
             });
-            GuiSystem._.RegisterButton(PaneId, "menu", () => {
+            GuiSystem._.RegisterButton(PaneId, "menu", () =>
+            {
                 throw new NotImplementedException();
             });
-            GuiSystem._.RegisterButton(PaneId, "exit", () => {
+            GuiSystem._.RegisterButton(PaneId, "exit", () =>
+            {
                 Application.Quit();
             });
         }

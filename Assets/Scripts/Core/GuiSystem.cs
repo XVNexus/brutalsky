@@ -29,9 +29,7 @@ namespace Core
 
         // External references
         public UIDocument cUIDocument;
-
-        // Player input
-        public InputAction iEscape;
+        private InputAction _iEscape;
 
         // Init functions
         protected override void OnStart()
@@ -39,10 +37,7 @@ namespace Core
             _root = cUIDocument.rootVisualElement;
             _panes[""] = new GuiPane("", _root, this, true);
 
-            iEscape = EventSystem._.aInputAction.FindAction("Escape");
-            iEscape.Enable();
-
-            iEscape.performed += OnIEscape;
+            _iEscape = EventSystem._.SetInputAction("Escape", _ => EscapeOne());
         }
 
         // System functions
@@ -65,7 +60,7 @@ namespace Core
         public void EscapeAll()
         {
             if (!ContainsVisiblePane()) return;
-            while (DeactivatePane()) {}
+            while (DeactivatePane()) { }
             TimeSystem._.Unpause();
         }
 
@@ -178,12 +173,6 @@ namespace Core
                 not null when type == typeof(FloatField) => _root.Q<T>($"{paneId}-flt-{itemId}"),
                 _ => throw Errors.InvalidItem("gui element type", type)
             };
-        }
-
-        // Event functions
-        private void OnIEscape(InputAction.CallbackContext context)
-        {
-            EscapeOne();
         }
     }
 }

@@ -22,7 +22,7 @@ namespace Controllers.Pool
         private float[] _wavePointOffsets;
         private readonly List<PoolWave> _waves = new();
 
-        // Component references
+        // External references
         public LineRenderer cLineRenderer;
         private SpriteRenderer _cSpriteRenderer;
 
@@ -38,9 +38,9 @@ namespace Controllers.Pool
             poolScale.y -= lineWidth * .5f;
             poolTransform.localScale = poolScale;
             var surfaceAngle = poolTransform.rotation.eulerAngles.z + 90f;
-            var poolPosition = poolTransform.position;
+            var poolPosition = poolTransform.localPosition;
             poolPosition -= (Vector3)MathfExt.RotateVector(new Vector2(lineWidth * .25f, 0f), surfaceAngle);
-            poolTransform.position = poolPosition;
+            poolTransform.localPosition = poolPosition;
 
             // Set up wave renderer
             cLineRenderer.material = _cSpriteRenderer.material;

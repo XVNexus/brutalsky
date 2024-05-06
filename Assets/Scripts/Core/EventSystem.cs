@@ -3,7 +3,6 @@ using Brutalsky;
 using Brutalsky.Object;
 using Controllers.Base;
 using UnityEngine.InputSystem;
-using Utils.Gui;
 
 namespace Core
 {
@@ -15,6 +14,24 @@ namespace Core
 
         // External references
         public InputActionAsset aInputAction;
+
+        // System functions
+        public InputAction GetInputAction(string id)
+        {
+            var result = aInputAction.FindAction(id);
+            if (!result.enabled)
+            {
+                result.Enable();
+            }
+            return result;
+        }
+
+        public InputAction SetInputAction(string id, Action<InputAction.CallbackContext> callback)
+        {
+            var action = GetInputAction(id);
+            action.performed += callback;
+            return action;
+        }
 
         // Event functions
         public void EmitMapPreload(BsMap map) => OnMapPreload?.Invoke(map);

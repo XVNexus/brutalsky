@@ -64,10 +64,7 @@ namespace Utils.Lcs
             while (cursor < raw.Length)
             {
                 var line = LcsLine.Parse(raw, ref cursor);
-                if (!lineLevelMap.ContainsKey(line.Prefix))
-                {
-                    throw Errors.InvalidItem("LCS line prefix", line.Prefix);
-                }
+                if (!lineLevelMap.ContainsKey(line.Prefix)) throw Errors.InvalidItem("LCS line prefix", line.Prefix);
                 var lineLevel = lineLevelMap[line.Prefix];
                 lineCache[lineLevel] = line;
                 if (lineLevel == 0)
@@ -106,10 +103,7 @@ namespace Utils.Lcs
             {
                 var rawLine = rawLines[i];
                 var line = LcsLine.Parse(rawLine);
-                if (!lineLevelMap.ContainsKey(line.Prefix))
-                {
-                    throw Errors.InvalidItem("LCS line prefix", line.Prefix);
-                }
+                if (!lineLevelMap.ContainsKey(line.Prefix)) throw Errors.InvalidItem("LCS line prefix", line.Prefix);
                 var lineLevel = lineLevelMap[line.Prefix];
                 lineCache[lineLevel] = line;
                 if (lineLevel == 0)

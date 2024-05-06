@@ -20,7 +20,7 @@ namespace Controllers.Player
         private float _ringThickness;
         private float _ringSpin;
 
-        // Component references
+        // External references
         public Light2D cLight2D;
         public SpriteRenderer cRingSpriteRenderer;
         public SpriteMask cSpriteMask;

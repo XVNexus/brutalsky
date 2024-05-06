@@ -12,10 +12,10 @@ namespace Brutalsky.Addon
 {
     public class BsJoint : BsAddon
     {
-        public override string Tag => Tags.JointLTag;
+        public override string Tag => Tags.JointPrefix;
         public override bool HasLogic => true;
 
-        public JointType JointType { get; private set; }
+        public JointType Type { get; private set; }
         public string MountShape { get; set; }
 
         public bool SelfCollision { get; set; } // Universal
@@ -57,7 +57,7 @@ namespace Brutalsky.Addon
         protected override Component _Init(GameObject gameObject, BsObject parentObject, BsMap map)
         {
             // Create joint component
-            AnchoredJoint2D component = JointType switch
+            AnchoredJoint2D component = Type switch
             {
                 JointType.Fixed => gameObject.AddComponent<FixedJoint2D>(),
                 JointType.Distance => gameObject.AddComponent<DistanceJoint2D>(),
@@ -65,7 +65,7 @@ namespace Brutalsky.Addon
                 JointType.Hinge => gameObject.AddComponent<HingeJoint2D>(),
                 JointType.Slider => gameObject.AddComponent<SliderJoint2D>(),
                 JointType.Wheel => gameObject.AddComponent<WheelJoint2D>(),
-                _ => throw Errors.InvalidItem("joint type", JointType)
+                _ => throw Errors.InvalidItem("joint type", Type)
             };
 
             // Apply universal joint config
@@ -75,7 +75,7 @@ namespace Brutalsky.Addon
             component.breakTorque = BreakTorque;
 
             // Apply specific joint config
-            switch (JointType)
+            switch (Type)
             {
                 case JointType.Fixed:
                     var fixedJointComponent = (FixedJoint2D)component;
@@ -158,18 +158,15 @@ namespace Brutalsky.Addon
                     break;
 
                 default:
-                    throw Errors.InvalidItem("joint type", JointType);
+                    throw Errors.InvalidItem("joint type", Type);
             }
 
             // Set up connected rigidbody
             component.autoConfigureConnectedAnchor = false;
             if (MountShape.Length > 0)
             {
-                var mountShape = map.GetObject<BsShape>(Tags.ShapeLTag, MountShape);
-                if (mountShape.InstanceObject == null)
-                {
-                    throw Errors.JointMountUnbuilt(this);
-                }
+                var mountShape = map.GetObject<BsShape>(Tags.ShapePrefix, MountShape);
+                if (mountShape.InstanceObject == null) throw Errors.JointMountUnbuilt(this);
                 component.connectedBody = mountShape.InstanceObject.GetComponent<Rigidbody2D>();
                 component.connectedAnchor = parentObject.Transform.Position - mountShape.Transform.Position;
             }
@@ -183,7 +180,7 @@ namespace Brutalsky.Addon
 
         public override BsNode RegisterLogic()
         {
-            return JointType switch
+            return Type switch
             {
                 JointType.Fixed => RegisterLogicFixed(),
                 JointType.Distance => RegisterLogicDistance(),
@@ -191,7 +188,7 @@ namespace Brutalsky.Addon
                 JointType.Hinge => RegisterLogicHinge(),
                 JointType.Slider => RegisterLogicSlider(),
                 JointType.Wheel => RegisterLogicWheel(),
-                _ => throw Errors.InvalidItem("joint type", JointType)
+                _ => throw Errors.InvalidItem("joint type", Type)
             };
         }
 
@@ -416,13 +413,13 @@ namespace Brutalsky.Addon
             var result = new List<LcsProp>
             {
                 new(LcsType.Transform, Transform),
-                new(LcsType.JointType, JointType),
+                new(LcsType.JointType, Type),
                 new(LcsType.String, MountShape),
                 new(LcsType.Bool, SelfCollision),
                 new(LcsType.Float, BreakForce),
                 new(LcsType.Float, BreakTorque)
             };
-            switch (JointType)
+            switch (Type)
             {
                 case JointType.Fixed:
                     result.Add(new LcsProp(LcsType.Float, DampingRatio));
@@ -467,7 +464,7 @@ namespace Brutalsky.Addon
                     result.Add(new LcsProp(LcsType.Float, MotorForce));
                     break;
                 default:
-                    throw Errors.InvalidItem("joint type", JointType);
+                    throw Errors.InvalidItem("joint type", Type);
             }
             return result.ToArray();
         }
@@ -475,12 +472,12 @@ namespace Brutalsky.Addon
         protected override void _FromLcs(LcsProp[] props)
         {
             Transform = (ObjectTransform)props[0].Value;
-            JointType = (JointType)props[1].Value;
+            Type = (JointType)props[1].Value;
             MountShape = (string)props[2].Value;
             SelfCollision = (bool)props[3].Value;
             BreakForce = (float)props[4].Value;
             BreakTorque = (float)props[5].Value;
-            switch (JointType)
+            switch (Type)
             {
                 case JointType.Fixed:
                     DampingRatio = (float)props[6].Value;
@@ -525,13 +522,13 @@ namespace Brutalsky.Addon
                     MotorForce = (float)props[12].Value;
                     break;
                 default:
-                    throw Errors.InvalidItem("joint type", JointType);
+                    throw Errors.InvalidItem("joint type", Type);
             }
         }
 
         public BsJoint FixedJoint(float dampingRatio, float dampingFrequency)
         {
-            JointType = JointType.Fixed;
+            Type = JointType.Fixed;
             DampingRatio = dampingRatio;
             DampingFrequency = dampingFrequency;
             return this;
@@ -539,7 +536,7 @@ namespace Brutalsky.Addon
 
         public BsJoint DistanceJoint(float distanceValue, bool distanceAuto, bool distanceMax)
         {
-            JointType = JointType.Distance;
+            Type = JointType.Distance;
             DistanceValue = distanceValue;
             DistanceAuto = distanceAuto;
             DistanceMax = distanceMax;
@@ -548,7 +545,7 @@ namespace Brutalsky.Addon
 
         public BsJoint SpringJoint(float distanceValue, bool distanceAuto, float dampingRatio, float dampingFrequency)
         {
-            JointType = JointType.Spring;
+            Type = JointType.Spring;
             DistanceValue = distanceValue;
             DistanceAuto = distanceAuto;
             DampingRatio = dampingRatio;
@@ -559,7 +556,7 @@ namespace Brutalsky.Addon
         public BsJoint HingeJoint(bool motorEnabled, float motorSpeed, float motorForce, bool limitEnabled,
             float limitMin, float limitMax)
         {
-            JointType = JointType.Hinge;
+            Type = JointType.Hinge;
             MotorEnabled = motorEnabled;
             MotorSpeed = motorSpeed;
             MotorForce = motorForce;
@@ -572,7 +569,7 @@ namespace Brutalsky.Addon
         public BsJoint SliderJoint(float angleValue, bool angleAuto, bool motorEnabled, float motorSpeed,
             float motorForce, bool limitEnabled, float limitMin, float limitMax)
         {
-            JointType = JointType.Slider;
+            Type = JointType.Slider;
             AngleValue = angleValue;
             AngleAuto = angleAuto;
             MotorEnabled = motorEnabled;
@@ -587,7 +584,7 @@ namespace Brutalsky.Addon
         public BsJoint WheelJoint(float dampingRatio, float dampingFrequency, float angleValue, bool angleAuto,
             bool motorEnabled, float motorSpeed, float motorForce)
         {
-            JointType = JointType.Wheel;
+            Type = JointType.Wheel;
             DampingRatio = dampingRatio;
             DampingFrequency = dampingFrequency;
             AngleValue = angleValue;

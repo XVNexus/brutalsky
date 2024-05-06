@@ -17,7 +17,7 @@ namespace Controllers.Pool
         {
             // Apply damage to player
             var health = Master.Object.Chemical.Health;
-            if (!other.gameObject.CompareTag(Tags.PlayerGTag)) return;
+            if (!other.gameObject.CompareTag(Tags.PlayerTag)) return;
             var playerController = other.gameObject.GetComponent<PlayerController>();
             if (health > 0f)
             {

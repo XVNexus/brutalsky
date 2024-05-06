@@ -6,27 +6,28 @@ using UnityEngine;
 using Utils.Constants;
 using Utils.Lcs;
 using Utils.Object;
+using Utils.Player;
 
 namespace Brutalsky.Object
 {
     public class BsPlayer : BsObject
     {
         public override GameObject Prefab => ResourceSystem._.pPlayer;
-        public override string Tag => Tags.PlayerLTag;
+        public override string Tag => Tags.PlayerPrefix;
         public override bool HasLogic => false;
 
+        public PlayerType Type { get; set; }
         public string Name { get; set; }
-        public float Health { get; set; }
         public Color Color { get; set; }
-        public bool Dummy { get; set; }
+        public float Health { get; set; }
 
-        public BsPlayer(string name, float health, Color color, bool dummy = false)
+        public BsPlayer(PlayerType type, string name, Color color, float health = 100f)
             : base(name, new ObjectTransform(), ObjectLayer.Midground, true)
         {
+            Type = type;
             Name = name;
-            Health = health;
             Color = color;
-            Dummy = dummy;
+            Health = health;
         }
 
         public BsPlayer()
@@ -49,19 +50,19 @@ namespace Brutalsky.Object
         {
             return new LcsProp[]
             {
+                new(LcsType.PlayerType, Type),
                 new(LcsType.String, Name),
-                new(LcsType.Float, Health),
                 new(LcsType.Color, Color),
-                new(LcsType.Bool, Dummy)
+                new(LcsType.Float, Health)
             };
         }
 
         protected override void _FromLcs(LcsProp[] props)
         {
-            Name = (string)props[0].Value;
-            Health = (float)props[1].Value;
+            Type = (PlayerType)props[0].Value;
+            Name = (string)props[1].Value;
             Color = (Color)props[2].Value;
-            Dummy = (bool)props[3].Value;
+            Health = (float)props[3].Value;
         }
     }
 }

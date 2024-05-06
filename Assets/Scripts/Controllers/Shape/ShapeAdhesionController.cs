@@ -11,7 +11,7 @@ namespace Controllers.Shape
         public override string Id => "adhesion";
         public override bool IsUnused => Master.Object.Material.Adhesion == 0f || !Master.Object.Simulated;
 
-        // Component references
+        // External references
         private Rigidbody2D _cRigidbody2D;
 
         // Init functions
@@ -23,7 +23,7 @@ namespace Controllers.Shape
         // Event functions
         private void OnCollisionExit2D(Collision2D other)
         {
-            if (!other.gameObject.CompareTag(Tags.PlayerGTag)) return;
+            if (!other.gameObject.CompareTag(Tags.PlayerTag)) return;
 
             // Allow players to unstick from low to moderate adhesion
             var playerRigidbody = other.rigidbody;
@@ -38,8 +38,8 @@ namespace Controllers.Shape
             // Get collision info
             var otherRigidbody = other.rigidbody;
             var thisDynamic = Master.Object.Dynamic;
-            var otherDynamic = other.gameObject.CompareTag(Tags.PlayerGTag)
-                || (other.gameObject.CompareTag(Tags.ShapeGTag)
+            var otherDynamic = other.gameObject.CompareTag(Tags.PlayerTag)
+                || (other.gameObject.CompareTag(Tags.ShapeTag)
                     && other.gameObject.GetComponent<ShapeController>().Object.Dynamic);
 
             // Apply adhesion force

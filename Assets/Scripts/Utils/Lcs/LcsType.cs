@@ -16,6 +16,7 @@ namespace Utils.Lcs
         Char,
         String,
         // Enum types
+        PlayerType,
         Direction,
         Layer,
         FormType,

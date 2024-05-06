@@ -17,8 +17,15 @@ namespace Controllers.Gui
             {
                 GuiSystem._.DeactivatePane(PaneId);
             });
-            GuiSystem._.RegisterButton(PaneId, "save", () => throw new NotImplementedException());
-            GuiSystem._.RegisterButton(PaneId, "rset", () => throw new NotImplementedException());
+            GuiSystem._.RegisterButton(PaneId, "save", () =>
+            {
+                GuiSystem._.DeactivatePane(PaneId);
+                throw new NotImplementedException();
+            });
+            GuiSystem._.RegisterButton(PaneId, "rset", () =>
+            {
+                throw new NotImplementedException();
+            });
         }
     }
 }

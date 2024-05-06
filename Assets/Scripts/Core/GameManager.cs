@@ -6,6 +6,7 @@ using Controllers.Base;
 using Controllers.Player;
 using UnityEngine;
 using Utils.Map;
+using Utils.Player;
 
 namespace Core
 {
@@ -26,8 +27,10 @@ namespace Core
 
         protected override void OnLoad()
         {
+            // Generate builtin custom maps
             MapSystem.ResaveBuiltinMaps(new[] { "Brutalsky", "Doomring", "Tossup", "Void" });
 
+            // Generate box maps
             var shapeNames = new[] { "Platform", "Box", "Cage", "Tunnel" };
             var shapes = new[] { 0b1000, 0b1011, 0b1111, 0b1100 };
             var sizeNames = new[] { "Small", "Medium", "Large" };
@@ -36,14 +39,20 @@ namespace Core
             {
                 MapSystem.SaveMap(MapGenerator.Box($"{sizeNames[j]} {shapeNames[i]}", shapes[i], sizes[j]));
             }
+
+            // TODO: GENERATE PLATFORMER MAPS
+
+            // TODO: GENERATE TERRAIN MAPS
+
+            // TODO: GENERATE MAZE MAPS
         }
 
         protected override void OnLink()
         {
-            InitGame(MapSystem.GenerateId("Brutalsky", "Xveon"), new[]
+            InitGame(MapSystem.GenerateId("Void", "Xveon"), new[]
             {
-                new BsPlayer("Player 1", 100f, new Color(1f, .5f, 0f)),
-                new BsPlayer("Player 2", 100f, new Color(0f, .5f, 1f), true)
+                new BsPlayer(PlayerType.Main, "Player 1", new Color(1f, .5f, 0f)),
+                new BsPlayer(PlayerType.Dummy, "Player 2", new Color(0f, .5f, 1f))
             });
         }
 

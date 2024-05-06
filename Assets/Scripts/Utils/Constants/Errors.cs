@@ -16,6 +16,9 @@ namespace Utils.Constants
         public static ArgumentNullException BuildNullMap()
             => new("", "Cannot rebuild the map when no map is currently loaded");
 
+        public static NullReferenceException MissingSubController(string masterTag, string requireeId, string requirementId)
+            => new($"Subcontroller '{requireeId}' of object '{masterTag}' requires '{requirementId}'");
+
         public static ArgumentNullException JointMountUnbuilt(BsJoint joint)
             => new(nameof(joint), "Cannot create a joint attached to an unbuilt shape");
 

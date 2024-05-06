@@ -2,7 +2,6 @@ using Brutalsky;
 using Brutalsky.Object;
 using Controllers.Base;
 using Core;
-using JetBrains.Annotations;
 using UnityEngine;
 using Utils.Constants;
 using Utils.Ext;
@@ -21,7 +20,7 @@ namespace Controllers.Player
         public bool alive = true;
         private float _lastSpeed;
 
-        // Component references
+        // External references
         private Rigidbody2D _cRigidbody2D;
         private SpriteRenderer _cSpriteRenderer;
         private CircleCollider2D _cCircleCollider2D;
@@ -97,7 +96,7 @@ namespace Controllers.Player
             if (!alive) return;
 
             // Get collision info
-            var impactForce = other.TotalNormalImpulse() * (other.gameObject.CompareTag(Tags.PlayerGTag) ? 2f : 1f);
+            var impactForce = other.TotalNormalImpulse() * (other.gameObject.CompareTag(Tags.PlayerTag) ? 2f : 1f);
             if (impactForce < 25f) return;
             var impactSpeed = _lastSpeed;
 

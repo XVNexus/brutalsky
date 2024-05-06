@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 5564369552224740061}
   - component: {fileID: 25362455484795478}
   - component: {fileID: 125284452002897716}
+  - component: {fileID: 4723386014194552845}
   - component: {fileID: 6636566231499246727}
   - component: {fileID: 328550718412262110}
   - component: {fileID: 3399184115846437671}
@@ -176,6 +177,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2aa817db9dc24dec81a884d953c1711c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &4723386014194552845
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 333419446728189740}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2948e0f78c944385bafe832cacdb07bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  movementInput: {x: 0, y: 0}
+  boostInput: 0
 --- !u!114 &6636566231499246727
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -191,27 +206,11 @@ MonoBehaviour:
   movementForce: 20
   jumpForce: 12
   dummy: 0
-  onGround: 0
+  grounded: 0
   boostCharge: 0
   boostCooldown: 0
-  iMovement:
-    m_Name: I Movement
-    m_Type: 0
-    m_ExpectedControlType: 
-    m_Id: 05382d9b-cc64-44fe-9d16-c34de1cff443
-    m_Processors: 
-    m_Interactions: 
-    m_SingletonActionBindings: []
-    m_Flags: 0
-  iBoost:
-    m_Name: I Boost
-    m_Type: 0
-    m_ExpectedControlType: 
-    m_Id: 71f8071c-293c-463f-a18c-f489ecab0220
-    m_Processors: 
-    m_Interactions: 
-    m_SingletonActionBindings: []
-    m_Flags: 0
+  movementInput: {x: 0, y: 0}
+  boostInput: 0
 --- !u!114 &328550718412262110
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -227,7 +226,6 @@ MonoBehaviour:
   maxHealth: 0
   health: -1
   alive: 1
-  cRingSpriteRenderer: {fileID: 1062589161020571729}
 --- !u!114 &3399184115846437671
 MonoBehaviour:
   m_ObjectHideFlags: 0

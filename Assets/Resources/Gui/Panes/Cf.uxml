@@ -5,8 +5,8 @@
         <ui:GroupBox class="bs bs-spacer" />
         <ui:GroupBox class="bs bs-box">
             <ui:GroupBox class="bs bs-row">
-                <ui:Button text="Back" parse-escape-sequences="true" display-tooltip-when-elided="true" name="cf-btn-back" focusable="false" class="bs bs-button" style="color: rgb(255, 191, 128); border-bottom-right-radius: 0; border-top-right-radius: 0;" />
-                <ui:Button text="Save Options" parse-escape-sequences="true" display-tooltip-when-elided="true" name="cf-btn-save" focusable="false" class="bs bs-button" style="color: rgb(128, 255, 128); border-top-left-radius: 0; border-top-right-radius: 0; border-bottom-right-radius: 0; border-bottom-left-radius: 0; flex-grow: 2;" />
+                <ui:Button text="Back" parse-escape-sequences="true" display-tooltip-when-elided="true" name="cf-btn-back" focusable="false" class="bs bs-button" style="color: rgb(128, 255, 128); border-bottom-right-radius: 0; border-top-right-radius: 0;" />
+                <ui:Button text="Save Options" parse-escape-sequences="true" display-tooltip-when-elided="true" name="cf-btn-save" focusable="false" class="bs bs-button" style="color: rgb(128, 255, 255); border-top-left-radius: 0; border-top-right-radius: 0; border-bottom-right-radius: 0; border-bottom-left-radius: 0; flex-grow: 2;" />
                 <ui:Button text="Reset Options" parse-escape-sequences="true" display-tooltip-when-elided="true" name="cf-btn-rset" focusable="false" class="bs bs-button" style="color: rgb(255, 191, 128); border-bottom-left-radius: 0; border-top-left-radius: 0;" />
             </ui:GroupBox>
         </ui:GroupBox>

@@ -229,15 +229,9 @@ namespace Brutalsky
         public static BsMap FromLcs(LcsDocument document)
         {
             var result = new BsMap();
-            if (document.Lines.Count == 0)
-            {
-                throw Errors.EmptyLcsDocument();
-            }
+            if (document.Lines.Count == 0) throw Errors.EmptyLcsDocument();
             var metadata = document.Lines[0].Props;
-            if (document.Lines[0].Prefix != '!')
-            {
-                throw Errors.InvalidItem("map LCS metadata line", metadata);
-            }
+            if (document.Lines[0].Prefix != '!') throw Errors.InvalidItem("map LCS metadata line", metadata);
             result.Title = (string)metadata[0].Value;
             result.Author = (string)metadata[1].Value;
             result.PlayArea = (Vector2)metadata[2].Value;

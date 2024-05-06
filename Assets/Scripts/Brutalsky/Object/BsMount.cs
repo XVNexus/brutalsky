@@ -3,7 +3,7 @@ using Brutalsky.Base;
 using Brutalsky.Logic;
 using Controllers;
 using Controllers.Base;
-using Controllers.Sensor;
+using Controllers.Mount;
 using Core;
 using UnityEngine;
 using Utils.Constants;
@@ -12,46 +12,43 @@ using Utils.Object;
 
 namespace Brutalsky.Object
 {
-    public class BsSensor : BsObject
+    public class BsMount : BsObject
     {
-        public override GameObject Prefab => ResourceSystem._.pSensor;
-        public override string Tag => Tags.SensorPrefix;
+        public override GameObject Prefab => ResourceSystem._.pMount;
+        public override string Tag => Tags.MountPrefix;
         public override bool HasLogic => true;
 
-        public Vector2 Size { get; set; }
+        public Vector2 Exit { get; set; }
 
-        public BsSensor(string id, ObjectTransform transform, bool simulated, Vector2 size)
+        public BsMount(string id, ObjectTransform transform, bool simulated, Vector2 exit)
             : base(id, transform, ObjectLayer.Midground, simulated)
         {
-            Size = size;
+            Exit = exit;
         }
 
-        public BsSensor()
+        public BsMount()
         {
         }
 
         protected override BsBehavior _Init(GameObject gameObject, BsMap map)
         {
             // Link object to controller
-            var controller = gameObject.GetComponent<SensorController>();
+            var controller = gameObject.GetComponent<MountController>();
             controller.Object = this;
 
-            // Apply size
-            gameObject.transform.localScale = Size;
-
-            // Apply position and rotation
+            // Apply position
             gameObject.transform.localPosition = Transform.Position;
-            gameObject.transform.localRotation = Quaternion.Euler(0f, 0f, Transform.Rotation);
 
             return controller;
         }
 
         protected override BsNode _RegisterLogic()
         {
-            var triggerController = ((SensorController)InstanceController).GetSub<SensorTriggerController>("trigger");
-            return new BsNode(Array.Empty<float>(), new float[1], (_, _) =>
+            var grabController = ((MountController)InstanceController).GetSub<MountGrabController>("grab");
+            return new BsNode(Array.Empty<float>(), new float[3], (_, _) =>
             {
-                return new[] { BsMatrix.ToLogic(triggerController.triggered) };
+                return new[] { BsMatrix.ToLogic(grabController.active),
+                    grabController.input.x, grabController.input.y };
             });
         }
 
@@ -60,7 +57,7 @@ namespace Brutalsky.Object
             return new LcsProp[]
             {
                 new(LcsType.Transform, Transform),
-                new(LcsType.Vector2, Size),
+                new(LcsType.Vector2, Exit),
                 new(LcsType.Bool, Simulated)
             };
         }
@@ -68,7 +65,7 @@ namespace Brutalsky.Object
         protected override void _FromLcs(LcsProp[] props)
         {
             Transform = (ObjectTransform)props[0].Value;
-            Size = (Vector2)props[1].Value;
+            Exit = (Vector2)props[1].Value;
             Simulated = (bool)props[2].Value;
         }
     }
