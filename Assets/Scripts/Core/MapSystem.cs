@@ -27,7 +27,7 @@ namespace Core
         public const float BackgroundField = 1000f;
         public const string SaveFormatString = "txt";
         public const string SaveFormatBinary = "bin";
-        public const bool UseBinaryFormat = false;
+        public const bool UseBinaryFormat = true;
 
         // Local variables
         public Dictionary<uint, BsMap> MapList { get; private set; } = new();
@@ -119,9 +119,10 @@ namespace Core
             MapList.Clear();
             var path = $"{ResourceSystem.DataPath}/{Paths.Maps}";
             if (!Directory.Exists(path)) return;
-            foreach (var mapPath in Directory.GetFiles(path, $"*.{SaveFormatString}"))
+            foreach (var mapPath in Directory.GetFiles(path))
             {
-                var mapFilename = Regex.Match(mapPath, $@"\w+(?=\.{SaveFormatString})").Value;
+                var mapFilename = Regex.Match(mapPath,
+                    $@"\w+(?=\.({SaveFormatString}|{SaveFormatBinary}))").Value;
                 var map = LoadMap(mapFilename);
                 MapList[map.Id] = map;
             }
@@ -148,9 +149,9 @@ namespace Core
             }
             if (File.Exists(pathBinary))
             {
-                using var stream = new FileStream(pathBinary, FileMode.Create);
+                using var stream = new FileStream(pathBinary, FileMode.Open);
                 using var reader = new BinaryReader(stream);
-                return BsMap.Parse(reader.ReadBytes((int)reader.BaseStream.Length));
+                return BsMap.Parse(reader.ReadBytes((int)stream.Length));
             }
             throw Errors.NoItemFound("map file", filename);
         }

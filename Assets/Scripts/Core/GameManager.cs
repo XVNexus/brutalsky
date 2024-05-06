@@ -33,7 +33,7 @@ namespace Core
         {
             MapSystem.ResaveBuiltinMaps(new[] { "Brutalsky", "Doomring", "Tossup", "Void" });
             GenerateDefaultMaps();
-            StartGame(MapSystem.GenerateId("Medium Platform", "Brutalsky"), new[]
+            StartGame(MapSystem.GenerateId("Void", "Xveon"), new[]
             {
                 new BsPlayer("Player 1", 100f, new Color(1f, .5f, 0f)),
                 new BsPlayer("Player 2", 100f, new Color(0f, .5f, 1f), true)

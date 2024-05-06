@@ -33,29 +33,16 @@ namespace Utils.Lcs
             return result.ToArray();
         }
 
-        public static LcsLine Parse(byte[] raw)
+        public static LcsLine Parse(byte[] raw, ref int cursor)
         {
+            var prefix = (char)raw[cursor++];
             var props = new List<LcsProp>();
-            var cursor = 1;
             while (cursor < raw.Length)
             {
-                var propType = (LcsType)raw[cursor];
-                var byteCount = LcsProp.TypeByteCountTable[propType];
-                if (byteCount == 0)
-                {
-                    byteCount = raw[cursor + 1];
-                    cursor++;
-                }
-                var propBytes = new byte[byteCount];
-                for (var i = 0; i < byteCount; i++)
-                {
-                    propBytes[i] = raw[cursor];
-                    cursor++;
-                }
-                props.Add(LcsProp.Parse(propType, propBytes.ToArray()));
-                cursor++;
+                if (raw[cursor] == 0) break;
+                props.Add(LcsProp.Parse(raw, ref cursor));
             }
-            return new LcsLine((char)raw[0], props.ToArray());
+            return new LcsLine(prefix, props.ToArray());
         }
 
         public string Stringify()
@@ -73,7 +60,7 @@ namespace Utils.Lcs
 
         public override string ToString()
         {
-            return Stringify().TrimEnd();
+            return Props.Aggregate("[[   ", (current, prop) => current + $"{prop}   ") + "]]";
         }
     }
 }

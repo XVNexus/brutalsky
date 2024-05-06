@@ -100,9 +100,21 @@ namespace Utils.Lcs
             return typeBytes.Concat(headerBytes).Concat(valueBytes).ToArray();
         }
 
-        public static LcsProp Parse(LcsType type, byte[] raw)
+        public static LcsProp Parse(byte[] raw, ref int cursor)
         {
-            var value = Binifier.Parse(type, raw);
+            var type = (LcsType)raw[cursor];
+            var byteCount = TypeByteCountTable[type];
+            if (byteCount == 0)
+            {
+                byteCount = raw[++cursor];
+            }
+            cursor++;
+            var valueBytes = new byte[byteCount];
+            for (var i = 0; i < byteCount; i++)
+            {
+                valueBytes[i] = raw[cursor++];
+            }
+            var value = Binifier.Parse(type, valueBytes);
             return new LcsProp(type, value);
         }
 
@@ -120,7 +132,7 @@ namespace Utils.Lcs
 
         public override string ToString()
         {
-            return Stringify();
+            return $"( {Type} : {Value} )";
         }
     }
 }

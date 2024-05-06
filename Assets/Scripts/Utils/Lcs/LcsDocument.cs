@@ -62,13 +62,7 @@ namespace Utils.Lcs
             var lineCache = new Dictionary<int, LcsLine>();
             while (cursor < raw.Length)
             {
-                var lineBytes = new List<byte>();
-                while (raw[cursor] > 0)
-                {
-                    lineBytes.Add(raw[cursor]);
-                    cursor++;
-                }
-                var line = LcsLine.Parse(lineBytes.ToArray());
+                var line = LcsLine.Parse(raw, ref cursor);
                 if (!lineLevelMap.ContainsKey(line.Prefix))
                 {
                     throw Errors.InvalidItem("LCS line prefix", line.Prefix);
@@ -131,7 +125,7 @@ namespace Utils.Lcs
 
         public override string ToString()
         {
-            return Stringify().TrimEnd();
+            return Lines.Aggregate("{{{\n", (current, line) => current + $"\t{line}\n") + "}}}";
         }
     }
 }
