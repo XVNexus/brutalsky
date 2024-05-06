@@ -1,4 +1,6 @@
 using System;
+using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using UnityEngine;
@@ -328,6 +330,25 @@ namespace Utils.Lcs
         private static float ByteToFloat01(byte value)
         {
             return value / 255f;
+        }
+
+        public static byte[] GzipCompress(byte[] source)
+        {
+            using var memoryStream = new MemoryStream();
+            using (var gzipStream = new GZipStream(memoryStream, CompressionMode.Compress, true))
+            {
+                gzipStream.Write(source, 0, source.Length);
+            }
+            return memoryStream.ToArray();
+        }
+
+        public static byte[] GzipDecompress(byte[] source)
+        {
+            using var memoryStream = new MemoryStream(source);
+            using var gzipStream = new GZipStream(memoryStream, CompressionMode.Decompress);
+            using var decompressedStream = new MemoryStream();
+            gzipStream.CopyTo(decompressedStream);
+            return decompressedStream.ToArray();
         }
     }
 }

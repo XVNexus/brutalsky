@@ -263,7 +263,7 @@ namespace Utils.Lcs
         // Compound types
         private static string StringifyVector2(Vector2 value)
         {
-            return CompressFields(new[]
+            return ConcatFields(new[]
             {
                 StringifyFloat(value.x),
                 StringifyFloat(value.y)
@@ -272,7 +272,7 @@ namespace Utils.Lcs
 
         private static Vector2 ParseVector2(string raw)
         {
-            var parts = ExpandFields(raw);
+            var parts = SplitFields(raw);
             return new Vector2(ParseFloat(parts[0]), ParseFloat(parts[1]));
         }
 
@@ -289,7 +289,7 @@ namespace Utils.Lcs
 
         private static string StringifyTransform(ObjectTransform transform)
         {
-            return CompressFields(new[]
+            return ConcatFields(new[]
             {
                 StringifyFloat(transform.Position.x),
                 StringifyFloat(transform.Position.y),
@@ -299,7 +299,7 @@ namespace Utils.Lcs
 
         private static ObjectTransform ParseTransform(string raw)
         {
-            var parts = ExpandFields(raw);
+            var parts = SplitFields(raw);
             return new ObjectTransform(ParseFloat(parts[0]), ParseFloat(parts[1]), ParseFloat(parts[2]));
         }
 
@@ -330,7 +330,7 @@ namespace Utils.Lcs
 
         private static string StringifyMaterial(ShapeMaterial material)
         {
-            return CompressFields(new[]
+            return ConcatFields(new[]
             {
                 StringifyFloat(material.Friction),
                 StringifyFloat(material.Restitution),
@@ -342,7 +342,7 @@ namespace Utils.Lcs
 
         private static ShapeMaterial ParseMaterial(string raw)
         {
-            var parts = ExpandFields(raw);
+            var parts = SplitFields(raw);
             var friction = ParseFloat(parts[0]);
             var restitution = ParseFloat(parts[1]);
             var adhesion = ParseFloat(parts[2]);
@@ -353,7 +353,7 @@ namespace Utils.Lcs
 
         private static string StringifyChemical(PoolChemical chemical)
         {
-            return CompressFields(new[]
+            return ConcatFields(new[]
             {
                 StringifyFloat(chemical.Buoyancy),
                 StringifyFloat(chemical.Viscosity),
@@ -363,7 +363,7 @@ namespace Utils.Lcs
 
         private static PoolChemical ParseChemical(string raw)
         {
-            var parts = ExpandFields(raw);
+            var parts = SplitFields(raw);
             var buoyancy = ParseFloat(parts[0]);
             var viscosity = ParseFloat(parts[1]);
             var health = ParseFloat(parts[2]);
@@ -391,33 +391,33 @@ namespace Utils.Lcs
             return HexToInt(hex) / 255f;
         }
 
-        public static string CompressProps(string[] items)
+        public static string ConcatProps(string[] items)
         {
-            return CompressList(items, PropertySeperator);
+            return ConcatList(items, PropertySeperator);
         }
 
-        public static string[] ExpandProps(string items)
+        public static string[] SplitProps(string items)
         {
-            return ExpandList(items, PropertySeperator);
+            return SplitList(items, PropertySeperator);
         }
 
-        public static string CompressFields(string[] items)
+        private static string ConcatFields(string[] items)
         {
-            return CompressList(items, FieldSeperator);
+            return ConcatList(items, FieldSeperator);
         }
 
-        public static string[] ExpandFields(string items)
+        private static string[] SplitFields(string items)
         {
-            return ExpandList(items, FieldSeperator);
+            return SplitList(items, FieldSeperator);
         }
 
-        private static string CompressList(string[] items, char separator)
+        private static string ConcatList(string[] items, char separator)
         {
             return items.Length > 0
                 ? items.Aggregate("", (current, property) => current + $"{separator}{property}")[1..] : "";
         }
 
-        private static string[] ExpandList(string items, char separator)
+        private static string[] SplitList(string items, char separator)
         {
             return items.Length > 0 ? items.Split(separator) : Array.Empty<string>();
         }

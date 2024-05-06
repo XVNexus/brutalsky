@@ -32,11 +32,12 @@ namespace Utils.Lcs
             {
                 result.AddRange(line.Binify());
             }
-            return result.ToArray();
+            return Binifier.GzipCompress(result.ToArray());
         }
 
         public static LcsDocument Parse(byte[] raw)
         {
+            raw = Binifier.GzipDecompress(raw);
             var lines = new List<LcsLine>();
             var version = BitConverter.ToInt32(raw[..4]);
             var lineLevels = new List<string> { "" };
@@ -84,7 +85,7 @@ namespace Utils.Lcs
 
         public string Stringify()
         {
-            return Version.ToString() + Stringifier.PropertySeperator + Stringifier.CompressProps(LineLevels)
+            return Version.ToString() + Stringifier.PropertySeperator + Stringifier.ConcatProps(LineLevels)
                    + '\n' + Lines.Aggregate("", (current, line) => current + line.Stringify());
         }
 
