@@ -953,7 +953,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   viewSize: {x: 10, y: 10}
   orthoSize: 0
-  dampening: 0.4
+  dampening: 0.3
   shakeInterval: 0.1
   simSpeed: 20
   gCameraMount: {fileID: 223431134}
@@ -1063,6 +1063,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d69867b827df4193b3040d4e03c4d9dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mapChangeActive: 0
 --- !u!1 &601674925
 GameObject:
   m_ObjectHideFlags: 0

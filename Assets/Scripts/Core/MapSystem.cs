@@ -25,8 +25,8 @@ namespace Core
         // Local constants
         public const float BackgroundFade = 10f;
         public const float BackgroundField = 1000f;
-        public const string SaveFormatString = "txt";
-        public const string SaveFormatBinary = "bin";
+        public const string SaveFormatString = "lcs";
+        public const string SaveFormatBinary = "lcb";
         public const bool UseBinaryFormat = true;
 
         // Local variables
@@ -122,7 +122,7 @@ namespace Core
             foreach (var mapPath in Directory.GetFiles(path))
             {
                 var mapFilename = Regex.Match(mapPath,
-                    $@"\w+(?=\.({SaveFormatString}|{SaveFormatBinary}))").Value;
+                    $@"\d+(?=\.({SaveFormatString}|{SaveFormatBinary}))").Value;
                 var map = LoadMap(mapFilename);
                 MapList[map.Id] = map;
             }
@@ -140,18 +140,18 @@ namespace Core
 
         public static BsMap LoadMap(string filename)
         {
-            var pathString = $"{ResourceSystem.DataPath}/{Paths.Maps}/{filename}.{SaveFormatString}";
             var pathBinary = $"{ResourceSystem.DataPath}/{Paths.Maps}/{filename}.{SaveFormatBinary}";
-            if (File.Exists(pathString))
-            {
-                using var reader = new StreamReader(pathString);
-                return BsMap.Parse(reader.ReadToEnd());
-            }
+            var pathString = $"{ResourceSystem.DataPath}/{Paths.Maps}/{filename}.{SaveFormatString}";
             if (File.Exists(pathBinary))
             {
                 using var stream = new FileStream(pathBinary, FileMode.Open);
                 using var reader = new BinaryReader(stream);
                 return BsMap.Parse(reader.ReadBytes((int)stream.Length));
+            }
+            if (File.Exists(pathString))
+            {
+                using var reader = new StreamReader(pathString);
+                return BsMap.Parse(reader.ReadToEnd());
             }
             throw Errors.NoItemFound("map file", filename);
         }
