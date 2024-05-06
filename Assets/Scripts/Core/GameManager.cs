@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Linq;
 using Brutalsky;
 using Brutalsky.Map;
@@ -21,7 +20,7 @@ namespace Core
         private void Awake() => _ = this;
 
         // Local variables
-        public bool mapChangeActive = false;
+        public bool mapChangeActive;
 
         // Init functions
         protected override void OnStart()
@@ -33,6 +32,10 @@ namespace Core
         {
             MapSystem.ResaveBuiltinMaps(new[] { "Brutalsky", "Doomring", "Tossup", "Void" });
             GenerateDefaultMaps();
+        }
+
+        protected override void OnLink()
+        {
             StartGame(MapSystem.GenerateId("Void", "Xveon"), new[]
             {
                 new BsPlayer("Player 1", 100f, new Color(1f, .5f, 0f)),
@@ -52,13 +55,13 @@ namespace Core
         public void StartRound(uint mapId)
         {
             CancelInvoke();
-            ChangeMap(mapId, true, 2f);
+            ChangeMap(mapId, true, 1.5f);
         }
 
         public void RestartRound()
         {
             CancelInvoke();
-            ChangeMap(MapSystem._.ActiveMap.Id, false, 2f);
+            ChangeMap(MapSystem._.ActiveMap.Id, false, 1f);
         }
 
         public void ChangeMap(uint mapId, bool moveCam, float animTime)
@@ -67,18 +70,17 @@ namespace Core
             var camCover = CameraSystem._.cCameraCover.gameObject;
             mapChangeActive = true;
             TimeSystem._.ForceUnpause();
-            camCover.LeanColor(MapSystem._.ActiveMap.BackgroundColor.MultiplyTint(.75f), animTime * .4f)
+            camCover.LeanColor(new Color(.2f, .2f, .2f), animTime * .4f)
                 .setEaseInOutCubic()
                 .setOnComplete(() =>
                 {
                     MapSystem._.SetAllPlayersFrozen(true);
                     MapSystem._.BuildMap(mapId);
                     MapSystem._.SpawnAllPlayers();
-                    camCover.LeanColor(MapSystem._.ActiveMap.BackgroundColor.MultiplyTint(.75f), animTime * .2f)
-                        .setOnComplete(() =>
+                    camCover.LeanDelayedCall(animTime * .2f, () =>
                         {
                             MapSystem._.SetAllPlayersFrozen(false);
-                            camCover.LeanColor(MapSystem._.ActiveMap.BackgroundColor.SetAlpha(0f).MultiplyTint(.75f), animTime * .4f)
+                            camCover.LeanColor(new Color(.2f, .2f, .2f, 0f), animTime * .4f)
                                 .setEaseInOutCubic()
                                 .setOnComplete(() =>
                                 {

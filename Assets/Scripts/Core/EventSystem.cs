@@ -17,6 +17,9 @@ namespace Core
         public InputActionAsset aInputAction;
 
         // Event functions
+        public void EmitMapPreload(BsMap map) => OnMapPreload?.Invoke(map);
+        public event Action<BsMap> OnMapPreload;
+
         public void EmitMapBuild(BsMap map) => OnMapBuild?.Invoke(map);
         public event Action<BsMap> OnMapBuild;
 

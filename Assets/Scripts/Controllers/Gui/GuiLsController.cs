@@ -23,6 +23,11 @@ namespace Controllers.Gui
         private VisualTreeAsset _eMapTileCell;
 
         // Init functions
+        protected override void OnStart()
+        {
+            EventSystem._.OnMapPreload += OnMapPreload;
+        }
+
         protected override void OnLoad()
         {
             _eMapTileCell = Resources.Load<VisualTreeAsset>("Gui/Elements/MapTile");
@@ -32,10 +37,6 @@ namespace Controllers.Gui
             {
                 GuiSystem._.DeactivatePane(PaneId);
             });
-            foreach (var map in MapSystem._.MapList.Values)
-            {
-                AddMapTile(map);
-            }
         }
 
         // Gui functions
@@ -144,6 +145,12 @@ namespace Controllers.Gui
             }
             painter.DrawPolygon(transformedPoints);
             painter.Fill(color);
+        }
+
+        // Event functions
+        private void OnMapPreload(BsMap map)
+        {
+            AddMapTile(map);
         }
     }
 }

@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
 using Utils.Constants;
+using Utils.Debug;
 using Utils.Ext;
 
 namespace Controllers.Player

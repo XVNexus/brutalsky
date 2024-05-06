@@ -12,6 +12,7 @@ using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using Utils.Constants;
+using Utils.Debug;
 using Utils.Object;
 
 namespace Core
@@ -30,7 +31,7 @@ namespace Core
         public const bool UseBinaryFormat = true;
 
         // Local variables
-        public Dictionary<uint, BsMap> MapList { get; private set; } = new();
+        public Dictionary<uint, string> MapList { get; private set; } = new();
         [CanBeNull] public BsMap ActiveMap { get; private set; }
         public Dictionary<string, BsPlayer> ActivePlayers { get; private set; } = new();
         [CanBeNull] public BsMatrix Matrix { get; private set; }
@@ -124,7 +125,8 @@ namespace Core
                 var mapFilename = Regex.Match(mapPath,
                     $@"\d+(?=\.({SaveFormatString}|{SaveFormatBinary}))").Value;
                 var map = LoadMap(mapFilename);
-                MapList[map.Id] = map;
+                EventSystem._.EmitMapPreload(map);
+                MapList[map.Id] = mapFilename;
             }
         }
 
@@ -182,7 +184,7 @@ namespace Core
 
         public void BuildMap(uint id)
         {
-            BuildMap(MapList[id]);
+            BuildMap(LoadMap(MapList[id]));
         }
 
         public void BuildMap([CanBeNull] BsMap map = null)

@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 
 namespace Utils.Debug
 {
@@ -19,6 +20,16 @@ namespace Utils.Debug
             end = DateTime.Now.Ticks;
             var duration = TimeSpan.FromTicks(end - start);
             UnityEngine.Debug.Log($"Operation '{name}' took {duration.Milliseconds} ms");
+        }
+
+        public static void Lag(int amount)
+        {
+            var x = 0f;
+            for (var i = 0; i < amount * 1000000; i++)
+            {
+                x += Mathf.PI;
+                x *= x;
+            }
         }
     }
 }
