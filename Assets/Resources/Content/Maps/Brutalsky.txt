@@ -43,11 +43,11 @@ $V16,1;i1
 #tsn;tspinner-sensor;T0,4,0;V10,10;b1
 %tbcfl;f50
 %tbcfl;f5000
-%tfmux;f2
+%tfmux;i2
 %tbcfl;f1
 %tbcfl;f-1
-%tmmul;f2
-%tmmul;f2
+%tmmul;i2
+%tmmul;i2
 ^i9;i0;i2;i0
 ^i0;i0;i2;i1
 ^i1;i0;i2;i2

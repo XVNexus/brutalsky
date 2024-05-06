@@ -27,5 +27,10 @@ namespace Utils.Object
         public ObjectTransform()
         {
         }
+
+        public override string ToString()
+        {
+            return $"({Position.x}, {Position.y}, {Rotation})";
+        }
     }
 }

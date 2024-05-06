@@ -1,3 +1,4 @@
+using System;
 using Controllers.Base;
 using Core;
 
@@ -16,6 +17,8 @@ namespace Controllers.Gui
             {
                 GuiSystem._.DeactivatePane(PaneId);
             });
+            GuiSystem._.RegisterButton(PaneId, "save", () => throw new NotImplementedException());
+            GuiSystem._.RegisterButton(PaneId, "rset", () => throw new NotImplementedException());
         }
     }
 }

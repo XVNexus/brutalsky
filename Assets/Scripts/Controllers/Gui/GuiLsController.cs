@@ -19,6 +19,9 @@ namespace Controllers.Gui
         // Gui metadata
         public const string PaneId = "ls";
 
+        // Local variables
+        private readonly List<string> _loadMapButtons = new();
+
         // External references
         private VisualTreeAsset _eMapTileCell;
 
@@ -26,6 +29,7 @@ namespace Controllers.Gui
         protected override void OnStart()
         {
             EventSystem._.OnMapPreload += OnMapPreload;
+            EventSystem._.OnMapsUnload += OnMapsUnload;
         }
 
         protected override void OnLoad()
@@ -36,6 +40,16 @@ namespace Controllers.Gui
             GuiSystem._.RegisterButton(PaneId, "back", () =>
             {
                 GuiSystem._.DeactivatePane(PaneId);
+            });
+            GuiSystem._.RegisterButton(PaneId, "reld", () =>
+            {
+                MapSystem._.LoadAllMapFiles();
+            });
+            GuiSystem._.RegisterButton(PaneId, "rest", () =>
+            {
+                if (GameManager._.mapChangeActive) return;
+                GameManager._.RestartRound();
+                GuiSystem._.EscapeAll();
             });
         }
 
@@ -52,7 +66,8 @@ namespace Controllers.Gui
 
             // Register load map button
             mapTileCell.Q<Label>("title").text = $"<b>{map.Title}</b>\n{map.Author}";
-            GuiSystem._.RegisterButton(mapTileCell.Q<Button>("button"), () =>
+            var itemId = $"load-{map.Id}";
+            GuiSystem._.RegisterButton(mapTileCell.Q<Button>("button"), PaneId, itemId, () =>
             {
                 if (GameManager._.mapChangeActive) return;
                 if (MapSystem._.MapLoaded && MapSystem._.ActiveMap.Id != map.Id)
@@ -65,6 +80,7 @@ namespace Controllers.Gui
                 }
                 GuiSystem._.EscapeAll();
             });
+            _loadMapButtons.Add(itemId);
 
             // Render map preview
             var preview = new GuiPainter(new Rect(map.PlayArea * -.5f, map.PlayArea), new Vector2(200f, 100f));
@@ -73,11 +89,24 @@ namespace Controllers.Gui
 
             // Add map tile to map picker view
             mapTileBox.Add(mapTileCell);
-            var container = GuiSystem._.GetPane(PaneId).Element.Q<VisualElement>("unity-content-container");
-            container.Add(mapTileBox);
+            var mapTileContainer = GuiSystem._.GetPane(PaneId).Element.Q<VisualElement>("unity-content-container");
+            mapTileContainer.Add(mapTileBox);
         }
 
-        public void PaintMapPreview(GuiPainter painter, BsMap map)
+        private void ClearMapTiles()
+        {
+            // Unregister all load map buttons
+            foreach (var itemId in _loadMapButtons)
+            {
+                GuiSystem._.UnregisterButton(PaneId, itemId);
+            }
+
+            // Remove the buttons from the ui
+            var mapTileContainer = GuiSystem._.GetPane(PaneId).Element.Q<VisualElement>("unity-content-container");
+            mapTileContainer.Clear();
+        }
+
+        private void PaintMapPreview(GuiPainter painter, BsMap map)
         {
             // Paint background and frame
             painter.AutoTransform = false;
@@ -128,7 +157,7 @@ namespace Controllers.Gui
             }
         }
 
-        public void PaintSpawnPreview(GuiPainter painter, Vector2 position)
+        private void PaintSpawnPreview(GuiPainter painter, Vector2 position)
         {
             painter.DrawCircle(position, .5f);
             painter.Fill(new Color(1f, 1f, 1f));
@@ -136,7 +165,7 @@ namespace Controllers.Gui
             painter.Stroke(new Color(1f, 1f, 1f, .1f), 2f);
         }
 
-        public void PaintObjectPreview(GuiPainter painter, ObjectTransform transform, Vector2[] points, Color color)
+        private void PaintObjectPreview(GuiPainter painter, ObjectTransform transform, Vector2[] points, Color color)
         {
             var transformedPoints = new Vector2[points.Length];
             for (var i = 0; i < points.Length; i++)
@@ -151,6 +180,11 @@ namespace Controllers.Gui
         private void OnMapPreload(BsMap map)
         {
             AddMapTile(map);
+        }
+
+        private void OnMapsUnload()
+        {
+            ClearMapTiles();
         }
     }
 }

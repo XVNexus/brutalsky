@@ -78,7 +78,7 @@ namespace Brutalsky.Base
             }
             catch (Exception ex)
             {
-                throw Errors.ErrorParsingLcsLine(line, ex.Message);
+                throw Errors.ErrorWhile("parsing LCS line", line, ex.Message);
             }
         }
     }

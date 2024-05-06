@@ -40,7 +40,7 @@ namespace Core
 
         protected override void OnLink()
         {
-            StartGame(MapSystem.GenerateId("Brutalsky", "Xveon"), new[]
+            InitGame(MapSystem.GenerateId("Brutalsky", "Xveon"), new[]
             {
                 new BsPlayer("Player 1", 100f, new Color(1f, .5f, 0f)),
                 new BsPlayer("Player 2", 100f, new Color(0f, .5f, 1f), true)
@@ -48,12 +48,17 @@ namespace Core
         }
 
         // System functions
-        public void StartGame(uint starterMapId, BsPlayer[] activePlayers)
+        public void InitGame(uint starterMapId, BsPlayer[] activePlayers)
         {
-            MapSystem._.ScanMapFiles();
+            MapSystem._.LoadAllMapFiles();
             MapSystem._.RegisterPlayers(activePlayers);
             MapSystem._.BuildMap(starterMapId);
             MapSystem._.SpawnAllPlayers();
+        }
+
+        public void ReloadData()
+        {
+            MapSystem._.LoadAllMapFiles();
         }
 
         public void StartRound(uint mapId)

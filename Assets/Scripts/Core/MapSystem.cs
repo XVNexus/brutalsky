@@ -114,9 +114,12 @@ namespace Core
             }
         }
 
-        public void ScanMapFiles()
+        public void LoadAllMapFiles()
         {
-            MapList.Clear();
+            if (MapList.Count > 0)
+            {
+                UnloadAllMapFiles();
+            }
             var path = $"{ResourceSystem.DataPath}/{Paths.Maps}";
             if (!Directory.Exists(path)) return;
             foreach (var mapPath in Directory.GetFiles(path))
@@ -129,32 +132,41 @@ namespace Core
             }
         }
 
+        public void UnloadAllMapFiles()
+        {
+            EventSystem._.EmitMapsUnload();
+            MapList.Clear();
+        }
+
         public static BsMap LoadMapAsset(string filename)
         {
             return BsMap.Parse(Resources.Load<TextAsset>($"{Paths.Content}/{Paths.Maps}/{filename}").text);
         }
 
-        public static BsMap LoadMap(string title, string author)
-        {
-            return LoadMap(GenerateId(title, author).ToString());
-        }
-
+        [CanBeNull]
         public static BsMap LoadMap(string filename)
         {
-            var pathBinary = $"{ResourceSystem.DataPath}/{Paths.Maps}/{filename}.{SaveFormatBinary}";
-            var pathString = $"{ResourceSystem.DataPath}/{Paths.Maps}/{filename}.{SaveFormatString}";
-            if (File.Exists(pathBinary))
+            try
             {
-                using var stream = new FileStream(pathBinary, FileMode.Open);
-                using var reader = new BinaryReader(stream);
-                return BsMap.Parse(reader.ReadBytes((int)stream.Length));
+                var pathBinary = $"{ResourceSystem.DataPath}/{Paths.Maps}/{filename}.{SaveFormatBinary}";
+                var pathString = $"{ResourceSystem.DataPath}/{Paths.Maps}/{filename}.{SaveFormatString}";
+                if (File.Exists(pathBinary))
+                {
+                    using var stream = new FileStream(pathBinary, FileMode.Open);
+                    using var reader = new BinaryReader(stream);
+                    return BsMap.Parse(reader.ReadBytes((int)stream.Length));
+                }
+                if (File.Exists(pathString))
+                {
+                    using var reader = new StreamReader(pathString);
+                    return BsMap.Parse(reader.ReadToEnd());
+                }
+                throw Errors.NoItemFound("map file", filename);
             }
-            if (File.Exists(pathString))
+            catch (Exception ex)
             {
-                using var reader = new StreamReader(pathString);
-                return BsMap.Parse(reader.ReadToEnd());
+                throw Errors.ErrorWhile("loading map", filename, ex.Message);
             }
-            throw Errors.NoItemFound("map file", filename);
         }
 
         public static void SaveMap(BsMap map)

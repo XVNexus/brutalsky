@@ -25,6 +25,7 @@ namespace Core
         private VisualElement _root;
         private readonly Dictionary<string, GuiPane> _panes = new();
         private readonly Dictionary<string, string> _parentRegistrationHold = new();
+        private readonly Dictionary<(string, string), (Button, Action)> _buttons = new();
 
         // External references
         public UIDocument cUIDocument;
@@ -142,12 +143,22 @@ namespace Core
 
         public void RegisterButton(string paneId, string itemId, Action onClick)
         {
-            RegisterButton(GetInputElement<Button>(paneId, itemId), onClick);
+            RegisterButton(GetInputElement<Button>(paneId, itemId), paneId, itemId, onClick);
         }
 
-        public void RegisterButton(Button button, Action onClick)
+        public void RegisterButton(Button button, string paneId, string itemId, Action onClick)
         {
             button.clicked += onClick;
+            _buttons[(paneId, itemId)] = (button, onClick);
+        }
+
+        public void UnregisterButton(string paneId, string itemId)
+        {
+            var key = (paneId, itemId);
+            if (!_buttons.ContainsKey(key)) return;
+            var button = _buttons[key];
+            button.Item1.clicked -= button.Item2;
+            _buttons.Remove(key);
         }
 
         public VisualElement GetPaneElement(string paneId)

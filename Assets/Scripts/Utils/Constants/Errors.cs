@@ -13,19 +13,22 @@ namespace Utils.Constants
         public static ArgumentOutOfRangeException NoItemFound(string type, object id)
             => new("", $"No {type} found with id '{id}'");
 
-        public static InvalidOperationException PortCountMismatch(int updateResultCount, int outputPortCount)
-            => new($"Cannot apply logic node update of length {updateResultCount} to output ports of length {outputPortCount}");
-
         public static ArgumentNullException BuildNullMap()
             => new("", "Cannot rebuild the map when no map is currently loaded");
 
-        public static ArgumentNullException JointMountShapeUnbuilt(BsJoint joint)
+        public static ArgumentNullException JointMountUnbuilt(BsJoint joint)
             => new(nameof(joint), "Cannot create a joint attached to an unbuilt shape");
+
+        public static InvalidOperationException PortCountMismatch(int updateResultCount, int outputPortCount)
+            => new($"Cannot apply logic node update of length {updateResultCount} to output ports of length {outputPortCount}");
 
         public static InvalidDataException EmptyLcsDocument()
             => new("Cannot parse an empty LCS document");
 
-        public static InvalidDataException ErrorParsingLcsLine(LcsLine line, string message)
-            => new($"Error while parsing LCS line '{line.Stringify().Trim()}': {message}");
+        public static InvalidOperationException ErrorWhile(string action, string message)
+            => new($"Error while {action}: {message}");
+
+        public static InvalidDataException ErrorWhile(string action, object context, string message)
+            => new($"Error while {action} '{context}': {message}");
     }
 }

@@ -55,9 +55,9 @@
     border-bottom-right-radius: 20px;
     border-bottom-left-radius: 20px;
     border-top-color: rgb(26, 26, 26);
-    border-bottom-color: rgba(0, 0, 0, 0.5);
-    border-right-color: rgba(0, 0, 0, 0.1);
-    border-left-color: rgba(0, 0, 0, 0.1);
+    border-bottom-color: rgba(0, 0, 0, 0.3);
+    border-right-color: rgba(0, 0, 0, 0.2);
+    border-left-color: rgba(0, 0, 0, 0.2);
 }
 
 .bs-title {

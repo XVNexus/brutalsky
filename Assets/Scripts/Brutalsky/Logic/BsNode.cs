@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using Core;
 using UnityEngine;
 using Utils.Constants;
 using Utils.Lcs;
@@ -10,7 +11,7 @@ namespace Brutalsky.Logic
     public class BsNode
     {
         public string Tag { get; set; }
-        public float[] Config { get; }
+        public LcsProp[] Config { get; }
         public float[] Inputs { get; set; }
         public float[] Outputs { get; private set; }
         private float[] _state = Array.Empty<float>();
@@ -20,7 +21,7 @@ namespace Brutalsky.Logic
         private readonly Func<float[], float[], float[]> _update;
 
         public BsNode(string tag, float[] defaultInputs, float[] defaultOutputs,
-            Func<float[]> init, Func<float[], float[], float[]> update, params float[] config)
+            Func<float[]> init, Func<float[], float[], float[]> update, params LcsProp[] config)
         {
             Tag = tag;
             _defaultInputs = defaultInputs;
@@ -31,7 +32,7 @@ namespace Brutalsky.Logic
         }
 
         public BsNode(float[] defaultInputs, float[] defaultOutputs,
-            Func<float[]> init, Func<float[], float[], float[]> update, params float[] config)
+            Func<float[]> init, Func<float[], float[], float[]> update, params LcsProp[] config)
         {
             _defaultInputs = defaultInputs;
             _defaultOutputs = defaultOutputs;
@@ -41,7 +42,7 @@ namespace Brutalsky.Logic
         }
 
         public BsNode(string tag, float[] defaultInputs, float[] defaultOutputs,
-            Func<float[], float[], float[]> update, params float[] config)
+            Func<float[], float[], float[]> update, params LcsProp[] config)
         {
             Tag = tag;
             _defaultInputs = defaultInputs;
@@ -51,7 +52,7 @@ namespace Brutalsky.Logic
         }
 
         public BsNode(float[] defaultInputs, float[] defaultOutputs,
-            Func<float[], float[], float[]> update, params float[] config)
+            Func<float[], float[], float[]> update, params LcsProp[] config)
         {
             _defaultInputs = defaultInputs;
             _defaultOutputs = defaultOutputs;
@@ -91,20 +92,20 @@ namespace Brutalsky.Logic
         {
             var logicValue = BsMatrix.ToLogic(value);
             return new BsNode("bcbl", Array.Empty<float>(), new[] { logicValue },
-                (_, _) => new[] { logicValue }, logicValue);
+                (_, _) => new[] { logicValue }, new LcsProp(LcsType.Bool, value));
         }
 
         public static BsNode ConstantInt(int value)
         {
             var logicValue = BsMatrix.ToLogic(value);
             return new BsNode("bcin", Array.Empty<float>(), new[] { logicValue },
-                (_, _) => new[] { logicValue }, logicValue);
+                (_, _) => new[] { logicValue }, new LcsProp(LcsType.Int, value));
         }
 
         public static BsNode ConstantFloat(float value)
         {
             return new BsNode("bcfl", Array.Empty<float>(), new[] { value },
-                (_, _) => new[] { value }, value);
+                (_, _) => new[] { value }, new LcsProp(LcsType.Float, value));
         }
 
         public static BsNode RandomBool()
@@ -130,7 +131,7 @@ namespace Brutalsky.Logic
                         state[0] = BsMatrix.ToLogic(Random.Range(BsMatrix.ToInt(inputs[1]), BsMatrix.ToInt(inputs[2]) + 1));
                     }
                     return new[] { state[0] };
-                }, min, max);
+                }, new LcsProp(LcsType.Int, min), new LcsProp(LcsType.Int, max));
         }
 
         public static BsNode RandomFloat(float min, float max)
@@ -143,18 +144,7 @@ namespace Brutalsky.Logic
                         state[0] = Random.Range(inputs[1], inputs[2]);
                     }
                     return new[] { state[0] };
-                }, min, max);
-        }
-
-        public static BsNode MemoryCell()
-        {
-            return new BsNode("bmem", new float[2], new float[1],
-                () => new float[1], (inputs, state) =>
-                {
-                    if (!BsMatrix.ToBool(inputs[1])) return new[] { state[0] };
-                    state[0] = inputs[0];
-                    return new[] { state[0] };
-                });
+                }, new LcsProp(LcsType.Float, min), new LcsProp(LcsType.Float, max));
         }
 
         // Flow nodes
@@ -164,6 +154,17 @@ namespace Brutalsky.Logic
                 () => new[] { Time.timeSinceLevelLoad }, (_, state) =>
                 {
                     return new[] { Time.timeSinceLevelLoad - state[0] };
+                });
+        }
+
+        public static BsNode MemoryCell()
+        {
+            return new BsNode("fmem", new float[2], new float[1],
+                () => new float[1], (inputs, state) =>
+                {
+                    if (!BsMatrix.ToBool(inputs[1])) return new[] { state[0] };
+                    state[0] = inputs[0];
+                    return new[] { state[0] };
                 });
         }
 
@@ -178,7 +179,7 @@ namespace Brutalsky.Logic
                     }
                     state[0] = inputs[0];
                     return new[] { state[^1] };
-                }, time);
+                }, new LcsProp(LcsType.Int, time));
         }
 
         public static BsNode Clock(int interval)
@@ -195,7 +196,7 @@ namespace Brutalsky.Logic
                     counter++;
                     state[0] = BsMatrix.ToLogic(counter);
                     return new[] { state[1] };
-                }, interval);
+                }, new LcsProp(LcsType.Int, interval));
         }
 
         public static BsNode ChangeListener()
@@ -214,7 +215,7 @@ namespace Brutalsky.Logic
             return new BsNode("fmux", new float[inputCount + 1], new float[1], (inputs, _) =>
             {
                 return new[] { inputs[BsMatrix.ToInt(inputs[0]) + 1] };
-            }, inputCount);
+            }, new LcsProp(LcsType.Int, inputCount));
         }
 
         public static BsNode Demultiplexer(int outputCount)
@@ -224,7 +225,7 @@ namespace Brutalsky.Logic
                 var result = new float[outputCount];
                 result[BsMatrix.ToInt(inputs[0])] = inputs[1];
                 return result;
-            }, outputCount);
+            }, new LcsProp(LcsType.Int, outputCount));
         }
 
         // Logic nodes
@@ -249,7 +250,7 @@ namespace Brutalsky.Logic
             return new BsNode("land", new float[inputCount], new float[1], (inputs, _) =>
             {
                 return new[] { BsMatrix.ToLogic(inputs.Aggregate(true, (current, input) => current & BsMatrix.ToBool(input))) };
-            }, inputCount);
+            }, new LcsProp(LcsType.Int, inputCount));
         }
 
         public static BsNode Or(int inputCount)
@@ -257,7 +258,7 @@ namespace Brutalsky.Logic
             return new BsNode("lgor", new float[inputCount], new float[1], (inputs, _) =>
             {
                 return new[] { BsMatrix.ToLogic(inputs.Aggregate(false, (current, input) => current | BsMatrix.ToBool(input))) };
-            },inputCount);
+            }, new LcsProp(LcsType.Int, inputCount));
         }
 
         public static BsNode Xor(int inputCount)
@@ -265,7 +266,7 @@ namespace Brutalsky.Logic
             return new BsNode("lxor", new float[inputCount], new float[1], (inputs, _) =>
             {
                 return new[] { BsMatrix.ToLogic(inputs.Aggregate(false, (current, input) => current ^ BsMatrix.ToBool(input))) };
-            }, inputCount);
+            }, new LcsProp(LcsType.Int, inputCount));
         }
 
         public static BsNode Nand(int inputCount)
@@ -273,7 +274,7 @@ namespace Brutalsky.Logic
             return new BsNode("lnan", new float[inputCount], new float[1], (inputs, _) =>
             {
                 return new[] { BsMatrix.ToLogic(!inputs.Aggregate(true, (current, input) => current & BsMatrix.ToBool(input))) };
-            }, inputCount);
+            }, new LcsProp(LcsType.Int, inputCount));
         }
 
         public static BsNode Nor(int inputCount)
@@ -281,7 +282,7 @@ namespace Brutalsky.Logic
             return new BsNode("lnor", new float[inputCount], new float[1], (inputs, _) =>
             {
                 return new[] { BsMatrix.ToLogic(!inputs.Aggregate(false, (current, input) => current | BsMatrix.ToBool(input))) };
-            }, inputCount);
+            }, new LcsProp(LcsType.Int, inputCount));
         }
 
         public static BsNode Xnor(int inputCount)
@@ -289,7 +290,7 @@ namespace Brutalsky.Logic
             return new BsNode("lxnr", new float[inputCount], new float[1], (inputs, _) =>
             {
                 return new[] { BsMatrix.ToLogic(!inputs.Aggregate(false, (current, input) => current ^ BsMatrix.ToBool(input))) };
-            }, inputCount);
+            }, new LcsProp(LcsType.Int, inputCount));
         }
 
         // Math nodes
@@ -298,7 +299,7 @@ namespace Brutalsky.Logic
             return new BsNode("madd", new float[inputCount], new float[1], (inputs, _) =>
             {
                 return new[] { inputs.Sum() };
-            }, inputCount);
+            }, new LcsProp(LcsType.Int, inputCount));
         }
 
         public static BsNode Subtract(int inputCount)
@@ -306,7 +307,7 @@ namespace Brutalsky.Logic
             return new BsNode("msub", new float[inputCount], new float[1], (inputs, _) =>
             {
                 return new[] { inputs.Aggregate(0f, (current, input) => current - input) };
-            }, inputCount);
+            }, new LcsProp(LcsType.Int, inputCount));
         }
 
         public static BsNode Multiply(int inputCount)
@@ -314,7 +315,7 @@ namespace Brutalsky.Logic
             return new BsNode("mmul", new float[inputCount], new float[1], (inputs, _) =>
             {
                 return new[] { inputs.Aggregate(1f, (current, input) => current * input) };
-            }, inputCount);
+            }, new LcsProp(LcsType.Int, inputCount));
         }
 
         public static BsNode Divide(int inputCount)
@@ -322,7 +323,7 @@ namespace Brutalsky.Logic
             return new BsNode("mdiv", new float[inputCount], new float[1], (inputs, _) =>
             {
                 return new[] { inputs.Aggregate(1f, (current, input) => current / input) };
-            }, inputCount);
+            }, new LcsProp(LcsType.Int, inputCount));
         }
 
         public static BsNode Pow()
@@ -389,13 +390,26 @@ namespace Brutalsky.Logic
             });
         }
 
+        // System nodes
+        public static BsNode Redirect(string title, string author)
+        {
+            return new BsNode("srdr", new float[1], Array.Empty<float>(), (inputs, _) =>
+            {
+                if (BsMatrix.ToBool(inputs[0]))
+                {
+                    GameManager._.StartRound(MapSystem.GenerateId(title, author));
+                }
+                return Array.Empty<float>();
+            }, new LcsProp(LcsType.String, title), new LcsProp(LcsType.String, author));
+        }
+
         public LcsLine ToLcs()
         {
             var props = new LcsProp[Config.Length + 1];
             props[0] = new LcsProp(LcsType.String, Tag);
             for (var i = 0; i < Config.Length; i++)
             {
-                props[i + 1] = new LcsProp(LcsType.Float, Config[i]);
+                props[i + 1] = Config[i];
             }
             return new LcsLine('%', props);
         }
@@ -403,42 +417,37 @@ namespace Brutalsky.Logic
         public static BsNode FromLcs(LcsLine line)
         {
             var tag = (string)line.Props[0].Value;
-            var config = new float[line.Props.Length - 1];
-            for (var i = 1; i < line.Props.Length; i++)
-            {
-                config[i - 1] = (float)line.Props[i].Value;
-            }
             return tag switch
             {
                 // Basic nodes
-                "bcbl" => ConstantBool(BsMatrix.ToBool(config[0])),
-                "bcin" => ConstantInt(BsMatrix.ToInt(config[0])),
-                "bcfl" => ConstantFloat(config[0]),
+                "bcbl" => ConstantBool((bool)line.Props[1].Value),
+                "bcin" => ConstantInt((int)line.Props[1].Value),
+                "bcfl" => ConstantFloat((float)line.Props[1].Value),
                 "brbl" => RandomBool(),
-                "brin" => RandomInt(BsMatrix.ToInt(config[0]), BsMatrix.ToInt(config[1])),
-                "brfl" => RandomFloat(config[0], config[1]),
-                "bmem" => MemoryCell(),
+                "brin" => RandomInt((int)line.Props[1].Value, (int)line.Props[2].Value),
+                "brfl" => RandomFloat((float)line.Props[1].Value, (float)line.Props[2].Value),
                 // Flow nodes
                 "ftmr" => GameTime(),
-                "fdly" => Delayer(BsMatrix.ToInt(config[0])),
-                "fclk" => Clock(BsMatrix.ToInt(config[0])),
+                "fmem" => MemoryCell(),
+                "fdly" => Delayer((int)line.Props[1].Value),
+                "fclk" => Clock((int)line.Props[1].Value),
                 "fchl" => ChangeListener(),
-                "fmux" => Multiplexer(BsMatrix.ToInt(config[0])),
-                "fdmx" => Demultiplexer(BsMatrix.ToInt(config[0])),
+                "fmux" => Multiplexer((int)line.Props[1].Value),
+                "fdmx" => Demultiplexer((int)line.Props[1].Value),
                 // Logic nodes
                 "lbuf" => Buffer(),
                 "lnot" => Not(),
-                "land" => And(BsMatrix.ToInt(config[0])),
-                "lgor" => Or(BsMatrix.ToInt(config[0])),
-                "lxor" => Xor(BsMatrix.ToInt(config[0])),
-                "lnan" => Nand(BsMatrix.ToInt(config[0])),
-                "lnor" => Nor(BsMatrix.ToInt(config[0])),
-                "lxnr" => Xnor(BsMatrix.ToInt(config[0])),
+                "land" => And((int)line.Props[1].Value),
+                "lgor" => Or((int)line.Props[1].Value),
+                "lxor" => Xor((int)line.Props[1].Value),
+                "lnan" => Nand((int)line.Props[1].Value),
+                "lnor" => Nor((int)line.Props[1].Value),
+                "lxnr" => Xnor((int)line.Props[1].Value),
                 // Math nodes
-                "madd" => Add(BsMatrix.ToInt(config[0])),
-                "msub" => Subtract(BsMatrix.ToInt(config[0])),
-                "mmul" => Multiply(BsMatrix.ToInt(config[0])),
-                "mdiv" => Divide(BsMatrix.ToInt(config[0])),
+                "madd" => Add((int)line.Props[1].Value),
+                "msub" => Subtract((int)line.Props[1].Value),
+                "mmul" => Multiply((int)line.Props[1].Value),
+                "mdiv" => Divide((int)line.Props[1].Value),
                 "mpow" => Pow(),
                 "mrot" => Root(),
                 "msin" => Sin(),
@@ -447,6 +456,8 @@ namespace Brutalsky.Logic
                 "masn" => Asin(),
                 "macs" => Acos(),
                 "matn" => Atan(),
+                // System nodes
+                "srdr" => Redirect((string)line.Props[1].Value, (string)line.Props[2].Value),
                 _ => throw Errors.InvalidItem("node tag", tag)
             };
         }

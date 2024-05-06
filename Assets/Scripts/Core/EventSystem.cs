@@ -20,6 +20,9 @@ namespace Core
         public void EmitMapPreload(BsMap map) => OnMapPreload?.Invoke(map);
         public event Action<BsMap> OnMapPreload;
 
+        public void EmitMapsUnload() => OnMapsUnload?.Invoke();
+        public event Action OnMapsUnload;
+
         public void EmitMapBuild(BsMap map) => OnMapBuild?.Invoke(map);
         public event Action<BsMap> OnMapBuild;
 

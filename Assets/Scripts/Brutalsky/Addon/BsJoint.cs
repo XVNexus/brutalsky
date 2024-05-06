@@ -168,7 +168,7 @@ namespace Brutalsky.Addon
                 var mountShape = map.GetObject<BsShape>(Tags.ShapeLTag, MountShape);
                 if (mountShape.InstanceObject == null)
                 {
-                    throw Errors.JointMountShapeUnbuilt(this);
+                    throw Errors.JointMountUnbuilt(this);
                 }
                 component.connectedBody = mountShape.InstanceObject.GetComponent<Rigidbody2D>();
                 component.connectedAnchor = parentObject.Transform.Position - mountShape.Transform.Position;

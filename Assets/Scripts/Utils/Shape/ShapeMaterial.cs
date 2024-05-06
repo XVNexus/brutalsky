@@ -42,5 +42,10 @@ namespace Utils.Shape
                 health ?? Health
             );
         }
+
+        public override string ToString()
+        {
+            return $"[F:{Friction}, R:{Restitution}, A:{Adhesion}, D:{Density}, H:{Health}]";
+        }
     }
 }

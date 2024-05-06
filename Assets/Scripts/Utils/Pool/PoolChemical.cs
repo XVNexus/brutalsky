@@ -32,5 +32,10 @@ namespace Utils.Pool
                 health ?? Health
             );
         }
+
+        public override string ToString()
+        {
+            return $"[B:{Buoyancy}, V:{Viscosity}, H:{Health}]";
+        }
     }
 }
