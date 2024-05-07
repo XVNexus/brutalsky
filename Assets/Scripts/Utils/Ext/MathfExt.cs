@@ -76,11 +76,24 @@ namespace Utils.Ext
         }
 
         // Tween tools
-        public static float MoveTo(float from, float to, float step)
+        public static Vector2 MoveToLinear(Vector2 from, Vector2 to, float step)
         {
-            return from < to ? Mathf.Min(from + step, to)
-                : from > to ? Mathf.Max(from - step, to)
-                : from;
+            return new Vector2(MoveToLinear(from.x, to.x, step), MoveToLinear(from.y, to.y, step));
+        }
+
+        public static Vector2 MoveToExponential(Vector2 from, Vector2 to, float factor)
+        {
+            return new Vector2(MoveToExponential(from.x, to.x, factor), MoveToExponential(from.y, to.y, factor));
+        }
+
+        public static float MoveToLinear(float from, float to, float step)
+        {
+            return from < to ? Mathf.Min(from + step, to) : from > to ? Mathf.Max(from - step, to) : from;
+        }
+
+        public static float MoveToExponential(float from, float to, float factor)
+        {
+            return from + (to - from) * factor;
         }
 
         public static Vector2 Lerp(Vector2 a, Vector2 b, float t)
@@ -96,7 +109,7 @@ namespace Utils.Ext
 
         public static Vector2 Mean(Vector2 a, Vector2 b)
         {
-            return new Vector2(Mean(a.x, b.x), Mean(a.y, b.y));
+            return (a + b) * .5f;
         }
 
         public static float WeightedMean(float a, float aWeight, float b, float bWeight)
@@ -106,8 +119,7 @@ namespace Utils.Ext
 
         public static Vector2 WeightedMean(Vector2 a, float aWeight, Vector2 b, float bWeight)
         {
-            return new Vector2(WeightedMean(a.x, aWeight, b.x, bWeight),
-                WeightedMean(a.y, aWeight, b.y, bWeight));
+            return (a * aWeight + b * bWeight) / (aWeight + bWeight);
         }
 
         // Advanced tools

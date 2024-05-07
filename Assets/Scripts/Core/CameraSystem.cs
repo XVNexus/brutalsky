@@ -19,9 +19,11 @@ namespace Core
         public float shoveDampening;
         public float shakeInterval;
         public float simSpeed;
-        public float followRectMargin;
+        public float followPositionSmoothing;
+        public float followSizeSmoothing;
+        public float followRectScale;
         public Vector2 minFollowRectSize;
-        public float minViewSizeForFollow;
+        public float minFollowViewSize;
 
         // Exposed properties
         public Rect BaseRect { get; private set; } = new(-20f, -10f, 40f, 20f);
@@ -97,7 +99,7 @@ namespace Core
         public void SetBaseRect(Rect baseRect)
         {
             BaseRect = baseRect;
-            _enableFollow = baseRect.size.magnitude > minViewSizeForFollow;
+            _enableFollow = baseRect.size.magnitude > minFollowViewSize;
             SetViewRect(baseRect);
         }
 
@@ -105,6 +107,12 @@ namespace Core
         {
             ViewPosition = viewRect.center;
             ViewSize = viewRect.size;
+        }
+
+        public void SetViewRectSmooth(Rect viewRect, float positionFactor, float sizeFactor)
+        {
+            ViewPosition = MathfExt.MoveToExponential(ViewPosition, viewRect.center, positionFactor);
+            ViewSize = MathfExt.MoveToExponential(ViewSize, viewRect.size, sizeFactor);
         }
 
         // Event functions
@@ -120,22 +128,6 @@ namespace Core
 
         private void FixedUpdate()
         {
-            // Focus on follow targets
-            if (_enableFollow && _isFollowing)
-            {
-                var followPositions = FollowTargets.Values.Select(transform => transform.position).ToArray();
-                var min = followPositions[0];
-                var max = followPositions[0];
-                for (var i = 1; i < FollowTargets.Count; i++)
-                {
-                    var target = followPositions[i];
-                    min = MathfExt.Min(target, min);
-                    max = MathfExt.Max(target, max);
-                }
-                var followRect = new Rect(min, max - min).Expand(followRectMargin);
-                SetViewRect(followRect.Resize(MathfExt.Max(followRect.size, minFollowRectSize)));
-            }
-
             // Convert shake to shove
             _shakeTimer += Time.fixedDeltaTime;
             if (_shakeTimer >= shakeInterval)
@@ -156,6 +148,31 @@ namespace Core
             var newPosition = ViewPosition + _shoveOffset * _cCamera.orthographicSize;
             cameraTransform.localPosition = new Vector3(newPosition.x, newPosition.y, cameraTransform.localPosition.z);
             _cCamera.orthographicSize = ViewSize.ForceAspect(_cCamera.aspect).y * .5f;
+
+            // Focus on follow targets
+            if (!_enableFollow) return;
+            Rect targetRect;
+            if (_isFollowing)
+            {
+                var followPositions = FollowTargets.Values.Select(transform => (Vector2)transform.position).ToArray();
+                var min = followPositions[0];
+                var max = followPositions[0];
+                for (var i = 1; i < FollowTargets.Count; i++)
+                {
+                    var target = followPositions[i];
+                    min = MathfExt.Min(target, min);
+                    max = MathfExt.Max(target, max);
+                }
+                var followPosition = MathfExt.Mean(min, max);
+                var followSize = Vector2.one * ((max - min).magnitude * followRectScale);
+                targetRect = new Rect(followPosition, Vector2.zero).Resize(MathfExt.Max(followSize, minFollowRectSize));
+            }
+            else
+            {
+                targetRect = BaseRect;
+            }
+            SetViewRectSmooth(targetRect,
+                followPositionSmoothing * Time.fixedDeltaTime, followSizeSmoothing * Time.fixedDeltaTime);
         }
     }
 }

@@ -84,9 +84,9 @@ namespace Controllers.Player
             }
 
             // Transition current ring properties to calculated target properties
-            _ringThickness = MathfExt.MoveTo(_ringThickness, targetRingThickness, Time.deltaTime);
-            _ringAlpha = MathfExt.MoveTo(_ringAlpha, targetRingAlpha, Time.deltaTime);
-            _ringSpin = MathfExt.MoveTo(_ringSpin, targetRingSpin, 1440f * Time.deltaTime);
+            _ringThickness = MathfExt.MoveToLinear(_ringThickness, targetRingThickness, Time.deltaTime);
+            _ringAlpha = MathfExt.MoveToLinear(_ringAlpha, targetRingAlpha, Time.deltaTime);
+            _ringSpin = MathfExt.MoveToLinear(_ringSpin, targetRingSpin, 1440f * Time.deltaTime);
 
             // Apply current ring properties
             var ringMaskScale = 1.8f - _ringThickness * .6f;

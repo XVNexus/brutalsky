@@ -954,9 +954,11 @@ MonoBehaviour:
   shoveDampening: 0.3
   shakeInterval: 0.1
   simSpeed: 20
-  followRectMargin: 5
-  minFollowRectSize: {x: 30, y: 20}
-  minViewSizeForFollow: 50
+  followPositionSmoothing: 10
+  followSizeSmoothing: 2
+  followRectScale: 1.5
+  minFollowRectSize: {x: 25, y: 25}
+  minFollowViewSize: 50
   gCameraMount: {fileID: 223431134}
   cCameraCover: {fileID: 1875631436}
 --- !u!114 &581734019
