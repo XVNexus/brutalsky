@@ -39,6 +39,11 @@ namespace Controllers.Player
             health = maxHealth;
         }
 
+        private void OnDestroy()
+        {
+            EventSystem._.OnPlayerSpawn -= OnPlayerSpawn;
+        }
+
         // Module functions
         public void Heal(float amount)
         {
@@ -79,7 +84,7 @@ namespace Controllers.Player
         }
 
         // Event functions
-        private void OnPlayerSpawn(BsMap map, BsPlayer player)
+        private void OnPlayerSpawn(BsMap map, BsPlayer player, Vector2 position)
         {
             if (player.Id != Master.Object.Id) return;
             maxHealth = player.Health;

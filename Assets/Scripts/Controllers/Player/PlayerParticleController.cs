@@ -1,3 +1,4 @@
+using System;
 using Brutalsky;
 using Brutalsky.Object;
 using Controllers.Base;
@@ -61,6 +62,12 @@ namespace Controllers.Player
             {
                 cParticleSystem.GetComponent<Renderer>().material.color = _cSpriteRenderer.color;
             }
+        }
+
+        private void OnDestroy()
+        {
+            EventSystem._.OnPlayerSpawn -= OnPlayerSpawn;
+            EventSystem._.OnPlayerDie -= OnPlayerDie;
         }
 
         protected override void OnLink()
@@ -129,7 +136,7 @@ namespace Controllers.Player
         }
 
         // Event functions
-        private void OnPlayerSpawn(BsMap map, BsPlayer player)
+        private void OnPlayerSpawn(BsMap map, BsPlayer player, Vector2 position)
         {
             if (player.Id != Master.Object.Id) return;
             foreach (var cParticleSystem in _cAllParticleSystems)

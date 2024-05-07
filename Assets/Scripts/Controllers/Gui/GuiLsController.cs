@@ -32,6 +32,12 @@ namespace Controllers.Gui
             EventSystem._.OnMapsUnload += OnMapsUnload;
         }
 
+        private void OnDestroy()
+        {
+            EventSystem._.OnMapPreload -= OnMapPreload;
+            EventSystem._.OnMapsUnload -= OnMapsUnload;
+        }
+
         protected override void OnLoad()
         {
             _eMapTileCell = Resources.Load<VisualTreeAsset>("Gui/Elements/MapTile");

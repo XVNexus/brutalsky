@@ -27,13 +27,18 @@ namespace Controllers.Player
             EventSystem._.OnPlayerSpawn += OnPlayerSpawn;
         }
 
+        private void OnDestroy()
+        {
+            EventSystem._.OnPlayerSpawn -= OnPlayerSpawn;
+        }
+
         protected override void OnLink()
         {
             _mHealth = Master.GetSub<PlayerHealthController>("health");
         }
 
         // Event functions
-        private void OnPlayerSpawn(BsMap map, BsPlayer player)
+        private void OnPlayerSpawn(BsMap map, BsPlayer player, Vector2 position)
         {
             if (player.Id != Master.Object.Id) return;
             _lastHealth = -1f;

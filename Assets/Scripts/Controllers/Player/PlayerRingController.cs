@@ -42,6 +42,11 @@ namespace Controllers.Player
             cRingSpriteRenderer.color = _cPlayerSpriteRenderer.color;
         }
 
+        private void OnDestroy()
+        {
+            EventSystem._.OnPlayerSpawn -= OnPlayerSpawn;
+        }
+
         protected override void OnLink()
         {
             _mMovement = Master.GetSub<PlayerMovementController>("movement");
@@ -49,7 +54,7 @@ namespace Controllers.Player
         }
 
         // Event functions
-        private void OnPlayerSpawn(BsMap map, BsPlayer player)
+        private void OnPlayerSpawn(BsMap map, BsPlayer player, Vector2 position)
         {
             if (player.Id != Master.Object.Id) return;
             _ringAlpha = 0f;

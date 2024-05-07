@@ -78,25 +78,14 @@ namespace Core
         public void SpawnPlayer(BsPlayer player)
         {
             player.Health = ActiveMap.PlayerHealth;
-            player.InstanceObject.transform.localPosition = ActiveMap.SelectSpawn();
-            EventSystem._.EmitPlayerSpawn(ActiveMap, player);
+            var position = ActiveMap.SelectSpawn();
+            player.InstanceObject.transform.localPosition = position;
+            EventSystem._.EmitPlayerSpawn(ActiveMap, player, position);
         }
 
-        public void SetAllPlayersLocked(bool locked, bool resetVelocity = false)
+        public bool GetPlayerFrozen(GameObject playerInstanceObject)
         {
-            foreach (var player in ActivePlayers.Values)
-            {
-                SetPlayerLocked(player.InstanceObject, locked, resetVelocity);
-            }
-        }
-
-        public void SetPlayerLocked(GameObject playerInstanceObject, bool locked, bool resetVelocity = false)
-        {
-            var rigidbody = playerInstanceObject.GetComponent<Rigidbody2D>();
-            rigidbody.bodyType = locked ? RigidbodyType2D.Kinematic : RigidbodyType2D.Dynamic;
-            if (!resetVelocity) return;
-            rigidbody.velocity = Vector2.zero;
-            rigidbody.angularVelocity = 0f;
+            return !playerInstanceObject.GetComponent<Rigidbody2D>().simulated;
         }
 
         public void SetAllPlayersFrozen(bool frozen, bool resetVelocity = false)
@@ -325,6 +314,9 @@ namespace Core
         {
             // Make sure there is an active map to unbuild
             if (!MapLoaded) return;
+
+            // Give everything a chance to remove any trash that might get left behind
+            EventSystem._.EmitMapCleanup(ActiveMap);
 
             // Delete all objects and destroy the map container
             foreach (var obj in ActiveMap.Objects.Values)

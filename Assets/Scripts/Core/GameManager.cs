@@ -17,7 +17,7 @@ namespace Core
         private void Awake() => _ = this;
 
         // Local constants
-        public bool RegenerateMaps = false;
+        public const bool RegenerateMaps = false;
 
         // Local variables
         public bool mapChangeActive;
@@ -26,6 +26,11 @@ namespace Core
         protected override void OnStart()
         {
             EventSystem._.OnPlayerDie += OnPlayerDie;
+        }
+
+        private void OnDestroy()
+        {
+            EventSystem._.OnPlayerDie -= OnPlayerDie;
         }
 
         protected override void OnLoad()

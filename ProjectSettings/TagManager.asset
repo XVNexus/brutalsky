@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Shape
   - Pool
+  - Sensor
+  - Mount
   layers:
   - Default
   - TransparentFX

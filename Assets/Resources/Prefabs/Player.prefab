@@ -19,7 +19,7 @@ GameObject:
   - component: {fileID: 3399184115846437671}
   - component: {fileID: 7684857053292564534}
   - component: {fileID: 4554995576766166513}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -115,7 +115,7 @@ CircleCollider2D:
   m_Material: {fileID: 6200000, guid: f5804d60985b1ab65b65e4ce4b78161a, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 9
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -189,6 +189,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2948e0f78c944385bafe832cacdb07bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  autoSendInput: 1
   movementInput: {x: 0, y: 0}
   boostInput: 0
 --- !u!114 &6636566231499246727

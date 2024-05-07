@@ -47,8 +47,8 @@ namespace Controllers.Player
         // Init functions
         protected override void OnInit()
         {
-            EventSystem._.OnMapBuild += OnMapBuild;
             EventSystem._.OnPlayerSpawn += OnPlayerSpawn;
+            EventSystem._.OnMapBuild += OnMapBuild;
 
             _cRigidbody2D = GetComponent<Rigidbody2D>();
 
@@ -57,6 +57,12 @@ namespace Controllers.Player
 
             // Force scanning map settings
             OnMapBuild(MapSystem._.ActiveMap);
+        }
+
+        private void OnDestroy()
+        {
+            EventSystem._.OnPlayerSpawn -= OnPlayerSpawn;
+            EventSystem._.OnMapBuild -= OnMapBuild;
         }
 
         // System functions
@@ -104,7 +110,7 @@ namespace Controllers.Player
             };
         }
 
-        private void OnPlayerSpawn(BsMap map, BsPlayer player)
+        private void OnPlayerSpawn(BsMap map, BsPlayer player, Vector2 position)
         {
             if (player.Id != Master.Object.Id) return;
             _cRigidbody2D.velocity = Vector2.zero;
