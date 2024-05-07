@@ -29,7 +29,7 @@ namespace Core
         public const string SaveFormatBinary = "lcb";
         public const bool UseBinaryFormat = true;
 
-        // Local variables
+        // Exposed properties
         public Dictionary<uint, string> MapList { get; private set; } = new();
         [CanBeNull] public BsMap ActiveMap { get; private set; }
         public Dictionary<string, BsPlayer> ActivePlayers { get; private set; } = new();
@@ -235,13 +235,14 @@ namespace Core
             MapLoaded = true;
 
             // Apply config
-            CameraSystem._.ResizeView(map.PlayArea);
+            CameraSystem._.Resize(map.PlayArea);
             var backgroundColor = map.BackgroundColor;
-            var halfArea = map.PlayArea * .5f;
+            var halfArea = map.PlayArea.size * .5f;
             const float halfFade = BackgroundFade * .5f;
             const float halfField = BackgroundField * .5f;
+            gBackgroundMain.transform.parent.localPosition = map.PlayArea.center;
             gBackgroundMain.color = backgroundColor;
-            gBackgroundMain.transform.localScale = map.PlayArea;
+            gBackgroundMain.transform.localScale = map.PlayArea.size;
             for (var i = 0; i < 8; i++)
             {
                 var gBackgroundEdge = gBackgroundEdges[i];
@@ -256,8 +257,8 @@ namespace Core
                 };
                 gBackgroundEdge.transform.localScale = (i % 2) switch
                 {
-                    0 => new Vector2(map.PlayArea.x, BackgroundFade),
-                    1 => new Vector2(map.PlayArea.y, BackgroundFade),
+                    0 => new Vector2(map.PlayArea.width, BackgroundFade),
+                    1 => new Vector2(map.PlayArea.height, BackgroundFade),
                     _ => gBackgroundEdge.transform.localScale
                 };
             }

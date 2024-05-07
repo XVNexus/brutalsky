@@ -4,6 +4,15 @@ namespace Utils.Ext
 {
     public static class MathfExt
     {
+        public static Vector2 Clamp(Vector2 vector, Rect bounds)
+        {
+            return new Vector2
+            (
+                Mathf.Clamp(vector.x, bounds.xMin, bounds.xMax),
+                Mathf.Clamp(vector.y, bounds.yMin, bounds.yMax)
+            );
+        }
+
         public static Vector2 ToVector(float angle, float magnitude)
         {
             return new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * magnitude;

@@ -9,8 +9,10 @@ namespace Core
         public static TimeSystem _ { get; private set; }
         private void Awake() => _ = this;
 
-        // Local variables
+        // Config options
         public int maxFps;
+
+        // Local variables
         private bool _userPaused;
         private bool _forcePaused;
         private bool _forcePauseActive;

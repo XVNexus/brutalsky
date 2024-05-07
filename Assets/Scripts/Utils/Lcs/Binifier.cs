@@ -36,6 +36,7 @@ namespace Utils.Lcs
                 LcsType.FormType => BinifyFormType((FormType)value),
                 LcsType.JointType => BinifyJointType((JointType)value),
                 LcsType.Vector2 => BinifyVector2((Vector2)value),
+                LcsType.Rect => BinifyRect((Rect)value),
                 LcsType.Color => BinifyColor((Color)value),
                 LcsType.Transform => BinifyTransform((ObjectTransform)value),
                 LcsType.Form => BinifyForm((Form)value),
@@ -66,6 +67,7 @@ namespace Utils.Lcs
                 LcsType.FormType => ParseFormType(raw),
                 LcsType.JointType => ParseJointType(raw),
                 LcsType.Vector2 => ParseVector2(raw),
+                LcsType.Rect => ParseRect(raw),
                 LcsType.Color => ParseColor(raw),
                 LcsType.Transform => ParseTransform(raw),
                 LcsType.Form => ParseForm(raw),
@@ -246,6 +248,18 @@ namespace Utils.Lcs
         private static Vector2 ParseVector2(byte[] raw)
         {
             return new Vector2(ParseFloat(raw[..4]), ParseFloat(raw[4..8]));
+        }
+
+        private static byte[] BinifyRect(Rect value)
+        {
+            return BinifyFloat(value.x).Concat(BinifyFloat(value.y))
+                .Concat(BinifyFloat(value.width)).Concat(BinifyFloat(value.height)).ToArray();
+        }
+
+        private static Rect ParseRect(byte[] raw)
+        {
+            return new Rect(ParseFloat(raw[..4]), ParseFloat(raw[4..8]),
+                ParseFloat(raw[8..12]), ParseFloat(raw[12..16]));
         }
 
         private static byte[] BinifyColor(Color color)

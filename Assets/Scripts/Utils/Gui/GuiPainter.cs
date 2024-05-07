@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UIElements;
+using Utils.Ext;
 
 namespace Utils.Gui
 {
@@ -16,12 +17,7 @@ namespace Utils.Gui
         public GuiPainter(Rect viewRect, Vector2 imageSize, bool autoTransform = true)
         {
             ViewRect = viewRect;
-            var renderAspect = imageSize.x / imageSize.y;
-            var renderSize = viewRect.width / viewRect.height > renderAspect
-                ? new Vector2(viewRect.width, viewRect.width / renderAspect)
-                : new Vector2(viewRect.height * renderAspect, viewRect.height);
-            RenderRect = new Rect(viewRect.x - (renderSize.x - viewRect.width) * .5f,
-                viewRect.y - (renderSize.y - viewRect.height) * .5f, renderSize.x, renderSize.y);
+            RenderRect = ViewRect.ForceAspect(imageSize.Aspect());
             ImageSize = imageSize;
             RenderScale = imageSize.x / RenderRect.width;
             AutoTransform = autoTransform;
@@ -29,7 +25,6 @@ namespace Utils.Gui
             _painter = new Painter2D();
         }
 
-        // Main
         public VectorImage Print()
         {
             var result = ScriptableObject.CreateInstance<VectorImage>();
@@ -38,7 +33,7 @@ namespace Utils.Gui
             return result;
         }
 
-        // Drawing
+        // Drawing functions
         public void DrawPolygon(Vector2[] points)
         {
             Start(points[0]);
@@ -58,7 +53,7 @@ namespace Utils.Gui
             Close();
         }
 
-        public void DrawRoundedRect(Rect rect, float radius)
+        public void DrawRect(Rect rect, float radius)
         {
             Start(rect.xMin, rect.yMin + radius);
             Arc(rect.xMin, rect.yMin, rect.xMin + radius, rect.yMin, radius);
@@ -81,7 +76,7 @@ namespace Utils.Gui
             Close();
         }
 
-        // Pen
+        // Pen functions
         public void Start()
         {
             _painter.BeginPath();
@@ -181,7 +176,7 @@ namespace Utils.Gui
             Stroke();
         }
 
-        // Config
+        // Config functions
         public void SetFill(Color color)
         {
             _painter.fillColor = color;
@@ -201,39 +196,35 @@ namespace Utils.Gui
             _painter.lineJoin = join;
         }
 
-        // Math
-        public Vector2 MakePoint(float x, float y)
+        // Math functions
+        private Vector2 MakePoint(float x, float y)
         {
             return MakePoint(new Vector2(x, y));
         }
 
-        public Vector2 MakePoint(Vector2 point)
+        private Vector2 MakePoint(Vector2 point)
         {
             return AutoTransform ? TransformPoint(point) : point;
         }
 
-        public float MakeValue(float value)
+        private float MakeValue(float value)
         {
             return AutoTransform ? TransformValue(value) : value;
         }
 
-        public Vector2 TransformPoint(float x, float y)
+        private Vector2 TransformPoint(float x, float y)
         {
             return TransformPoint(new Vector2(x, y));
         }
 
-        public Vector2 TransformPoint(Vector2 point)
+        private Vector2 TransformPoint(Vector2 point)
         {
-            // Clamp to viewable area
-            var result = new Vector2(Mathf.Clamp(point.x, ViewRect.xMin, ViewRect.xMax),
-                Mathf.Clamp(point.y, ViewRect.yMin, ViewRect.yMax));
-
-            // Convert from object coordinates to pixel coordinates
+            var result = MathfExt.Clamp(point, ViewRect);
             return new Vector2((result.x - RenderRect.xMin) / (RenderRect.xMax - RenderRect.xMin) * ImageSize.x,
-                (-result.y - RenderRect.yMin) / (RenderRect.yMax - RenderRect.yMin) * ImageSize.y);
+                (result.y - RenderRect.yMax) / (RenderRect.yMin - RenderRect.yMax) * ImageSize.y);
         }
 
-        public float TransformValue(float value)
+        private float TransformValue(float value)
         {
             return value * RenderScale;
         }

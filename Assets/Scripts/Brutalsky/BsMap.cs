@@ -17,7 +17,7 @@ namespace Brutalsky
         public uint Id => MapSystem.GenerateId(Title, Author);
         public string Title { get; set; }
         public string Author { get; set; }
-        public Vector2 PlayArea { get; set; }
+        public Rect PlayArea { get; set; }
         public Color BackgroundColor { get => _backgroundColor; set => _backgroundColor = value.StripAlpha(); }
         private Color _backgroundColor;
         public Color LightingTint
@@ -208,7 +208,7 @@ namespace Brutalsky
                 {
                     new LcsProp(LcsType.String, Title),
                     new LcsProp(LcsType.String, Author),
-                    new LcsProp(LcsType.Vector2, PlayArea),
+                    new LcsProp(LcsType.Rect, PlayArea),
                     new LcsProp(LcsType.Color, BackgroundColor),
                     new LcsProp(LcsType.Color, LightingColor),
                     new LcsProp(LcsType.Direction, GravityDirection),
@@ -234,7 +234,7 @@ namespace Brutalsky
             if (document.Lines[0].Prefix != '!') throw Errors.InvalidItem("map LCS metadata line", metadata);
             result.Title = (string)metadata[0].Value;
             result.Author = (string)metadata[1].Value;
-            result.PlayArea = (Vector2)metadata[2].Value;
+            result.PlayArea = (Rect)metadata[2].Value;
             result.BackgroundColor = (Color)metadata[3].Value;
             result.LightingColor = (Color)metadata[4].Value;
             result.GravityDirection = (Direction)metadata[5].Value;

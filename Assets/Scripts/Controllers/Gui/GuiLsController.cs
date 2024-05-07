@@ -53,7 +53,7 @@ namespace Controllers.Gui
             });
             GuiSystem._.RegisterButton(PaneId, "rest", () =>
             {
-                if (GameManager._.mapChangeActive) return;
+                if (GameManager._.MapChangeActive) return;
                 GameManager._.RestartRound();
                 GuiSystem._.EscapeAll();
             });
@@ -75,7 +75,7 @@ namespace Controllers.Gui
             var itemId = $"load-{map.Id}";
             GuiSystem._.RegisterButton(mapTileCell.Q<Button>("button"), PaneId, itemId, () =>
             {
-                if (GameManager._.mapChangeActive) return;
+                if (GameManager._.MapChangeActive) return;
                 if (MapSystem._.MapLoaded && MapSystem._.ActiveMap.Id != map.Id)
                 {
                     GameManager._.StartRound(map.Id);
@@ -89,7 +89,7 @@ namespace Controllers.Gui
             _loadMapButtons.Add(itemId);
 
             // Render map preview
-            var preview = new GuiPainter(new Rect(map.PlayArea * -.5f, map.PlayArea), new Vector2(200f, 100f));
+            var preview = new GuiPainter(map.PlayArea, new Vector2(200f, 100f));
             PaintMapPreview(preview, map);
             mapTileCell.Q<VisualElement>("preview").style.backgroundImage = new StyleBackground(preview.Print());
 
@@ -116,9 +116,9 @@ namespace Controllers.Gui
         {
             // Paint background and frame
             painter.AutoTransform = false;
-            painter.DrawRoundedRect(new Rect(-3f, -3f, 206f, 106f), 3f);
+            painter.DrawRect(new Rect(-3f, -3f, 206f, 106f), 3f);
             painter.Fill(map.BackgroundColor);
-            painter.DrawRoundedRect(new Rect(-2f, -2f, 204f, 104f), 2f);
+            painter.DrawRect(new Rect(-2f, -2f, 204f, 104f), 2f);
             painter.Stroke(new Color(1f, 1f, 1f, .25f), 2f);
             painter.AutoTransform = true;
 

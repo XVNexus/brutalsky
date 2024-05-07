@@ -24,7 +24,7 @@ namespace Utils.Map
             var right = (shape & 0b0001) > 0;
             var result = new BsMap(title, "Brutalsky")
             {
-                PlayArea = size,
+                PlayArea = new Rect(size * -.5f, size),
                 BackgroundColor = MapBackground,
                 LightingColor = MapLighting,
                 GravityDirection = Direction.Down,

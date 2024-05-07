@@ -37,6 +37,7 @@ namespace Utils.Lcs
                 LcsType.FormType => StringifyFormType((FormType)value),
                 LcsType.JointType => StringifyJointType((JointType)value),
                 LcsType.Vector2 => StringifyVector2((Vector2)value),
+                LcsType.Rect => StringifyRect((Rect)value),
                 LcsType.Color => StringifyColor((Color)value),
                 LcsType.Transform => StringifyTransform((ObjectTransform)value),
                 LcsType.Form => StringifyForm((Form)value),
@@ -67,6 +68,7 @@ namespace Utils.Lcs
                 LcsType.FormType => ParseFormType(raw),
                 LcsType.JointType => ParseJointType(raw),
                 LcsType.Vector2 => ParseVector2(raw),
+                LcsType.Rect => ParseRect(raw),
                 LcsType.Color => ParseColor(raw),
                 LcsType.Transform => ParseTransform(raw),
                 LcsType.Form => ParseForm(raw),
@@ -287,6 +289,24 @@ namespace Utils.Lcs
         {
             var parts = SplitFields(raw);
             return new Vector2(ParseFloat(parts[0]), ParseFloat(parts[1]));
+        }
+
+        private static string StringifyRect(Rect value)
+        {
+            return ConcatFields(new[]
+            {
+                StringifyFloat(value.x),
+                StringifyFloat(value.y),
+                StringifyFloat(value.width),
+                StringifyFloat(value.height)
+            });
+        }
+
+        private static Rect ParseRect(string raw)
+        {
+            var parts = SplitFields(raw);
+            return new Rect(ParseFloat(parts[0]), ParseFloat(parts[1]),
+                ParseFloat(parts[2]), ParseFloat(parts[3]));
         }
 
         private static string StringifyColor(Color color)

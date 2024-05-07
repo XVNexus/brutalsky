@@ -23,6 +23,7 @@ namespace Utils.Lcs
         JointType,
         // Compound types
         Vector2,
+        Rect,
         Color,
         Transform,
         Form,

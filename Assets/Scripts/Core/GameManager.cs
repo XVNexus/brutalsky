@@ -21,8 +21,8 @@ namespace Core
         public static readonly Color LoadingColor = new(.15f, .15f, .15f);
         public const bool RegenerateMaps = false;
 
-        // Local variables
-        public bool mapChangeActive;
+        // Exposed properties
+        public bool MapChangeActive { get; private set; }
 
         // Init functions
         protected override void OnStart()
@@ -39,7 +39,6 @@ namespace Core
         {
             // Always resave void because I keep testing shit on it
             MapSystem.ResaveBuiltinMap("Void");
-
             if (!RegenerateMaps) return;
 
             // Resave builtin maps
@@ -103,7 +102,7 @@ namespace Core
         {
             // Fade out view to hide level loading and fade back in with new level
             var camCover = CameraSystem._.cCameraCover.gameObject;
-            mapChangeActive = true;
+            MapChangeActive = true;
             TimeSystem._.ForceUnpause();
             camCover.LeanColor(LoadingColor, animTime * .4f)
                 .setEaseInOutCubic()
@@ -119,7 +118,7 @@ namespace Core
                                 .setEaseInOutCubic()
                                 .setOnComplete(() =>
                                 {
-                                    mapChangeActive = false;
+                                    MapChangeActive = false;
                                     TimeSystem._.RemoveForcePause();
                                 });
                         });
@@ -128,11 +127,11 @@ namespace Core
             // Move camera down as if the old level ascends into the sky and is replaced by the new level from below
             if (!moveCam) return;
             var camMount = CameraSystem._.gCameraMount;
-            camMount.LeanMoveLocal(new Vector2(0f, CameraSystem._.orthoSize * -3f), animTime * .5f)
+            camMount.LeanMoveLocal(new Vector2(0f, CameraSystem._.ViewRect.height * -3f), animTime * .5f)
                 .setEaseInQuint()
                 .setOnComplete(() =>
                 {
-                    camMount.transform.localPosition = new Vector2(0f, CameraSystem._.orthoSize * 3f);
+                    camMount.transform.localPosition = new Vector2(0f, CameraSystem._.ViewRect.height * 3f);
                     camMount.LeanMoveLocal(new Vector2(0f, 0f), animTime * .5f)
                         .setEaseOutQuint();
                 });

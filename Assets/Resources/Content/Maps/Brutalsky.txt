@@ -1,5 +1,5 @@
 1;!$#%^;@
-!tBrutalsky;tXveon;V40,20;C4C4C4CFF;CFFFFFFCC;D1;f20;f100
+!tBrutalsky;tXveon;R-20,-10,40,20;C4C4C4CFF;CFFFFFFCC;D1;f20;f100
 $V-16,1;i1
 $V-14,1;i0
 $V14,1;i0

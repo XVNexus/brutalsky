@@ -4,7 +4,6 @@ using Brutalsky.Object;
 using Controllers.Base;
 using Core;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using Utils.Constants;
 using Utils.Ext;
 using Utils.Player;

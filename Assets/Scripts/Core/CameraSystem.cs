@@ -10,15 +10,19 @@ namespace Core
         public static CameraSystem _ { get; private set; }
         private void Awake() => _ = this;
 
-        // Local variables
-        public Vector2 viewSize;
-        public float orthoSize;
+        // Config options
         public float dampening;
         public float shakeInterval;
         public float simSpeed;
+
+        // Exposed properties
+        public Rect ViewRect { get; private set; }
+        public Vector2 TrackPoint { get; private set; }
+
+        // Local variables
         private float _offsetMultiplier;
-        private Vector2 _offset;
-        private Vector2 _velocity;
+        private Vector2 _shoveOffset;
+        private Vector2 _shoveVelocity;
         private float _shake;
         private float _shakeTimer;
         private float _lastCameraAspect;
@@ -37,17 +41,17 @@ namespace Core
         }
 
         // System functions
-        public void ResizeView(Vector2 viewSize)
+        public void Resize(Rect viewRect)
         {
-            this.viewSize = viewSize;
-            _offsetMultiplier = Mathf.Min(viewSize.x, viewSize.y);
-            orthoSize = Mathf.Max(viewSize.y * .5f * (viewSize.x / viewSize.y) / _cCamera.aspect, viewSize.y * .5f);
-            _cCamera.orthographicSize = orthoSize;
+            ViewRect = viewRect;
+            TrackPoint = viewRect.center;
+            _offsetMultiplier = Mathf.Min(viewRect.width, viewRect.height);
+            _cCamera.orthographicSize = viewRect.ForceAspect(_cCamera.aspect).height * .5f;
         }
 
         public void Shove(Vector2 force)
         {
-            _velocity += force * .01f;
+            _shoveVelocity += force * .01f;
         }
 
         public void Shake(float force)
@@ -69,22 +73,24 @@ namespace Core
             }
 
             // Simulate camera spring mount
-            var velocityFromSpring = _velocity + -_offset * (simSpeed * Time.fixedDeltaTime);
-            var velocityFromDampening = -_offset;
-            _velocity = MathfExt.Lerp(velocityFromSpring, velocityFromDampening, dampening);
-            _offset += _velocity * (simSpeed * Time.fixedDeltaTime);
+            var velocityFromSpring = _shoveVelocity + -_shoveOffset * (simSpeed * Time.fixedDeltaTime);
+            var velocityFromDampening = -_shoveOffset;
+            _shoveVelocity = MathfExt.Lerp(velocityFromSpring, velocityFromDampening, dampening);
+            _shoveOffset += _shoveVelocity * (simSpeed * Time.fixedDeltaTime);
 
             // Apply shove offset
             var cameraTransform = _cCamera.transform;
-            var scaledOffset = _offset * _offsetMultiplier;
-            cameraTransform.localPosition = new Vector3(scaledOffset.x, scaledOffset.y, cameraTransform.localPosition.z);
+            var scaledOffset = _shoveOffset * _offsetMultiplier;
+            var newPosition = TrackPoint + scaledOffset;
+            cameraTransform.localPosition = new Vector3(newPosition.x, newPosition.y, cameraTransform.localPosition.z);
         }
 
         private void RareUpdate()
         {
             // Configure the viewport to fit the screen
             if (Mathf.Approximately(_cCamera.aspect, _lastCameraAspect)) return;
-            ResizeView(viewSize);
+            _cCamera.orthographicSize = Mathf.Max(
+                ViewRect.height * .5f * ViewRect.Aspect() / _cCamera.aspect, ViewRect.height * .5f);
             _lastCameraAspect = _cCamera.aspect;
         }
     }

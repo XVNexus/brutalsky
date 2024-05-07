@@ -1,4 +1,3 @@
-using System;
 using Brutalsky;
 using Brutalsky.Object;
 using Controllers.Base;
@@ -126,12 +125,8 @@ namespace Controllers.Player
         {
             if (!MapSystem._.MapLoaded) return;
             cDeathParticleSystem.gameObject.SetActive(true);
-            var mapBounds = MapSystem._.ActiveMap.PlayArea * .5f + Vector2.one * DeathParticleClamp;
-            cDeathParticleSystem.transform.position = new Vector2
-            (
-                Mathf.Clamp(transform.localPosition.x, -mapBounds.x, mapBounds.x),
-                Mathf.Clamp(transform.localPosition.y, -mapBounds.y, mapBounds.y)
-            );
+            cDeathParticleSystem.transform.position = MathfExt.Clamp(transform.localPosition,
+                MapSystem._.ActiveMap.PlayArea.Expand(DeathParticleClamp));
             cDeathParticleSystem.Play();
         }
 
