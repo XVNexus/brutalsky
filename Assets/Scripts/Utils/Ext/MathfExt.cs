@@ -4,6 +4,26 @@ namespace Utils.Ext
 {
     public static class MathfExt
     {
+        public static Vector2 ToVector(float angle, float magnitude)
+        {
+            return new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * magnitude;
+        }
+
+        public static Vector2 ToVector(Vector2 polar)
+        {
+            return ToVector(polar.x, polar.y);
+        }
+
+        public static Vector2 ToPolar(float x, float y)
+        {
+            return ToPolar(new Vector2(x, y));
+        }
+
+        public static Vector2 ToPolar(Vector2 vector)
+        {
+            return new Vector2(Atan2(vector), vector.magnitude);
+        }
+
         public static float Atan2(Vector2 vector)
         {
             return Mathf.Atan2(vector.y, vector.x);

@@ -18,12 +18,12 @@ namespace Brutalsky.Object
         public override string Tag => Tags.MountPrefix;
         public override bool HasLogic => true;
 
-        public Vector2 Exit { get; set; }
+        public float ExitAngle { get; set; }
 
-        public BsMount(string id, ObjectTransform transform, bool simulated, Vector2 exit)
+        public BsMount(string id, ObjectTransform transform, bool simulated, float exitAngle)
             : base(id, transform, ObjectLayer.Midground, simulated)
         {
-            Exit = exit;
+            ExitAngle = exitAngle;
         }
 
         public BsMount()
@@ -56,13 +56,13 @@ namespace Brutalsky.Object
         {
             return new LcsProp[]
             {
-                new(LcsType.Vector2, Exit)
+                new(LcsType.Float, ExitAngle)
             };
         }
 
         protected override void _FromLcs(LcsProp[] props)
         {
-            Exit = (Vector2)props[0].Value;
+            ExitAngle = (float)props[0].Value;
         }
     }
 }

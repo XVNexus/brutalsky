@@ -1,10 +1,9 @@
-using System;
 using Brutalsky.Object;
 using Controllers.Base;
 using Core;
-using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Utils.Player;
 
 namespace Controllers.Player
 {
@@ -18,6 +17,7 @@ namespace Controllers.Player
         public bool autoSendInput = true;
         public Vector2 movementInput;
         public bool boostInput;
+        public bool dummy;
 
         // External references
         private InputAction _iMovement;
@@ -31,6 +31,9 @@ namespace Controllers.Player
         {
             _iMovement = EventSystem._.GetInputAction("Movement");
             _iBoost = EventSystem._.GetInputAction("Boost");
+
+            // Disable input if the player is a dummy
+            dummy = Master.Object.Type == PlayerType.Dummy;
         }
 
         protected override void OnLink()
@@ -41,7 +44,7 @@ namespace Controllers.Player
         // Event functions
         private void FixedUpdate()
         {
-            if (Status < Ready) return;
+            if (dummy || Status < Ready) return;
             movementInput = _iMovement.ReadValue<Vector2>();
             boostInput = _iBoost.IsPressed();
             if (!autoSendInput) return;

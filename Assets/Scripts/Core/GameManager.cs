@@ -5,6 +5,7 @@ using Controllers;
 using Controllers.Base;
 using Controllers.Player;
 using UnityEngine;
+using Utils.Ext;
 using Utils.Map;
 using Utils.Player;
 
@@ -17,6 +18,7 @@ namespace Core
         private void Awake() => _ = this;
 
         // Local constants
+        public static readonly Color LoadingColor = new Color(.15f, .15f, .15f);
         public const bool RegenerateMaps = false;
 
         // Local variables
@@ -63,16 +65,22 @@ namespace Core
             {
                 new BsPlayer(PlayerType.Main, "Player 1", new Color(1f, .5f, 0f)),
                 new BsPlayer(PlayerType.Dummy, "Player 2", new Color(0f, .5f, 1f))
-            });
+            }, 1f);
         }
 
         // System functions
-        public void InitGame(uint starterMapId, BsPlayer[] activePlayers)
+        public void InitGame(uint starterMapId, BsPlayer[] activePlayers, float animTime)
         {
             MapSystem._.LoadAllMapFiles();
             MapSystem._.RegisterPlayers(activePlayers);
             MapSystem._.BuildMap(starterMapId);
             MapSystem._.SpawnAllPlayers();
+            var camCover = CameraSystem._.cCameraCover.gameObject;
+            camCover.LeanDelayedCall(animTime * .2f, () =>
+            {
+                camCover.LeanColor(LoadingColor.SetAlpha(0f), animTime * .4f)
+                    .setEaseInOutCubic();
+            });
         }
 
         public void ReloadData()
@@ -98,7 +106,7 @@ namespace Core
             var camCover = CameraSystem._.cCameraCover.gameObject;
             mapChangeActive = true;
             TimeSystem._.ForceUnpause();
-            camCover.LeanColor(new Color(.2f, .2f, .2f), animTime * .4f)
+            camCover.LeanColor(LoadingColor, animTime * .4f)
                 .setEaseInOutCubic()
                 .setOnComplete(() =>
                 {
@@ -108,7 +116,7 @@ namespace Core
                     camCover.LeanDelayedCall(animTime * .2f, () =>
                         {
                             MapSystem._.SetAllPlayersFrozen(false);
-                            camCover.LeanColor(new Color(.2f, .2f, .2f, 0f), animTime * .4f)
+                            camCover.LeanColor(LoadingColor.SetAlpha(0f), animTime * .4f)
                                 .setEaseInOutCubic()
                                 .setOnComplete(() =>
                                 {

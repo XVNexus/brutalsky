@@ -1,4 +1,3 @@
-using System;
 using Brutalsky;
 using Brutalsky.Object;
 using Controllers.Base;
@@ -6,6 +5,7 @@ using Controllers.Player;
 using Core;
 using UnityEngine;
 using Utils.Constants;
+using Utils.Ext;
 
 namespace Controllers.Mount
 {
@@ -17,6 +17,7 @@ namespace Controllers.Mount
 
         // Local constants
         public const float TransitionTime = .25f;
+        public const float IndicatorScale = 2.2f / .8f / 1.5f;
 
         // Local variables
         public bool active;
@@ -24,17 +25,15 @@ namespace Controllers.Mount
         public Vector2 input;
         private string _activePlayerId = "";
         private bool _transitioning;
-        private SpriteRenderer _cSpriteRenderer;
 
         // External references
-        public Collider2D[] _cClampCollider2Ds;
+        public GameObject gIndicatorRing;
+        public Collider2D[] cClampCollider2Ds;
 
         // Init functions
         protected override void OnInit()
         {
             EventSystem._.OnMapCleanup += OnMapCleanup;
-
-            _cSpriteRenderer = GetComponent<SpriteRenderer>();
         }
 
         private void OnDestroy()
@@ -54,37 +53,54 @@ namespace Controllers.Mount
                 .setEaseOutCubic()
                 .setOnComplete(() =>
                 {
-                    foreach (var clamp in _cClampCollider2Ds)
+                    foreach (var clamp in cClampCollider2Ds)
                     {
                         clamp.enabled = true;
                     }
                     MapSystem._.SetPlayerFrozen(player.gameObject, false);
                     _transitioning = false;
                 });
+            gIndicatorRing.LeanScale(Vector2.one * IndicatorScale, TransitionTime)
+                .setEaseInOutCubic();
+            gIndicatorRing.LeanColor(new Color(1f, 1f, 1f, .5f), TransitionTime)
+                .setEaseInOutCubic();
         }
 
-        public void UngrabPlayer()
+        public void UngrabPlayer(bool forceExit = true)
         {
             input = Vector2.zero;
             active = false;
             _activePlayerId = "";
-            _transitioning = true;
-            foreach (var clamp in _cClampCollider2Ds)
+            foreach (var clamp in cClampCollider2Ds)
             {
                 clamp.enabled = false;
             }
-            MapSystem._.SetPlayerFrozen(activePlayer.gameObject, true);
-            activePlayer.gameObject.LeanMoveLocal(transform.position + (Vector3)Master.Object.Exit, TransitionTime)
-                .setEaseOutCubic()
-                .setOnComplete(() =>
-                {
-                    MapSystem._.SetPlayerFrozen(activePlayer.gameObject, false);
-                    activePlayer.autoSendInput = true;
-                    activePlayer = null;
-                    _transitioning = false;
-                });
             activePlayer.gameObject.LeanRotateZ(0f, TransitionTime)
                 .setEaseOutCubic();
+            if (forceExit)
+            {
+                _transitioning = true;
+                MapSystem._.SetPlayerFrozen(activePlayer.gameObject, true);
+                var exitOffset = MathfExt.ToVector(Master.Object.ExitAngle * Mathf.Deg2Rad, 1.5f);
+                activePlayer.gameObject.LeanMoveLocal(transform.position + (Vector3)exitOffset, TransitionTime)
+                    .setEaseOutCubic()
+                    .setOnComplete(() =>
+                    {
+                        MapSystem._.SetPlayerFrozen(activePlayer.gameObject, false);
+                        activePlayer.autoSendInput = true;
+                        activePlayer = null;
+                        _transitioning = false;
+                    });
+            }
+            else
+            {
+                activePlayer.autoSendInput = true;
+                activePlayer = null;
+            }
+            gIndicatorRing.LeanScale(Vector2.one, TransitionTime)
+                .setEaseInOutCubic();
+            gIndicatorRing.LeanColor(new Color(1f, 1f, 1f, .1f), TransitionTime)
+                .setEaseInOutCubic();
         }
 
         // Event functions
@@ -112,13 +128,8 @@ namespace Controllers.Mount
                 && other.GetComponent<PlayerController>().Object.Id == _activePlayerId
                 && !MapSystem._.GetPlayerFrozen(activePlayer.gameObject))
             {
-                UngrabPlayer();
+                UngrabPlayer(false);
             }
-        }
-
-        private void Update()
-        {
-            _cSpriteRenderer.color = new Color(_transitioning ? 1f : 0f, active ? 1f : 0f, 0f);
         }
 
         private void FixedUpdate()

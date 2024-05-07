@@ -52,7 +52,7 @@ namespace Controllers.Player
 
             _cRigidbody2D = GetComponent<Rigidbody2D>();
 
-            // Disable movement if dummy is set to true
+            // Disable movement if the player is a dummy
             dummy = Master.Object.Type == PlayerType.Dummy;
 
             // Force scanning map settings

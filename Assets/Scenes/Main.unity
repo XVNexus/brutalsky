@@ -367,7 +367,7 @@ GameObject:
   m_Component:
   - component: {fileID: 253857811}
   m_Layer: 0
-  m_Name: Margins
+  m_Name: Map Margins
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1023,15 +1023,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cUIDocument: {fileID: 2021743624}
-  iEscape:
-    m_Name: I Escape
-    m_Type: 0
-    m_ExpectedControlType: 
-    m_Id: 4bfbeae9-e5e6-4074-8779-2b356d1263b1
-    m_Processors: 
-    m_Interactions: 
-    m_SingletonActionBindings: []
-    m_Flags: 0
 --- !u!114 &581734023
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2706,7 +2697,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 4
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0.1, g: 0.1, b: 0.1, a: 0}
+  m_Color: {r: 0.15, g: 0.15, b: 0.15, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -2905,8 +2896,8 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 581734016}
+  - {fileID: 2021743625}
   - {fileID: 223431135}
   - {fileID: 253857811}
-  - {fileID: 2021743625}
   - {fileID: 436285078}
   - {fileID: 130180706}
