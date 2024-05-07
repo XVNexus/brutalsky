@@ -4,6 +4,14 @@ namespace Utils.Ext
 {
     public static class MathfExt
     {
+        // Common tools
+        public static Rect Clamp(Rect rect, Rect bounds)
+        {
+            var min = Max(rect.min, bounds.min);
+            var max = Min(rect.max, bounds.max);
+            return new Rect(min, max - min);
+        }
+
         public static Vector2 Clamp(Vector2 vector, Rect bounds)
         {
             return new Vector2
@@ -13,6 +21,17 @@ namespace Utils.Ext
             );
         }
 
+        public static Vector2 Min(Vector2 a, Vector2 b)
+        {
+            return new Vector2(Mathf.Min(a.x, b.x), Mathf.Min(a.y, b.y));
+        }
+
+        public static Vector2 Max(Vector2 a, Vector2 b)
+        {
+            return new Vector2(Mathf.Max(a.x, b.x), Mathf.Max(a.y, b.y));
+        }
+
+        // Vector tools
         public static Vector2 ToVector(float angle, float magnitude)
         {
             return new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * magnitude;
@@ -56,6 +75,7 @@ namespace Utils.Ext
             return TranslateVector(RotateVector(vector, rotation), translation);
         }
 
+        // Tween tools
         public static float MoveTo(float from, float to, float step)
         {
             return from < to ? Mathf.Min(from + step, to)
@@ -68,6 +88,7 @@ namespace Utils.Ext
             return new Vector2(Mathf.Lerp(a.x, b.x, t), Mathf.Lerp(a.y, b.y, t));
         }
 
+        // Dataset tools
         public static float Mean(float a, float b)
         {
             return (a + b) * .5f;
@@ -89,11 +110,12 @@ namespace Utils.Ext
                 WeightedMean(a.y, aWeight, b.y, bWeight));
         }
 
+        // Advanced tools
         public static string ToBaseX(string charset, int numberBase10)
         {
             var result = "";
 
-            int radix = charset.Length;
+            var radix = charset.Length;
             var quotient = numberBase10;
             while (quotient != 0)
             {
@@ -109,7 +131,7 @@ namespace Utils.Ext
         {
             var result = 0;
 
-            int radix = charset.Length;
+            var radix = charset.Length;
             for (var i = 0; i < numberBaseX.Length; i++)
             {
                 var power = (int)Mathf.Pow(radix, i);

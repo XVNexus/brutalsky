@@ -951,11 +951,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7fbf46dc596df1301b09437b8e012b50, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewSize: {x: 10, y: 10}
-  orthoSize: 0
-  dampening: 0.3
+  shoveDampening: 0.3
   shakeInterval: 0.1
   simSpeed: 20
+  followRectMargin: 5
+  minFollowRectSize: {x: 30, y: 20}
+  minViewSizeForFollow: 50
   gCameraMount: {fileID: 223431134}
   cCameraCover: {fileID: 1875631436}
 --- !u!114 &581734019
@@ -970,6 +971,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40255d782b67422fa83dc3848e5e6e27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  backgroundFade: 10
+  backgroundField: 1000
+  saveFormatString: lcs
+  saveFormatBinary: lcb
+  useBinaryFormat: 1
   gMapParent: {fileID: 436285077}
   gPlayerParent: {fileID: 130180705}
   gBackgroundMain: {fileID: 22585168}
@@ -1022,6 +1028,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1db1e7a376054c39b47305fce91ef979, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  disabledClass: bs-disabled
+  pauseMenuId: pm
   cUIDocument: {fileID: 2021743624}
 --- !u!114 &581734023
 MonoBehaviour:
@@ -1054,7 +1062,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d69867b827df4193b3040d4e03c4d9dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mapChangeActive: 0
+  loadingColor: {r: 0.15, g: 0.15, b: 0.15, a: 1}
+  regenerateMaps: 0
 --- !u!1 &601674925
 GameObject:
   m_ObjectHideFlags: 0

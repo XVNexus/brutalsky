@@ -98,14 +98,14 @@ namespace Utils.Gui
         private void Show()
         {
             if (Dummy) return;
-            Element.RemoveFromClassList(GuiSystem.DisabledClass);
+            Element.RemoveFromClassList(GuiSystem._.disabledClass);
             Visible = true;
         }
 
         private void Hide()
         {
             if (Dummy) return;
-            Element.AddToClassList(GuiSystem.DisabledClass);
+            Element.AddToClassList(GuiSystem._.disabledClass);
             Visible = false;
         }
     }

@@ -73,10 +73,10 @@
     border-top-right-radius: 20px;
     border-bottom-right-radius: 0;
     border-bottom-left-radius: 0;
-    border-top-width: 3px;
-    border-right-width: 3px;
-    border-bottom-width: 3px;
-    border-left-width: 3px;
+    border-top-width: 5px;
+    border-right-width: 5px;
+    border-bottom-width: 5px;
+    border-left-width: 5px;
     border-bottom-color: rgb(20, 20, 20);
     border-top-color: rgb(31, 31, 31);
     height: 50px;

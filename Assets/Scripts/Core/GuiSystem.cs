@@ -17,9 +17,9 @@ namespace Core
         public static GuiSystem _ { get; private set; }
         private void Awake() => _ = this;
 
-        // Local constants
-        public const string DisabledClass = "bs-disabled";
-        public const string PauseMenuId = "pm";
+        // Config options
+        public string disabledClass;
+        public string pauseMenuId;
 
         // Local variables
         private VisualElement _root;
@@ -52,7 +52,7 @@ namespace Core
             }
             else
             {
-                ActivatePane(PauseMenuId);
+                ActivatePane(pauseMenuId);
                 TimeSystem._.Pause();
             }
         }

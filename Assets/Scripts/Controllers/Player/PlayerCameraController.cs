@@ -53,7 +53,7 @@ namespace Controllers.Player
 
             // Apply camera shake
             var shakeForce = Mathf.Min(PlayerHealthController.CalculateDamage(impactForce) * .05f, 5f);
-            CameraSystem._.Shove(shakeForce * impactDirection);
+            CameraSystem._.AddShove(shakeForce * impactDirection);
         }
 
         private void FixedUpdate()
@@ -70,11 +70,11 @@ namespace Controllers.Player
             if (deltaHealth < 0f)
             {
                 var shakeForce = Mathf.Min(-deltaHealth * .05f, 5f);
-                CameraSystem._.Shake(shakeForce);
+                CameraSystem._.AddShake(shakeForce);
             }
             if (health == 0f && _lastHealth > 0f)
             {
-                CameraSystem._.Shake(5f);
+                CameraSystem._.AddShake(5f);
             }
             _lastHealth = health;
         }

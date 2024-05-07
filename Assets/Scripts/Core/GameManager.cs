@@ -17,12 +17,12 @@ namespace Core
         public static GameManager _ { get; private set; }
         private void Awake() => _ = this;
 
-        // Local constants
-        public static readonly Color LoadingColor = new(.15f, .15f, .15f);
-        public const bool RegenerateMaps = false;
-
         // Exposed properties
         public bool MapChangeActive { get; private set; }
+
+        // Config options
+        public Color loadingColor;
+        public bool regenerateMaps;
 
         // Init functions
         protected override void OnStart()
@@ -38,11 +38,11 @@ namespace Core
         protected override void OnLoad()
         {
             // Always resave void because I keep testing shit on it
-            MapSystem.ResaveBuiltinMap("Void");
-            if (!RegenerateMaps) return;
+            MapSystem._.ResaveBuiltinMap("Void");
+            if (!regenerateMaps) return;
 
             // Resave builtin maps
-            MapSystem.ResaveBuiltinMaps(new[] { "Brutalsky", "Doomring", "Tossup" });
+            MapSystem._.ResaveBuiltinMaps(new[] { "Brutalsky", "Doomring", "Tossup" });
 
             // Generate box maps
             var shapeNames = new[] { "Platform", "Box", "Cage", "Tunnel" };
@@ -51,7 +51,7 @@ namespace Core
             var sizes = new[] { new Vector2(20f, 10f), new Vector2(40f, 20f), new Vector2(80f, 40f) };
             for (var i = 0; i < shapes.Length; i++) for (var j = 0; j < sizes.Length; j++)
             {
-                MapSystem.SaveMap(MapGenerator.Box($"{sizeNames[j]} {shapeNames[i]}", shapes[i], sizes[j]));
+                MapSystem._.SaveMap(MapGenerator.Box($"{sizeNames[j]} {shapeNames[i]}", shapes[i], sizes[j]));
             }
 
             // TODO: GENERATE PLATFORMER MAPS
@@ -77,7 +77,7 @@ namespace Core
             MapSystem._.RegisterPlayers(activePlayers);
             MapSystem._.BuildMap(starterMapId);
             MapSystem._.SpawnAllPlayers();
-            CameraSystem._.cCameraCover.gameObject.LeanColor(LoadingColor.SetAlpha(0f), animTime * .4f)
+            CameraSystem._.cCameraCover.gameObject.LeanColor(loadingColor.SetAlpha(0f), animTime * .4f)
                 .setEaseInOutCubic();
         }
 
@@ -104,7 +104,7 @@ namespace Core
             var camCover = CameraSystem._.cCameraCover.gameObject;
             MapChangeActive = true;
             TimeSystem._.ForceUnpause();
-            camCover.LeanColor(LoadingColor, animTime * .4f)
+            camCover.LeanColor(loadingColor, animTime * .4f)
                 .setEaseInOutCubic()
                 .setOnComplete(() =>
                 {
@@ -114,7 +114,7 @@ namespace Core
                     camCover.LeanDelayedCall(animTime * .2f, () =>
                         {
                             MapSystem._.SetAllPlayersFrozen(false);
-                            camCover.LeanColor(LoadingColor.SetAlpha(0f), animTime * .4f)
+                            camCover.LeanColor(loadingColor.SetAlpha(0f), animTime * .4f)
                                 .setEaseInOutCubic()
                                 .setOnComplete(() =>
                                 {
@@ -127,11 +127,11 @@ namespace Core
             // Move camera down as if the old level ascends into the sky and is replaced by the new level from below
             if (!moveCam) return;
             var camMount = CameraSystem._.gCameraMount;
-            camMount.LeanMoveLocal(new Vector2(0f, CameraSystem._.ViewRect.height * -3f), animTime * .5f)
+            camMount.LeanMoveLocal(new Vector2(0f, CameraSystem._.BaseRect.height * -3f), animTime * .5f)
                 .setEaseInQuint()
                 .setOnComplete(() =>
                 {
-                    camMount.transform.localPosition = new Vector2(0f, CameraSystem._.ViewRect.height * 3f);
+                    camMount.transform.localPosition = new Vector2(0f, CameraSystem._.BaseRect.height * 3f);
                     camMount.LeanMoveLocal(new Vector2(0f, 0f), animTime * .5f)
                         .setEaseOutQuint();
                 });

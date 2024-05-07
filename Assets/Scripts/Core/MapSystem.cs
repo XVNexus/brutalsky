@@ -22,17 +22,17 @@ namespace Core
         public static MapSystem _ { get; private set; }
         private void Awake() => _ = this;
 
-        // Local constants
-        public const float BackgroundFade = 10f;
-        public const float BackgroundField = 1000f;
-        public const string SaveFormatString = "lcs";
-        public const string SaveFormatBinary = "lcb";
-        public const bool UseBinaryFormat = true;
+        // Config options
+        public float backgroundFade;
+        public float backgroundField;
+        public string saveFormatString;
+        public string saveFormatBinary;
+        public bool useBinaryFormat;
 
         // Exposed properties
-        public Dictionary<uint, string> MapList { get; private set; } = new();
+        public Dictionary<uint, string> MapList { get; } = new();
         [CanBeNull] public BsMap ActiveMap { get; private set; }
-        public Dictionary<string, BsPlayer> ActivePlayers { get; private set; } = new();
+        public Dictionary<string, BsPlayer> ActivePlayers { get; } = new();
         [CanBeNull] public BsMatrix Matrix { get; private set; }
         public bool MapLoaded { get; private set; }
 
@@ -106,7 +106,7 @@ namespace Core
             rigidbody.angularVelocity = 0f;
         }
 
-        public static void ResaveBuiltinMaps(IEnumerable<string> filenames)
+        public void ResaveBuiltinMaps(IEnumerable<string> filenames)
         {
             foreach (var filename in filenames)
             {
@@ -114,7 +114,7 @@ namespace Core
             }
         }
 
-        public static void ResaveBuiltinMap(string filename)
+        public void ResaveBuiltinMap(string filename)
         {
             SaveMap(LoadMapAsset(filename));
         }
@@ -130,7 +130,7 @@ namespace Core
             foreach (var mapPath in Directory.GetFiles(path))
             {
                 var mapFilename = Regex.Match(mapPath,
-                    $@"\d+(?=\.({SaveFormatString}|{SaveFormatBinary}))").Value;
+                    $@"\d+(?=\.({saveFormatString}|{saveFormatBinary}))").Value;
                 var map = LoadMap(mapFilename);
                 EventSystem._.EmitMapPreload(map);
                 MapList[map.Id] = mapFilename;
@@ -143,17 +143,17 @@ namespace Core
             MapList.Clear();
         }
 
-        public static BsMap LoadMapAsset(string filename)
+        public BsMap LoadMapAsset(string filename)
         {
             return BsMap.Parse(Resources.Load<TextAsset>($"{Paths.Content}/{Paths.Maps}/{filename}").text);
         }
 
-        public static BsMap LoadMap(string filename)
+        public BsMap LoadMap(string filename)
         {
             try
             {
-                var pathBinary = $"{ResourceSystem.DataPath}/{Paths.Maps}/{filename}.{SaveFormatBinary}";
-                var pathString = $"{ResourceSystem.DataPath}/{Paths.Maps}/{filename}.{SaveFormatString}";
+                var pathBinary = $"{ResourceSystem.DataPath}/{Paths.Maps}/{filename}.{saveFormatBinary}";
+                var pathString = $"{ResourceSystem.DataPath}/{Paths.Maps}/{filename}.{saveFormatString}";
                 if (File.Exists(pathBinary))
                 {
                     using var stream = new FileStream(pathBinary, FileMode.Open);
@@ -173,13 +173,13 @@ namespace Core
             }
         }
 
-        public static void SaveMap(BsMap map)
+        public void SaveMap(BsMap map)
         {
             try
             {
-                if (UseBinaryFormat)
+                if (useBinaryFormat)
                 {
-                    var path = $"{ResourceSystem.DataPath}/{Paths.Maps}/{map.Id}.{SaveFormatBinary}";
+                    var path = $"{ResourceSystem.DataPath}/{Paths.Maps}/{map.Id}.{saveFormatBinary}";
                     new FileInfo(path).Directory?.Create();
                     using var stream = new FileStream(path, FileMode.Create);
                     using var writer = new BinaryWriter(stream);
@@ -187,7 +187,7 @@ namespace Core
                 }
                 else
                 {
-                    var path = $"{ResourceSystem.DataPath}/{Paths.Maps}/{map.Id}.{SaveFormatString}";
+                    var path = $"{ResourceSystem.DataPath}/{Paths.Maps}/{map.Id}.{saveFormatString}";
                     new FileInfo(path).Directory?.Create();
                     using var writer = new StreamWriter(path);
                     writer.Write(map.Stringify());
@@ -235,11 +235,11 @@ namespace Core
             MapLoaded = true;
 
             // Apply config
-            CameraSystem._.Resize(map.PlayArea);
+            CameraSystem._.SetBaseRect(map.PlayArea);
             var backgroundColor = map.BackgroundColor;
             var halfArea = map.PlayArea.size * .5f;
-            const float halfFade = BackgroundFade * .5f;
-            const float halfField = BackgroundField * .5f;
+            var halfFade = backgroundFade * .5f;
+            var halfField = backgroundField * .5f;
             gBackgroundMain.transform.parent.localPosition = map.PlayArea.center;
             gBackgroundMain.color = backgroundColor;
             gBackgroundMain.transform.localScale = map.PlayArea.size;
@@ -257,8 +257,8 @@ namespace Core
                 };
                 gBackgroundEdge.transform.localScale = (i % 2) switch
                 {
-                    0 => new Vector2(map.PlayArea.width, BackgroundFade),
-                    1 => new Vector2(map.PlayArea.height, BackgroundFade),
+                    0 => new Vector2(map.PlayArea.width, backgroundFade),
+                    1 => new Vector2(map.PlayArea.height, backgroundFade),
                     _ => gBackgroundEdge.transform.localScale
                 };
             }
@@ -274,7 +274,7 @@ namespace Core
                     3 => new Vector2(-halfArea.x - halfFade, halfArea.y + halfFade),
                     _ => gBackgroundCorner.transform.localPosition
                 };
-                gBackgroundCorner.transform.localScale = new Vector2(BackgroundFade, BackgroundFade);
+                gBackgroundCorner.transform.localScale = new Vector2(backgroundFade, backgroundFade);
             }
             for (var i = 0; i < 4; i++)
             {
@@ -282,13 +282,13 @@ namespace Core
                 gBackgroundOob.color = backgroundColor;
                 gBackgroundOob.transform.localPosition = i switch
                 {
-                    0 => new Vector2(0f, halfArea.y + BackgroundFade + halfField),
-                    1 => new Vector2(halfArea.x + BackgroundFade + halfField, 0f),
-                    2 => new Vector2(0f, -halfArea.y - BackgroundFade - halfField),
-                    3 => new Vector2(-halfArea.x - BackgroundFade - halfField, 0f),
+                    0 => new Vector2(0f, halfArea.y + backgroundFade + halfField),
+                    1 => new Vector2(halfArea.x + backgroundFade + halfField, 0f),
+                    2 => new Vector2(0f, -halfArea.y - backgroundFade - halfField),
+                    3 => new Vector2(-halfArea.x - backgroundFade - halfField, 0f),
                     _ => gBackgroundOob.transform.localPosition
                 };
-                gBackgroundOob.transform.localScale = new Vector2(BackgroundField, BackgroundField);
+                gBackgroundOob.transform.localScale = new Vector2(backgroundField, backgroundField);
             }
             cLight2D.color = map.LightingTint;
             cLight2D.intensity = map.LightingIntensity;
