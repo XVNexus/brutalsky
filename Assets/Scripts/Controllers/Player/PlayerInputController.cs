@@ -14,9 +14,10 @@ namespace Controllers.Player
         public override bool IsUnused => false;
 
         // Local variables
-        public bool autoSendInput = true;
         public Vector2 movementInput;
         public bool boostInput;
+        public bool autoSendInput = true;
+        public bool blockInput;
         public bool dummy;
 
         // External references
@@ -44,11 +45,20 @@ namespace Controllers.Player
         // Event functions
         private void FixedUpdate()
         {
-            if (dummy || Status < Ready) return;
-            movementInput = _iMovement.ReadValue<Vector2>();
-            boostInput = _iBoost.IsPressed();
-            if (!autoSendInput) return;
-            _mMovement.SendInput(movementInput, boostInput);
+            if (dummy) return;
+            if (!blockInput)
+            {
+                if (Status < Ready) return;
+                movementInput = _iMovement.ReadValue<Vector2>();
+                boostInput = _iBoost.IsPressed();
+                if (!autoSendInput) return;
+                _mMovement.SendInput(movementInput, boostInput);
+            }
+            else
+            {
+                movementInput = Vector2.zero;
+                boostInput = false;
+            }
         }
     }
 }

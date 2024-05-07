@@ -18,7 +18,7 @@ namespace Core
         private void Awake() => _ = this;
 
         // Local constants
-        public static readonly Color LoadingColor = new Color(.15f, .15f, .15f);
+        public static readonly Color LoadingColor = new(.15f, .15f, .15f);
         public const bool RegenerateMaps = false;
 
         // Local variables
@@ -37,10 +37,13 @@ namespace Core
 
         protected override void OnLoad()
         {
+            // Always resave void because I keep testing shit on it
+            MapSystem.ResaveBuiltinMap("Void");
+
             if (!RegenerateMaps) return;
 
-            // Generate builtin custom maps
-            MapSystem.ResaveBuiltinMaps(new[] { "Brutalsky", "Doomring", "Tossup", "Void" });
+            // Resave builtin maps
+            MapSystem.ResaveBuiltinMaps(new[] { "Brutalsky", "Doomring", "Tossup" });
 
             // Generate box maps
             var shapeNames = new[] { "Platform", "Box", "Cage", "Tunnel" };
@@ -75,12 +78,8 @@ namespace Core
             MapSystem._.RegisterPlayers(activePlayers);
             MapSystem._.BuildMap(starterMapId);
             MapSystem._.SpawnAllPlayers();
-            var camCover = CameraSystem._.cCameraCover.gameObject;
-            camCover.LeanDelayedCall(animTime * .2f, () =>
-            {
-                camCover.LeanColor(LoadingColor.SetAlpha(0f), animTime * .4f)
-                    .setEaseInOutCubic();
-            });
+            CameraSystem._.cCameraCover.gameObject.LeanColor(LoadingColor.SetAlpha(0f), animTime * .4f)
+                .setEaseInOutCubic();
         }
 
         public void ReloadData()
@@ -145,9 +144,10 @@ namespace Core
             var livingPlayers = (from activePlayer in MapSystem._.ActivePlayers.Values
                 where ((PlayerController)activePlayer.InstanceController).GetSub<PlayerHealthController>("health").alive
                 select activePlayer).ToList();
-            if (livingPlayers.Count != 1) return;
-            Debug.Log($"{livingPlayers[0].Name} wins!");
-            Invoke(nameof(RestartRound), 3f);
+            if (livingPlayers.Count == 1)
+            {
+                Invoke(nameof(RestartRound), 3f);
+            }
         }
     }
 }

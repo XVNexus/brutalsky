@@ -110,8 +110,13 @@ namespace Core
         {
             foreach (var filename in filenames)
             {
-                SaveMap(LoadMapAsset(filename));
+                ResaveBuiltinMap(filename);
             }
+        }
+
+        public static void ResaveBuiltinMap(string filename)
+        {
+            SaveMap(LoadMapAsset(filename));
         }
 
         public void LoadAllMapFiles()
