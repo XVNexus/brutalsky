@@ -26,9 +26,6 @@ namespace Core
         // Config options
         public float backgroundFade;
         public float backgroundField;
-        public string saveFormatString;
-        public string saveFormatBinary;
-        public bool useBinaryFormat;
 
         // Exposed properties
         // Maps are saved as gzip binary to not take up 2 terabytes of memory
@@ -110,68 +107,11 @@ namespace Core
             rigidbody.angularVelocity = 0f;
         }
 
-        public void LoadMapAssets(IEnumerable<string> filenames)
+        public void RegisterMaps(IEnumerable<BsMap> maps)
         {
-            foreach (var filename in filenames)
+            foreach (var map in maps)
             {
-                LoadMapAsset(filename);
-            }
-        }
-
-        public void LoadMapAsset(string filename)
-        {
-            RegisterMap(BsMap.Parse(Resources.Load<TextAsset>($"{Paths.Content}/{Paths.Maps}/{filename}").text));
-        }
-
-        public void LoadMapFiles()
-        {
-            var path = $"{ResourceSystem.DataPath}/{Paths.Maps}";
-            if (!Directory.Exists(path)) return;
-            foreach (var mapPath in Directory.GetFiles(path))
-            {
-                LoadMapFile(Regex.Match(mapPath, $@"\d+(?=\.({saveFormatString}|{saveFormatBinary}))").Value);
-            }
-        }
-
-        public void LoadMapFile(string filename)
-        {
-            var pathBinary = $"{ResourceSystem.DataPath}/{Paths.Maps}/{filename}.{saveFormatBinary}";
-            var pathString = $"{ResourceSystem.DataPath}/{Paths.Maps}/{filename}.{saveFormatString}";
-            BsMap map;
-            if (File.Exists(pathBinary))
-            {
-                using var stream = new FileStream(pathBinary, FileMode.Open);
-                using var reader = new BinaryReader(stream);
-                map = BsMap.Parse(reader.ReadBytes((int)stream.Length));
-            }
-            else if (File.Exists(pathString))
-            {
-                using var reader = new StreamReader(pathString);
-                map = BsMap.Parse(reader.ReadToEnd());
-            }
-            else
-            {
-                throw Errors.NoItemFound("map file", filename);
-            }
-            RegisterMap(map);
-        }
-
-        public void SaveMapFile(BsMap map)
-        {
-            if (useBinaryFormat)
-            {
-                var path = $"{ResourceSystem.DataPath}/{Paths.Maps}/{map.Id}.{saveFormatBinary}";
-                new FileInfo(path).Directory?.Create();
-                using var stream = new FileStream(path, FileMode.Create);
-                using var writer = new BinaryWriter(stream);
-                writer.Write(map.Binify());
-            }
-            else
-            {
-                var path = $"{ResourceSystem.DataPath}/{Paths.Maps}/{map.Id}.{saveFormatString}";
-                new FileInfo(path).Directory?.Create();
-                using var writer = new StreamWriter(path);
-                writer.Write(map.Stringify());
+                RegisterMap(map);
             }
         }
 

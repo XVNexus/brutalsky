@@ -55,10 +55,13 @@ namespace Core
             }
 
             // Load builtin maps
-            MapSystem._.LoadMapAssets(new[] { "Void", "Brutalsky", "Doomring", "Tossup" });
+            MapSystem._.RegisterMaps(ResourceSystem._.LoadMapAssets(new[]
+            {
+                "Void", "Brutalsky", "Doomring", "Tossup"
+            }));
 
             // Load custom maps
-            MapSystem._.LoadMapFiles();
+            MapSystem._.RegisterMaps(ResourceSystem._.LoadMapFiles());
 
             // Generate box maps
             var shapes = new[] { 0b1000, 0b1011, 0b1111, 0b1100 };
@@ -83,7 +86,6 @@ namespace Core
 
         public void InitGame(uint starterMapId, BsPlayer[] activePlayers, float animTime)
         {
-            MapSystem._.LoadMapFiles();
             MapSystem._.RegisterPlayers(activePlayers);
             MapSystem._.BuildMap(starterMapId);
             MapSystem._.SpawnPlayers();
