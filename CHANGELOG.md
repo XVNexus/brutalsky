@@ -2,7 +2,10 @@
 
 #### CHANGED
 - improved followcam targeting to lead fast moving targets and keep them in frame
-- fix camera not adapting to screen aspect ratio automatically on maps without followcam
+
+#### FIXED
+- camera did not adapt to the screen aspect ratio automatically on maps without followcam
+- logic links did not get saved with the map if there were no logic nodes
 
 
 ## *Nightly 2024.05.07*
@@ -20,8 +23,8 @@
 - map system now generates maps on the spot instead of generating files and then loading those files back again
 
 #### FIXED
-- players are no longer immortal when on a mount
-- smooth cam jolted when changing aspect ratio from horizontal to vertical relative to the screen's aspect ratio
+- players were immortal while on a player mount
+- smooth cam jolted when changing aspect ratio from horizontal to vertical or vice versa relative to the screen's aspect ratio
 - data folders did not get automatically created on game start
 
 
@@ -37,7 +40,7 @@
 - map loading gracefully fails when encountering bad map data
 
 #### FIXED
-- restart map parsed the source file again instead of reloading the map from memory
+- the active map was reloaded from disk instead of reloaded from memory on map restart
 
 
 ## *Nightly 2024.05.05*
@@ -211,7 +214,7 @@
 ## *Nightly 2024.04.05*
 
 #### FIXED
-- map ids didn't generate correctly
+- map ids did not generate correctly
 
 
 ## *Nightly 2024.04.02*

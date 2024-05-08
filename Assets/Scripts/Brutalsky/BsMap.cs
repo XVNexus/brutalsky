@@ -221,11 +221,8 @@ namespace Brutalsky
             };
             lines.AddRange(Spawns.Select(spawn => spawn.ToLcs()));
             lines.AddRange(Objects.Values.Select(obj => obj.ToLcs()));
-            if (Nodes.Count > 0)
-            {
-                lines.AddRange(Nodes.Select(node => node.ToLcs()).ToArray());
-                lines.AddRange(Links.Values.Select(link => link.ToLcs()).ToArray());
-            }
+            lines.AddRange(Nodes.Select(node => node.ToLcs()));
+            lines.AddRange(Links.Values.Select(link => link.ToLcs()));
             return new LcsDocument(1, lines, new[] { "!$#%^", "@" });
         }
 
