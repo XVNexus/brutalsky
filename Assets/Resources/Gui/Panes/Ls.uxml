@@ -7,7 +7,7 @@
             <ui:GroupBox class="bs bs-row">
                 <ui:Button text="Back" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ls-btn-back" focusable="false" class="bs bs-button" style="color: rgb(128, 255, 128); border-top-right-radius: 0; border-bottom-right-radius: 0;" />
                 <ui:Button text="Restart Fight" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ls-btn-rest" focusable="false" class="bs bs-button" style="color: rgb(128, 255, 255); border-top-left-radius: 0; border-bottom-left-radius: 0; flex-grow: 2; border-top-right-radius: 0; border-bottom-right-radius: 0;" />
-                <ui:Button text="Reload Files" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ls-btn-reld" focusable="false" class="bs bs-button" style="color: rgb(128, 191, 255); border-top-left-radius: 0; border-bottom-left-radius: 0;" />
+                <ui:Button text="Reload Data" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ls-btn-reld" focusable="false" class="bs bs-button" style="color: rgb(128, 191, 255); border-top-left-radius: 0; border-bottom-left-radius: 0;" />
             </ui:GroupBox>
         </ui:GroupBox>
     </ui:VisualElement>

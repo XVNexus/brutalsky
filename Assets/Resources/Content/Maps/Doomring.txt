@@ -1,5 +1,5 @@
 1;!$#%^;@
-!tDoomring;tXveon;R-15,-15,30,30;C4C4C4CFF;CFFFFFFCC;D0;f0;f100
+!tDoomring;tXveon;R-15,-15,30,30;C4C4C4CFF;CFFFFFFCC;D0;f0;f100;b1
 $V0,5;i0
 $V5,0;i0
 $V0,-5;i0

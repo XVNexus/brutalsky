@@ -19,16 +19,16 @@ namespace Core
         public float shoveDampening;
         public float shakeInterval;
         public float simSpeed;
-        public float followPositionSmoothing;
-        public float followSizeSmoothing;
+        public Vector2 followSpeed;
         public float followRectScale;
-        public Vector2 minFollowRectSize;
-        public float minFollowViewSize;
+        public float followMinSize;
+        public float followViewSizeThreshold;
 
         // Exposed properties
         public Rect BaseRect { get; private set; } = new(-20f, -10f, 40f, 20f);
         public Vector2 ViewPosition { get; private set; } = new(0f, 0f);
         public Vector2 ViewSize { get; private set; } = new(40f, 20f);
+        public float OrthoSize { get; private set; } = 10f;
         public Dictionary<string, Transform> FollowTargets { get; } = new();
 
         // Local variables
@@ -99,7 +99,7 @@ namespace Core
         public void SetBaseRect(Rect baseRect)
         {
             BaseRect = baseRect;
-            _enableFollow = baseRect.size.magnitude > minFollowViewSize;
+            _enableFollow = baseRect.size.magnitude > followViewSizeThreshold;
             SetViewRect(baseRect);
         }
 
@@ -107,18 +107,28 @@ namespace Core
         {
             ViewPosition = viewRect.center;
             ViewSize = viewRect.size;
+            _cCamera.orthographicSize = ViewSize.ForceAspect(_cCamera.aspect).y * .5f;
         }
 
         public void SetViewRectSmooth(Rect viewRect, float positionFactor, float sizeFactor)
         {
             ViewPosition = MathfExt.MoveToExponential(ViewPosition, viewRect.center, positionFactor);
-            ViewSize = MathfExt.MoveToExponential(ViewSize, viewRect.size, sizeFactor);
+            ViewSize = viewRect.size;
+            _cCamera.orthographicSize = MathfExt.MoveToExponential(_cCamera.orthographicSize,
+                ViewSize.ForceAspect(_cCamera.aspect).y * .5f, sizeFactor);
         }
 
         // Event functions
-        private void OnPlayerSpawn(BsMap map, BsPlayer player, Vector2 position)
+        private void OnPlayerSpawn(BsMap map, BsPlayer player, Vector2 position, bool visible)
         {
-            StartFollowing(player);
+            if (visible)
+            {
+                StartFollowing(player);
+            }
+            else
+            {
+                StopFollowing(player);
+            }
         }
 
         private void OnPlayerDie(BsMap map, BsPlayer player)
@@ -143,11 +153,10 @@ namespace Core
             _shoveVelocity = MathfExt.Lerp(velocityFromSpring, velocityFromDampening, shoveDampening);
             _shoveOffset += _shoveVelocity * (simSpeed * Time.fixedDeltaTime);
 
-            // Apply position and size
+            // Apply position and shove
             var cameraTransform = _cCamera.transform;
             var newPosition = ViewPosition + _shoveOffset * _cCamera.orthographicSize;
             cameraTransform.localPosition = new Vector3(newPosition.x, newPosition.y, cameraTransform.localPosition.z);
-            _cCamera.orthographicSize = ViewSize.ForceAspect(_cCamera.aspect).y * .5f;
 
             // Focus on follow targets
             if (!_enableFollow) return;
@@ -164,15 +173,15 @@ namespace Core
                     max = MathfExt.Max(target, max);
                 }
                 var followPosition = MathfExt.Mean(min, max);
-                var followSize = Vector2.one * ((max - min).magnitude * followRectScale);
-                targetRect = new Rect(followPosition, Vector2.zero).Resize(MathfExt.Max(followSize, minFollowRectSize));
+                var followSize = (max - min).magnitude * followRectScale;
+                targetRect = new Rect(followPosition, Vector2.zero)
+                    .Resize(Vector2.one * Mathf.Max(followSize, followMinSize));
             }
             else
             {
                 targetRect = BaseRect;
             }
-            SetViewRectSmooth(targetRect,
-                followPositionSmoothing * Time.fixedDeltaTime, followSizeSmoothing * Time.fixedDeltaTime);
+            SetViewRectSmooth(targetRect, followSpeed.x * Time.fixedDeltaTime, followSpeed.y * Time.fixedDeltaTime);
         }
     }
 }

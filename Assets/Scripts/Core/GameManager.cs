@@ -21,8 +21,8 @@ namespace Core
         public bool MapChangeActive { get; private set; }
 
         // Config options
+        public bool autoRestart;
         public Color loadingColor;
-        public bool regenerateMaps;
 
         // Init functions
         protected override void OnStart()
@@ -35,34 +35,9 @@ namespace Core
             EventSystem._.OnPlayerDie -= OnPlayerDie;
         }
 
-        protected override void OnLoad()
-        {
-            // Always resave void because I keep testing shit on it
-            MapSystem._.ResaveBuiltinMap("Void");
-            if (!regenerateMaps) return;
-
-            // Resave builtin maps
-            MapSystem._.ResaveBuiltinMaps(new[] { "Brutalsky", "Doomring", "Tossup" });
-
-            // Generate box maps
-            var shapeNames = new[] { "Platform", "Box", "Cage", "Tunnel" };
-            var shapes = new[] { 0b1000, 0b1011, 0b1111, 0b1100 };
-            var sizeNames = new[] { "Small", "Medium", "Large" };
-            var sizes = new[] { new Vector2(20f, 10f), new Vector2(40f, 20f), new Vector2(80f, 40f) };
-            for (var i = 0; i < shapes.Length; i++) for (var j = 0; j < sizes.Length; j++)
-            {
-                MapSystem._.SaveMap(MapGenerator.Box($"{sizeNames[j]} {shapeNames[i]}", shapes[i], sizes[j]));
-            }
-
-            // TODO: GENERATE PLATFORMER MAPS
-
-            // TODO: GENERATE TERRAIN MAPS
-
-            // TODO: GENERATE MAZE MAPS
-        }
-
         protected override void OnLink()
         {
+            LoadData();
             InitGame(MapSystem.GenerateId("Void", "Xveon"), new[]
             {
                 new BsPlayer(PlayerType.Main, "Player 1", new Color(1f, .5f, 0f)),
@@ -71,19 +46,49 @@ namespace Core
         }
 
         // System functions
-        public void InitGame(uint starterMapId, BsPlayer[] activePlayers, float animTime)
+        public static void LoadData()
         {
-            MapSystem._.LoadAllMapFiles();
-            MapSystem._.RegisterPlayers(activePlayers);
-            MapSystem._.BuildMap(starterMapId);
-            MapSystem._.SpawnAllPlayers();
-            CameraSystem._.cCameraCover.gameObject.LeanColor(loadingColor.SetAlpha(0f), animTime * .4f)
-                .setEaseInOutCubic();
+            // Clear any previously loaded maps
+            if (MapSystem._.MapList.Count > 0)
+            {
+                MapSystem._.UnregisterMaps();
+            }
+
+            // Load builtin maps
+            MapSystem._.LoadMapAssets(new[] { "Void", "Brutalsky", "Doomring", "Tossup" });
+
+            // Load custom maps
+            MapSystem._.LoadMapFiles();
+
+            // Generate box maps
+            var shapes = new[] { 0b1000, 0b1011, 0b1111, 0b1100 };
+            var sizes = new[] { new Vector2(20f, 10f), new Vector2(40f, 20f), new Vector2(80f, 40f) };
+            for (var i = 0; i < shapes.Length; i++) for (var j = 0; j < sizes.Length; j++)
+            {
+                MapSystem._.RegisterMap(MapGenerator.Box($"Box {i * sizes.Length + j + 1}", shapes[i], sizes[j]));
+            }
+
+            // Generate platformer maps
+            const int variantCount = 5;
+            for (var i = 1; i < variantCount + 1; i++)
+            {
+                MapSystem._.RegisterMap(MapGenerator.Platformer($"Platformer {i}", 50f + i * 50f,
+                    (uint)(i * 0x69), i < variantCount ? $"Platformer {i + 1}" : ""));
+            }
+
+            // TODO: GENERATE TERRAIN MAPS
+
+            // TODO: GENERATE MAZE MAPS
         }
 
-        public void ReloadData()
+        public void InitGame(uint starterMapId, BsPlayer[] activePlayers, float animTime)
         {
-            MapSystem._.LoadAllMapFiles();
+            MapSystem._.LoadMapFiles();
+            MapSystem._.RegisterPlayers(activePlayers);
+            MapSystem._.BuildMap(starterMapId);
+            MapSystem._.SpawnPlayers();
+            CameraSystem._.cCameraCover.gameObject.LeanColor(loadingColor.SetAlpha(0f), animTime * .4f)
+                .setEaseInOutCubic();
         }
 
         public void StartRound(uint mapId)
@@ -108,12 +113,10 @@ namespace Core
                 .setEaseInOutCubic()
                 .setOnComplete(() =>
                 {
-                    MapSystem._.SetAllPlayersFrozen(true);
                     MapSystem._.BuildMap(mapId);
-                    MapSystem._.SpawnAllPlayers();
+                    MapSystem._.SpawnPlayers();
                     camCover.LeanDelayedCall(animTime * .2f, () =>
                         {
-                            MapSystem._.SetAllPlayersFrozen(false);
                             camCover.LeanColor(loadingColor.SetAlpha(0f), animTime * .4f)
                                 .setEaseInOutCubic()
                                 .setOnComplete(() =>
@@ -140,10 +143,12 @@ namespace Core
         // Event functions
         private void OnPlayerDie(BsMap map, BsPlayer player)
         {
+            if (MapChangeActive) return;
             var livingPlayers = (from activePlayer in MapSystem._.ActivePlayers.Values
                 where ((PlayerController)activePlayer.InstanceController).GetSub<PlayerHealthController>("health").alive
+                    && !MapSystem._.GetPlayerFrozen(player.InstanceObject)
                 select activePlayer).ToList();
-            if (livingPlayers.Count == 1)
+            if ((autoRestart && livingPlayers.Count == 1) || livingPlayers.Count == 0)
             {
                 Invoke(nameof(RestartRound), 3f);
             }

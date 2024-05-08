@@ -393,12 +393,12 @@ namespace Brutalsky.Logic
         // System nodes
         public static BsNode Redirect(string title, string author)
         {
-            return new BsNode("srdr", new float[1], Array.Empty<float>(), (inputs, _) =>
+            return new BsNode("srdr", new float[1], Array.Empty<float>(), 
+                () => new[] { 0f }, (inputs, state) =>
             {
-                if (BsMatrix.ToBool(inputs[0]))
-                {
-                    GameManager._.StartRound(MapSystem.GenerateId(title, author));
-                }
+                if (!BsMatrix.ToBool(inputs[0]) || BsMatrix.ToBool(state[0])) return Array.Empty<float>();
+                GameManager._.StartRound(MapSystem.GenerateId(title, author));
+                state[0] = 1f;
                 return Array.Empty<float>();
             }, new LcsProp(LcsType.String, title), new LcsProp(LcsType.String, author));
         }

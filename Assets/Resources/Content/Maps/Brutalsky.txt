@@ -1,5 +1,5 @@
 1;!$#%^;@
-!tBrutalsky;tXveon;R-20,-10,40,20;C4C4C4CFF;CFFFFFFCC;D1;f20;f100
+!tBrutalsky;tXveon;R-20,-10,40,20;C4C4C4CFF;CFFFFFFCC;D1;f20;f100;b1
 $V-16,1;i1
 $V-14,1;i0
 $V14,1;i0
@@ -40,7 +40,7 @@ $V16,1;i1
 #tsh;tlava-right-wall-bottom;t;t;T13,-13.25,0;L1;b1;O3,13,0.5;M2,0,0,10,-100;b0;C80261AFF;b1
 #tsh;tlava-right-wall-left;t;t;T6.75,-11.5,0;L1;b1;O3,0.5,3;M2,0,0,10,0;b0;C80261AFF;b1
 #tsh;tlava-right-wall-right;t;t;T19.25,-11.5,0;L1;b1;O3,0.5,3;M2,0,0,10,0;b0;C80261AFF;b1
-#tsn;tspinner-sensor;t;t;T0,4,0;L1;b1;V10,10
+#tsn;tspinner-sensor;t;t;T0,4,0;L1;b1;f10
 %tbcfl;f50
 %tbcfl;f5000
 %tfmux;i2

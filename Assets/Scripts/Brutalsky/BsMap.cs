@@ -34,6 +34,8 @@ namespace Brutalsky
         public Direction GravityDirection { get; set; }
         public float GravityStrength { get; set; }
         public float PlayerHealth { get; set; }
+        public bool AllowDummies { get; set; }
+
         public List<BsSpawn> Spawns { get; } = new();
         public Dictionary<(string, string), BsObject> Objects { get; } = new();
         public List<BsNode> Nodes { get; } = new();
@@ -213,7 +215,8 @@ namespace Brutalsky
                     new LcsProp(LcsType.Color, LightingColor),
                     new LcsProp(LcsType.Direction, GravityDirection),
                     new LcsProp(LcsType.Float, GravityStrength),
-                    new LcsProp(LcsType.Float, PlayerHealth)
+                    new LcsProp(LcsType.Float, PlayerHealth),
+                    new LcsProp(LcsType.Bool, AllowDummies)
                 })
             };
             lines.AddRange(Spawns.Select(spawn => spawn.ToLcs()));
@@ -240,6 +243,7 @@ namespace Brutalsky
             result.GravityDirection = (Direction)metadata[5].Value;
             result.GravityStrength = (float)metadata[6].Value;
             result.PlayerHealth = (float)metadata[7].Value;
+            result.AllowDummies = (bool)metadata[8].Value;
             for (var i = 1; i < document.Lines.Count; i++)
             {
                 var line = document.Lines[i];

@@ -13,6 +13,7 @@ using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using Utils.Constants;
 using Utils.Object;
+using Utils.Player;
 
 namespace Core
 {
@@ -30,7 +31,8 @@ namespace Core
         public bool useBinaryFormat;
 
         // Exposed properties
-        public Dictionary<uint, string> MapList { get; } = new();
+        // Maps are saved as gzip binary to not take up 2 terabytes of memory
+        public Dictionary<uint, byte[]> MapList { get; } = new();
         [CanBeNull] public BsMap ActiveMap { get; private set; }
         public Dictionary<string, BsPlayer> ActivePlayers { get; } = new();
         [CanBeNull] public BsMatrix Matrix { get; private set; }
@@ -64,23 +66,25 @@ namespace Core
             ActivePlayers.Clear();
         }
 
-        public void SpawnAllPlayers()
+        public void SpawnPlayers()
         {
             var playerList = ActivePlayers.Values.ToList();
             while (playerList.Count > 0)
             {
                 var index = ResourceSystem.Random.NextInt(playerList.Count);
-                SpawnPlayer(playerList[index]);
+                var player = playerList[index];
+                SpawnPlayer(player, ActiveMap.AllowDummies || player.Type != PlayerType.Dummy);
                 playerList.RemoveAt(index);
             }
         }
 
-        public void SpawnPlayer(BsPlayer player)
+        public void SpawnPlayer(BsPlayer player, bool visible = true)
         {
+            SetPlayerFrozen(player.InstanceObject, !visible);
+            var position = visible ? ActiveMap.SelectSpawn() : new Vector2(1e6f, 1e6f);
             player.Health = ActiveMap.PlayerHealth;
-            var position = ActiveMap.SelectSpawn();
             player.InstanceObject.transform.localPosition = position;
-            EventSystem._.EmitPlayerSpawn(ActiveMap, player, position);
+            EventSystem._.EmitPlayerSpawn(ActiveMap, player, position, visible);
         }
 
         public bool GetPlayerFrozen(GameObject playerInstanceObject)
@@ -88,7 +92,7 @@ namespace Core
             return !playerInstanceObject.GetComponent<Rigidbody2D>().simulated;
         }
 
-        public void SetAllPlayersFrozen(bool frozen, bool resetVelocity = false)
+        public void SetPlayersFrozen(bool frozen, bool resetVelocity = false)
         {
             foreach (var player in ActivePlayers.Values)
             {
@@ -106,97 +110,81 @@ namespace Core
             rigidbody.angularVelocity = 0f;
         }
 
-        public void ResaveBuiltinMaps(IEnumerable<string> filenames)
+        public void LoadMapAssets(IEnumerable<string> filenames)
         {
             foreach (var filename in filenames)
             {
-                ResaveBuiltinMap(filename);
+                LoadMapAsset(filename);
             }
         }
 
-        public void ResaveBuiltinMap(string filename)
+        public void LoadMapAsset(string filename)
         {
-            SaveMap(LoadMapAsset(filename));
+            RegisterMap(BsMap.Parse(Resources.Load<TextAsset>($"{Paths.Content}/{Paths.Maps}/{filename}").text));
         }
 
-        public void LoadAllMapFiles()
+        public void LoadMapFiles()
         {
-            if (MapList.Count > 0)
-            {
-                UnloadAllMapFiles();
-            }
             var path = $"{ResourceSystem.DataPath}/{Paths.Maps}";
             if (!Directory.Exists(path)) return;
             foreach (var mapPath in Directory.GetFiles(path))
             {
-                var mapFilename = Regex.Match(mapPath,
-                    $@"\d+(?=\.({saveFormatString}|{saveFormatBinary}))").Value;
-                var map = LoadMap(mapFilename);
-                EventSystem._.EmitMapPreload(map);
-                MapList[map.Id] = mapFilename;
+                LoadMapFile(Regex.Match(mapPath, $@"\d+(?=\.({saveFormatString}|{saveFormatBinary}))").Value);
             }
         }
 
-        public void UnloadAllMapFiles()
+        public void LoadMapFile(string filename)
+        {
+            var pathBinary = $"{ResourceSystem.DataPath}/{Paths.Maps}/{filename}.{saveFormatBinary}";
+            var pathString = $"{ResourceSystem.DataPath}/{Paths.Maps}/{filename}.{saveFormatString}";
+            BsMap map;
+            if (File.Exists(pathBinary))
+            {
+                using var stream = new FileStream(pathBinary, FileMode.Open);
+                using var reader = new BinaryReader(stream);
+                map = BsMap.Parse(reader.ReadBytes((int)stream.Length));
+            }
+            else if (File.Exists(pathString))
+            {
+                using var reader = new StreamReader(pathString);
+                map = BsMap.Parse(reader.ReadToEnd());
+            }
+            else
+            {
+                throw Errors.NoItemFound("map file", filename);
+            }
+            RegisterMap(map);
+        }
+
+        public void SaveMapFile(BsMap map)
+        {
+            if (useBinaryFormat)
+            {
+                var path = $"{ResourceSystem.DataPath}/{Paths.Maps}/{map.Id}.{saveFormatBinary}";
+                new FileInfo(path).Directory?.Create();
+                using var stream = new FileStream(path, FileMode.Create);
+                using var writer = new BinaryWriter(stream);
+                writer.Write(map.Binify());
+            }
+            else
+            {
+                var path = $"{ResourceSystem.DataPath}/{Paths.Maps}/{map.Id}.{saveFormatString}";
+                new FileInfo(path).Directory?.Create();
+                using var writer = new StreamWriter(path);
+                writer.Write(map.Stringify());
+            }
+        }
+
+        public void RegisterMap(BsMap map)
+        {
+            EventSystem._.EmitMapPreload(map);
+            MapList[map.Id] = map.Binify();
+        }
+
+        public void UnregisterMaps()
         {
             EventSystem._.EmitMapsUnload();
             MapList.Clear();
-        }
-
-        public BsMap LoadMapAsset(string filename)
-        {
-            return BsMap.Parse(Resources.Load<TextAsset>($"{Paths.Content}/{Paths.Maps}/{filename}").text);
-        }
-
-        public BsMap LoadMap(string filename)
-        {
-            try
-            {
-                var pathBinary = $"{ResourceSystem.DataPath}/{Paths.Maps}/{filename}.{saveFormatBinary}";
-                var pathString = $"{ResourceSystem.DataPath}/{Paths.Maps}/{filename}.{saveFormatString}";
-                if (File.Exists(pathBinary))
-                {
-                    using var stream = new FileStream(pathBinary, FileMode.Open);
-                    using var reader = new BinaryReader(stream);
-                    return BsMap.Parse(reader.ReadBytes((int)stream.Length));
-                }
-                if (File.Exists(pathString))
-                {
-                    using var reader = new StreamReader(pathString);
-                    return BsMap.Parse(reader.ReadToEnd());
-                }
-                throw Errors.NoItemFound("map file", filename);
-            }
-            catch (Exception ex)
-            {
-                throw Errors.ErrorWhile("loading map", filename, ex);
-            }
-        }
-
-        public void SaveMap(BsMap map)
-        {
-            try
-            {
-                if (useBinaryFormat)
-                {
-                    var path = $"{ResourceSystem.DataPath}/{Paths.Maps}/{map.Id}.{saveFormatBinary}";
-                    new FileInfo(path).Directory?.Create();
-                    using var stream = new FileStream(path, FileMode.Create);
-                    using var writer = new BinaryWriter(stream);
-                    writer.Write(map.Binify());
-                }
-                else
-                {
-                    var path = $"{ResourceSystem.DataPath}/{Paths.Maps}/{map.Id}.{saveFormatString}";
-                    new FileInfo(path).Directory?.Create();
-                    using var writer = new StreamWriter(path);
-                    writer.Write(map.Stringify());
-                }
-            }
-            catch (Exception ex)
-            {
-                throw Errors.ErrorWhile("saving map", map, ex);
-            }
         }
 
         public void BuildMap(string title, string author)
@@ -208,7 +196,7 @@ namespace Core
         {
             if (id > 0)
             {
-                BuildMap(LoadMap(MapList[id]));
+                BuildMap(BsMap.Parse(MapList[id]));
             }
             else
             {

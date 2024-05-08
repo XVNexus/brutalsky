@@ -35,8 +35,9 @@ namespace Core
         }
 
         // Event functions
-        public void EmitPlayerSpawn(BsMap map, BsPlayer player, Vector2 position) => OnPlayerSpawn?.Invoke(map, player, position);
-        public event Action<BsMap, BsPlayer, Vector2> OnPlayerSpawn;
+        public void EmitPlayerSpawn(BsMap map, BsPlayer player, Vector2 position, bool visble)
+            => OnPlayerSpawn?.Invoke(map, player, position, visble);
+        public event Action<BsMap, BsPlayer, Vector2, bool> OnPlayerSpawn;
 
         public void EmitPlayerDie(BsMap map, BsPlayer player) => OnPlayerDie?.Invoke(map, player);
         public event Action<BsMap, BsPlayer> OnPlayerDie;

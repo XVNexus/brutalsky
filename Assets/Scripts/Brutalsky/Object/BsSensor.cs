@@ -18,9 +18,9 @@ namespace Brutalsky.Object
         public override string Tag => Tags.SensorPrefix;
         public override bool HasLogic => true;
 
-        public Vector2 Size { get; set; }
+        public float Size { get; set; }
 
-        public BsSensor(string id, ObjectTransform transform, bool simulated, Vector2 size)
+        public BsSensor(string id, ObjectTransform transform, bool simulated, float size)
             : base(id, transform, ObjectLayer.Midground, simulated)
         {
             Size = size;
@@ -37,7 +37,7 @@ namespace Brutalsky.Object
             controller.Object = this;
 
             // Apply size
-            gameObject.transform.localScale = Size;
+            gameObject.transform.localScale = Vector2.one * Size;
 
             // Apply position and rotation
             gameObject.transform.localPosition = Transform.Position;
@@ -59,13 +59,13 @@ namespace Brutalsky.Object
         {
             return new LcsProp[]
             {
-                new(LcsType.Vector2, Size)
+                new(LcsType.Float, Size)
             };
         }
 
         protected override void _FromLcs(LcsProp[] props)
         {
-            Size = (Vector2)props[0].Value;
+            Size = (float)props[0].Value;
         }
     }
 }

@@ -109,7 +109,7 @@ namespace Controllers.Player
             };
         }
 
-        private void OnPlayerSpawn(BsMap map, BsPlayer player, Vector2 position)
+        private void OnPlayerSpawn(BsMap map, BsPlayer player, Vector2 position, bool visible)
         {
             if (player.Id != Master.Object.Id) return;
             _cRigidbody2D.velocity = Vector2.zero;

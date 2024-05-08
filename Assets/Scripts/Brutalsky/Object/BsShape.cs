@@ -26,11 +26,12 @@ namespace Brutalsky.Object
         public bool Glow { get; set; }
 
         public BsShape(string id, ObjectTransform transform, ObjectLayer layer, bool simulated, Form form,
-            [CanBeNull] ShapeMaterial material = null, Color? color = null, bool glow = false)
+            [CanBeNull] ShapeMaterial material = null, bool dynamic = false, Color? color = null, bool glow = false)
             : base(id, transform, layer, simulated)
         {
             Form = form;
             Material = material ?? ShapeMaterial.Metal;
+            Dynamic = dynamic;
             Color = color ?? ColorExt.Ether;
             Glow = glow;
         }

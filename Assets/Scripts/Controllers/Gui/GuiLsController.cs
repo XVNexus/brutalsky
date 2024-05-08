@@ -49,7 +49,7 @@ namespace Controllers.Gui
             });
             GuiSystem._.RegisterButton(PaneId, "reld", () =>
             {
-                MapSystem._.LoadAllMapFiles();
+                GameManager.LoadData();
             });
             GuiSystem._.RegisterButton(PaneId, "rest", () =>
             {
