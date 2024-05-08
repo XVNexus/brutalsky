@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Brutalsky;
@@ -28,8 +27,7 @@ namespace Core
         public float backgroundField;
 
         // Exposed properties
-        // Maps are saved as gzip binary to not take up 2 terabytes of memory
-        public Dictionary<uint, byte[]> MapList { get; } = new();
+        public Dictionary<uint, byte[]> MapList { get; } = new(); // Maps are saved as compressed binary files
         [CanBeNull] public BsMap ActiveMap { get; private set; }
         public Dictionary<string, BsPlayer> ActivePlayers { get; } = new();
         [CanBeNull] public BsMatrix Matrix { get; private set; }

@@ -20,15 +20,15 @@ namespace Core
         public float shakeInterval;
         public float simSpeed;
         public Vector2 followSpeed;
-        public float followRectScale;
+        public Vector2 followLead;
+        public float followScale;
         public float followMinSize;
         public float followViewSizeThreshold;
 
         // Exposed properties
         public Rect BaseRect { get; private set; } = new(-20f, -10f, 40f, 20f);
         public Vector2 ViewPosition { get; private set; } = new(0f, 0f);
-        public Vector2 ViewSize { get; private set; } = new(40f, 20f);
-        public float OrthoSize { get; private set; } = 10f;
+        public float ViewSize { get; private set; } = 10f;
         public Dictionary<string, Transform> FollowTargets { get; } = new();
 
         // Local variables
@@ -36,10 +36,11 @@ namespace Core
         private Vector2 _shoveVelocity;
         private float _shake;
         private float _shakeTimer;
-        private float _lastCameraAspect;
         private bool _enableFollow;
-        private bool _isFollowing;
+        private bool _hasFollowTargets;
         private Rect _followRect;
+        private Vector2 _lastFollowPosition;
+        private float _lastCameraAspect;
 
         // External references
         public GameObject gCameraMount;
@@ -53,6 +54,8 @@ namespace Core
             EventSystem._.OnPlayerDie += OnPlayerDie;
 
             _cCamera = Camera.main;
+
+            InvokeRepeating(nameof(RareUpdate), 1f, 1f);
         }
 
         private void OnDestroy()
@@ -76,7 +79,7 @@ namespace Core
         public void StartFollowing(BsObject obj)
         {
             FollowTargets[obj.Id] = obj.InstanceObject.transform;
-            _isFollowing = true;
+            _hasFollowTargets = true;
         }
 
         public void StopFollowing(BsObject obj)
@@ -87,13 +90,13 @@ namespace Core
         public void StopFollowing(string id)
         {
             FollowTargets.Remove(id);
-            _isFollowing = FollowTargets.Count > 0;
+            _hasFollowTargets = FollowTargets.Count > 0;
         }
 
         public void ClearFollowing()
         {
             FollowTargets.Clear();
-            _isFollowing = false;
+            _hasFollowTargets = false;
         }
 
         public void SetBaseRect(Rect baseRect)
@@ -106,16 +109,14 @@ namespace Core
         public void SetViewRect(Rect viewRect)
         {
             ViewPosition = viewRect.center;
-            ViewSize = viewRect.size;
-            _cCamera.orthographicSize = ViewSize.ForceAspect(_cCamera.aspect).y * .5f;
+            ViewSize = viewRect.size.ForceAspect(_cCamera.aspect).y * .5f;
         }
 
         public void SetViewRectSmooth(Rect viewRect, float positionFactor, float sizeFactor)
         {
             ViewPosition = MathfExt.MoveToExponential(ViewPosition, viewRect.center, positionFactor);
-            ViewSize = viewRect.size;
-            _cCamera.orthographicSize = MathfExt.MoveToExponential(_cCamera.orthographicSize,
-                ViewSize.ForceAspect(_cCamera.aspect).y * .5f, sizeFactor);
+            ViewSize = MathfExt.MoveToExponential(ViewSize,
+                viewRect.size.ForceAspect(_cCamera.aspect).y * .5f, sizeFactor);
         }
 
         // Event functions
@@ -153,15 +154,16 @@ namespace Core
             _shoveVelocity = MathfExt.Lerp(velocityFromSpring, velocityFromDampening, shoveDampening);
             _shoveOffset += _shoveVelocity * (simSpeed * Time.fixedDeltaTime);
 
-            // Apply position and shove
+            // Apply position and size
             var cameraTransform = _cCamera.transform;
             var newPosition = ViewPosition + _shoveOffset * _cCamera.orthographicSize;
             cameraTransform.localPosition = new Vector3(newPosition.x, newPosition.y, cameraTransform.localPosition.z);
+            _cCamera.orthographicSize = ViewSize;
 
             // Focus on follow targets
             if (!_enableFollow) return;
             Rect targetRect;
-            if (_isFollowing)
+            if (_hasFollowTargets)
             {
                 var followPositions = FollowTargets.Values.Select(transform => (Vector2)transform.position).ToArray();
                 var min = followPositions[0];
@@ -173,15 +175,30 @@ namespace Core
                     max = MathfExt.Max(target, max);
                 }
                 var followPosition = MathfExt.Mean(min, max);
-                var followSize = (max - min).magnitude * followRectScale;
-                targetRect = new Rect(followPosition, Vector2.zero)
-                    .Resize(Vector2.one * Mathf.Max(followSize, followMinSize));
+                var followVelocity = (followPosition - _lastFollowPosition) * followLead.x;
+                _lastFollowPosition = followPosition;
+                var lookAhead = Vector2.zero;
+                if (followVelocity.magnitude <= 50f) // Do not lead the target during teleportation
+                {
+                    lookAhead = followVelocity * Mathf.Pow(followVelocity.magnitude, followLead.y);
+                }
+                targetRect = new Rect(followPosition + lookAhead, Vector2.zero)
+                    .Resize(Vector2.one * Mathf.Max((max - min).magnitude * followScale, followMinSize));
             }
             else
             {
                 targetRect = BaseRect;
             }
             SetViewRectSmooth(targetRect, followSpeed.x * Time.fixedDeltaTime, followSpeed.y * Time.fixedDeltaTime);
+        }
+
+        private void RareUpdate()
+        {
+            // Update camera size if the screen aspect ratio changes
+            if (_enableFollow || Mathf.Approximately(_cCamera.aspect, _lastCameraAspect)) return;
+            ViewSize = BaseRect.size.ForceAspect(_cCamera.aspect).y * .5f;
+            _cCamera.orthographicSize = ViewSize;
+            _lastCameraAspect = _cCamera.aspect;
         }
     }
 }

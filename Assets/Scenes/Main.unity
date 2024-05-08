@@ -955,7 +955,8 @@ MonoBehaviour:
   shakeInterval: 0.1
   simSpeed: 20
   followSpeed: {x: 2.5, y: 2.5}
-  followRectScale: 1.5
+  followLead: {x: 2.25, y: 1.25}
+  followScale: 1.5
   followMinSize: 25
   followViewSizeThreshold: 50
   gCameraMount: {fileID: 223431134}
