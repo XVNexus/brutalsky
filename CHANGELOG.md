@@ -1,3 +1,22 @@
+## *Nightly 2024.05.08*
+
+#### ADDED
+- particle effect for goals, previously known as redirects
+- options for player sensor to select whether or not to output a logic signal for enter, stay, and exit events
+- target leading for followcam so fast moving targets do not leave the frame
+
+#### CHANGED
+- increased size of void map to one square kilometer
+- improved followcam leading algorithm so it doesn't overshoot very fast targets
+- limited map size to one square kilometer
+- made goals their own object instead of a standalone logic node
+
+#### FIXED
+- camera did not adapt to screen aspect ratio automatically on maps without followcam
+- followcam jolted when a player died close to another player
+- logic links did not get saved with the map if there were no logic nodes
+
+
 ## *Nightly 2024.05.07*
 
 #### ADDED
