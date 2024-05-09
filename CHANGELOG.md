@@ -170,7 +170,7 @@
 ## *Nightly 2024.04.14*
 
 #### ADDED
-- new experimental builtin map
+- new experimental default map
 
 #### CHANGED
 - improved map previews
