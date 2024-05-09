@@ -17,12 +17,12 @@ namespace Core
         public static GameManager _ { get; private set; }
         private void Awake() => _ = this;
 
-        // Exposed properties
-        public bool MapChangeActive { get; private set; }
-
         // Config options
         public bool autoRestart;
         public Color loadingColor;
+
+        // Exposed properties
+        private bool _mapChangeActive;
 
         // Init functions
         protected override void OnStart()
@@ -93,23 +93,28 @@ namespace Core
                 .setEaseInOutCubic();
         }
 
-        public void StartRound(uint mapId)
+        public bool StartRound(uint mapId)
         {
+            if (_mapChangeActive) return false;
             CancelInvoke();
-            ChangeMap(mapId, true, 1.5f);
+            return ChangeMap(!MapSystem._.MapLoaded || mapId != MapSystem._.ActiveMap.Id ? mapId : 0,
+                true, 1.5f);
         }
 
-        public void RestartRound()
+        public bool RestartRound()
         {
+            if (_mapChangeActive) return false;
             CancelInvoke();
-            ChangeMap(0, false, 1f);
+            return ChangeMap(0, false, 1f);
         }
 
-        public void ChangeMap(uint mapId, bool moveCam, float animTime)
+        public bool ChangeMap(uint mapId, bool moveCam, float animTime)
         {
+            if (_mapChangeActive) return false;
+
             // Fade out view to hide level loading and fade back in with new level
             var camCover = CameraSystem._.cCameraCover.gameObject;
-            MapChangeActive = true;
+            _mapChangeActive = true;
             TimeSystem._.ForceUnpause();
             camCover.LeanColor(loadingColor, animTime * .4f)
                 .setEaseInOutCubic()
@@ -123,14 +128,14 @@ namespace Core
                                 .setEaseInOutCubic()
                                 .setOnComplete(() =>
                                 {
-                                    MapChangeActive = false;
+                                    _mapChangeActive = false;
                                     TimeSystem._.RemoveForcePause();
                                 });
                         });
                 });
 
             // Move camera down as if the old level ascends into the sky and is replaced by the new level from below
-            if (!moveCam) return;
+            if (!moveCam) return true;
             var camMount = CameraSystem._.gCameraMount;
             camMount.LeanMoveLocal(new Vector2(0f, CameraSystem._.BaseRect.height * -3f), animTime * .5f)
                 .setEaseInQuint()
@@ -140,12 +145,14 @@ namespace Core
                     camMount.LeanMoveLocal(new Vector2(0f, 0f), animTime * .5f)
                         .setEaseOutQuint();
                 });
+
+            return true;
         }
 
         // Event functions
         private void OnPlayerDie(BsMap map, BsPlayer player)
         {
-            if (MapChangeActive) return;
+            if (_mapChangeActive) return;
             var livingPlayers = (from activePlayer in MapSystem._.ActivePlayers.Values
                 where ((PlayerController)activePlayer.InstanceController).GetSub<PlayerHealthController>("health").alive
                     && !MapSystem._.GetPlayerFrozen(player.InstanceObject)

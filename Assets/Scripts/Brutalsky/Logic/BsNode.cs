@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using Core;
 using UnityEngine;
 using Utils.Constants;
 using Utils.Lcs;
@@ -14,6 +13,7 @@ namespace Brutalsky.Logic
         public LcsProp[] Config { get; }
         public float[] Inputs { get; set; }
         public float[] Outputs { get; private set; }
+
         private float[] _state = Array.Empty<float>();
         private readonly float[] _defaultInputs;
         private readonly float[] _defaultOutputs;
@@ -390,19 +390,6 @@ namespace Brutalsky.Logic
             });
         }
 
-        // System nodes
-        public static BsNode Redirect(string title, string author)
-        {
-            return new BsNode("srdr", new float[1], Array.Empty<float>(), 
-                () => new[] { 0f }, (inputs, state) =>
-            {
-                if (!BsMatrix.ToBool(inputs[0]) || BsMatrix.ToBool(state[0])) return Array.Empty<float>();
-                GameManager._.StartRound(MapSystem.GenerateId(title, author));
-                state[0] = 1f;
-                return Array.Empty<float>();
-            }, new LcsProp(LcsType.String, title), new LcsProp(LcsType.String, author));
-        }
-
         public LcsLine ToLcs()
         {
             var props = new LcsProp[Config.Length + 1];
@@ -456,8 +443,6 @@ namespace Brutalsky.Logic
                 "masn" => Asin(),
                 "macs" => Acos(),
                 "matn" => Atan(),
-                // System nodes
-                "srdr" => Redirect((string)line.Props[1].Value, (string)line.Props[2].Value),
                 _ => throw Errors.InvalidItem("node tag", tag)
             };
         }

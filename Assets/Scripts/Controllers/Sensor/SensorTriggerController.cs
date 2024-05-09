@@ -21,12 +21,26 @@ namespace Controllers.Sensor
         // Event functions
         private void OnTriggerEnter2D(Collider2D other)
         {
-            OnTrigger(other);
+            if (Master.Object.OnEnter)
+            {
+                OnTrigger(other);
+            }
         }
 
         private void OnTriggerStay2D(Collider2D other)
         {
-            OnTrigger(other);
+            if (Master.Object.OnStay)
+            {
+                OnTrigger(other);
+            }
+        }
+
+        private void OnTriggerExit2D(Collider2D other)
+        {
+            if (Master.Object.OnExit)
+            {
+                OnTrigger(other);
+            }
         }
 
         private void OnTrigger(Collider2D other)

@@ -156,7 +156,7 @@ namespace Utils.Map
                 Form.Rectangle(10f, 1f),
                 ObjectMaterial,
                 false,
-                new Color(1f, .3f, .1f),
+                ColorExt.Lava,
                 true
             ));
             result.AddObject(new BsShape
@@ -168,7 +168,7 @@ namespace Utils.Map
                 Form.Rectangle(10f, 1f),
                 ObjectMaterial,
                 false,
-                new Color(.3f, 1f, .1f),
+                ColorExt.Medicine,
                 true
             ));
             var cursor = 10f;
@@ -196,14 +196,15 @@ namespace Utils.Map
             }
             if (nextTitle.Length > 0)
             {
-                result.AddObject(new BsSensor(
-                    "sensor-goal",
+                result.AddObject(new BsGoal(
+                    "goal",
                     new ObjectTransform(length + 20f, 2.5f),
                     true,
-                    5f
+                    5f,
+                    ColorExt.Medicine,
+                    nextTitle,
+                    Author
                 ));
-                result.AddNode(BsNode.Redirect(nextTitle, Author));
-                result.AddLink(new BsLink((1, 0), (0, 0)));
             }
             return result;
         }

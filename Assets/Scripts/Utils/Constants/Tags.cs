@@ -13,6 +13,8 @@ namespace Utils.Constants
         public const string SensorTag = "Sensor";
         public const string MountPrefix = "mn";
         public const string MountTag = "Mount";
+        public const string GoalPrefix = "gl";
+        public const string GoalTag = "Goal";
 
         // Addons
         public const string JointPrefix = "jn";

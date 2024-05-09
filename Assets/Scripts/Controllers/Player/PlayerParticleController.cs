@@ -59,7 +59,7 @@ namespace Controllers.Player
             // Sync particle system colors with player color
             foreach (var cParticleSystem in _cAllParticleSystems)
             {
-                cParticleSystem.GetComponent<Renderer>().material.color = _cSpriteRenderer.color;
+                cParticleSystem.GetComponent<Renderer>().material.color = Master.Object.Color;
             }
         }
 

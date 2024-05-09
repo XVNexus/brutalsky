@@ -1052,6 +1052,7 @@ MonoBehaviour:
   pPool: {fileID: 916318484910277029, guid: 03ad247d5d92f3916986acd6db4520cb, type: 3}
   pSensor: {fileID: 333419446728189740, guid: 6298eb93ba06640d9a7b525de23fc92d, type: 3}
   pMount: {fileID: 333419446728189740, guid: 9174c08f56d9ad1f6a579504c6b020c3, type: 3}
+  pGoal: {fileID: 333419446728189740, guid: 36b23f01981ecce708363278d9b1d7f6, type: 3}
   aLitMaterial: {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   aUnlitMaterial: {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
 --- !u!114 &581734024

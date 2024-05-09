@@ -44,6 +44,7 @@ namespace Core
         public GameObject pPool;
         public GameObject pSensor;
         public GameObject pMount;
+        public GameObject pGoal;
         public Material aLitMaterial;
         public Material aUnlitMaterial;
 
@@ -57,6 +58,7 @@ namespace Core
                 Tags.PoolPrefix => new BsPool(),
                 Tags.SensorPrefix => new BsSensor(),
                 Tags.MountPrefix => new BsMount(),
+                Tags.GoalPrefix => new BsGoal(),
                 _ => throw Errors.InvalidItem("object tag", tag)
             };
         }

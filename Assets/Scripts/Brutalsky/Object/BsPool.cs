@@ -23,8 +23,8 @@ namespace Brutalsky.Object
         public Color Color { get; set; }
         public bool Glow { get; set; }
 
-        public BsPool(string id, ObjectTransform transform, ObjectLayer layer, bool simulated, Vector2 size,
-            [CanBeNull] PoolChemical chemical = null, Color? color = null, bool glow = false)
+        public BsPool(string id, ObjectTransform transform, ObjectLayer layer, bool simulated,
+            Vector2 size, [CanBeNull] PoolChemical chemical = null, Color? color = null, bool glow = false)
             : base(id, transform, layer, simulated)
         {
             Size = size;

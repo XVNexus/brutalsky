@@ -39,6 +39,7 @@ namespace Core
         private bool _enableFollow;
         private bool _hasFollowTargets;
         private Rect _followRect;
+        private int _lastFollowTargetCount;
         private Vector2 _lastFollowPosition;
         private float _lastCameraAspect;
 
@@ -178,11 +179,14 @@ namespace Core
                 var followVelocity = (followPosition - _lastFollowPosition) / Time.fixedDeltaTime;
                 _lastFollowPosition = followPosition;
                 var lookAhead = Vector2.zero;
-                if (followVelocity.magnitude <= 1000f) // Do not lead the target during teleportation
+                var followTargetCount = FollowTargets.Count;
+                // Do not lead the target during teleportation
+                if (followVelocity.magnitude <= 1000f && followTargetCount == _lastFollowTargetCount)
                 {
                     lookAhead = followVelocity * (followLead.x *
                         Mathf.Min(followVelocity.magnitude / followLead.y, 1f));
                 }
+                _lastFollowTargetCount = followTargetCount;
                 targetRect = new Rect(followPosition + lookAhead, Vector2.zero)
                     .Resize(Vector2.one * Mathf.Max((max - min).magnitude * followScale, followMinSize));
             }

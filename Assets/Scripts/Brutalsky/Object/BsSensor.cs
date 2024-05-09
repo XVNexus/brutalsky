@@ -19,11 +19,18 @@ namespace Brutalsky.Object
         public override bool HasLogic => true;
 
         public float Size { get; set; }
+        public bool OnEnter { get; set; }
+        public bool OnStay { get; set; }
+        public bool OnExit { get; set; }
 
-        public BsSensor(string id, ObjectTransform transform, bool simulated, float size)
+        public BsSensor(string id, ObjectTransform transform, bool simulated,
+            float size, bool onEnter, bool onStay, bool onExit)
             : base(id, transform, ObjectLayer.Midground, simulated)
         {
             Size = size;
+            OnEnter = onEnter;
+            OnStay = onStay;
+            OnExit = onExit;
         }
 
         public BsSensor()
@@ -36,12 +43,9 @@ namespace Brutalsky.Object
             var controller = gameObject.GetComponent<SensorController>();
             controller.Object = this;
 
-            // Apply size
+            // Apply size and position
             gameObject.transform.localScale = Vector2.one * Size;
-
-            // Apply position and rotation
             gameObject.transform.localPosition = Transform.Position;
-            gameObject.transform.localRotation = Quaternion.Euler(0f, 0f, Transform.Rotation);
 
             return controller;
         }
@@ -59,13 +63,19 @@ namespace Brutalsky.Object
         {
             return new LcsProp[]
             {
-                new(LcsType.Float, Size)
+                new(LcsType.Float, Size),
+                new(LcsType.Bool, OnEnter),
+                new(LcsType.Bool, OnStay),
+                new(LcsType.Bool, OnExit)
             };
         }
 
         protected override void _FromLcs(LcsProp[] props)
         {
             Size = (float)props[0].Value;
+            OnEnter = (bool)props[1].Value;
+            OnStay = (bool)props[2].Value;
+            OnExit = (bool)props[3].Value;
         }
     }
 }

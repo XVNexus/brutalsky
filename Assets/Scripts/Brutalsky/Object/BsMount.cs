@@ -21,7 +21,8 @@ namespace Brutalsky.Object
         public Vector2 GripStrength { get; set; }
         public Vector2 EjectionForce { get; set; }
 
-        public BsMount(string id, ObjectTransform transform, bool simulated, Vector2 gripStrength, Vector2 ejectionForce)
+        public BsMount(string id, ObjectTransform transform, bool simulated,
+            Vector2 gripStrength, Vector2 ejectionForce)
             : base(id, transform, ObjectLayer.Midground, simulated)
         {
             GripStrength = gripStrength;

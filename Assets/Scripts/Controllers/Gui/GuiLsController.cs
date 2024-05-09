@@ -53,9 +53,10 @@ namespace Controllers.Gui
             });
             GuiSystem._.RegisterButton(PaneId, "rest", () =>
             {
-                if (GameManager._.MapChangeActive) return;
-                GameManager._.RestartRound();
-                GuiSystem._.EscapeAll();
+                if (GameManager._.RestartRound())
+                {
+                    GuiSystem._.EscapeAll();
+                }
             });
         }
 
@@ -75,16 +76,10 @@ namespace Controllers.Gui
             var itemId = $"load-{map.Id}";
             GuiSystem._.RegisterButton(mapTileCell.Q<Button>("button"), PaneId, itemId, () =>
             {
-                if (GameManager._.MapChangeActive) return;
-                if (MapSystem._.MapLoaded && MapSystem._.ActiveMap.Id != map.Id)
+                if (GameManager._.StartRound(map.Id))
                 {
-                    GameManager._.StartRound(map.Id);
+                    GuiSystem._.EscapeAll();
                 }
-                else
-                {
-                    GameManager._.RestartRound();
-                }
-                GuiSystem._.EscapeAll();
             });
             _loadMapButtons.Add(itemId);
 
