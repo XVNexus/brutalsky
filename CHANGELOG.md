@@ -1,13 +1,3 @@
-## *Nightly 2024.05.08*
-
-#### CHANGED
-- improved followcam targeting to lead fast moving targets and keep them in frame
-
-#### FIXED
-- camera did not adapt to the screen aspect ratio automatically on maps without followcam
-- logic links did not get saved with the map if there were no logic nodes
-
-
 ## *Nightly 2024.05.07*
 
 #### ADDED

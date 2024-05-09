@@ -955,7 +955,7 @@ MonoBehaviour:
   shakeInterval: 0.1
   simSpeed: 20
   followSpeed: {x: 2.5, y: 2.5}
-  followLead: {x: 2.25, y: 1.25}
+  followLead: {x: 0.5, y: 200}
   followScale: 1.5
   followMinSize: 25
   followViewSizeThreshold: 50

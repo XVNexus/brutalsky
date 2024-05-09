@@ -175,12 +175,13 @@ namespace Core
                     max = MathfExt.Max(target, max);
                 }
                 var followPosition = MathfExt.Mean(min, max);
-                var followVelocity = (followPosition - _lastFollowPosition) * followLead.x;
+                var followVelocity = (followPosition - _lastFollowPosition) / Time.fixedDeltaTime;
                 _lastFollowPosition = followPosition;
                 var lookAhead = Vector2.zero;
-                if (followVelocity.magnitude <= 50f) // Do not lead the target during teleportation
+                if (followVelocity.magnitude <= 1000f) // Do not lead the target during teleportation
                 {
-                    lookAhead = followVelocity * Mathf.Pow(followVelocity.magnitude, followLead.y);
+                    lookAhead = followVelocity * (followLead.x *
+                        Mathf.Min(followVelocity.magnitude / followLead.y, 1f));
                 }
                 targetRect = new Rect(followPosition + lookAhead, Vector2.zero)
                     .Resize(Vector2.one * Mathf.Max((max - min).magnitude * followScale, followMinSize));

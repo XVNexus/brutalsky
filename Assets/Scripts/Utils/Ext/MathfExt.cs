@@ -31,6 +31,11 @@ namespace Utils.Ext
             return new Vector2(Mathf.Max(a.x, b.x), Mathf.Max(a.y, b.y));
         }
 
+        public static Vector2 Pow(Vector2 v, float p)
+        {
+            return v.normalized * Mathf.Pow(v.magnitude, p);
+        }
+
         // Vector tools
         public static Vector2 ToVector(float angle, float magnitude)
         {
