@@ -13,8 +13,8 @@ namespace Controllers.Pool
         public override string Id => "wave";
         public override bool IsUnused => !Master.Object.Simulated;
 
-        // Local constants
-        public const float WavePointDensity = 2f;
+        // Config options
+        public float wavePointDensity;
 
         // Local variables
         private float _waveHeight;
@@ -45,13 +45,13 @@ namespace Controllers.Pool
             // Set up wave renderer
             cLineRenderer.material = _cSpriteRenderer.material;
             cLineRenderer.sortingOrder = _cSpriteRenderer.sortingOrder;
-            cLineRenderer.positionCount = Mathf.RoundToInt(poolScale.x * WavePointDensity) + 3;
+            cLineRenderer.positionCount = Mathf.RoundToInt(poolScale.x * wavePointDensity) + 3;
             var posCount = cLineRenderer.positionCount;
             _wavePointCount = posCount - 4;
             _wavePointOffsets = new float[_wavePointCount];
             var surfaceOffset = lineWidth * 2f / poolScale.y;
             var edgeOffset = lineWidth * .5f / poolScale.x;
-            var wavePointInterval = 1f / WavePointDensity / poolScale.x;
+            var wavePointInterval = 1f / wavePointDensity / poolScale.x;
             _waveHeight = lineWidth * .5f / poolScale.y;
             cLineRenderer.SetPosition(0, new Vector2(-.5f + edgeOffset, -surfaceOffset));
             cLineRenderer.SetPosition(1, new Vector2(-.5f + edgeOffset, 0f));

@@ -47,16 +47,16 @@ namespace Controllers.Gui
             {
                 GuiSystem._.DeactivatePane(PaneId);
             });
-            GuiSystem._.RegisterButton(PaneId, "reld", () =>
-            {
-                GameManager.LoadData();
-            });
             GuiSystem._.RegisterButton(PaneId, "rest", () =>
             {
                 if (GameManager._.RestartRound())
                 {
                     GuiSystem._.EscapeAll();
                 }
+            });
+            GuiSystem._.RegisterButton(PaneId, "reld", () =>
+            {
+                GameManager.LoadData();
             });
         }
 

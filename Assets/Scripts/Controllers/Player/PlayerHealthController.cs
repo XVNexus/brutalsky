@@ -14,10 +14,12 @@ namespace Controllers.Player
         public override string Id => "health";
         public override bool IsUnused => Mathf.Approximately(Master.Object.Health, -1f);
 
+        // Exposed properties
+        public float MaxHealth { get; private set; }
+        public float Health { get; private set; } = -1f;
+        public bool Alive { get; private set; } = true;
+
         // Local variables
-        public float maxHealth;
-        public float health = -1f;
-        public bool alive = true;
         private float _lastSpeed;
 
         // External references
@@ -35,8 +37,8 @@ namespace Controllers.Player
             _cCircleCollider2D = GetComponent<CircleCollider2D>();
 
             // Sync health with max health
-            maxHealth = Master.Object.Health;
-            health = maxHealth;
+            MaxHealth = Master.Object.Health;
+            Health = MaxHealth;
         }
 
         private void OnDestroy()
@@ -47,24 +49,24 @@ namespace Controllers.Player
         // Module functions
         public void Heal(float amount)
         {
-            health = Mathf.Min(health + amount, maxHealth);
+            Health = Mathf.Min(Health + amount, MaxHealth);
         }
 
         public void Hurt(float amount)
         {
-            if (amount >= health)
+            if (amount >= Health)
             {
                 Kill();
                 return;
             }
-            health = Mathf.Max(health - amount, 0f);
+            Health = Mathf.Max(Health - amount, 0f);
         }
 
         public void Revive()
         {
-            if (alive) return;
-            health = maxHealth;
-            alive = true;
+            if (Alive) return;
+            Health = MaxHealth;
+            Alive = true;
             _cRigidbody2D.simulated = true;
             _cSpriteRenderer.enabled = true;
             _cCircleCollider2D.enabled = true;
@@ -73,9 +75,9 @@ namespace Controllers.Player
 
         public void Kill()
         {
-            if (!alive) return;
-            health = 0f;
-            alive = false;
+            if (!Alive) return;
+            Health = 0f;
+            Alive = false;
             _cRigidbody2D.simulated = false;
             _cSpriteRenderer.enabled = false;
             _cCircleCollider2D.enabled = false;
@@ -87,8 +89,8 @@ namespace Controllers.Player
         private void OnPlayerSpawn(BsMap map, BsPlayer player, Vector2 position, bool visible)
         {
             if (player.Id != Master.Object.Id) return;
-            maxHealth = player.Health;
-            health = maxHealth;
+            MaxHealth = player.Health;
+            Health = MaxHealth;
             Revive();
         }
 
@@ -98,7 +100,7 @@ namespace Controllers.Player
 
         private void OnCollision(Collision2D other)
         {
-            if (!alive) return;
+            if (!Alive) return;
 
             // Get collision info
             var impactForce = other.TotalNormalImpulse() * (other.gameObject.CompareTag(Tags.PlayerTag) ? 2f : 1f);
@@ -113,7 +115,7 @@ namespace Controllers.Player
 
         private void FixedUpdate()
         {
-            if (!alive) return;
+            if (!Alive) return;
 
             // Save the current speed for future reference
             _lastSpeed = _cRigidbody2D.velocity.magnitude;

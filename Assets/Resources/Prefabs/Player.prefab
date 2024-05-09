@@ -190,8 +190,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   autoSendInput: 1
-  movementInput: {x: 0, y: 0}
-  boostInput: 0
 --- !u!114 &6636566231499246727
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -206,12 +204,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   movementForce: 20
   jumpForce: 12
-  dummy: 0
-  grounded: 0
-  boostCharge: 0
-  boostCooldown: 0
-  movementInput: {x: 0, y: 0}
-  boostInput: 0
+  maxOnGroundFrames: 5
 --- !u!114 &328550718412262110
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -224,9 +217,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02c7aa6a8c3ef4415b68365f601c54bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 0
-  health: -1
-  alive: 1
 --- !u!114 &3399184115846437671
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -254,6 +244,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e02e0473101b76d9bee7f36177b3755, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  boostThreshold: 30
+  boostCap: 1000
+  particleMultiplier: 3
+  deathParticleClamp: 3
   cTouchParticleSystem: {fileID: 799340086311092629}
   cSlideParticleSystem: {fileID: 4654329193152478705}
   cBoostParticleSystem: {fileID: 5750454859715637797}
@@ -273,6 +267,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0bb7c28fedab2677a8ba3d025bb1b22a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  shakeScale: 0.05
+  shakeCap: 5
 --- !u!1 &2730403350328093100
 GameObject:
   m_ObjectHideFlags: 0

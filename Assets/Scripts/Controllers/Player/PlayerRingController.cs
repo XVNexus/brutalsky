@@ -66,17 +66,17 @@ namespace Controllers.Player
         private void Update()
         {
             // Calculate target ring properties
-            var targetRingThickness = _mHealth ? _mHealth.health / _mHealth.maxHealth : 1f;
+            var targetRingThickness = _mHealth ? _mHealth.Health / _mHealth.MaxHealth : 1f;
             var targetRingAlpha = .25f;
             var targetRingSpin = 40f;
             if (_mMovement)
             {
-                if (_mMovement.boostCharge > 0f)
+                if (_mMovement.BoostCharge > 0f)
                 {
-                    targetRingAlpha = .25f + _mMovement.boostCharge * .25f;
-                    targetRingSpin = (Mathf.Pow(_mMovement.boostCharge, 1.5f) + 1.5f) * 360f;
+                    targetRingAlpha = .25f + _mMovement.BoostCharge * .25f;
+                    targetRingSpin = (Mathf.Pow(_mMovement.BoostCharge, 1.5f) + 1.5f) * 360f;
                 }
-                else if (_mMovement.boostCooldown > 0f)
+                else if (_mMovement.BoostCooldown > 0f)
                 {
                     targetRingAlpha = .05f;
                     targetRingSpin = 10f;

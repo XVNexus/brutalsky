@@ -15,14 +15,16 @@ namespace Controllers.Mount
         public override string Id => "grab";
         public override bool IsUnused => !Master.Object.Simulated;
 
-        // Local constants
-        public const float CooldownTime = 1f;
-        public const float IndicatorScale = 1.6f / .9f;
-        public const float AnimTime = .25f;
+        // Config options
+        public float cooldownTime;
+        public float indicatorScale;
+        public float animationTime;
+
+        // Exposed properties
+        public bool Active { get; private set; }
+        public Vector2 Input { get; private set; }
 
         // Local variables
-        public bool active;
-        public Vector2 input;
         private string _activePlayerId;
         private PlayerInputController _activePlayer;
         private Rigidbody2D _activeRigidbody;
@@ -49,7 +51,7 @@ namespace Controllers.Mount
         public void GrabPlayer(PlayerInputController player)
         {
             // Set the tracker variables
-            active = true;
+            Active = true;
             _activePlayerId = player.Master.Object.Id;
             _activePlayer = player;
             _activeRigidbody = player.gameObject.GetComponent<Rigidbody2D>();
@@ -66,16 +68,16 @@ namespace Controllers.Mount
             _activeClamp.correctionScale = Master.Object.GripStrength.y;
 
             // Set the indicator ring to the player color and scale
-            gIndicatorRing.LeanScale(Vector2.one * IndicatorScale, AnimTime)
-                .setEaseInOutCubic();
-            gIndicatorRing.LeanColor(_activePlayer.Master.Object.Color.SetAlpha(.25f), AnimTime)
-                .setEaseInOutCubic();
+            gIndicatorRing.LeanScale(Vector2.one * indicatorScale, animationTime)
+                .setEaseOutCubic();
+            gIndicatorRing.LeanColor(_activePlayer.Master.Object.Color.SetAlpha(.25f), animationTime)
+                .setEaseOutCubic();
         }
 
         public void UngrabPlayer()
         {
             // Reset the logic output
-            input = Vector2.zero;
+            Input = Vector2.zero;
 
             // Eject the player from the mount
             _activePlayer.autoSendInput = true;
@@ -85,20 +87,20 @@ namespace Controllers.Mount
                 Master.Object.EjectionForce.y), ForceMode2D.Impulse);
 
             // Reset the tracker variables
-            active = false;
+            Active = false;
             _activePlayerId = "";
             _activePlayer = null;
             _activeRigidbody = null;
 
             // Reset the indicator ring
-            gIndicatorRing.LeanScale(Vector2.one, AnimTime)
-                .setEaseInOutCubic();
-            gIndicatorRing.LeanColor(new Color(1f, 1f, 1f, .1f), AnimTime)
-                .setEaseInOutCubic();
+            gIndicatorRing.LeanScale(Vector2.one, animationTime)
+                .setEaseOutCubic();
+            gIndicatorRing.LeanColor(new Color(1f, 1f, 1f, .1f), animationTime)
+                .setEaseOutCubic();
 
             // Temporarily lock the mount
             _cooldown = true;
-            gameObject.LeanDelayedCall(CooldownTime, () =>
+            gameObject.LeanDelayedCall(cooldownTime, () =>
             {
                 _cooldown = false;
             });
@@ -115,14 +117,16 @@ namespace Controllers.Mount
         private void OnMapCleanup(BsMap map)
         {
             // Ungrab any mounted players before the map is unloaded
-            if (!active) return;
-            UngrabPlayer();
+            if (Active)
+            {
+                UngrabPlayer();
+            }
         }
 
         private void OnTriggerEnter2D(Collider2D other)
         {
             // Grab any players that come in contact
-            if (active || _cooldown || !other.CompareTag(Tags.PlayerTag)) return;
+            if (Active || _cooldown || !other.CompareTag(Tags.PlayerTag)) return;
             _activePlayer = other.GetComponent<PlayerController>().GetSub<PlayerInputController>("input");
             if (_activePlayer == null) throw Errors.NoItemFound("player subcontroller", "input");
             GrabPlayer(_activePlayer);
@@ -131,11 +135,11 @@ namespace Controllers.Mount
         private void FixedUpdate()
         {
             // Send player movement input to public variable for use in the logic system
-            if (!active || _cooldown) return;
-            input = _activePlayer.movementInput;
+            if (!Active) return;
+            Input = _activePlayer.MovementInput;
 
             // Ungrab the active player if the boost input is triggered
-            if (!_activePlayer.boostInput) return;
+            if (!_activePlayer.BoostInput) return;
             UngrabPlayer();
         }
     }

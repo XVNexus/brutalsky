@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using UnityEngine;
 
 namespace Utils.Constants
 {
@@ -13,6 +14,9 @@ namespace Utils.Constants
 
         public static ArgumentNullException BuildNullMap()
             => new("", "Cannot rebuild the map when no map is currently loaded");
+
+        public static ArgumentOutOfRangeException OversizedMap(Vector2 size, Vector2 limit)
+            => new("", $"Map size {size} exceeds the limit of {limit}");
 
         public static NullReferenceException MissingSubController(string masterTag, string requireeId, string requirementId)
             => new($"Subcontroller '{requireeId}' of object '{masterTag}' requires '{requirementId}'");

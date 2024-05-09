@@ -15,11 +15,11 @@ namespace Controllers.Player
         public override string Id => "particle";
         public override bool IsUnused => false;
 
-        // Local constants
-        public const float BoostThreshold = 30f;
-        public const float BoostCap = 1000f;
-        public const float ParticleMultiplier = 3f;
-        public const float DeathParticleClamp = 2.5f;
+        // Config options
+        public float boostThreshold;
+        public float boostCap;
+        public float particleMultiplier;
+        public float deathParticleClamp;
 
         // Local variables
         private float _lastSpeed;
@@ -89,15 +89,13 @@ namespace Controllers.Player
 
         public void DisplayBoostParticles(float speed)
         {
-            if (speed > BoostCap) return;
-            switch (speed)
+            if (speed >= boostThreshold && speed < boostCap && _lastSpeed < boostThreshold)
             {
-                case >= BoostThreshold when _lastSpeed < BoostThreshold:
-                    cBoostParticleSystem.Play();
-                    break;
-                case < BoostThreshold when _lastSpeed >= BoostThreshold:
-                    cBoostParticleSystem.Stop();
-                    break;
+                cBoostParticleSystem.Play();
+            }
+            else if (speed < boostThreshold && _lastSpeed >= boostThreshold)
+            {
+                cBoostParticleSystem.Stop();
             }
         }
 
@@ -126,7 +124,7 @@ namespace Controllers.Player
             if (!MapSystem._.MapLoaded) return;
             cDeathParticleSystem.gameObject.SetActive(true);
             cDeathParticleSystem.transform.position = MathfExt.Clamp(transform.localPosition,
-                MapSystem._.ActiveMap.PlayArea.Expand(DeathParticleClamp));
+                MapSystem._.ActiveMap.PlayArea.Expand(deathParticleClamp));
             cDeathParticleSystem.Play();
         }
 
@@ -171,8 +169,8 @@ namespace Controllers.Player
             _lastSpeed = speed;
 
             // Display heal/hurt particles
-            if (!_mHealth || !_mHealth.alive) return;
-            var health = Mathf.CeilToInt(_mHealth.health * ParticleMultiplier);
+            if (!_mHealth || !_mHealth.Alive) return;
+            var health = Mathf.CeilToInt(_mHealth.Health * particleMultiplier);
             if (_lastHealth < 0)
             {
                 _lastHealth = health;

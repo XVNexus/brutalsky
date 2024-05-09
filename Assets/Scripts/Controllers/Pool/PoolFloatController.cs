@@ -9,8 +9,8 @@ namespace Controllers.Pool
     {
         // Controller metadata
         public override string Id => "float";
-        public override bool IsUnused =>
-            (Master.Object.Chemical.Buoyancy == 0f && Master.Object.Chemical.Viscosity == 0f) || !Master.Object.Simulated;
+        public override bool IsUnused => (Master.Object.Chemical.Buoyancy == 0f &&
+            Master.Object.Chemical.Viscosity == 0f) || !Master.Object.Simulated;
 
         // Local variables
         private Vector2 _buoyancyForce;

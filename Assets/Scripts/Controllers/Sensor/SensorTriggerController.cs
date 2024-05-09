@@ -11,11 +11,13 @@ namespace Controllers.Sensor
         public override string Id => "trigger";
         public override bool IsUnused => !Master.Object.Simulated;
 
-        // Local constants
-        public const int MaxTriggeredFrames = 3;
+        // Config options
+        public int maxTriggeredFrames;
+
+        // Exposed properties
+        public bool Triggered { get; private set; }
 
         // Local variables
-        public bool triggered;
         private int _triggeredFrames;
 
         // Event functions
@@ -47,14 +49,14 @@ namespace Controllers.Sensor
         {
             // Update triggered status
             if (!other.CompareTag(Tags.PlayerTag)) return;
-            _triggeredFrames = MaxTriggeredFrames;
-            triggered = true;
+            _triggeredFrames = maxTriggeredFrames;
+            Triggered = true;
         }
 
         private void FixedUpdate()
         {
             // Update triggered status
-            triggered = _triggeredFrames > 0;
+            Triggered = _triggeredFrames > 0;
             _triggeredFrames = Mathf.Max(_triggeredFrames - 1, 0);
         }
     }

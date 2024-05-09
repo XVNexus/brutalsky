@@ -955,7 +955,7 @@ MonoBehaviour:
   shakeInterval: 0.1
   simSpeed: 20
   followSpeed: {x: 2.5, y: 2.5}
-  followLead: {x: 0.5, y: 200}
+  followLead: {x: 0.5, y: 100}
   followScale: 1.5
   followMinSize: 25
   followViewSizeThreshold: 50
@@ -974,7 +974,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   backgroundFade: 10
-  backgroundField: 1000
+  backgroundField: 10000
   gMapParent: {fileID: 436285077}
   gPlayerParent: {fileID: 130180705}
   gBackgroundMain: {fileID: 22585168}
@@ -2664,7 +2664,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1000, y: 1000, z: 1}
+  m_LocalScale: {x: 10000, y: 10000, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 223431135}

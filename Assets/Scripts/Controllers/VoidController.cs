@@ -14,7 +14,7 @@ namespace Controllers
 
             // Kill any players that enter the void
             var mHealth = other.GetComponent<PlayerController>().GetSub<PlayerHealthController>("health");
-            if (mHealth && mHealth.alive)
+            if (mHealth && mHealth.Alive)
             {
                 mHealth.Kill();
             }

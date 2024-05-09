@@ -50,8 +50,8 @@ namespace Brutalsky.Object
             var grabController = ((MountController)InstanceController).GetSub<MountGrabController>("grab");
             return new BsNode(Array.Empty<float>(), new float[3], (_, _) =>
             {
-                return new[] { BsMatrix.ToLogic(grabController.active),
-                    grabController.input.x, grabController.input.y };
+                return new[] { BsMatrix.ToLogic(grabController.Active),
+                    grabController.Input.x, grabController.Input.y };
             });
         }
 

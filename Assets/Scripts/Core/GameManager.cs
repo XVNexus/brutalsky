@@ -21,7 +21,7 @@ namespace Core
         public bool autoRestart;
         public Color loadingColor;
 
-        // Exposed properties
+        // Local variables
         private bool _mapChangeActive;
 
         // Init functions
@@ -38,7 +38,7 @@ namespace Core
         protected override void OnLink()
         {
             LoadData();
-            InitGame(MapSystem.GenerateId("Void", "Xveon"), new[]
+            InitMap(MapSystem.GenerateId("Void", "Xveon"), new[]
             {
                 new BsPlayer(PlayerType.Main, "Player 1", new Color(1f, .5f, 0f)),
                 new BsPlayer(PlayerType.Dummy, "Player 2", new Color(0f, .5f, 1f))
@@ -84,47 +84,43 @@ namespace Core
             // TODO: GENERATE MAZE MAPS
         }
 
-        public void InitGame(uint starterMapId, BsPlayer[] activePlayers, float animTime)
-        {
-            MapSystem._.RegisterPlayers(activePlayers);
-            MapSystem._.BuildMap(starterMapId);
-            MapSystem._.SpawnPlayers();
-            CameraSystem._.cCameraCover.gameObject.LeanColor(loadingColor.SetAlpha(0f), animTime * .4f)
-                .setEaseInOutCubic();
-        }
-
         public bool StartRound(uint mapId)
         {
-            if (_mapChangeActive) return false;
-            CancelInvoke();
-            return ChangeMap(!MapSystem._.MapLoaded || mapId != MapSystem._.ActiveMap.Id ? mapId : 0,
-                true, 1.5f);
+            return mapId != (MapSystem._.ActiveMap?.Id ?? 0) ? ChangeMap(mapId, true, 1.5f) : RestartRound();
         }
 
         public bool RestartRound()
         {
-            if (_mapChangeActive) return false;
-            CancelInvoke();
             return ChangeMap(0, false, 1f);
         }
 
-        public bool ChangeMap(uint mapId, bool moveCam, float animTime)
+        public void InitMap(uint starterMapId, BsPlayer[] activePlayers, float animationTime)
+        {
+            MapSystem._.RegisterPlayers(activePlayers);
+            MapSystem._.BuildMap(starterMapId);
+            MapSystem._.SpawnPlayers();
+            CameraSystem._.cCameraCover.gameObject.LeanColor(loadingColor.SetAlpha(0f), animationTime * .4f)
+                .setEaseInOutCubic();
+        }
+
+        public bool ChangeMap(uint mapId, bool moveCam, float animationTime)
         {
             if (_mapChangeActive) return false;
+            CancelInvoke();
 
             // Fade out view to hide level loading and fade back in with new level
             var camCover = CameraSystem._.cCameraCover.gameObject;
             _mapChangeActive = true;
             TimeSystem._.ForceUnpause();
-            camCover.LeanColor(loadingColor, animTime * .4f)
+            camCover.LeanColor(loadingColor, animationTime * .4f)
                 .setEaseInOutCubic()
                 .setOnComplete(() =>
                 {
                     MapSystem._.BuildMap(mapId);
                     MapSystem._.SpawnPlayers();
-                    camCover.LeanDelayedCall(animTime * .2f, () =>
+                    camCover.LeanDelayedCall(animationTime * .2f, () =>
                         {
-                            camCover.LeanColor(loadingColor.SetAlpha(0f), animTime * .4f)
+                            camCover.LeanColor(loadingColor.SetAlpha(0f), animationTime * .4f)
                                 .setEaseInOutCubic()
                                 .setOnComplete(() =>
                                 {
@@ -137,12 +133,12 @@ namespace Core
             // Move camera down as if the old level ascends into the sky and is replaced by the new level from below
             if (!moveCam) return true;
             var camMount = CameraSystem._.gCameraMount;
-            camMount.LeanMoveLocal(new Vector2(0f, CameraSystem._.BaseRect.height * -3f), animTime * .5f)
+            camMount.LeanMoveLocal(new Vector2(0f, CameraSystem._.ViewSize * -3f), animationTime * .5f)
                 .setEaseInQuint()
                 .setOnComplete(() =>
                 {
-                    camMount.transform.localPosition = new Vector2(0f, CameraSystem._.BaseRect.height * 3f);
-                    camMount.LeanMoveLocal(new Vector2(0f, 0f), animTime * .5f)
+                    camMount.transform.localPosition = new Vector2(0f, CameraSystem._.ViewSize * 3f);
+                    camMount.LeanMoveLocal(new Vector2(0f, 0f), animationTime * .5f)
                         .setEaseOutQuint();
                 });
 
@@ -154,7 +150,7 @@ namespace Core
         {
             if (_mapChangeActive) return;
             var livingPlayers = (from activePlayer in MapSystem._.ActivePlayers.Values
-                where ((PlayerController)activePlayer.InstanceController).GetSub<PlayerHealthController>("health").alive
+                where ((PlayerController)activePlayer.InstanceController).GetSub<PlayerHealthController>("health").Alive
                     && !MapSystem._.GetPlayerFrozen(player.InstanceObject)
                 select activePlayer).ToList();
             if ((autoRestart && livingPlayers.Count == 1) || livingPlayers.Count == 0)

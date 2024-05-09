@@ -9,6 +9,7 @@ using UnityEngine;
 using Utils.Constants;
 using Utils.Ext;
 using Utils.Lcs;
+using Color = UnityEngine.Color;
 
 namespace Brutalsky
 {
@@ -17,7 +18,18 @@ namespace Brutalsky
         public uint Id => MapSystem.GenerateId(Title, Author);
         public string Title { get; set; }
         public string Author { get; set; }
-        public Rect PlayArea { get; set; }
+        public Rect PlayArea
+        {
+            get => _playArea;
+            set
+            {
+                if (value.width > 1000f || value.height > 1000f)
+                    throw Errors.OversizedMap(value.size, new Vector2(1000f, 1000f));
+                _playArea = value;
+            }
+        }
+
+        private Rect _playArea;
         public Color BackgroundColor { get => _backgroundColor; set => _backgroundColor = value.StripAlpha(); }
         private Color _backgroundColor;
         public Color LightingTint

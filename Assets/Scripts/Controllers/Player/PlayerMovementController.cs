@@ -4,6 +4,7 @@ using Brutalsky.Object;
 using Controllers.Base;
 using Core;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Utils.Constants;
 using Utils.Ext;
 using Utils.Player;
@@ -16,18 +17,20 @@ namespace Controllers.Player
         public override string Id => "movement";
         public override bool IsUnused => false;
 
-        // Local constants
-        public const int MaxOnGroundFrames = 5;
-
-        // Local variables
+        // Config options
         public float movementForce;
         public float jumpForce;
-        public bool dummy;
-        public bool grounded;
-        public float boostCharge;
-        public float boostCooldown;
-        public Vector2 movementInput;
-        public bool boostInput;
+        public int maxOnGroundFrames;
+
+        // Exposed properties
+        public bool Dummy { get; private set; }
+        public bool Grounded { get; private set; }
+        public float BoostCharge { get; private set; }
+        public float BoostCooldown { get; private set; }
+        public Vector2 MovementInput { get; private set; }
+        public bool BoostInput { get; private set; }
+
+        // Local variables
         private Vector2 _movementScale;
         private Vector2 _jumpVector;
         private int _jumpCooldown;
@@ -52,7 +55,7 @@ namespace Controllers.Player
             _cRigidbody2D = GetComponent<Rigidbody2D>();
 
             // Disable movement if the player is a dummy
-            dummy = Master.Object.Type == PlayerType.Dummy;
+            Dummy = Master.Object.Type == PlayerType.Dummy;
 
             // Force scanning map settings
             OnMapBuild(MapSystem._.ActiveMap);
@@ -67,8 +70,8 @@ namespace Controllers.Player
         // System functions
         public void SendInput(Vector2 movement, bool boost)
         {
-            movementInput = movement;
-            boostInput = boost;
+            MovementInput = movement;
+            BoostInput = boost;
         }
 
         // Event functions
@@ -113,8 +116,8 @@ namespace Controllers.Player
         {
             if (player.Id != Master.Object.Id) return;
             _cRigidbody2D.velocity = Vector2.zero;
-            boostCharge = 0f;
-            boostCooldown = 0f;
+            BoostCharge = 0f;
+            BoostCooldown = 0f;
         }
 
         private void OnCollisionEnter2D(Collision2D other)
@@ -140,16 +143,16 @@ namespace Controllers.Player
             // Update ground status
             if (!other.gameObject.CompareTag(Tags.ShapeTag) && !other.gameObject.CompareTag(Tags.PlayerTag)) return;
             if (!TestOnGround(other.GetContact(0).point, _lastPosition)) return;
-            _groundedFrames = MaxOnGroundFrames;
-            grounded = true;
+            _groundedFrames = maxOnGroundFrames;
+            Grounded = true;
         }
 
         private void FixedUpdate()
         {
-            if (dummy) return;
+            if (Dummy) return;
 
             // Update ground status
-            grounded = _groundedFrames > 0;
+            Grounded = _groundedFrames > 0;
             _groundedFrames = Mathf.Max(_groundedFrames - 1, 0);
             _lastPosition = transform.localPosition;
 
@@ -158,33 +161,33 @@ namespace Controllers.Player
             var speed = velocity.magnitude;
 
             // Apply directional movement
-            _cRigidbody2D.AddForce(movementInput * _movementScale * (grounded ? 1.5f : .5f));
+            _cRigidbody2D.AddForce(MovementInput * _movementScale * (Grounded ? 1.5f : .5f));
 
             // Apply jump movement
-            var jumpInput = grounded && TestJumpInput(movementInput) && _jumpCooldown == 0;
+            var jumpInput = Grounded && TestJumpInput(MovementInput) && _jumpCooldown == 0;
             if (jumpInput)
             {
                 _cRigidbody2D.AddForce(_jumpVector, ForceMode2D.Impulse);
-                _jumpCooldown = MaxOnGroundFrames + 1;
+                _jumpCooldown = maxOnGroundFrames + 1;
             }
 
             // Apply boost movement
-            var safeBoostInput = boostInput && boostCooldown == 0f;
+            var safeBoostInput = BoostInput && BoostCooldown == 0f;
             if (safeBoostInput)
             {
-                boostCharge = Mathf.Min(boostCharge + Time.fixedDeltaTime, 3f);
+                BoostCharge = Mathf.Min(BoostCharge + Time.fixedDeltaTime, 3f);
             }
             else if (_lastBoostInput)
             {
-                var boost = Mathf.Pow(boostCharge, 1.5f) + 1.5f;
+                var boost = Mathf.Pow(BoostCharge, 1.5f) + 1.5f;
                 velocity *= boost;
                 _cRigidbody2D.velocity = velocity;
-                boostCharge = 0f;
-                boostCooldown = Mathf.Min(boost, speed);
+                BoostCharge = 0f;
+                BoostCooldown = Mathf.Min(boost, speed);
             }
-            if (boostCooldown > 0f)
+            if (BoostCooldown > 0f)
             {
-                boostCooldown = Mathf.Max(boostCooldown - Time.fixedDeltaTime, 0f);
+                BoostCooldown = Mathf.Max(BoostCooldown - Time.fixedDeltaTime, 0f);
             }
             _lastBoostInput = safeBoostInput;
 

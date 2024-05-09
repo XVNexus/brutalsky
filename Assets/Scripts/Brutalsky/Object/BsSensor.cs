@@ -55,7 +55,7 @@ namespace Brutalsky.Object
             var triggerController = ((SensorController)InstanceController).GetSub<SensorTriggerController>("trigger");
             return new BsNode(Array.Empty<float>(), new float[1], (_, _) =>
             {
-                return new[] { BsMatrix.ToLogic(triggerController.triggered) };
+                return new[] { BsMatrix.ToLogic(triggerController.Triggered) };
             });
         }
 

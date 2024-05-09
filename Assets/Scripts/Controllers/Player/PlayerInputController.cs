@@ -13,12 +13,13 @@ namespace Controllers.Player
         public override string Id => "input";
         public override bool IsUnused => false;
 
-        // Local variables
-        public Vector2 movementInput;
-        public bool boostInput;
-        public bool autoSendInput = true;
-        public bool blockInput;
-        public bool dummy;
+        // Config options
+        public bool autoSendInput;
+
+        // Exposed properties
+        public Vector2 MovementInput { get; private set; }
+        public bool BoostInput { get; private set; }
+        public bool Dummy { get; private set; }
 
         // External references
         private InputAction _iMovement;
@@ -34,7 +35,7 @@ namespace Controllers.Player
             _iBoost = EventSystem._.GetInputAction("Boost");
 
             // Disable input if the player is a dummy
-            dummy = Master.Object.Type == PlayerType.Dummy;
+            Dummy = Master.Object.Type == PlayerType.Dummy;
         }
 
         protected override void OnLink()
@@ -45,19 +46,12 @@ namespace Controllers.Player
         // Event functions
         private void FixedUpdate()
         {
-            if (dummy) return;
-            if (!blockInput)
+            if (Dummy || Status < Ready) return;
+            MovementInput = _iMovement.ReadValue<Vector2>();
+            BoostInput = _iBoost.IsPressed();
+            if (autoSendInput)
             {
-                if (Status < Ready) return;
-                movementInput = _iMovement.ReadValue<Vector2>();
-                boostInput = _iBoost.IsPressed();
-                if (!autoSendInput) return;
-                _mMovement.SendInput(movementInput, boostInput);
-            }
-            else
-            {
-                movementInput = Vector2.zero;
-                boostInput = false;
+                _mMovement.SendInput(MovementInput, BoostInput);
             }
         }
     }

@@ -159,7 +159,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5bf958b45a94681a40ffe96bf1439ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cLineRenderer: {fileID: 5449310121527418907}
 --- !u!114 &683648333978764913
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -184,6 +183,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 400cac6399474110b0251b487076bc70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  wavePointDensity: 2
   cLineRenderer: {fileID: 5449310121527418907}
 --- !u!1 &2598308721006671609
 GameObject:

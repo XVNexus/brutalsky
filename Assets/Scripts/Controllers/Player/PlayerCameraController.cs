@@ -15,6 +15,10 @@ namespace Controllers.Player
         public override string Id => "camera";
         public override bool IsUnused => false;
 
+        // Config options
+        public float shakeScale;
+        public float shakeCap;
+
         // Local variables
         private float _lastHealth = -1f;
 
@@ -51,16 +55,16 @@ namespace Controllers.Player
             var impactForce = other.TotalNormalImpulse();
             var impactDirection = ((Vector2)transform.localPosition - other.contacts[0].point).normalized;
 
-            // Apply camera shake
-            var shakeForce = Mathf.Min(PlayerHealthController.CalculateDamage(impactForce) * .05f, 5f);
-            CameraSystem._.AddShove(shakeForce * impactDirection);
+            // Apply camera shove
+            CameraSystem._.AddShove(Mathf.Min(PlayerHealthController.CalculateDamage(impactForce) *
+                shakeScale, shakeCap) * impactDirection);
         }
 
         private void FixedUpdate()
         {
             // Apply camera shake after taking damage
             if (!_mHealth) return;
-            var health = _mHealth.health;
+            var health = _mHealth.Health;
             if (_lastHealth < 0f)
             {
                 _lastHealth = health;
@@ -69,12 +73,12 @@ namespace Controllers.Player
             var deltaHealth = health - _lastHealth;
             if (deltaHealth < 0f)
             {
-                var shakeForce = Mathf.Min(-deltaHealth * .05f, 5f);
+                var shakeForce = Mathf.Min(-deltaHealth * shakeScale, shakeCap);
                 CameraSystem._.AddShake(shakeForce);
             }
             if (health == 0f && _lastHealth > 0f)
             {
-                CameraSystem._.AddShake(5f);
+                CameraSystem._.AddShake(shakeCap);
             }
             _lastHealth = health;
         }

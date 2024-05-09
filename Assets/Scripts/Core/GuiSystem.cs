@@ -29,7 +29,6 @@ namespace Core
 
         // External references
         public UIDocument cUIDocument;
-        private InputAction _iEscape;
 
         // Init functions
         protected override void OnStart()
@@ -37,7 +36,7 @@ namespace Core
             _root = cUIDocument.rootVisualElement;
             _panes[""] = new GuiPane("", _root, this, true);
 
-            _iEscape = EventSystem._.SetInputAction("Escape", _ => EscapeOne());
+            EventSystem._.SetInputAction("Escape", _ => EscapeOne());
         }
 
         // System functions

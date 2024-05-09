@@ -93,4 +93,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d2deafc762445c8b0d953019188b328, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  triggered: 0
+  maxTriggeredFrames: 5
