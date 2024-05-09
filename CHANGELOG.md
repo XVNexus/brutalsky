@@ -42,7 +42,7 @@
 #### ADDED
 - ui buttons to restart the current round or refresh the map list from the level selector
 - logic redirect node that switches to a different map when triggered
-- player mounts that grab any player that comes in contact and send their joystick input to the logic system
+- player mounts that grab any nearby player and send their joystick input to the logic system
 - ability to make objects children of other objects which causes them to be welded to their parent
 
 #### CHANGED
