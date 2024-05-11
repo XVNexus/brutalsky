@@ -11,6 +11,7 @@ using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using Utils.Constants;
+using Utils.Ext;
 using Utils.Object;
 using Utils.Player;
 
@@ -36,6 +37,7 @@ namespace Core
         // External references
         public GameObject gMapParent;
         public GameObject gPlayerParent;
+        public SpriteRenderer gBackgroundPattern;
         public SpriteRenderer gBackgroundMain;
         public SpriteRenderer[] gBackgroundEdges;
         public SpriteRenderer[] gBackgroundCorners;
@@ -47,18 +49,28 @@ namespace Core
         {
             foreach (var player in players)
             {
-                player.Activate(gPlayerParent.transform, ActiveMap);
-                ActivePlayers[player.Id] = player;
+                RegisterPlayer(player);
             }
+        }
+
+        public void RegisterPlayer(BsPlayer player)
+        {
+            player.Activate(gPlayerParent.transform, ActiveMap);
+            ActivePlayers[player.Id] = player;
         }
 
         public void UnregisterPlayers()
         {
             foreach (var player in ActivePlayers.Values)
             {
-                player.Deactivate();
+                UnregisterPlayer(player);
             }
-            ActivePlayers.Clear();
+        }
+
+        public void UnregisterPlayer(BsPlayer player)
+        {
+            player.Deactivate();
+            ActivePlayers.Remove(player.Id);
         }
 
         public void SpawnPlayers()
@@ -166,13 +178,16 @@ namespace Core
             var halfArea = map.PlayArea.size * .5f;
             var halfFade = backgroundFade * .5f;
             var halfField = backgroundField * .5f;
-            gBackgroundMain.transform.parent.localPosition = map.PlayArea.center;
-            gBackgroundMain.color = backgroundColor;
+            gBackgroundPattern.color = backgroundColor;
+            gBackgroundPattern.transform.parent.localPosition = map.PlayArea.center;
+            gBackgroundMain.color = backgroundColor.SetAlpha(.25f);
             gBackgroundMain.transform.localScale = map.PlayArea.size;
             for (var i = 0; i < 8; i++)
             {
                 var gBackgroundEdge = gBackgroundEdges[i];
-                gBackgroundEdge.color = backgroundColor;
+                gBackgroundEdge.color = i < 4
+                    ? backgroundColor.SetAlpha(.25f)
+                    : backgroundColor;
                 gBackgroundEdge.transform.localPosition = (i % 4) switch
                 {
                     0 => new Vector2(0f, halfArea.y + halfFade),
@@ -181,17 +196,16 @@ namespace Core
                     3 => new Vector2(-halfArea.x - halfFade, 0f),
                     _ => gBackgroundEdge.transform.localPosition
                 };
-                gBackgroundEdge.transform.localScale = (i % 2) switch
-                {
-                    0 => new Vector2(map.PlayArea.width, backgroundFade),
-                    1 => new Vector2(map.PlayArea.height, backgroundFade),
-                    _ => gBackgroundEdge.transform.localScale
-                };
+                gBackgroundEdge.transform.localScale = i % 2 == 0
+                    ? new Vector2(map.PlayArea.width, backgroundFade)
+                    : new Vector2(map.PlayArea.height, backgroundFade);
             }
             for (var i = 0; i < 8; i++)
             {
                 var gBackgroundCorner = gBackgroundCorners[i];
-                gBackgroundCorner.color = backgroundColor;
+                gBackgroundCorner.color = i < 4
+                    ? backgroundColor.SetAlpha(.25f)
+                    : backgroundColor;
                 gBackgroundCorner.transform.localPosition = (i % 4) switch
                 {
                     0 => new Vector2(halfArea.x + halfFade, halfArea.y + halfFade),
