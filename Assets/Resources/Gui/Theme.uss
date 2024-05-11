@@ -77,9 +77,11 @@
     border-right-width: 5px;
     border-bottom-width: 5px;
     border-left-width: 5px;
-    border-bottom-color: rgb(20, 20, 20);
-    border-top-color: rgb(31, 31, 31);
+    border-bottom-color: rgb(18, 18, 18);
+    border-top-color: rgb(33, 33, 33);
     height: 50px;
+    border-right-color: rgb(31, 31, 31);
+    border-left-color: rgb(31, 31, 31);
 }
 
 .bs-box {

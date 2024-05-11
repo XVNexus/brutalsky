@@ -100,21 +100,31 @@ namespace Utils.Lcs
             var valueBytes = Binifier.Binify(Type, Value);
             var expectedByteCount = TypeByteCountTable[Type];
             if (expectedByteCount > 0) return typeBytes.Concat(valueBytes).ToArray();
+            var headerBytes = new List<byte>();
             var byteCount = valueBytes.Length;
-            if (byteCount > 255) throw new NotImplementedException();
-            var headerBytes = new[] { (byte)byteCount };
+            while (byteCount > 127)
+            {
+                headerBytes.Add((byte)(byteCount | 0x80));
+                byteCount /= 128;
+            }
+            headerBytes.Add((byte)byteCount);
             return typeBytes.Concat(headerBytes).Concat(valueBytes).ToArray();
         }
 
         public static LcsProp Parse(byte[] raw, ref int cursor)
         {
-            var type = (LcsType)raw[cursor];
+            var type = (LcsType)raw[cursor++];
             var byteCount = TypeByteCountTable[type];
             if (byteCount == 0)
             {
-                byteCount = raw[++cursor];
+                var power = 1;
+                while ((raw[cursor] & 0x80) > 0)
+                {
+                    byteCount += (raw[cursor++] & 0x7F) * power; 
+                    power *= 128;
+                }
+                byteCount += raw[cursor++] * power;
             }
-            cursor++;
             var valueBytes = new byte[byteCount];
             for (var i = 0; i < byteCount; i++)
             {
