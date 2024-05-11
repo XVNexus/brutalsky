@@ -38,7 +38,7 @@ namespace Core
         protected override void OnLink()
         {
             LoadData();
-            InitMap(MapSystem.GenerateId("Testing", "Brutalsky"), new[]
+            InitMap(MapSystem.GenerateId("Void", "Xveon"), new[]
             {
                 new BsPlayer(PlayerType.Main, "Player 1", new Color(1f, .5f, 0f)),
                 new BsPlayer(PlayerType.Dummy, "Player 2", new Color(0f, .5f, 1f))
@@ -54,16 +54,10 @@ namespace Core
                 MapSystem._.UnregisterMaps();
             }
 
-            // Load testing map if available
-            if (MapGenerator.EnableTestingMap)
-            {
-                MapSystem._.RegisterMap(MapGenerator.Testing());
-            }
-
             // Load builtin maps
             MapSystem._.RegisterMaps(ResourceSystem._.LoadMapAssets(new[]
             {
-                "Void", "Brutalsky", "Doomring", "Tossup"
+                "Void", "Brutalsky", "Doomring", "Tossup", "Racetrack"
             }));
 
             // Load custom maps

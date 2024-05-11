@@ -26,6 +26,7 @@ namespace Core
         // Config options
         public float backgroundFade;
         public float backgroundField;
+        public float maxMapSize;
 
         // Exposed properties
         public Dictionary<uint, byte[]> MapList { get; } = new(); // Maps are saved as compressed binary files
@@ -180,6 +181,7 @@ namespace Core
             var halfField = backgroundField * .5f;
             gBackgroundPattern.color = backgroundColor;
             gBackgroundPattern.transform.parent.localPosition = map.PlayArea.center;
+            gBackgroundPattern.size = map.PlayArea.size + backgroundFade * new Vector2(2f, 2f);
             gBackgroundMain.color = backgroundColor.SetAlpha(.25f);
             gBackgroundMain.transform.localScale = map.PlayArea.size;
             for (var i = 0; i < 8; i++)

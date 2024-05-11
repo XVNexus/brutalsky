@@ -15,7 +15,7 @@ namespace Utils.Constants
         public static ArgumentNullException BuildNullMap()
             => new("", "Cannot rebuild the map when no map is currently loaded");
 
-        public static ArgumentOutOfRangeException OversizedMap(Vector2 size, Vector2 limit)
+        public static ArgumentOutOfRangeException OversizedMap(Vector2 size, float limit)
             => new("", $"Map size {size} exceeds the limit of {limit}");
 
         public static NullReferenceException MissingSubController(string masterTag, string requireeId, string requirementId)

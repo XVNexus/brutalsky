@@ -166,7 +166,8 @@ namespace Core
             Rect targetRect;
             if (_hasFollowTargets)
             {
-                var followPositions = FollowTargets.Values.Select(transform => (Vector2)transform.position).ToArray();
+                var followPositions = FollowTargets.Values.Select(transform =>
+                    MathfExt.Clamp(transform.position, BaseRect)).ToArray();
                 var min = followPositions[0];
                 var max = followPositions[0];
                 for (var i = 1; i < FollowTargets.Count; i++)

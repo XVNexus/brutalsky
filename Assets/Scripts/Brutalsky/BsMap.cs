@@ -23,8 +23,8 @@ namespace Brutalsky
             get => _playArea;
             set
             {
-                if (value.width > 1000f || value.height > 1000f)
-                    throw Errors.OversizedMap(value.size, new Vector2(1000f, 1000f));
+                if (value.width > MapSystem._.maxMapSize || value.height > MapSystem._.maxMapSize)
+                    throw Errors.OversizedMap(value.size, MapSystem._.maxMapSize);
                 _playArea = value;
             }
         }
