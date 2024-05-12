@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Core;
 using Utils.Constants;
 
 namespace Utils.Lcs
@@ -32,12 +33,16 @@ namespace Utils.Lcs
             {
                 result.AddRange(line.Binify());
             }
-            return LcsInfo.GzipCompress(result.ToArray());
+            return ResourceSystem._.useGzipCompression
+                ? LcsInfo.GzipCompress(result.ToArray())
+                : result.ToArray();
         }
 
         public static LcsDocument Parse(byte[] raw)
         {
-            raw = LcsInfo.GzipDecompress(raw);
+            raw = ResourceSystem._.useGzipCompression
+                ? LcsInfo.GzipDecompress(raw)
+                : raw;
             var lines = new List<LcsLine>();
             var version = BitConverter.ToInt32(raw[..4]);
             var lineLevels = new List<string> { "" };
@@ -63,19 +68,27 @@ namespace Utils.Lcs
             var lineCache = new Dictionary<int, LcsLine>();
             while (cursor < raw.Length)
             {
-                var line = LcsLine.Parse(raw, ref cursor);
-                if (!lineLevelMap.ContainsKey(line.Prefix)) throw Errors.InvalidItem("LCS line prefix", line.Prefix);
-                var lineLevel = lineLevelMap[line.Prefix];
-                lineCache[lineLevel] = line;
-                if (lineLevel == 0)
+                try
                 {
-                    lines.Add(line);
+                    var line = LcsLine.Parse(raw, ref cursor);
+                    if (!lineLevelMap.ContainsKey(line.Prefix)) throw Errors.InvalidItem("LCS line prefix", line.Prefix);
+                    var lineLevel = lineLevelMap[line.Prefix];
+                    lineCache[lineLevel] = line;
+                    if (lineLevel == 0)
+                    {
+                        lines.Add(line);
+                    }
+                    else
+                    {
+                        lineCache[lineLevel - 1].Children.Add(line);
+                    }
+                    cursor++;
                 }
-                else
+                catch (Exception ex)
                 {
-                    lineCache[lineLevel - 1].Children.Add(line);
+                    UnityEngine.Debug.Log($"Exception at cursor position {cursor}");
+                    throw;
                 }
-                cursor++;
             }
             return new LcsDocument(version, lines, lineLevels.ToArray());
         }
@@ -83,7 +96,7 @@ namespace Utils.Lcs
         public string Stringify()
         {
             return Version.ToString() + LcsInfo.PropertySeparator + LcsInfo.ConcatProps(LineLevels)
-                   + '\n' + Lines.Aggregate("", (current, line) => current + line.Stringify());
+                + '\n' + Lines.Aggregate("", (current, line) => current + line.Stringify());
         }
 
         public static LcsDocument Parse(string raw)

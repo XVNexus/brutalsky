@@ -67,26 +67,22 @@ namespace Utils.Lcs
             { LcsType.Material, MaterialInfo() },
             { LcsType.Chemical, ChemicalInfo() }
         };
-        public static readonly Dictionary<byte, LcsType> ByteTable =
-            TypeTable.ToDictionary(kv => kv.Value.ByteTag, kv => kv.Key);
-        public static readonly Dictionary<char, LcsType> CharTable =
-            TypeTable.ToDictionary(kv => kv.Value.CharTag, kv => kv.Key);
+        public static readonly Dictionary<char, LcsType> TagTable =
+            TypeTable.ToDictionary(kv => kv.Value.Tag, kv => kv.Key);
 
         public int Size { get; }
-        public byte ByteTag { get; }
-        public char CharTag { get; }
+        public char Tag { get; }
         public Func<object, byte[]> ToBin { get; }
         public Func<byte[], object> FromBin { get; }
         public Func<object, string> ToStr { get; }
         public Func<string, object> FromStr { get; }
 
-        public LcsInfo(int size, byte byteTag, char charTag,
+        public LcsInfo(int size, char tag,
             Func<object, byte[]> toBin, Func<byte[], object> fromBin,
             Func<object, string> toStr, Func<string, object> fromStr)
         {
             Size = size;
-            ByteTag = byteTag;
-            CharTag = charTag;
+            Tag = tag;
             ToBin = toBin;
             FromBin = fromBin;
             ToStr = toStr;
@@ -95,7 +91,7 @@ namespace Utils.Lcs
 
         // Primitive types
         public static LcsInfo BoolInfo() {
-            return new LcsInfo(1, 0x01, '1',
+            return new LcsInfo(1, '1',
                 value => BitConverter.GetBytes((bool)value),
                 raw => BitConverter.ToBoolean(raw),
                 value => value.ToString(),
@@ -103,7 +99,7 @@ namespace Utils.Lcs
         }
 
         public static LcsInfo ByteInfo() {
-            return new LcsInfo(1, 0x02, '2',
+            return new LcsInfo(1, '2',
                 value => new[] { (byte)value },
                 raw => raw[0],
                 value => value.ToString(),
@@ -111,7 +107,7 @@ namespace Utils.Lcs
         }
 
         public static LcsInfo UShortInfo() {
-            return new LcsInfo(2, 0x03, '3',
+            return new LcsInfo(2, '3',
                 value => BitConverter.GetBytes((ushort)value),
                 raw => BitConverter.ToUInt16(raw),
                 value => value.ToString(),
@@ -119,7 +115,7 @@ namespace Utils.Lcs
         }
 
         public static LcsInfo UIntInfo() {
-            return new LcsInfo(4, 0x04, '4',
+            return new LcsInfo(4, '4',
                 value => BitConverter.GetBytes((uint)value),
                 raw => BitConverter.ToUInt32(raw),
                 value => value.ToString(),
@@ -127,7 +123,7 @@ namespace Utils.Lcs
         }
 
         public static LcsInfo ULongInfo() {
-            return new LcsInfo(8, 0x05, '5',
+            return new LcsInfo(8, '5',
                 value => BitConverter.GetBytes((ulong)value),
                 raw => BitConverter.ToUInt64(raw),
                 value => value.ToString(),
@@ -135,7 +131,7 @@ namespace Utils.Lcs
         }
 
         public static LcsInfo SByteInfo() {
-            return new LcsInfo(1, 0x06, '6',
+            return new LcsInfo(1, '6',
                 value => new[] { (byte)value },
                 raw => (sbyte)raw[0],
                 value => value.ToString(),
@@ -143,7 +139,7 @@ namespace Utils.Lcs
         }
 
         public static LcsInfo ShortInfo() {
-            return new LcsInfo(2, 0x07, '7',
+            return new LcsInfo(2, '7',
                 value => BitConverter.GetBytes((short)value),
                 raw => BitConverter.ToInt16(raw),
                 value => value.ToString(),
@@ -151,7 +147,7 @@ namespace Utils.Lcs
         }
 
         public static LcsInfo IntInfo() {
-            return new LcsInfo(4, 0x08, '8',
+            return new LcsInfo(4, '8',
                 value => BitConverter.GetBytes((int)value),
                 raw => BitConverter.ToInt32(raw),
                 value => value.ToString(),
@@ -159,7 +155,7 @@ namespace Utils.Lcs
         }
 
         public static LcsInfo LongInfo() {
-            return new LcsInfo(8, 0x09, '9',
+            return new LcsInfo(8, '9',
                 value => BitConverter.GetBytes((long)value),
                 raw => BitConverter.ToInt64(raw),
                 value => value.ToString(),
@@ -167,7 +163,7 @@ namespace Utils.Lcs
         }
 
         public static LcsInfo FloatInfo() {
-            return new LcsInfo(4, 0x0A, 'A',
+            return new LcsInfo(4, 'A',
                 value => BitConverter.GetBytes((float)value),
                 raw => BitConverter.ToSingle(raw),
                 value => value.ToString(),
@@ -175,7 +171,7 @@ namespace Utils.Lcs
         }
 
         public static LcsInfo DoubleInfo() {
-            return new LcsInfo(8, 0x0B, 'B',
+            return new LcsInfo(8, 'B',
                 value => BitConverter.GetBytes((double)value),
                 raw => BitConverter.ToDouble(raw),
                 value => value.ToString(),
@@ -183,7 +179,7 @@ namespace Utils.Lcs
         }
 
         public static LcsInfo DecimalInfo() {
-            return new LcsInfo(16, 0x0C, 'C',
+            return new LcsInfo(16, 'C',
                 value => throw new NotImplementedException(),
                 raw => throw new NotImplementedException(),
                 value => throw new NotImplementedException(),
@@ -191,7 +187,7 @@ namespace Utils.Lcs
         }
 
         public static LcsInfo CharInfo() {
-            return new LcsInfo(2, 0x0D, 'D',
+            return new LcsInfo(2, 'D',
                 value => BitConverter.GetBytes((char)value),
                 raw => BitConverter.ToChar(raw),
                 value =>
@@ -203,7 +199,7 @@ namespace Utils.Lcs
         }
 
         public static LcsInfo StringInfo() {
-            return new LcsInfo(-1, 0x0E, 'E',
+            return new LcsInfo(-1, 'E',
                 value => Encoding.UTF8.GetBytes((string)value),
                 raw => Encoding.UTF8.GetString(raw),
                 value => SpecialChars.Keys.Aggregate(((string)value).Replace(@"\", @"\\"),
@@ -215,7 +211,7 @@ namespace Utils.Lcs
 
         // Compound types
         public static LcsInfo Int2Info() {
-            return new LcsInfo(8, 0x10, 'G',
+            return new LcsInfo(8, 'G',
                 value =>
                 {
                     var cast = (Vector2Int)value;
@@ -235,7 +231,7 @@ namespace Utils.Lcs
         }
 
         public static LcsInfo Int3Info() {
-            return new LcsInfo(12, 0x11, 'H',
+            return new LcsInfo(12, 'H',
                 value =>
                 {
                     var cast = (Vector3Int)value;
@@ -256,7 +252,7 @@ namespace Utils.Lcs
         }
 
         public static LcsInfo Float2Info() {
-            return new LcsInfo(8, 0x12, 'I',
+            return new LcsInfo(8, 'I',
                 value =>
                 {
                     var cast = (Vector2)value;
@@ -276,7 +272,7 @@ namespace Utils.Lcs
         }
 
         public static LcsInfo Float3Info() {
-            return new LcsInfo(12, 0x13, 'J',
+            return new LcsInfo(12, 'J',
                 value =>
                 {
                     var cast = (Vector3)value;
@@ -298,7 +294,7 @@ namespace Utils.Lcs
         }
 
         public static LcsInfo RectInfo() {
-            return new LcsInfo(16, 0x14, 'K',
+            return new LcsInfo(16, 'K',
                 value =>
                 {
                     var cast = (Rect)value;
@@ -323,7 +319,7 @@ namespace Utils.Lcs
         }
 
         public static LcsInfo ColorInfo() {
-            return new LcsInfo(4, 0x15, 'L',
+            return new LcsInfo(4, 'L',
                 value =>
                 {
                     var cast = (Color)value;
@@ -344,40 +340,40 @@ namespace Utils.Lcs
 
         // Enum types
         public static LcsInfo PlayerTypeInfo() {
-            return new LcsInfo(1, 0x20, 'a',
-                value => new[] { (byte)value },
+            return new LcsInfo(1, 'a',
+                value => new[] { (byte)(PlayerType)value },
                 raw => (PlayerType)raw[0],
                 value => value.ToString(),
                 raw => (PlayerType)Enum.Parse(typeof(PlayerType), raw));
         }
 
         public static LcsInfo DirectionInfo() {
-            return new LcsInfo(1, 0x21, 'b',
-                value => new[] { (byte)value },
+            return new LcsInfo(1, 'b',
+                value => new[] { (byte)(Direction)value },
                 raw => (Direction)raw[0],
                 value => value.ToString(),
                 raw => (Direction)Enum.Parse(typeof(Direction), raw));
         }
 
         public static LcsInfo LayerInfo() {
-            return new LcsInfo(1, 0x22, 'c',
-                value => new[] { (byte)value },
+            return new LcsInfo(1, 'c',
+                value => new[] { (byte)(ObjectLayer)value },
                 raw => (ObjectLayer)raw[0],
                 value => value.ToString(),
                 raw => (ObjectLayer)Enum.Parse(typeof(ObjectLayer), raw));
         }
 
         public static LcsInfo FormTypeInfo() {
-            return new LcsInfo(1, 0x23, 'd',
-                value => new[] { (byte)value },
+            return new LcsInfo(1, 'd',
+                value => new[] { (byte)(FormType)value },
                 raw => (FormType)raw[0],
                 value => value.ToString(),
                 raw => (FormType)Enum.Parse(typeof(FormType), raw));
         }
 
         public static LcsInfo JointTypeInfo() {
-            return new LcsInfo(1, 0x24, 'e',
-                value => new[] { (byte)value },
+            return new LcsInfo(1, 'e',
+                value => new[] { (byte)(JointType)value },
                 raw => (JointType)raw[0],
                 value => value.ToString(),
                 raw => (JointType)Enum.Parse(typeof(JointType), raw));
@@ -385,7 +381,7 @@ namespace Utils.Lcs
 
         // Brutalsky types
         public static LcsInfo TransformInfo() {
-            return new LcsInfo(12, 0x30, 'q',
+            return new LcsInfo(12, 'q',
                 value =>
                 {
                     var cast = (ObjectTransform)value;
@@ -408,7 +404,7 @@ namespace Utils.Lcs
         }
 
         public static LcsInfo FormInfo() {
-            return new LcsInfo(-1, 0x31, 'r',
+            return new LcsInfo(-1, 'r',
                 value =>
                 {
                     var cast = (Form)value;
@@ -470,7 +466,7 @@ namespace Utils.Lcs
         }
 
         public static LcsInfo MaterialInfo() {
-            return new LcsInfo(20, 0x32, 's',
+            return new LcsInfo(20, 's',
                 value =>
                 {
                     var cast = (ShapeMaterial)value;
@@ -496,7 +492,7 @@ namespace Utils.Lcs
         }
 
         public static LcsInfo ChemicalInfo() {
-            return new LcsInfo(12, 0x33, 't',
+            return new LcsInfo(12, 't',
                 value =>
                 {
                     var cast = (PoolChemical)value;

@@ -37,6 +37,7 @@ namespace Core
         public string saveFormatString;
         public string saveFormatBinary;
         public bool useBinaryFormat;
+        public bool useGzipCompression;
 
         // External references
         public GameObject pPlayer;

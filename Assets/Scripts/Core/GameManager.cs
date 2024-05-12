@@ -38,6 +38,7 @@ namespace Core
         protected override void OnLink()
         {
             LoadData();
+            ResourceSystem._.SaveMapFile(ResourceSystem._.LoadMapAsset("Void"));
             InitMap(MapSystem.GenerateId("Void", "Xveon"), new[]
             {
                 new BsPlayer(PlayerType.Main, "Player 1", new Color(1f, .5f, 0f)),

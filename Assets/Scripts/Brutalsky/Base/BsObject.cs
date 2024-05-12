@@ -142,14 +142,7 @@ namespace Brutalsky.Base
             Transform = (ObjectTransform)line.Props[4].Value;
             Layer = (ObjectLayer)line.Props[5].Value;
             Simulated = (bool)line.Props[6].Value;
-            try
-            {
-                _FromLcs(line.Props[7..]);
-            }
-            catch (Exception ex)
-            {
-                throw Errors.ErrorWhile("parsing LCS line", line, ex);
-            }
+            _FromLcs(line.Props[7..]);
             foreach (var child in line.Children)
             {
                 Addons.Add(BsAddon.FromLcs(child));

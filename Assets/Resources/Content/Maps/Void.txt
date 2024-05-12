@@ -4,7 +4,7 @@ $ I:-10'-10 8:0
 $ I:10'-10 8:0
 $ I:-10'10 8:0
 $ I:10'10 8:0
-# E:sh E:spinner E: E: q:0'0'0 c:Midground 1:True q:7'6'5'3 s:2'0'0'10'0 1:True L:E5E5FFFF 1:False
+# E:sh E:spinner E: E: q:0'0'0 c:Midground 1:True r:Star'6'5'3 s:2'0'0'10'0 1:True L:E5E5FFFF 1:False
 @ E:jn E:spinner-motor q:0'0'0 e:Hinge E: 1:False A:Infinity A:Infinity 1:True A:0 A:1000 1:False A:0 A:0
 # E:mn E:mount-1 E:sh E:spinner q:0'10'0 c:Midground 1:True I:1000'0.3 I:0'0
 # E:mn E:mount-2 E:sh E:spinner q:0'-10'0 c:Midground 1:True I:1000'0.3 I:0'0

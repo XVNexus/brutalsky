@@ -78,14 +78,7 @@ namespace Brutalsky.Base
         {
             Id = (string)line.Props[1].Value;
             Transform = (ObjectTransform)line.Props[2].Value;
-            try
-            {
-                _FromLcs(line.Props[3..]);
-            }
-            catch (Exception ex)
-            {
-                throw Errors.ErrorWhile("parsing LCS line", line, ex);
-            }
+            _FromLcs(line.Props[3..]);
         }
     }
 }
