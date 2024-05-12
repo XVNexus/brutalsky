@@ -1,5 +1,5 @@
 1 !$#%^ @
-! E:Void E:Xveon K:-125'-125'250'250 L:4C4C4CFF L:FFFFFFCC b:None A:0 A:100 1:True
+! E:Void E:Xveon K:-125'-125'250'250 L:333333FF L:FFFFFFCC b:None A:0 A:100 1:True
 $ I:-10'-10 8:0
 $ I:10'-10 8:0
 $ I:-10'10 8:0

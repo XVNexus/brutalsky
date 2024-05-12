@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Core;
 using Utils.Constants;
 
 namespace Utils.Lcs
@@ -20,7 +19,7 @@ namespace Utils.Lcs
             LineLevels = lineLevels;
         }
 
-        public byte[] Binify()
+        public byte[] Binify(bool useGzip = false)
         {
             var result = new List<byte>();
             result.AddRange(BitConverter.GetBytes(Version));
@@ -33,16 +32,12 @@ namespace Utils.Lcs
             {
                 result.AddRange(line.Binify());
             }
-            return ResourceSystem._.useGzipCompression
-                ? LcsInfo.GzipCompress(result.ToArray())
-                : result.ToArray();
+            return useGzip ? LcsInfo.GzipCompress(result.ToArray()) : result.ToArray();
         }
 
-        public static LcsDocument Parse(byte[] raw)
+        public static LcsDocument Parse(byte[] raw, bool useGzip = false)
         {
-            raw = ResourceSystem._.useGzipCompression
-                ? LcsInfo.GzipDecompress(raw)
-                : raw;
+            raw = useGzip ? LcsInfo.GzipDecompress(raw) : raw;
             var lines = new List<LcsLine>();
             var version = BitConverter.ToInt32(raw[..4]);
             var lineLevels = new List<string> { "" };
@@ -68,27 +63,19 @@ namespace Utils.Lcs
             var lineCache = new Dictionary<int, LcsLine>();
             while (cursor < raw.Length)
             {
-                try
+                var line = LcsLine.Parse(raw, ref cursor);
+                if (!lineLevelMap.ContainsKey(line.Prefix)) throw Errors.InvalidItem("LCS line prefix", line.Prefix);
+                var lineLevel = lineLevelMap[line.Prefix];
+                lineCache[lineLevel] = line;
+                if (lineLevel == 0)
                 {
-                    var line = LcsLine.Parse(raw, ref cursor);
-                    if (!lineLevelMap.ContainsKey(line.Prefix)) throw Errors.InvalidItem("LCS line prefix", line.Prefix);
-                    var lineLevel = lineLevelMap[line.Prefix];
-                    lineCache[lineLevel] = line;
-                    if (lineLevel == 0)
-                    {
-                        lines.Add(line);
-                    }
-                    else
-                    {
-                        lineCache[lineLevel - 1].Children.Add(line);
-                    }
-                    cursor++;
+                    lines.Add(line);
                 }
-                catch (Exception ex)
+                else
                 {
-                    UnityEngine.Debug.Log($"Exception at cursor position {cursor}");
-                    throw;
+                    lineCache[lineLevel - 1].Children.Add(line);
                 }
+                cursor++;
             }
             return new LcsDocument(version, lines, lineLevels.ToArray());
         }

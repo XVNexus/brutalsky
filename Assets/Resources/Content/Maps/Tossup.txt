@@ -1,40 +1,40 @@
-1;!$#%^;@
-!tTossup;tXveon;R-20,-10,40,20;C4C4C4CFF;CFFFFFFCC;D1;f20;f100;b1
-$V-7,-8.5;i1
-$V-5,-8.5;i0
-$V5,-8.5;i0
-$V7,-8.5;i1
-#tsh;twall-bottom;t;t;T0,-10,0;L1;b1;O1,-15,0,-10,1,10,1,15,0;M2,0,0,10,0;b0;CB2B2B2FF;b0
-#tsh;twall-left;t;t;T-20,10,0;L1;b1;O1,0,0,10,0,5,-1,1,-1,1,-10,0,-15;M2,0,0,10,0;b0;CB2B2B2FF;b0
-#tsh;twall-right;t;t;T20,10,0;L1;b1;O1,0,0,-10,0,-5,-1,-1,-1,-1,-10,0,-15;M2,0,0,10,0;b0;CB2B2B2FF;b0
-#tsh;tspinner-middle-bg;t;t;T0,7,0;L0;b0;O4,4;M0,0,0,0,0;b0;C3FFF3F0D;b0
-#tsh;tspinner-middle;t;t;T0,7,0;L1;b1;O7,3,4,1;M5,0,20,1,0;b1;C3FFF3FFF;b0
-@tjn;tspinner-middle-motor;T0,0,0;J3;t;b0;fInfinity;fInfinity;b1;f0;f10000;b0;f0;f0
-#tsh;tspinner-left-bg;t;t;T-17,-7,0;L0;b0;O4,4;M0,0,0,0,0;b0;CFF3F3F0D;b0
-#tsh;tspinner-left;t;t;T-17,-7,0;L1;b1;O7,3,4,1;M5,0,20,1,0;b1;CFF3F3FFF;b0
-@tjn;tspinner-left-motor;T0,0,0;J3;t;b0;fInfinity;fInfinity;b1;f0;f10000;b0;f0;f0
-#tsh;tspinner-right-bg;t;t;T17,-7,0;L0;b0;O4,4;M0,0,0,0,0;b0;C3F3FFF0D;b0
-#tsh;tspinner-right;t;t;T17,-7,0;L1;b1;O7,3,4,1;M5,0,20,1,0;b1;C3F3FFFFF;b0
-@tjn;tspinner-right-motor;T0,0,0;J3;t;b0;fInfinity;fInfinity;b1;f0;f10000;b0;f0;f0
-%tftmr
-%tbcfl;f3.141593
-%tmmul;i2
-%tmsin
-%tbcfl;f1000
-%tmmul;i2
-%tfclk;i50
-%tfchl
-%tbrin;i0;i2
-%tfdmx;i3
-^i0;i0;i2;i0
-^i1;i0;i2;i1
-^i2;i0;i3;i0
-^i3;i0;i5;i0
-^i4;i0;i5;i1
-^i5;i0;i9;i1
-^i6;i0;i7;i0
-^i7;i0;i8;i0
-^i8;i0;i9;i0
-^i9;i0;i10;i4
-^i9;i1;i11;i4
-^i9;i2;i12;i4
+1 !$#%^ @
+! E:Tossup E:Xveon K:-20'-10'40'20 L:333333FF L:FFFFFFCC b:Down A:20 A:100 1:True
+$ I:-7'-8.5 8:1
+$ I:-5'-8.5 8:0
+$ I:5'-8.5 8:0
+$ I:7'-8.5 8:1
+# E:sh E:wall-bottom E: E: q:0'-10'0 c:Midground 1:True r:Polygon'-15'0'-10'1'10'1'15'0 s:2'0'0'10'0 1:False L:B2B2B2FF 1:False
+# E:sh E:wall-left E: E: q:-20'10'0 c:Midground 1:True r:Polygon'0'0'10'0'5'-1'1'-1'1'-10'0'-15 s:2'0'0'10'0 1:False L:B2B2B2FF 1:False
+# E:sh E:wall-right E: E: q:20'10'0 c:Midground 1:True r:Polygon'0'0'-10'0'-5'-1'-1'-1'-1'-10'0'-15 s:2'0'0'10'0 1:False L:B2B2B2FF 1:False
+# E:sh E:spinner-middle-bg E: E: q:0'7'0 c:Background 1:False r:Circle'4 s:0'0'0'0'0 1:False L:3FFF3F0D 1:False
+# E:sh E:spinner-middle E: E: q:0'7'0 c:Midground 1:True r:Star'3'4'1 s:5'0'20'1'0 1:True L:3FFF3FFF 1:False
+@ E:jn E:spinner-middle-motor q:0'0'0 e:Hinge E: 1:False A:Infinity A:Infinity 1:True A:0 A:10000 1:False A:0 A:0
+# E:sh E:spinner-left-bg E: E: q:-17'-7'0 c:Background 1:False r:Circle'4 s:0'0'0'0'0 1:False L:FF3F3F0D 1:False
+# E:sh E:spinner-left E: E: q:-17'-7'0 c:Midground 1:True r:Star'3'4'1 s:5'0'20'1'0 1:True L:FF3F3FFF 1:False
+@ E:jn E:spinner-left-motor q:0'0'0 e:Hinge E: 1:False A:Infinity A:Infinity 1:True A:0 A:10000 1:False A:0 A:0
+# E:sh E:spinner-right-bg E: E: q:17'-7'0 c:Background 1:False r:Circle'4 s:0'0'0'0'0 1:False L:3F3FFF0D 1:False
+# E:sh E:spinner-right E: E: q:17'-7'0 c:Midground 1:True r:Star'3'4'1 s:5'0'20'1'0 1:True L:3F3FFFFF 1:False
+@ E:jn E:spinner-right-motor q:0'0'0 e:Hinge E: 1:False A:Infinity A:Infinity 1:True A:0 A:10000 1:False A:0 A:0
+% E:ftmr
+% E:bcfl A:3.141593
+% E:mmul 8:2
+% E:msin
+% E:bcfl A:1000
+% E:mmul 8:2
+% E:fclk 8:50
+% E:fchl
+% E:brin 8:0 8:2
+% E:fdmx 8:3
+^ 3:0 2:0 3:2 2:0
+^ 3:1 2:0 3:2 2:1
+^ 3:2 2:0 3:3 2:0
+^ 3:3 2:0 3:5 2:0
+^ 3:4 2:0 3:5 2:1
+^ 3:5 2:0 3:9 2:1
+^ 3:6 2:0 3:7 2:0
+^ 3:7 2:0 3:8 2:0
+^ 3:8 2:0 3:9 2:0
+^ 3:9 2:0 3:10 2:4
+^ 3:9 2:1 3:11 2:4
+^ 3:9 2:2 3:12 2:4

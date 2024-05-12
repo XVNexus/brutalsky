@@ -195,14 +195,14 @@ namespace Brutalsky
             return Links.ContainsKey(toPort);
         }
 
-        public byte[] Binify()
+        public byte[] Binify(bool useGzip = false)
         {
-            return ToLcs().Binify();
+            return ToLcs().Binify(useGzip);
         }
 
-        public static BsMap Parse(byte[] raw)
+        public static BsMap Parse(byte[] raw, bool useGzip = false)
         {
-            return FromLcs(LcsDocument.Parse(raw));
+            return FromLcs(LcsDocument.Parse(raw, useGzip));
         }
 
         public string Stringify()

@@ -1,6 +1,4 @@
 using Brutalsky;
-using Brutalsky.Addon;
-using Brutalsky.Logic;
 using Brutalsky.Map;
 using Brutalsky.Object;
 using UnityEngine;
@@ -14,7 +12,7 @@ namespace Utils.Map
 {
     public static class MapGenerator
     {
-        public static readonly Color MapBackground = new(.3f, .3f, .3f);
+        public static readonly Color MapBackground = new(.2f, .2f, .2f);
         public static readonly Color MapLighting = new(1f, 1f, 1f, .8f);
         public static readonly ShapeMaterial ObjectMaterial = ShapeMaterial.Stone;
         public static readonly Color ObjectColor = ColorExt.Stone;

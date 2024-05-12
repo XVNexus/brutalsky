@@ -10,6 +10,7 @@ using Brutalsky.Object;
 using Controllers.Base;
 using UnityEngine;
 using Utils.Constants;
+using Utils.Lcs;
 using Random = Unity.Mathematics.Random;
 
 namespace Core
@@ -34,10 +35,8 @@ namespace Core
 
         // Config options
         public string[] dataDirectories;
-        public string saveFormatString;
-        public string saveFormatBinary;
-        public bool useBinaryFormat;
-        public bool useGzipCompression;
+        public string[] lcsFormatExtensions;
+        public LcsFormat lcsPreferredFormat;
 
         // External references
         public GameObject pPlayer;
@@ -108,47 +107,64 @@ namespace Core
             var path = GetDataPath("Maps");
             return Directory.Exists(path)
                 ? Directory.GetFiles(path).Select(mapPath => LoadMapFile(Regex.Match(mapPath,
-                    $@"\d+(?=\.({saveFormatString}|{saveFormatBinary}))").Value)).ToList()
+                    $@"\d+(?=\.({string.Join('|', lcsFormatExtensions)}))").Value)).ToList()
                 : new List<BsMap>();
         }
 
         public BsMap LoadMapFile(string filename)
         {
-            var pathBinary = GetDataPath("Maps", filename, saveFormatBinary);
-            var pathString = GetDataPath("Maps", filename, saveFormatString);
-            BsMap result;
+            var pathString = GetDataPath("Maps", filename, lcsFormatExtensions[0]);
+            var pathBinary = GetDataPath("Maps", filename, lcsFormatExtensions[1]);
+            var pathGzip = GetDataPath("Maps", filename, lcsFormatExtensions[2]);
+            if (File.Exists(pathString))
+            {
+                using var reader = new StreamReader(pathString);
+                return BsMap.Parse(reader.ReadToEnd());
+            }
             if (File.Exists(pathBinary))
             {
                 using var stream = new FileStream(pathBinary, FileMode.Open);
                 using var reader = new BinaryReader(stream);
-                result = BsMap.Parse(reader.ReadBytes((int)stream.Length));
+                return BsMap.Parse(reader.ReadBytes((int)stream.Length), false);
             }
-            else if (File.Exists(pathString))
+            if (File.Exists(pathGzip))
             {
-                using var reader = new StreamReader(pathString);
-                result = BsMap.Parse(reader.ReadToEnd());
+                using var stream = new FileStream(pathBinary, FileMode.Open);
+                using var reader = new BinaryReader(stream);
+                return BsMap.Parse(reader.ReadBytes((int)stream.Length));
             }
-            else
-            {
-                throw Errors.NoItemFound("map file", filename);
-            }
-            return result;
+            throw Errors.NoItemFound("map file", filename);
         }
 
         public void SaveMapFile(BsMap map)
         {
-            if (useBinaryFormat)
+            switch (lcsPreferredFormat)
             {
-                var path = GetDataPath("Maps", map.Id.ToString(), saveFormatBinary);
-                using var stream = new FileStream(path, FileMode.Create);
-                using var writer = new BinaryWriter(stream);
-                writer.Write(map.Binify());
-            }
-            else
-            {
-                var path = GetDataPath("Maps", map.Id.ToString(), saveFormatString);
-                using var writer = new StreamWriter(path);
-                writer.Write(map.Stringify());
+                case LcsFormat.String:
+                {
+                    var pathString = GetDataPath("Maps", map.Id.ToString(), lcsFormatExtensions[0]);
+                    using var writer = new StreamWriter(pathString);
+                    writer.Write(map.Stringify());
+                    break;
+                }
+                case LcsFormat.Binary:
+                {
+                    var pathGzip = GetDataPath("Maps", map.Id.ToString(), lcsFormatExtensions[1]);
+                    using var stream = new FileStream(pathGzip, FileMode.Create);
+                    using var writer = new BinaryWriter(stream);
+                    writer.Write(map.Binify());
+                    break;
+                }
+                case LcsFormat.Gzip:
+                {
+                    var pathGzip = GetDataPath("Maps", map.Id.ToString(), lcsFormatExtensions[2]);
+                    using var stream = new FileStream(pathGzip, FileMode.Create);
+                    using var writer = new BinaryWriter(stream);
+                    writer.Write(map.Binify(true));
+                    break;
+                }
+                default:
+                    throw Errors.InvalidItem("lcs format", lcsPreferredFormat);
             }
         }
     }

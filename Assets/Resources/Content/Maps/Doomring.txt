@@ -1,24 +1,24 @@
-1;!$#%^;@
-!tDoomring;tXveon;R-15,-15,30,30;C4C4C4CFF;CFFFFFFCC;D0;f0;f100;b1
-$V0,5;i0
-$V5,0;i0
-$V0,-5;i0
-$V-5,0;i0
-#tsh;tbackground-top;t;t;T0,0,45;L0;b0;O0,0,0,0,0,15,1,15,15,15,0;M0,0,0,0,0;b0;CFF3F3F0D;b0
-#tsh;tquadrant-top;t;t;T0,0,45;L1;b1;O0,0,15,1,15,15,15,0,0,14,0,1,14,14,0,14;M2,2,0,10,-10;b0;CB2B2B2FF;b0
-#tsh;tbackground-right;t;t;T0,0,-45;L0;b0;O0,0,0,0,0,15,1,15,15,15,0;M0,0,0,0,0;b0;C9FFF3F0D;b0
-#tsh;tquadrant-right;t;t;T0,0,-45;L1;b1;O0,0,15,1,15,15,15,0,0,14,0,1,14,14,0,14;M2,2,0,10,-10;b0;CB2B2B2FF;b0
-#tsh;tbackground-bottom;t;t;T0,0,-135;L0;b0;O0,0,0,0,0,15,1,15,15,15,0;M0,0,0,0,0;b0;C3FFFFF0D;b0
-#tsh;tquadrant-bottom;t;t;T0,0,-135;L1;b1;O0,0,15,1,15,15,15,0,0,14,0,1,14,14,0,14;M2,2,0,10,-10;b0;CB2B2B2FF;b0
-#tsh;tbackground-left;t;t;T0,0,-225;L0;b0;O0,0,0,0,0,15,1,15,15,15,0;M0,0,0,0,0;b0;C9F3FFF0D;b0
-#tsh;tquadrant-left;t;t;T0,0,-225;L1;b1;O0,0,15,1,15,15,15,0,0,14,0,1,14,14,0,14;M2,2,0,10,-10;b0;CB2B2B2FF;b0
-#tsh;tspinner;t;t;T0,0,0;L1;b1;O7,4,4,1;M5,0,0,100,0;b1;CE5E5FFFF;b0
-@tjn;tspinner-motor;T0,0,0;J3;t;b0;fInfinity;fInfinity;b1;f50;f1000000;b0;f0;f0
-#tsh;tspinner-arm-top;t;t;T0,10,0;L1;b1;O6,3,4;M2,0,0,1,0;b1;CFF3F3FFF;b0
-@tjn;tspinner-arm-top-link;T0,0,0;J3;tspinner;b0;fInfinity;fInfinity;b1;f-1000;f100;b0;f0;f0
-#tsh;tspinner-arm-right;t;t;T10,0,-90;L1;b1;O6,3,4;M2,0,0,1,0;b1;C9FFF3FFF;b0
-@tjn;tspinner-arm-right-link;T0,0,0;J3;tspinner;b0;fInfinity;fInfinity;b1;f-1000;f100;b0;f0;f0
-#tsh;tspinner-arm-bottom;t;t;T0,-10,-180;L1;b1;O6,3,4;M2,0,0,1,0;b1;C3FFFFFFF;b0
-@tjn;tspinner-arm-bottom-link;T0,0,0;J3;tspinner;b0;fInfinity;fInfinity;b1;f-1000;f100;b0;f0;f0
-#tsh;tspinner-arm-left;t;t;T-10,0,-270;L1;b1;O6,3,4;M2,0,0,1,0;b1;C9F3FFFFF;b0
-@tjn;tspinner-arm-left-link;T0,0,0;J3;tspinner;b0;fInfinity;fInfinity;b1;f-1000;f100;b0;f0;f0
+1 !$#%^ @
+! E:Doomring E:Xveon K:-15'-15'30'30 L:333333FF L:FFFFFFCC b:None A:0 A:100 1:True
+$ I:0'5 8:0
+$ I:5'0 8:0
+$ I:0'-5 8:0
+$ I:-5'0 8:0
+# E:sh E:background-top E: E: q:0'0'45 c:Background 1:False r:Vector'0'0'0'0'15'1'15'15'15'0 s:0'0'0'0'0 1:False L:FF3F3F0D 1:False
+# E:sh E:quadrant-top E: E: q:0'0'45 c:Midground 1:True r:Vector'0'15'1'15'15'15'0'0'14'0'1'14'14'0'14 s:2'2'0'10'-10 1:False L:B2B2B2FF 1:False
+# E:sh E:background-right E: E: q:0'0'-45 c:Background 1:False r:Vector'0'0'0'0'15'1'15'15'15'0 s:0'0'0'0'0 1:False L:9FFF3F0D 1:False
+# E:sh E:quadrant-right E: E: q:0'0'-45 c:Midground 1:True r:Vector'0'15'1'15'15'15'0'0'14'0'1'14'14'0'14 s:2'2'0'10'-10 1:False L:B2B2B2FF 1:False
+# E:sh E:background-bottom E: E: q:0'0'-135 c:Background 1:False r:Vector'0'0'0'0'15'1'15'15'15'0 s:0'0'0'0'0 1:False L:3FFFFF0D 1:False
+# E:sh E:quadrant-bottom E: E: q:0'0'-135 c:Midground 1:True r:Vector'0'15'1'15'15'15'0'0'14'0'1'14'14'0'14 s:2'2'0'10'-10 1:False L:B2B2B2FF 1:False
+# E:sh E:background-left E: E: q:0'0'-225 c:Background 1:False r:Vector'0'0'0'0'15'1'15'15'15'0 s:0'0'0'0'0 1:False L:9F3FFF0D 1:False
+# E:sh E:quadrant-left E: E: q:0'0'-225 c:Midground 1:True r:Vector'0'15'1'15'15'15'0'0'14'0'1'14'14'0'14 s:2'2'0'10'-10 1:False L:B2B2B2FF 1:False
+# E:sh E:spinner E: E: q:0'0'0 c:Midground 1:True r:Star'4'4'1 s:5'0'0'100'0 1:True L:E5E5FFFF 1:False
+@ E:jn E:spinner-motor q:0'0'0 e:Hinge E: 1:False A:Infinity A:Infinity 1:True A:50 A:1000000 1:False A:0 A:0
+# E:sh E:spinner-arm-top E: E: q:0'10'0 c:Midground 1:True r:Ngon'3'4 s:2'0'0'1'0 1:True L:FF3F3FFF 1:False
+@ E:jn E:spinner-arm-top-link q:0'0'0 e:Hinge E:spinner 1:False A:Infinity A:Infinity 1:True A:-1000 A:100 1:False A:0 A:0
+# E:sh E:spinner-arm-right E: E: q:10'0'-90 c:Midground 1:True r:Ngon'3'4 s:2'0'0'1'0 1:True L:9FFF3FFF 1:False
+@ E:jn E:spinner-arm-right-link q:0'0'0 e:Hinge E:spinner 1:False A:Infinity A:Infinity 1:True A:-1000 A:100 1:False A:0 A:0
+# E:sh E:spinner-arm-bottom E: E: q:0'-10'-180 c:Midground 1:True r:Ngon'3'4 s:2'0'0'1'0 1:True L:3FFFFFFF 1:False
+@ E:jn E:spinner-arm-bottom-link q:0'0'0 e:Hinge E:spinner 1:False A:Infinity A:Infinity 1:True A:-1000 A:100 1:False A:0 A:0
+# E:sh E:spinner-arm-left E: E: q:-10'0'-270 c:Midground 1:True r:Ngon'3'4 s:2'0'0'1'0 1:True L:9F3FFFFF 1:False
+@ E:jn E:spinner-arm-left-link q:0'0'0 e:Hinge E:spinner 1:False A:Infinity A:Infinity 1:True A:-1000 A:100 1:False A:0 A:0
