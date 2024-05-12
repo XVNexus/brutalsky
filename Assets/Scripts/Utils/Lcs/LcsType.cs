@@ -2,29 +2,36 @@ namespace Utils.Lcs
 {
     public enum LcsType
     {
-        Null,
         // Primitive types
+        Null,
         Bool,
+        Byte,
         UShort,
         UInt,
         ULong,
+        SByte,
         Short,
         Int,
         Long,
         Float,
         Double,
+        Decimal,
         Char,
         String,
+        // Compound types
+        Int2,
+        Int3,
+        Float2,
+        Float3,
+        Rect,
+        Color,
         // Enum types
         PlayerType,
         Direction,
         Layer,
         FormType,
         JointType,
-        // Compound types
-        Vector2,
-        Rect,
-        Color,
+        // Brutalsky types
         Transform,
         Form,
         Material,

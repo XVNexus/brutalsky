@@ -46,15 +46,14 @@ namespace Utils.Lcs
 
         public string Stringify()
         {
-            return Children.Aggregate(
-                $"{Prefix}{Stringifier.ConcatProps(Props.Select(prop => prop.Stringify()).ToArray())}\n",
+            return Children.Aggregate($"{Prefix}{LcsInfo.PropertySeparator}" +
+                $"{LcsInfo.ConcatProps(Props.Select(prop => prop.Stringify()).ToArray())}\n",
                 (current, child) => current + child.Stringify());
         }
 
         public static LcsLine Parse(string raw)
         {
-            return new LcsLine(raw[0],
-                Stringifier.SplitProps(raw[1..]).Select(prop => LcsProp.Parse(prop)).ToArray());
+            return new LcsLine(raw[0], LcsInfo.SplitProps(raw[2..]).Select(prop => LcsProp.Parse(prop)).ToArray());
         }
 
         public override string ToString()

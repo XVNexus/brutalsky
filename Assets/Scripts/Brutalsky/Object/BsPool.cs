@@ -70,7 +70,7 @@ namespace Brutalsky.Object
         {
             return new LcsProp[]
             {
-                new(LcsType.Vector2, Size),
+                new(LcsType.Float2, Size),
                 new(LcsType.Chemical, Chemical),
                 new(LcsType.Color, Color),
                 new(LcsType.Bool, Glow)

@@ -32,12 +32,12 @@ namespace Utils.Lcs
             {
                 result.AddRange(line.Binify());
             }
-            return Binifier.GzipCompress(result.ToArray());
+            return LcsInfo.GzipCompress(result.ToArray());
         }
 
         public static LcsDocument Parse(byte[] raw)
         {
-            raw = Binifier.GzipDecompress(raw);
+            raw = LcsInfo.GzipDecompress(raw);
             var lines = new List<LcsLine>();
             var version = BitConverter.ToInt32(raw[..4]);
             var lineLevels = new List<string> { "" };
@@ -82,7 +82,7 @@ namespace Utils.Lcs
 
         public string Stringify()
         {
-            return Version.ToString() + Stringifier.PropertySeperator + Stringifier.ConcatProps(LineLevels)
+            return Version.ToString() + LcsInfo.PropertySeparator + LcsInfo.ConcatProps(LineLevels)
                    + '\n' + Lines.Aggregate("", (current, line) => current + line.Stringify());
         }
 
@@ -90,7 +90,7 @@ namespace Utils.Lcs
         {
             var lines = new List<LcsLine>();
             var rawLines = raw.Trim().Split('\n');
-            var headerParts = rawLines[0].Split(Stringifier.PropertySeperator);
+            var headerParts = rawLines[0].Split(LcsInfo.PropertySeparator);
             var version = int.Parse(headerParts[0]);
             var lineLevels = headerParts[1..];
             var lineLevelMap = new Dictionary<char, int>();

@@ -4,16 +4,16 @@ namespace Brutalsky.Logic
 {
     public class BsLink
     {
-        public (int, int) FromPort { get; }
-        public (int, int) ToPort { get; }
+        public (ushort, byte) FromPort { get; }
+        public (ushort, byte) ToPort { get; }
 
-        public BsLink((int, int) fromPort, (int, int) toPort)
+        public BsLink((ushort, byte) fromPort, (ushort, byte) toPort)
         {
             FromPort = fromPort;
             ToPort = toPort;
         }
 
-        public BsLink(int fromNode, int fromPort, int toNode, int toPort)
+        public BsLink(ushort fromNode, byte fromPort, ushort toNode, byte toPort)
         {
             FromPort = (fromNode, fromPort);
             ToPort = (toNode, toPort);
@@ -23,8 +23,8 @@ namespace Brutalsky.Logic
         {
             return new LcsLine('^', new LcsProp[]
             {
-                new(LcsType.Int, FromPort.Item1), new(LcsType.Int, FromPort.Item2),
-                new(LcsType.Int, ToPort.Item1), new(LcsType.Int, ToPort.Item2)
+                new(LcsType.UShort, FromPort.Item1), new(LcsType.Byte, FromPort.Item2),
+                new(LcsType.UShort, ToPort.Item1), new(LcsType.Byte, ToPort.Item2)
             });
         }
 
@@ -32,8 +32,8 @@ namespace Brutalsky.Logic
         {
             return new BsLink
             (
-                (int)line.Props[0].Value, (int)line.Props[1].Value,
-                (int)line.Props[2].Value, (int)line.Props[3].Value
+                (ushort)line.Props[0].Value, (byte)line.Props[1].Value,
+                (ushort)line.Props[2].Value, (byte)line.Props[3].Value
             );
         }
     }

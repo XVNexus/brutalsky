@@ -59,8 +59,8 @@ namespace Brutalsky.Object
         {
             return new LcsProp[]
             {
-                new(LcsType.Vector2, GripStrength),
-                new(LcsType.Vector2, EjectionForce)
+                new(LcsType.Float2, GripStrength),
+                new(LcsType.Float2, EjectionForce)
             };
         }
 

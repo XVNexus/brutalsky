@@ -7,8 +7,8 @@ namespace Brutalsky.Logic
     public class BsMatrix
     {
         private readonly List<BsNode> _nodes = new();
-        private readonly Dictionary<(int, int), (int, int)> _links = new();
-        private readonly Dictionary<(int, int), float> _buffer = new();
+        private readonly Dictionary<(ushort, byte), (ushort, byte)> _links = new();
+        private readonly Dictionary<(ushort, byte), float> _buffer = new();
 
         public BsMatrix(IEnumerable<BsNode> nodes, IEnumerable<BsLink> links)
         {
@@ -43,56 +43,56 @@ namespace Brutalsky.Logic
             }
         }
 
-        public float GetPort((int, int) port)
+        public float GetPort((ushort, byte) port)
         {
             return GetPort(port.Item1, port.Item2);
         }
 
-        public float GetPort(int id, int index)
+        public float GetPort(ushort id, byte index)
         {
             ValidateOutputPort(id, index);
             return _nodes[id].Outputs[index];
         }
 
-        public void SetPort((int, int) port, float value)
+        public void SetPort((ushort, byte) port, float value)
         {
             SetPort(port.Item1, port.Item2, value);
         }
 
-        public void SetPort(int id, int index, float value)
+        public void SetPort(ushort id, byte index, float value)
         {
             ValidateInputPort(id, index);
             _nodes[id].Inputs[index] = value;
         }
 
-        public bool ContainsInputPort(int id, int index)
+        public bool ContainsInputPort(ushort id, byte index)
         {
             return ContainsNode(id) && index >= 0 && index < _nodes[id].Inputs.Length;
         }
 
-        public bool ContainsOutputPort(int id, int index)
+        public bool ContainsOutputPort(ushort id, byte index)
         {
             return ContainsNode(id) && index >= 0 && index < _nodes[id].Outputs.Length;
         }
 
-        public void ValidateInputPort(int id, int index)
+        public void ValidateInputPort(ushort id, byte index)
         {
             if (!ContainsNode(id)) throw Errors.NoItemFound("node", id);
             if (!ContainsInputPort(id, index)) throw Errors.NoItemFound("input port", $"{id}:{index}");
         }
 
-        public void ValidateOutputPort(int id, int index)
+        public void ValidateOutputPort(ushort id, byte index)
         {
             if (!ContainsNode(id)) throw Errors.NoItemFound("node", id);
             if (!ContainsOutputPort(id, index)) throw Errors.NoItemFound("output port", $"{id}:{index}");
         }
 
-        public bool ContainsNode(int id)
+        public bool ContainsNode(ushort id)
         {
             return id >= 0 && id < _nodes.Count;
         }
 
-        public bool ContainsLink((int, int) toPort)
+        public bool ContainsLink((ushort, byte) toPort)
         {
             return _links.ContainsKey(toPort);
         }
