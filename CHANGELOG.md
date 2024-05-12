@@ -1,3 +1,19 @@
+## *Nightly 2024.05.11*
+
+#### ADDED
+- new default map with a working car that has a driver and passenger mount
+- checkerboard background with 1x1 and 10x10 meter squares for all maps to visualize movement better
+
+#### CHANGED
+- increased map size limit to 2.5 kilometers
+- decreased size of void map to 250x250 meters
+- slightly changed ui pane title border colors
+- logic nodes for joints no longer continually output the joint's properties
+
+#### FIXED
+- binary lcs parser did not allow strings and shape forms longer than 255 bytes
+
+
 ## *Nightly 2024.05.08*
 
 #### ADDED
