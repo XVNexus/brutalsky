@@ -129,7 +129,7 @@ namespace Core
         public void RegisterMap(BsMap map)
         {
             EventSystem._.EmitMapPreload(map);
-            MapList[map.Id] = map.Binify();
+            MapList[map.Id] = map.Binify(true);
         }
 
         public void UnregisterMaps()
@@ -145,14 +145,7 @@ namespace Core
 
         public void BuildMap(uint id)
         {
-            if (id > 0)
-            {
-                BuildMap(BsMap.Parse(MapList[id]));
-            }
-            else
-            {
-                BuildMap();
-            }
+            BuildMap(id > 0 ? BsMap.Parse(MapList[id], true) : null);
         }
 
         public void BuildMap([CanBeNull] BsMap map = null)

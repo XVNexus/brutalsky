@@ -1,5 +1,5 @@
 1 !$#%^ @
-! str: Doomring / str: Xveon / rec: -15 -15 30 30 / col: 333333FF / col: FFFFFFCC / dir: None / flt: 0 / flt: 100 / bol: True
+! str: Doomring / str: Xveon / rec: -15 -15 30 30 / col: 404040FF / col: FFFFFFCC / dir: None / flt: 0 / flt: 100 / bol: True
 $ fl2: 0 5 / sin: 0
 $ fl2: 5 0 / sin: 0
 $ fl2: 0 -5 / sin: 0

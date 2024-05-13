@@ -17,9 +17,9 @@ namespace Core
         public InputActionAsset aInputAction;
 
         // System functions
-        public InputAction GetInputAction(string id)
+        public InputAction GetInputAction(string mapId, string actionId)
         {
-            var result = aInputAction.FindAction(id);
+            var result = aInputAction.FindActionMap(mapId).FindAction(actionId);
             if (!result.enabled)
             {
                 result.Enable();
@@ -27,9 +27,9 @@ namespace Core
             return result;
         }
 
-        public InputAction SetInputAction(string id, Action<InputAction.CallbackContext> callback)
+        public InputAction SetInputAction(string mapId, string actionId, Action<InputAction.CallbackContext> callback)
         {
-            var action = GetInputAction(id);
+            var action = GetInputAction(mapId, actionId);
             action.performed += callback;
             return action;
         }

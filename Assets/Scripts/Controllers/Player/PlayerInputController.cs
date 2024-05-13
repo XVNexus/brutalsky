@@ -1,3 +1,4 @@
+using System;
 using Brutalsky.Object;
 using Controllers.Base;
 using Core;
@@ -31,10 +32,15 @@ namespace Controllers.Player
         // Init functions
         protected override void OnInit()
         {
-            _iMovement = EventSystem._.GetInputAction("Movement");
-            _iBoost = EventSystem._.GetInputAction("Boost");
-
-            // Disable input if the player is a dummy
+            var inputSetId = Master.Object.Type switch
+            {
+                PlayerType.Main => "Player Main",
+                PlayerType.Local1 => "Player Local1",
+                PlayerType.Local2 => "Player Local2",
+                _ => "Player Main"
+            };
+            _iMovement = EventSystem._.GetInputAction(inputSetId, "Movement");
+            _iBoost = EventSystem._.GetInputAction(inputSetId, "Boost");
             Dummy = Master.Object.Type == PlayerType.Dummy;
         }
 

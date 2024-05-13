@@ -40,8 +40,8 @@ namespace Core
             LoadData();
             InitMap(MapSystem.GenerateId("Void", "Xveon"), new[]
             {
-                new BsPlayer(PlayerType.Main, "Player 1", new Color(1f, .5f, 0f)),
-                new BsPlayer(PlayerType.Dummy, "Player 2", new Color(0f, .5f, 1f))
+                new BsPlayer(PlayerType.Local1, "Player 1", new Color(1f, .5f, 0f)),
+                new BsPlayer(PlayerType.Local2, "Player 2", new Color(0f, .5f, 1f))
             }, 1f);
         }
 

@@ -4,8 +4,8 @@ namespace Utils.Player
     {
         Dummy,
         Main,
-        Offline1,
-        Offline2,
+        Local1,
+        Local2,
         Bot
     }
 }

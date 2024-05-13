@@ -1,5 +1,5 @@
 1 !$#%^ @
-! str: Tossup / str: Xveon / rec: -20 -10 40 20 / col: 333333FF / col: FFFFFFCC / dir: Down / flt: 20 / flt: 100 / bol: True
+! str: Tossup / str: Xveon / rec: -20 -10 40 20 / col: 404040FF / col: FFFFFFCC / dir: Down / flt: 20 / flt: 100 / bol: True
 $ fl2: -7 -8.5 / sin: 1
 $ fl2: -5 -8.5 / sin: 0
 $ fl2: 5 -8.5 / sin: 0

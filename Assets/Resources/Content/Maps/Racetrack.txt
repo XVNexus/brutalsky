@@ -1,5 +1,5 @@
 1 !$#%^ @
-! str: Racetrack / str: Xveon / rec: -1250 0 2500 250 / col: 333333FF / col: FFFFFFCC / dir: Down / flt: 20 / flt: 100 / bol: True
+! str: Racetrack / str: Xveon / rec: -1250 0 2500 250 / col: 404040FF / col: FFFFFFCC / dir: Down / flt: 20 / flt: 100 / bol: True
 $ fl2: -4 11 / sin: 0
 $ fl2: 4 11 / sin: 0
 # str: sh / str: wall-bottom / str:  / str:  / trn: 0 -5 0 / lay: Midground / bol: True / for: Rectangle 2500 12 / mat: 2 0 0 10 0 / bol: False / col: B2B2B2FF / bol: False
