@@ -1,24 +1,24 @@
 1 !$#%^ @
-! E:Doomring E:Xveon K:-15'-15'30'30 L:333333FF L:FFFFFFCC b:None A:0 A:100 1:True
-$ I:0'5 8:0
-$ I:5'0 8:0
-$ I:0'-5 8:0
-$ I:-5'0 8:0
-# E:sh E:background-top E: E: q:0'0'45 c:Background 1:False r:Vector'0'0'0'0'15'1'15'15'15'0 s:0'0'0'0'0 1:False L:FF3F3F0D 1:False
-# E:sh E:quadrant-top E: E: q:0'0'45 c:Midground 1:True r:Vector'0'15'1'15'15'15'0'0'14'0'1'14'14'0'14 s:2'2'0'10'-10 1:False L:B2B2B2FF 1:False
-# E:sh E:background-right E: E: q:0'0'-45 c:Background 1:False r:Vector'0'0'0'0'15'1'15'15'15'0 s:0'0'0'0'0 1:False L:9FFF3F0D 1:False
-# E:sh E:quadrant-right E: E: q:0'0'-45 c:Midground 1:True r:Vector'0'15'1'15'15'15'0'0'14'0'1'14'14'0'14 s:2'2'0'10'-10 1:False L:B2B2B2FF 1:False
-# E:sh E:background-bottom E: E: q:0'0'-135 c:Background 1:False r:Vector'0'0'0'0'15'1'15'15'15'0 s:0'0'0'0'0 1:False L:3FFFFF0D 1:False
-# E:sh E:quadrant-bottom E: E: q:0'0'-135 c:Midground 1:True r:Vector'0'15'1'15'15'15'0'0'14'0'1'14'14'0'14 s:2'2'0'10'-10 1:False L:B2B2B2FF 1:False
-# E:sh E:background-left E: E: q:0'0'-225 c:Background 1:False r:Vector'0'0'0'0'15'1'15'15'15'0 s:0'0'0'0'0 1:False L:9F3FFF0D 1:False
-# E:sh E:quadrant-left E: E: q:0'0'-225 c:Midground 1:True r:Vector'0'15'1'15'15'15'0'0'14'0'1'14'14'0'14 s:2'2'0'10'-10 1:False L:B2B2B2FF 1:False
-# E:sh E:spinner E: E: q:0'0'0 c:Midground 1:True r:Star'4'4'1 s:5'0'0'100'0 1:True L:E5E5FFFF 1:False
-@ E:jn E:spinner-motor q:0'0'0 e:Hinge E: 1:False A:Infinity A:Infinity 1:True A:50 A:1000000 1:False A:0 A:0
-# E:sh E:spinner-arm-top E: E: q:0'10'0 c:Midground 1:True r:Ngon'3'4 s:2'0'0'1'0 1:True L:FF3F3FFF 1:False
-@ E:jn E:spinner-arm-top-link q:0'0'0 e:Hinge E:spinner 1:False A:Infinity A:Infinity 1:True A:-1000 A:100 1:False A:0 A:0
-# E:sh E:spinner-arm-right E: E: q:10'0'-90 c:Midground 1:True r:Ngon'3'4 s:2'0'0'1'0 1:True L:9FFF3FFF 1:False
-@ E:jn E:spinner-arm-right-link q:0'0'0 e:Hinge E:spinner 1:False A:Infinity A:Infinity 1:True A:-1000 A:100 1:False A:0 A:0
-# E:sh E:spinner-arm-bottom E: E: q:0'-10'-180 c:Midground 1:True r:Ngon'3'4 s:2'0'0'1'0 1:True L:3FFFFFFF 1:False
-@ E:jn E:spinner-arm-bottom-link q:0'0'0 e:Hinge E:spinner 1:False A:Infinity A:Infinity 1:True A:-1000 A:100 1:False A:0 A:0
-# E:sh E:spinner-arm-left E: E: q:-10'0'-270 c:Midground 1:True r:Ngon'3'4 s:2'0'0'1'0 1:True L:9F3FFFFF 1:False
-@ E:jn E:spinner-arm-left-link q:0'0'0 e:Hinge E:spinner 1:False A:Infinity A:Infinity 1:True A:-1000 A:100 1:False A:0 A:0
+! str: Doomring / str: Xveon / rec: -15 -15 30 30 / col: 333333FF / col: FFFFFFCC / dir: None / flt: 0 / flt: 100 / bol: True
+$ fl2: 0 5 / sin: 0
+$ fl2: 5 0 / sin: 0
+$ fl2: 0 -5 / sin: 0
+$ fl2: -5 0 / sin: 0
+# str: sh / str: background-top / str:  / str:  / trn: 0 0 45 / lay: Background / bol: False / for: Vector 0 0 0 0 15 1 15 15 15 0 / mat: 0 0 0 0 0 / bol: False / col: FF3F3F0D / bol: False
+# str: sh / str: quadrant-top / str:  / str:  / trn: 0 0 45 / lay: Midground / bol: True / for: Vector 0 15 1 15 15 15 0 0 14 0 1 14 14 0 14 / mat: 2 2 0 10 -10 / bol: False / col: B2B2B2FF / bol: False
+# str: sh / str: background-right / str:  / str:  / trn: 0 0 -45 / lay: Background / bol: False / for: Vector 0 0 0 0 15 1 15 15 15 0 / mat: 0 0 0 0 0 / bol: False / col: 9FFF3F0D / bol: False
+# str: sh / str: quadrant-right / str:  / str:  / trn: 0 0 -45 / lay: Midground / bol: True / for: Vector 0 15 1 15 15 15 0 0 14 0 1 14 14 0 14 / mat: 2 2 0 10 -10 / bol: False / col: B2B2B2FF / bol: False
+# str: sh / str: background-bottom / str:  / str:  / trn: 0 0 -135 / lay: Background / bol: False / for: Vector 0 0 0 0 15 1 15 15 15 0 / mat: 0 0 0 0 0 / bol: False / col: 3FFFFF0D / bol: False
+# str: sh / str: quadrant-bottom / str:  / str:  / trn: 0 0 -135 / lay: Midground / bol: True / for: Vector 0 15 1 15 15 15 0 0 14 0 1 14 14 0 14 / mat: 2 2 0 10 -10 / bol: False / col: B2B2B2FF / bol: False
+# str: sh / str: background-left / str:  / str:  / trn: 0 0 -225 / lay: Background / bol: False / for: Vector 0 0 0 0 15 1 15 15 15 0 / mat: 0 0 0 0 0 / bol: False / col: 9F3FFF0D / bol: False
+# str: sh / str: quadrant-left / str:  / str:  / trn: 0 0 -225 / lay: Midground / bol: True / for: Vector 0 15 1 15 15 15 0 0 14 0 1 14 14 0 14 / mat: 2 2 0 10 -10 / bol: False / col: B2B2B2FF / bol: False
+# str: sh / str: spinner / str:  / str:  / trn: 0 0 0 / lay: Midground / bol: True / for: Star 4 4 1 / mat: 5 0 0 100 0 / bol: True / col: E5E5FFFF / bol: False
+@ str: jn / str: spinner-motor / trn: 0 0 0 / jnt: Hinge / str:  / bol: False / flt: Infinity / flt: Infinity / bol: True / flt: 50 / flt: 1000000 / bol: False / flt: 0 / flt: 0
+# str: sh / str: spinner-arm-top / str:  / str:  / trn: 0 10 0 / lay: Midground / bol: True / for: Ngon 3 4 / mat: 2 0 0 1 0 / bol: True / col: FF3F3FFF / bol: False
+@ str: jn / str: spinner-arm-top-link / trn: 0 0 0 / jnt: Hinge / str: spinner / bol: False / flt: Infinity / flt: Infinity / bol: True / flt: -1000 / flt: 100 / bol: False / flt: 0 / flt: 0
+# str: sh / str: spinner-arm-right / str:  / str:  / trn: 10 0 -90 / lay: Midground / bol: True / for: Ngon 3 4 / mat: 2 0 0 1 0 / bol: True / col: 9FFF3FFF / bol: False
+@ str: jn / str: spinner-arm-right-link / trn: 0 0 0 / jnt: Hinge / str: spinner / bol: False / flt: Infinity / flt: Infinity / bol: True / flt: -1000 / flt: 100 / bol: False / flt: 0 / flt: 0
+# str: sh / str: spinner-arm-bottom / str:  / str:  / trn: 0 -10 -180 / lay: Midground / bol: True / for: Ngon 3 4 / mat: 2 0 0 1 0 / bol: True / col: 3FFFFFFF / bol: False
+@ str: jn / str: spinner-arm-bottom-link / trn: 0 0 0 / jnt: Hinge / str: spinner / bol: False / flt: Infinity / flt: Infinity / bol: True / flt: -1000 / flt: 100 / bol: False / flt: 0 / flt: 0
+# str: sh / str: spinner-arm-left / str:  / str:  / trn: -10 0 -270 / lay: Midground / bol: True / for: Ngon 3 4 / mat: 2 0 0 1 0 / bol: True / col: 9F3FFFFF / bol: False
+@ str: jn / str: spinner-arm-left-link / trn: 0 0 0 / jnt: Hinge / str: spinner / bol: False / flt: Infinity / flt: Infinity / bol: True / flt: -1000 / flt: 100 / bol: False / flt: 0 / flt: 0

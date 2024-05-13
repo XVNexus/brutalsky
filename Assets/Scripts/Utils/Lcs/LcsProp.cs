@@ -17,7 +17,7 @@ namespace Utils.Lcs
         public byte[] Binify()
         {
             var typeInfo = LcsInfo.TypeTable[Type];
-            var typeBytes = new[] { (byte)typeInfo.Tag };
+            var typeBytes = new[] { typeInfo.ByteTag };
             var valueBytes = typeInfo.ToBin(Value);
             var size = typeInfo.Size;
             if (size > -1) return typeBytes.Concat(valueBytes).ToArray();
@@ -34,7 +34,7 @@ namespace Utils.Lcs
 
         public static LcsProp Parse(byte[] raw, ref int cursor)
         {
-            var type = LcsInfo.TagTable[(char)raw[cursor++]];
+            var type = LcsInfo.ByteTagTable[raw[cursor++]];
             var typeInfo = LcsInfo.TypeTable[type];
             var size = typeInfo.Size;
             if (size == -1)
@@ -60,14 +60,15 @@ namespace Utils.Lcs
         public string Stringify()
         {
             var typeInfo = LcsInfo.TypeTable[Type];
-            return $"{typeInfo.Tag}{LcsInfo.TypeSeparator}{typeInfo.ToStr(Value)}";
+            return $"{typeInfo.StringTag}{LcsInfo.TypeSeparator}{typeInfo.ToStr(Value)}";
         }
 
         public static LcsProp Parse(string raw)
         {
-            var type = LcsInfo.TagTable[raw[0]];
+            var parts = raw.Split(LcsInfo.TypeSeparator);
+            var type = LcsInfo.StringTagTable[parts[0]];
             var typeInfo = LcsInfo.TypeTable[type];
-            var value = typeInfo.FromStr(raw[2..]);
+            var value = typeInfo.FromStr(parts[1]);
             return new LcsProp(type, value);
         }
 

@@ -2,39 +2,25 @@ using Utils.Lcs;
 
 namespace Brutalsky.Logic
 {
-    public class BsLink
+    public struct BsLink
     {
-        public (ushort, byte) FromPort { get; }
-        public (ushort, byte) ToPort { get; }
+        public BsPort FromPort { get; }
+        public BsPort ToPort { get; }
 
-        public BsLink((ushort, byte) fromPort, (ushort, byte) toPort)
+        public BsLink(BsPort fromPort, BsPort toPort)
         {
             FromPort = fromPort;
             ToPort = toPort;
         }
 
-        public BsLink(ushort fromNode, byte fromPort, ushort toNode, byte toPort)
-        {
-            FromPort = (fromNode, fromPort);
-            ToPort = (toNode, toPort);
-        }
-
         public LcsLine ToLcs()
         {
-            return new LcsLine('^', new LcsProp[]
-            {
-                new(LcsType.UShort, FromPort.Item1), new(LcsType.Byte, FromPort.Item2),
-                new(LcsType.UShort, ToPort.Item1), new(LcsType.Byte, ToPort.Item2)
-            });
+            return new LcsLine('^', new LcsProp[] { new(LcsType.Port, FromPort), new(LcsType.Port, ToPort) });
         }
 
         public static BsLink FromLcs(LcsLine line)
         {
-            return new BsLink
-            (
-                (ushort)line.Props[0].Value, (byte)line.Props[1].Value,
-                (ushort)line.Props[2].Value, (byte)line.Props[3].Value
-            );
+            return new BsLink((BsPort)line.Props[0].Value, (BsPort)line.Props[1].Value);
         }
     }
 }

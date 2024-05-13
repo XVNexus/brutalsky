@@ -52,7 +52,7 @@ namespace Brutalsky
         public List<BsSpawn> Spawns { get; } = new();
         public Dictionary<(string, string), BsObject> Objects { get; } = new();
         public List<BsNode> Nodes { get; } = new();
-        public Dictionary<(int, int), BsLink> Links { get; } = new();
+        public Dictionary<BsPort, BsLink> Links { get; } = new();
 
         public BsMap(string title = "Untitled Map", string author = "Anonymous Marble")
         {
@@ -160,10 +160,9 @@ namespace Brutalsky
             return id >= 0 && id < Nodes.Count;
         }
 
-        [CanBeNull]
-        public BsLink GetLink((int, int) toPort)
+        public BsLink GetLink(BsPort toPort)
         {
-            return ContainsLink(toPort) ? Links[toPort] : null;
+            return Links[toPort];
         }
 
         public bool AddLink(BsLink link)
@@ -178,7 +177,7 @@ namespace Brutalsky
             return RemoveLink(link.ToPort);
         }
 
-        public bool RemoveLink((int, int) toPort)
+        public bool RemoveLink(BsPort toPort)
         {
             if (!ContainsLink(toPort)) return false;
             Links.Remove(toPort);
@@ -190,7 +189,7 @@ namespace Brutalsky
             return ContainsLink(link.ToPort);
         }
 
-        public bool ContainsLink((int, int) toPort)
+        public bool ContainsLink(BsPort toPort)
         {
             return Links.ContainsKey(toPort);
         }

@@ -82,15 +82,15 @@ namespace Utils.Lcs
 
         public string Stringify()
         {
-            return Version.ToString() + LcsInfo.PropertySeparator + LcsInfo.ConcatProps(LineLevels)
-                + '\n' + Lines.Aggregate("", (current, line) => current + line.Stringify());
+            return Version + ' ' + LcsInfo.ConcatList(LineLevels, " ") + LcsInfo.LineSeparator +
+                Lines.Aggregate("", (current, line) => current + line.Stringify());
         }
 
         public static LcsDocument Parse(string raw)
         {
             var lines = new List<LcsLine>();
-            var rawLines = raw.Trim().Split('\n');
-            var headerParts = rawLines[0].Split(LcsInfo.PropertySeparator);
+            var rawLines = raw.Trim().Split(LcsInfo.LineSeparator);
+            var headerParts = rawLines[0].Split(' ');
             var version = int.Parse(headerParts[0]);
             var lineLevels = headerParts[1..];
             var lineLevelMap = new Dictionary<char, int>();
@@ -102,6 +102,7 @@ namespace Utils.Lcs
             for (var i = 1; i < rawLines.Length; i++)
             {
                 var rawLine = rawLines[i];
+                if (rawLine.Length == 0) continue;
                 var line = LcsLine.Parse(rawLine);
                 if (!lineLevelMap.ContainsKey(line.Prefix)) throw Errors.InvalidItem("LCS line prefix", line.Prefix);
                 var lineLevel = lineLevelMap[line.Prefix];

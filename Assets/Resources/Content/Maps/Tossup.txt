@@ -1,40 +1,40 @@
 1 !$#%^ @
-! E:Tossup E:Xveon K:-20'-10'40'20 L:333333FF L:FFFFFFCC b:Down A:20 A:100 1:True
-$ I:-7'-8.5 8:1
-$ I:-5'-8.5 8:0
-$ I:5'-8.5 8:0
-$ I:7'-8.5 8:1
-# E:sh E:wall-bottom E: E: q:0'-10'0 c:Midground 1:True r:Polygon'-15'0'-10'1'10'1'15'0 s:2'0'0'10'0 1:False L:B2B2B2FF 1:False
-# E:sh E:wall-left E: E: q:-20'10'0 c:Midground 1:True r:Polygon'0'0'10'0'5'-1'1'-1'1'-10'0'-15 s:2'0'0'10'0 1:False L:B2B2B2FF 1:False
-# E:sh E:wall-right E: E: q:20'10'0 c:Midground 1:True r:Polygon'0'0'-10'0'-5'-1'-1'-1'-1'-10'0'-15 s:2'0'0'10'0 1:False L:B2B2B2FF 1:False
-# E:sh E:spinner-middle-bg E: E: q:0'7'0 c:Background 1:False r:Circle'4 s:0'0'0'0'0 1:False L:3FFF3F0D 1:False
-# E:sh E:spinner-middle E: E: q:0'7'0 c:Midground 1:True r:Star'3'4'1 s:5'0'20'1'0 1:True L:3FFF3FFF 1:False
-@ E:jn E:spinner-middle-motor q:0'0'0 e:Hinge E: 1:False A:Infinity A:Infinity 1:True A:0 A:10000 1:False A:0 A:0
-# E:sh E:spinner-left-bg E: E: q:-17'-7'0 c:Background 1:False r:Circle'4 s:0'0'0'0'0 1:False L:FF3F3F0D 1:False
-# E:sh E:spinner-left E: E: q:-17'-7'0 c:Midground 1:True r:Star'3'4'1 s:5'0'20'1'0 1:True L:FF3F3FFF 1:False
-@ E:jn E:spinner-left-motor q:0'0'0 e:Hinge E: 1:False A:Infinity A:Infinity 1:True A:0 A:10000 1:False A:0 A:0
-# E:sh E:spinner-right-bg E: E: q:17'-7'0 c:Background 1:False r:Circle'4 s:0'0'0'0'0 1:False L:3F3FFF0D 1:False
-# E:sh E:spinner-right E: E: q:17'-7'0 c:Midground 1:True r:Star'3'4'1 s:5'0'20'1'0 1:True L:3F3FFFFF 1:False
-@ E:jn E:spinner-right-motor q:0'0'0 e:Hinge E: 1:False A:Infinity A:Infinity 1:True A:0 A:10000 1:False A:0 A:0
-% E:ftmr
-% E:bcfl A:3.141593
-% E:mmul 8:2
-% E:msin
-% E:bcfl A:1000
-% E:mmul 8:2
-% E:fclk 8:50
-% E:fchl
-% E:brin 8:0 8:2
-% E:fdmx 8:3
-^ 3:0 2:0 3:2 2:0
-^ 3:1 2:0 3:2 2:1
-^ 3:2 2:0 3:3 2:0
-^ 3:3 2:0 3:5 2:0
-^ 3:4 2:0 3:5 2:1
-^ 3:5 2:0 3:9 2:1
-^ 3:6 2:0 3:7 2:0
-^ 3:7 2:0 3:8 2:0
-^ 3:8 2:0 3:9 2:0
-^ 3:9 2:0 3:10 2:4
-^ 3:9 2:1 3:11 2:4
-^ 3:9 2:2 3:12 2:4
+! str: Tossup / str: Xveon / rec: -20 -10 40 20 / col: 333333FF / col: FFFFFFCC / dir: Down / flt: 20 / flt: 100 / bol: True
+$ fl2: -7 -8.5 / sin: 1
+$ fl2: -5 -8.5 / sin: 0
+$ fl2: 5 -8.5 / sin: 0
+$ fl2: 7 -8.5 / sin: 1
+# str: sh / str: wall-bottom / str:  / str:  / trn: 0 -10 0 / lay: Midground / bol: True / for: Polygon -15 0 -10 1 10 1 15 0 / mat: 2 0 0 10 0 / bol: False / col: B2B2B2FF / bol: False
+# str: sh / str: wall-left / str:  / str:  / trn: -20 10 0 / lay: Midground / bol: True / for: Polygon 0 0 10 0 5 -1 1 -1 1 -10 0 -15 / mat: 2 0 0 10 0 / bol: False / col: B2B2B2FF / bol: False
+# str: sh / str: wall-right / str:  / str:  / trn: 20 10 0 / lay: Midground / bol: True / for: Polygon 0 0 -10 0 -5 -1 -1 -1 -1 -10 0 -15 / mat: 2 0 0 10 0 / bol: False / col: B2B2B2FF / bol: False
+# str: sh / str: spinner-middle-bg / str:  / str:  / trn: 0 7 0 / lay: Background / bol: False / for: Circle 4 / mat: 0 0 0 0 0 / bol: False / col: 3FFF3F0D / bol: False
+# str: sh / str: spinner-middle / str:  / str:  / trn: 0 7 0 / lay: Midground / bol: True / for: Star 3 4 1 / mat: 5 0 20 1 0 / bol: True / col: 3FFF3FFF / bol: False
+@ str: jn / str: spinner-middle-motor / trn: 0 0 0 / jnt: Hinge / str:  / bol: False / flt: Infinity / flt: Infinity / bol: True / flt: 0 / flt: 10000 / bol: False / flt: 0 / flt: 0
+# str: sh / str: spinner-left-bg / str:  / str:  / trn: -17 -7 0 / lay: Background / bol: False / for: Circle 4 / mat: 0 0 0 0 0 / bol: False / col: FF3F3F0D / bol: False
+# str: sh / str: spinner-left / str:  / str:  / trn: -17 -7 0 / lay: Midground / bol: True / for: Star 3 4 1 / mat: 5 0 20 1 0 / bol: True / col: FF3F3FFF / bol: False
+@ str: jn / str: spinner-left-motor / trn: 0 0 0 / jnt: Hinge / str:  / bol: False / flt: Infinity / flt: Infinity / bol: True / flt: 0 / flt: 10000 / bol: False / flt: 0 / flt: 0
+# str: sh / str: spinner-right-bg / str:  / str:  / trn: 17 -7 0 / lay: Background / bol: False / for: Circle 4 / mat: 0 0 0 0 0 / bol: False / col: 3F3FFF0D / bol: False
+# str: sh / str: spinner-right / str:  / str:  / trn: 17 -7 0 / lay: Midground / bol: True / for: Star 3 4 1 / mat: 5 0 20 1 0 / bol: True / col: 3F3FFFFF / bol: False
+@ str: jn / str: spinner-right-motor / trn: 0 0 0 / jnt: Hinge / str:  / bol: False / flt: Infinity / flt: Infinity / bol: True / flt: 0 / flt: 10000 / bol: False / flt: 0 / flt: 0
+% str: ftmr
+% str: bcfl / flt: 3.141593
+% str: mmul / sin: 2
+% str: msin
+% str: bcfl / flt: 1000
+% str: mmul / sin: 2
+% str: fclk / sin: 50
+% str: fchl
+% str: brin / sin: 0 / sin: 2
+% str: fdmx / sin: 3
+^ prt: 000000 / prt: 000200
+^ prt: 000100 / prt: 000201
+^ prt: 000200 / prt: 000300
+^ prt: 000300 / prt: 000500
+^ prt: 000400 / prt: 000501
+^ prt: 000500 / prt: 000901
+^ prt: 000600 / prt: 000700
+^ prt: 000700 / prt: 000800
+^ prt: 000800 / prt: 000900
+^ prt: 000900 / prt: 000A04
+^ prt: 000901 / prt: 000B04
+^ prt: 000902 / prt: 000C04

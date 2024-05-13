@@ -1,18 +1,18 @@
 1 !$#%^ @
-! E:Void E:Xveon K:-125'-125'250'250 L:333333FF L:FFFFFFCC b:None A:0 A:100 1:True
-$ I:-10'-10 8:0
-$ I:10'-10 8:0
-$ I:-10'10 8:0
-$ I:10'10 8:0
-# E:sh E:spinner E: E: q:0'0'0 c:Midground 1:True r:Star'6'5'3 s:2'0'0'10'0 1:True L:E5E5FFFF 1:False
-@ E:jn E:spinner-motor q:0'0'0 e:Hinge E: 1:False A:Infinity A:Infinity 1:True A:0 A:1000 1:False A:0 A:0
-# E:mn E:mount-1 E:sh E:spinner q:0'10'0 c:Midground 1:True I:1000'0.3 I:0'0
-# E:mn E:mount-2 E:sh E:spinner q:0'-10'0 c:Midground 1:True I:1000'0.3 I:0'0
-% E:madd 8:2
-% E:bcfl A:500
-% E:mmul 8:2
-^ 3:4 2:1 3:0 2:0
-^ 3:5 2:1 3:0 2:1
-^ 3:0 2:0 3:2 2:0
-^ 3:1 2:0 3:2 2:1
-^ 3:2 2:0 3:3 2:4
+! str: Void / str: Xveon / rec: -125 -125 250 250 / col: 333333FF / col: FFFFFFCC / dir: None / flt: 0 / flt: 100 / bol: True
+$ fl2: -10 -10 / sin: 0
+$ fl2: 10 -10 / sin: 0
+$ fl2: -10 10 / sin: 0
+$ fl2: 10 10 / sin: 0
+# str: sh / str: spinner / str:  / str:  / trn: 0 0 0 / lay: Midground / bol: True / for: Star 6 5 3 / mat: 2 0 0 10 0 / bol: True / col: E5E5FFFF / bol: False
+@ str: jn / str: spinner-motor / trn: 0 0 0 / jnt: Hinge / str:  / bol: False / flt: Infinity / flt: Infinity / bol: True / flt: 0 / flt: 1000 / bol: False / flt: 0 / flt: 0
+# str: mn / str: mount-1 / str: sh / str: spinner / trn: 0 10 0 / lay: Midground / bol: True / fl2: 1000 0.3 / fl2: 0 0
+# str: mn / str: mount-2 / str: sh / str: spinner / trn: 0 -10 0 / lay: Midground / bol: True / fl2: 1000 0.3 / fl2: 0 0
+% str: madd / sin: 2
+% str: bcfl / flt: 500
+% str: mmul / sin: 2
+^ prt: 000401 / prt: 000000
+^ prt: 000501 / prt: 000001
+^ prt: 000000 / prt: 000200
+^ prt: 000100 / prt: 000201
+^ prt: 000200 / prt: 000304

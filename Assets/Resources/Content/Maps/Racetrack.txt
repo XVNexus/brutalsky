@@ -1,20 +1,20 @@
 1 !$#%^ @
-! E:Racetrack E:Xveon K:-1250'0'2500'250 L:333333FF L:FFFFFFCC b:Down A:20 A:100 1:True
-$ I:-4'11 8:0
-$ I:4'11 8:0
-# E:sh E:wall-bottom E: E: q:0'-5'0 c:Midground 1:True r:Rectangle'2500'12 s:2'0'0'10'0 1:False L:B2B2B2FF 1:False
-# E:sh E:wall-left E: E: q:-1255'10'0 c:Midground 1:True r:Rectangle'12'42 s:2'0'0'10'0 1:False L:B2B2B2FF 1:False
-# E:sh E:wall-right E: E: q:1255'10'0 c:Midground 1:True r:Rectangle'12'42 s:2'0'0'10'0 1:False L:B2B2B2FF 1:False
-# E:sh E:car-body E: E: q:0'10'0 c:Midground 1:True r:Rectangle'12'1 s:2'0'0'10'0 1:True L:FF9933FF 1:False
-# E:sh E:car-wheel-1 E: E: q:-6'9.5'0 c:Background 1:True r:Circle'2 s:10'0'0'1'0 1:True L:191919FF 1:False
-@ E:jn E:car-wheel-1-motor q:0'0'0 e:Hinge E:car-body 1:False A:Infinity A:Infinity 1:True A:0 A:1000 1:False A:0 A:0
-# E:sh E:car-wheel-2 E: E: q:6'9.5'0 c:Background 1:True r:Circle'2 s:10'0'0'1'0 1:True L:191919FF 1:False
-@ E:jn E:car-wheel-2-motor q:0'0'0 e:Hinge E:car-body 1:False A:Infinity A:Infinity 1:True A:0 A:1000 1:False A:0 A:0
-# E:mn E:car-seat-driver E:sh E:car-body q:1'1.5'0 c:Midground 1:True I:1000'0.3 I:0'0
-# E:mn E:car-seat-passenger E:sh E:car-body q:-1'1.5'0 c:Midground 1:True I:1000'0.3 I:0'0
-% E:bcfl A:10000
-% E:mmul 8:2
-^ 3:4 2:1 3:1 2:0
-^ 3:0 2:0 3:1 2:1
-^ 3:1 2:0 3:2 2:4
-^ 3:1 2:0 3:3 2:4
+! str: Racetrack / str: Xveon / rec: -1250 0 2500 250 / col: 333333FF / col: FFFFFFCC / dir: Down / flt: 20 / flt: 100 / bol: True
+$ fl2: -4 11 / sin: 0
+$ fl2: 4 11 / sin: 0
+# str: sh / str: wall-bottom / str:  / str:  / trn: 0 -5 0 / lay: Midground / bol: True / for: Rectangle 2500 12 / mat: 2 0 0 10 0 / bol: False / col: B2B2B2FF / bol: False
+# str: sh / str: wall-left / str:  / str:  / trn: -1255 10 0 / lay: Midground / bol: True / for: Rectangle 12 42 / mat: 2 0 0 10 0 / bol: False / col: B2B2B2FF / bol: False
+# str: sh / str: wall-right / str:  / str:  / trn: 1255 10 0 / lay: Midground / bol: True / for: Rectangle 12 42 / mat: 2 0 0 10 0 / bol: False / col: B2B2B2FF / bol: False
+# str: sh / str: car-body / str:  / str:  / trn: 0 10 0 / lay: Midground / bol: True / for: Rectangle 12 1 / mat: 2 0 0 10 0 / bol: True / col: FF9933FF / bol: False
+# str: sh / str: car-wheel-1 / str:  / str:  / trn: -6 9.5 0 / lay: Background / bol: True / for: Circle 2 / mat: 10 0 0 1 0 / bol: True / col: 191919FF / bol: False
+@ str: jn / str: car-wheel-1-motor / trn: 0 0 0 / jnt: Hinge / str: car-body / bol: False / flt: Infinity / flt: Infinity / bol: True / flt: 0 / flt: 1000 / bol: False / flt: 0 / flt: 0
+# str: sh / str: car-wheel-2 / str:  / str:  / trn: 6 9.5 0 / lay: Background / bol: True / for: Circle 2 / mat: 10 0 0 1 0 / bol: True / col: 191919FF / bol: False
+@ str: jn / str: car-wheel-2-motor / trn: 0 0 0 / jnt: Hinge / str: car-body / bol: False / flt: Infinity / flt: Infinity / bol: True / flt: 0 / flt: 1000 / bol: False / flt: 0 / flt: 0
+# str: mn / str: car-seat-driver / str: sh / str: car-body / trn: 1 1.5 0 / lay: Midground / bol: True / fl2: 1000 0.3 / fl2: 0 0
+# str: mn / str: car-seat-passenger / str: sh / str: car-body / trn: -1 1.5 0 / lay: Midground / bol: True / fl2: 1000 0.3 / fl2: 0 0
+% str: bcfl / flt: 10000
+% str: mmul / sin: 2
+^ prt: 000401 / prt: 000100
+^ prt: 000000 / prt: 000101
+^ prt: 000100 / prt: 000204
+^ prt: 000100 / prt: 000304

@@ -35,6 +35,7 @@ namespace Utils.Lcs
         Transform,
         Form,
         Material,
-        Chemical
+        Chemical,
+        Port
     }
 }

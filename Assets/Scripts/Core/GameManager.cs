@@ -57,7 +57,7 @@ namespace Core
             // Load builtin maps
             MapSystem._.RegisterMaps(ResourceSystem._.LoadMapAssets(new[]
             {
-                "Void"/*, "Brutalsky"*/, "Doomring", "Tossup", "Racetrack"
+                "Void", "Brutalsky", "Doomring", "Tossup", "Racetrack"
             }));
 
             // Load custom maps

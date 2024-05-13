@@ -31,6 +31,11 @@ namespace Utils.Ext
             return new Vector2(Mathf.Max(a.x, b.x), Mathf.Max(a.y, b.y));
         }
 
+        public static Vector2 Clamp(Vector2 value, Vector2 min, Vector2 max)
+        {
+            return Min(Max(value, min), max);
+        }
+
         public static Vector2 Pow(Vector2 v, float p)
         {
             return v.normalized * Mathf.Pow(v.magnitude, p);

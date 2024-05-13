@@ -7,8 +7,8 @@ namespace Brutalsky.Logic
     public class BsMatrix
     {
         private readonly List<BsNode> _nodes = new();
-        private readonly Dictionary<(ushort, byte), (ushort, byte)> _links = new();
-        private readonly Dictionary<(ushort, byte), float> _buffer = new();
+        private readonly Dictionary<BsPort, BsPort> _links = new();
+        private readonly Dictionary<BsPort, float> _buffer = new();
 
         public BsMatrix(IEnumerable<BsNode> nodes, IEnumerable<BsLink> links)
         {
@@ -43,48 +43,38 @@ namespace Brutalsky.Logic
             }
         }
 
-        public float GetPort((ushort, byte) port)
+        public float GetPort(BsPort port)
         {
-            return GetPort(port.Item1, port.Item2);
+            ValidateOutputPort(port);
+            return _nodes[port.NodeId].Outputs[port.PortId];
         }
 
-        public float GetPort(ushort id, byte index)
+        public void SetPort(BsPort port, float value)
         {
-            ValidateOutputPort(id, index);
-            return _nodes[id].Outputs[index];
+            ValidateInputPort(port);
+            _nodes[port.NodeId].Inputs[port.PortId] = value;
         }
 
-        public void SetPort((ushort, byte) port, float value)
+        public bool ContainsInputPort(BsPort port)
         {
-            SetPort(port.Item1, port.Item2, value);
+            return ContainsNode(port.NodeId) && port.PortId >= 0 && port.PortId < _nodes[port.NodeId].Inputs.Length;
         }
 
-        public void SetPort(ushort id, byte index, float value)
+        public bool ContainsOutputPort(BsPort port)
         {
-            ValidateInputPort(id, index);
-            _nodes[id].Inputs[index] = value;
+            return ContainsNode(port.NodeId) && port.PortId >= 0 && port.PortId < _nodes[port.NodeId].Outputs.Length;
         }
 
-        public bool ContainsInputPort(ushort id, byte index)
+        public void ValidateInputPort(BsPort port)
         {
-            return ContainsNode(id) && index >= 0 && index < _nodes[id].Inputs.Length;
+            if (!ContainsNode(port.NodeId)) throw Errors.NoItemFound("node", port.NodeId);
+            if (!ContainsInputPort(port)) throw Errors.NoItemFound("input port", $"{port.NodeId}:{port.PortId}");
         }
 
-        public bool ContainsOutputPort(ushort id, byte index)
+        public void ValidateOutputPort(BsPort port)
         {
-            return ContainsNode(id) && index >= 0 && index < _nodes[id].Outputs.Length;
-        }
-
-        public void ValidateInputPort(ushort id, byte index)
-        {
-            if (!ContainsNode(id)) throw Errors.NoItemFound("node", id);
-            if (!ContainsInputPort(id, index)) throw Errors.NoItemFound("input port", $"{id}:{index}");
-        }
-
-        public void ValidateOutputPort(ushort id, byte index)
-        {
-            if (!ContainsNode(id)) throw Errors.NoItemFound("node", id);
-            if (!ContainsOutputPort(id, index)) throw Errors.NoItemFound("output port", $"{id}:{index}");
+            if (!ContainsNode(port.NodeId)) throw Errors.NoItemFound("node", port.NodeId);
+            if (!ContainsOutputPort(port)) throw Errors.NoItemFound("output port", $"{port.NodeId}:{port.PortId}");
         }
 
         public bool ContainsNode(ushort id)
@@ -92,7 +82,7 @@ namespace Brutalsky.Logic
             return id >= 0 && id < _nodes.Count;
         }
 
-        public bool ContainsLink((ushort, byte) toPort)
+        public bool ContainsLink(BsPort toPort)
         {
             return _links.ContainsKey(toPort);
         }

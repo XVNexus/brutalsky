@@ -1,59 +1,59 @@
-1;!$#%^;@
-!tBrutalsky;tXveon;R-20,-10,40,20;333333FF;CFFFFFFCC;D1;f20;f100;b1
-$V-16,1;i1
-$V-14,1;i0
-$V14,1;i0
-$V16,1;i1
-#tsh;twall-left;t;t;T-19.5,0,0;L1;b1;O3,1,20;M2,0,0,10,0;b0;CB2B2B2FF;b0
-#tsh;twall-right;t;t;T19.5,0,0;L1;b1;O3,1,20;M2,0,0,10,0;b0;CB2B2B2FF;b0
-#tsh;twall-top;t;t;T0,10,0;L1;b1;O1,-15,0,15,0,14,-0.5,-14,-0.5;M2,0,0,10,0;b0;CB2B2B2FF;b0
-#tsh;twall-bottom;t;t;T0,-10,0;L1;b1;O1,-7,0,-7,0.5,0,3,7,0.5,7,0;M2,0,0,10,0;b0;CB2B2B2FF;b0
-#tsh;tplatform-left;t;t;T-19,0,0;L1;b1;O0,-1,2.5,0,0,2.5,1,0,0.5,2,0.5,0,8,0.5,0,7.5,0,0,8,-0.5,0,2,-0.5,1,0,-0.5,0,-2.5,0,-1,-2.5;M2,0,0,10,0;b0;CB2B2B2FF;b0
-#tsh;tplatform-right;t;t;T19,0,0;L1;b1;O0,1,2.5,0,0,2.5,1,0,0.5,-2,0.5,0,-8,0.5,0,-7.5,0,0,-8,-0.5,0,-2,-0.5,1,0,-0.5,0,-2.5,0,1,-2.5;M2,0,0,10,0;b0;CB2B2B2FF;b0
-#tsh;tglue-left;t;t;T-9,9.25,0;L1;b1;O3,10,0.5;M5,0,2,1,0;b0;CB2E566FF;b0
-#tsh;tglue-right;t;t;T9,9.25,0;L1;b1;O3,10,0.5;M5,0,2,1,0;b0;CB2E566FF;b0
-#tsh;tice-left;t;t;T-14.5,9.5,0;L1;b1;O1,-0.5,0.5,0.5,0,0.5,-0.5,-0.5,0;M0,0,0,1,0;b0;C7FCCFFFF;b0
-#tsh;tice-right;t;t;T14.5,9.5,0;L1;b1;O1,0.5,0.5,-0.5,0,-0.5,-0.5,0.5,0;M0,0,0,1,0;b0;C7FCCFFFF;b0
-#tsh;tice-bottom;t;t;T0,-9.5,0;L1;b1;O1,-7,0,-7,0.5,0,3,7,0.5,7,0,0,2.5;M0,0,0,1,0;b0;C7FCCFFFF;b0
-#tsh;trubber-top;t;t;T0,9.25,0;L1;b1;O1,4,0.25,4,-0.25,0,-1.25,-4,-0.25,-4,0.25;M0,1,0,1,0;b0;CB266E5FF;b0
-#tsh;telectric-left;t;t;T-11,0,45;L1;b1;O2,0.7;M2,0,0,1,-50;b0;CFFFF33FF;b1
-#tsh;telectric-right;t;t;T11,0,45;L1;b1;O2,0.7;M2,0,0,1,-50;b0;CFFFF33FF;b1
-#tsh;tspinner-left-bg;t;t;T-2.5,0,0;L0;b0;O4,5;M0,0,0,0,0;b0;CFFFFFF0D;b0
-#tsh;tspinner-left;t;t;T-2.5,0,0;L1;b1;O7,6,5,3;M2,0,0,10,0;b1;CE5E5FFFF;b0
-@tjn;tspinner-left-motor;T0,0,0;J3;t;b0;fInfinity;fInfinity;b1;f0;f2000;b0;f0;f0
-#tsh;tspinner-right-bg;t;t;T2.5,0,0;L0;b0;O4,5;M0,0,0,0,0;b0;CFFFFFF0D;b0
-#tsh;tspinner-right;t;t;T2.5,0,30;L1;b1;O7,6,5,3;M2,0,0,10,0;b1;CE5E5FFFF;b0
-@tjn;tspinner-right-motor;T0,0,0;J3;t;b0;fInfinity;fInfinity;b1;f0;f2000;b0;f0;f0
-#tpl;twater-left;t;t;T-17,11.25,180;L2;b1;V4,3.5;H25,1,0;C6666FFFF;b0
-#tsh;twater-left-wall-top;t;t;T-17,13.25,0;L1;b1;O3,5,0.5;M2,0,0,10,25;b0;C333380FF;b0
-#tsh;twater-left-wall-left;t;t;T-19.25,11.5,0;L1;b1;O3,0.5,3;M2,0,0,10,0;b0;C333380FF;b0
-#tsh;twater-left-wall-right;t;t;T-14.75,11.5,0;L1;b1;O3,0.5,3;M2,0,0,10,0;b0;C333380FF;b0
-#tpl;twater-right;t;t;T17,11.25,180;L2;b1;V4,3.5;H25,1,0;C6666FFFF;b0
-#tsh;twater-right-wall-top;t;t;T17,13.25,0;L1;b1;O3,5,0.5;M2,0,0,10,25;b0;C333380FF;b0
-#tsh;twater-right-wall-left;t;t;T14.75,11.5,0;L1;b1;O3,0.5,3;M2,0,0,10,0;b0;C333380FF;b0
-#tsh;twater-right-wall-right;t;t;T19.25,11.5,0;L1;b1;O3,0.5,3;M2,0,0,10,0;b0;C333380FF;b0
-#tpl;tlava-left;t;t;T-13,-11,0;L2;b1;V12,4;H25,1,-50;CFF4C33FF;b1
-#tsh;tlava-left-wall-bottom;t;t;T-13,-13.25,0;L1;b1;O3,13,0.5;M2,0,0,10,-100;b0;C80261AFF;b1
-#tsh;tlava-left-wall-left;t;t;T-19.25,-11.5,0;L1;b1;O3,0.5,3;M2,0,0,10,0;b0;C80261AFF;b1
-#tsh;tlava-left-wall-right;t;t;T-6.75,-11.5,0;L1;b1;O3,0.5,3;M2,0,0,10,0;b0;C80261AFF;b1
-#tpl;tlava-right;t;t;T13,-11,0;L2;b1;V12,4;H25,1,-50;CFF4C33FF;b1
-#tsh;tlava-right-wall-bottom;t;t;T13,-13.25,0;L1;b1;O3,13,0.5;M2,0,0,10,-100;b0;C80261AFF;b1
-#tsh;tlava-right-wall-left;t;t;T6.75,-11.5,0;L1;b1;O3,0.5,3;M2,0,0,10,0;b0;C80261AFF;b1
-#tsh;tlava-right-wall-right;t;t;T19.25,-11.5,0;L1;b1;O3,0.5,3;M2,0,0,10,0;b0;C80261AFF;b1
-#tsn;tspinner-sensor;t;t;T0,4,0;L1;b1;f10;b0;b1;b0
-%tbcfl;f50
-%tbcfl;f5000
-%tfmux;i2
-%tbcfl;f1
-%tbcfl;f-1
-%tmmul;i2
-%tmmul;i2
-^i9;i0;i2;i0
-^i0;i0;i2;i1
-^i1;i0;i2;i2
-^i2;i0;i5;i0
-^i2;i0;i6;i0
-^i3;i0;i5;i1
-^i4;i0;i6;i1
-^i5;i0;i7;i4
-^i6;i0;i8;i4
+1 !$#%^ @
+! str: Brutalsky / str: Xveon / rec: -20 -10 40 20 / col: 333333FF / col: FFFFFFCC / dir: Down / flt: 20 / flt: 100 / bol: True
+$ fl2: -16 1 / sin: 1
+$ fl2: -14 1 / sin: 0
+$ fl2: 14 1 / sin: 0
+$ fl2: 16 1 / sin: 1
+# str: sh / str: wall-left / str:  / str:  / trn: -19.5 0 0 / lay: Midground / bol: True / for: Rectangle 1 20 / mat: 2 0 0 10 0 / bol: False / col: B2B2B2FF / bol: False
+# str: sh / str: wall-right / str:  / str:  / trn: 19.5 0 0 / lay: Midground / bol: True / for: Rectangle 1 20 / mat: 2 0 0 10 0 / bol: False / col: B2B2B2FF / bol: False
+# str: sh / str: wall-top / str:  / str:  / trn: 0 10 0 / lay: Midground / bol: True / for: Polygon -15 0 15 0 14 -0.5 -14 -0.5 / mat: 2 0 0 10 0 / bol: False / col: B2B2B2FF / bol: False
+# str: sh / str: wall-bottom / str:  / str:  / trn: 0 -10 0 / lay: Midground / bol: True / for: Polygon -7 0 -7 0.5 0 3 7 0.5 7 0 / mat: 2 0 0 10 0 / bol: False / col: B2B2B2FF / bol: False
+# str: sh / str: platform-left / str:  / str:  / trn: -19 0 0 / lay: Midground / bol: True / for: Vector -1 2.5 0 0 2.5 1 0 0.5 2 0.5 0 8 0.5 0 7.5 0 0 8 -0.5 0 2 -0.5 1 0 -0.5 0 -2.5 0 -1 -2.5 / mat: 2 0 0 10 0 / bol: False / col: B2B2B2FF / bol: False
+# str: sh / str: platform-right / str:  / str:  / trn: 19 0 0 / lay: Midground / bol: True / for: Vector 1 2.5 0 0 2.5 1 0 0.5 -2 0.5 0 -8 0.5 0 -7.5 0 0 -8 -0.5 0 -2 -0.5 1 0 -0.5 0 -2.5 0 1 -2.5 / mat: 2 0 0 10 0 / bol: False / col: B2B2B2FF / bol: False
+# str: sh / str: glue-left / str:  / str:  / trn: -9 9.25 0 / lay: Midground / bol: True / for: Rectangle 10 0.5 / mat: 5 0 2 1 0 / bol: False / col: B2E566FF / bol: False
+# str: sh / str: glue-right / str:  / str:  / trn: 9 9.25 0 / lay: Midground / bol: True / for: Rectangle 10 0.5 / mat: 5 0 2 1 0 / bol: False / col: B2E566FF / bol: False
+# str: sh / str: ice-left / str:  / str:  / trn: -14.5 9.5 0 / lay: Midground / bol: True / for: Polygon -0.5 0.5 0.5 0 0.5 -0.5 -0.5 0 / mat: 0 0 0 1 0 / bol: False / col: 7FCCFFFF / bol: False
+# str: sh / str: ice-right / str:  / str:  / trn: 14.5 9.5 0 / lay: Midground / bol: True / for: Polygon 0.5 0.5 -0.5 0 -0.5 -0.5 0.5 0 / mat: 0 0 0 1 0 / bol: False / col: 7FCCFFFF / bol: False
+# str: sh / str: ice-bottom / str:  / str:  / trn: 0 -9.5 0 / lay: Midground / bol: True / for: Polygon -7 0 -7 0.5 0 3 7 0.5 7 0 0 2.5 / mat: 0 0 0 1 0 / bol: False / col: 7FCCFFFF / bol: False
+# str: sh / str: rubber-top / str:  / str:  / trn: 0 9.25 0 / lay: Midground / bol: True / for: Polygon 4 0.25 4 -0.25 0 -1.25 -4 -0.25 -4 0.25 / mat: 0 1 0 1 0 / bol: False / col: B266E5FF / bol: False
+# str: sh / str: electric-left / str:  / str:  / trn: -11 0 45 / lay: Midground / bol: True / for: Square 0.7 / mat: 2 0 0 1 -50 / bol: False / col: FFFF33FF / bol: True
+# str: sh / str: electric-right / str:  / str:  / trn: 11 0 45 / lay: Midground / bol: True / for: Square 0.7 / mat: 2 0 0 1 -50 / bol: False / col: FFFF33FF / bol: True
+# str: sh / str: spinner-left-bg / str:  / str:  / trn: -2.5 0 0 / lay: Background / bol: False / for: Circle 5 / mat: 0 0 0 0 0 / bol: False / col: FFFFFF0D / bol: False
+# str: sh / str: spinner-left / str:  / str:  / trn: -2.5 0 0 / lay: Midground / bol: True / for: Star 6 5 3 / mat: 2 0 0 10 0 / bol: True / col: E5E5FFFF / bol: False
+@ str: jn / str: spinner-left-motor / trn: 0 0 0 / jnt: Hinge / str:  / bol: False / flt: Infinity / flt: Infinity / bol: True / flt: 0 / flt: 2000 / bol: False / flt: 0 / flt: 0
+# str: sh / str: spinner-right-bg / str:  / str:  / trn: 2.5 0 0 / lay: Background / bol: False / for: Circle 5 / mat: 0 0 0 0 0 / bol: False / col: FFFFFF0D / bol: False
+# str: sh / str: spinner-right / str:  / str:  / trn: 2.5 0 30 / lay: Midground / bol: True / for: Star 6 5 3 / mat: 2 0 0 10 0 / bol: True / col: E5E5FFFF / bol: False
+@ str: jn / str: spinner-right-motor / trn: 0 0 0 / jnt: Hinge / str:  / bol: False / flt: Infinity / flt: Infinity / bol: True / flt: 0 / flt: 2000 / bol: False / flt: 0 / flt: 0
+# str: pl / str: water-left / str:  / str:  / trn: -17 11.25 180 / lay: Foreground / bol: True / fl2: 4 3.5 / cem: 25 1 0 / col: 6666FFFF / bol: False
+# str: sh / str: water-left-wall-top / str:  / str:  / trn: -17 13.25 0 / lay: Midground / bol: True / for: Rectangle 5 0.5 / mat: 2 0 0 10 25 / bol: False / col: 333380FF / bol: False
+# str: sh / str: water-left-wall-left / str:  / str:  / trn: -19.25 11.5 0 / lay: Midground / bol: True / for: Rectangle 0.5 3 / mat: 2 0 0 10 0 / bol: False / col: 333380FF / bol: False
+# str: sh / str: water-left-wall-right / str:  / str:  / trn: -14.75 11.5 0 / lay: Midground / bol: True / for: Rectangle 0.5 3 / mat: 2 0 0 10 0 / bol: False / col: 333380FF / bol: False
+# str: pl / str: water-right / str:  / str:  / trn: 17 11.25 180 / lay: Foreground / bol: True / fl2: 4 3.5 / cem: 25 1 0 / col: 6666FFFF / bol: False
+# str: sh / str: water-right-wall-top / str:  / str:  / trn: 17 13.25 0 / lay: Midground / bol: True / for: Rectangle 5 0.5 / mat: 2 0 0 10 25 / bol: False / col: 333380FF / bol: False
+# str: sh / str: water-right-wall-left / str:  / str:  / trn: 14.75 11.5 0 / lay: Midground / bol: True / for: Rectangle 0.5 3 / mat: 2 0 0 10 0 / bol: False / col: 333380FF / bol: False
+# str: sh / str: water-right-wall-right / str:  / str:  / trn: 19.25 11.5 0 / lay: Midground / bol: True / for: Rectangle 0.5 3 / mat: 2 0 0 10 0 / bol: False / col: 333380FF / bol: False
+# str: pl / str: lava-left / str:  / str:  / trn: -13 -11 0 / lay: Foreground / bol: True / fl2: 12 4 / cem: 25 1 -50 / col: FF4C33FF / bol: True
+# str: sh / str: lava-left-wall-bottom / str:  / str:  / trn: -13 -13.25 0 / lay: Midground / bol: True / for: Rectangle 13 0.5 / mat: 2 0 0 10 -100 / bol: False / col: 80261AFF / bol: True
+# str: sh / str: lava-left-wall-left / str:  / str:  / trn: -19.25 -11.5 0 / lay: Midground / bol: True / for: Rectangle 0.5 3 / mat: 2 0 0 10 0 / bol: False / col: 80261AFF / bol: True
+# str: sh / str: lava-left-wall-right / str:  / str:  / trn: -6.75 -11.5 0 / lay: Midground / bol: True / for: Rectangle 0.5 3 / mat: 2 0 0 10 0 / bol: False / col: 80261AFF / bol: True
+# str: pl / str: lava-right / str:  / str:  / trn: 13 -11 0 / lay: Foreground / bol: True / fl2: 12 4 / cem: 25 1 -50 / col: FF4C33FF / bol: True
+# str: sh / str: lava-right-wall-bottom / str:  / str:  / trn: 13 -13.25 0 / lay: Midground / bol: True / for: Rectangle 13 0.5 / mat: 2 0 0 10 -100 / bol: False / col: 80261AFF / bol: True
+# str: sh / str: lava-right-wall-left / str:  / str:  / trn: 6.75 -11.5 0 / lay: Midground / bol: True / for: Rectangle 0.5 3 / mat: 2 0 0 10 0 / bol: False / col: 80261AFF / bol: True
+# str: sh / str: lava-right-wall-right / str:  / str:  / trn: 19.25 -11.5 0 / lay: Midground / bol: True / for: Rectangle 0.5 3 / mat: 2 0 0 10 0 / bol: False / col: 80261AFF / bol: True
+# str: sn / str: spinner-sensor / str:  / str:  / trn: 0 5 0 / lay: Midground / bol: True / flt: 12 / bol: False / bol: True / bol: False
+% str: bcfl / flt: 50
+% str: bcfl / flt: 5000
+% str: fmux / sin: 2
+% str: bcfl / flt: 1
+% str: bcfl / flt: -1
+% str: mmul / sin: 2
+% str: mmul / sin: 2
+^ prt: 000900 / prt: 000200
+^ prt: 000000 / prt: 000201
+^ prt: 000100 / prt: 000202
+^ prt: 000200 / prt: 000500
+^ prt: 000200 / prt: 000600
+^ prt: 000300 / prt: 000501
+^ prt: 000400 / prt: 000601
+^ prt: 000500 / prt: 000704
+^ prt: 000600 / prt: 000804

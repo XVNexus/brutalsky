@@ -188,8 +188,8 @@ namespace Core
                         Mathf.Min(followVelocity.magnitude / followLead.y, 1f));
                 }
                 _lastFollowTargetCount = followTargetCount;
-                targetRect = new Rect(followPosition + lookAhead, Vector2.zero)
-                    .Resize(Vector2.one * Mathf.Max((max - min).magnitude * followScale, followMinSize));
+                targetRect = new Rect(followPosition + lookAhead, Vector2.zero).Resize(MathfExt.Min(Vector2.one *
+                    Mathf.Max((max - min).magnitude * followScale, followMinSize), BaseRect.size));
             }
             else
             {
