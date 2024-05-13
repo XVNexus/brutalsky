@@ -99,8 +99,14 @@ namespace Core
             MapSystem._.RegisterPlayers(activePlayers);
             MapSystem._.BuildMap(starterMapId);
             MapSystem._.SpawnPlayers();
-            CameraSystem._.cCameraCover.gameObject.LeanColor(loadingColor.SetAlpha(0f), animationTime * .4f)
-                .setEaseInOutCubic();
+            var camCover = CameraSystem._.cCameraCover.gameObject;
+            camCover.transform.localPosition = Vector2.zero;
+            camCover.LeanColor(loadingColor.SetAlpha(0f), animationTime * .4f)
+                .setEaseInOutCubic()
+                .setOnComplete(() =>
+                {
+                    camCover.transform.localPosition = new Vector2(0f, camCover.transform.localScale.y);
+                });
         }
 
         public bool ChangeMap(uint mapId, bool moveCam, float animationTime)
@@ -112,6 +118,7 @@ namespace Core
             var camCover = CameraSystem._.cCameraCover.gameObject;
             _mapChangeActive = true;
             TimeSystem._.ForceUnpause();
+            camCover.transform.localPosition = Vector2.zero;
             camCover.LeanColor(loadingColor, animationTime * .4f)
                 .setEaseInOutCubic()
                 .setOnComplete(() =>
@@ -124,6 +131,7 @@ namespace Core
                                 .setEaseInOutCubic()
                                 .setOnComplete(() =>
                                 {
+                                    camCover.transform.localPosition = new Vector2(0f, camCover.transform.localScale.y);
                                     _mapChangeActive = false;
                                     TimeSystem._.RemoveForcePause();
                                 });

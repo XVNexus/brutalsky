@@ -8,9 +8,9 @@ $ fl2: 4 11 / int: 0
 # str: sh / str: corner-bl / str:  / str:  / trn: -1249 1 0 / lay: Midground / bol: True / for: Vector 0 0 0 0 20 1 0 0 20 0 / mat: 2 0 0 10 0 / bol: False / col: B2B2B2FF / bol: False
 # str: sh / str: corner-br / str:  / str:  / trn: 1249 1 0 / lay: Midground / bol: True / for: Vector 0 0 0 0 20 1 0 0 -20 0 / mat: 2 0 0 10 0 / bol: False / col: B2B2B2FF / bol: False
 # str: sh / str: car-body / str:  / str:  / trn: 0 10 0 / lay: Midground / bol: True / for: Rectangle 12 1 / mat: 2 0 0 10 0 / bol: True / col: FF9933FF / bol: False
-# str: sh / str: car-wheel-1 / str:  / str:  / trn: -6 9.5 0 / lay: Background / bol: True / for: Circle 2 / mat: 10 0 0 1 0 / bol: True / col: 191919FF / bol: False
+# str: sh / str: car-wheel-1 / str:  / str:  / trn: -6.5 8.5 0 / lay: Background / bol: True / for: Circle 3 / mat: 10 0 0 1 0 / bol: True / col: 191919FF / bol: False
 @ str: jn / str: car-wheel-1-motor / trn: 0 0 0 / jnt: Hinge / str: car-body / bol: False / flt: Infinity / flt: Infinity / bol: True / flt: 0 / flt: 1000 / bol: False / flt: 0 / flt: 0
-# str: sh / str: car-wheel-2 / str:  / str:  / trn: 6 9.5 0 / lay: Background / bol: True / for: Circle 2 / mat: 10 0 0 1 0 / bol: True / col: 191919FF / bol: False
+# str: sh / str: car-wheel-2 / str:  / str:  / trn: 6.5 8.5 0 / lay: Background / bol: True / for: Circle 3 / mat: 10 0 0 1 0 / bol: True / col: 191919FF / bol: False
 @ str: jn / str: car-wheel-2-motor / trn: 0 0 0 / jnt: Hinge / str: car-body / bol: False / flt: Infinity / flt: Infinity / bol: True / flt: 0 / flt: 1000 / bol: False / flt: 0 / flt: 0
 # str: mn / str: car-seat-driver / str: sh / str: car-body / trn: 1 1.5 0 / lay: Midground / bol: True / fl2: 1000 0.3 / fl2: 0 0
 # str: mn / str: car-seat-passenger / str: sh / str: car-body / trn: -1 1.5 0 / lay: Midground / bol: True / fl2: 1000 0.3 / fl2: 0 0

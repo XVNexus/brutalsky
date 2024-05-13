@@ -4,7 +4,6 @@ using Brutalsky.Object;
 using Controllers.Base;
 using Core;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Utils.Constants;
 using Utils.Ext;
 using Utils.Player;
@@ -20,7 +19,7 @@ namespace Controllers.Player
         // Config options
         public float movementForce;
         public float jumpForce;
-        public int maxOnGroundFrames;
+        public int maxGroundedFrames;
 
         // Exposed properties
         public bool Dummy { get; private set; }
@@ -40,7 +39,7 @@ namespace Controllers.Player
         private Vector2 _lastPosition;
 
         // Local functions
-        public Func<Vector2, Vector2, bool> TestOnGround = (_, _) => false;
+        public Func<Vector2, Vector2, bool> TestGrounded = (_, _) => false;
         public Func<Vector2, bool> TestJumpInput = _ => false;
 
         // External references
@@ -94,7 +93,7 @@ namespace Controllers.Player
                 Direction.Right => Vector2.left * jumpForce,
                 _ => Vector2.zero
             };
-            TestOnGround = map.GravityDirection switch
+            TestGrounded = map.GravityDirection switch
             {
                 Direction.Down => (c, p) => c.y < p.y - .25f,
                 Direction.Up => (c, p) => c.y > p.y + .25f,
@@ -142,8 +141,8 @@ namespace Controllers.Player
         {
             // Update ground status
             if (!other.gameObject.CompareTag(Tags.ShapeTag) && !other.gameObject.CompareTag(Tags.PlayerTag)) return;
-            if (!TestOnGround(other.GetContact(0).point, _lastPosition)) return;
-            _groundedFrames = maxOnGroundFrames;
+            if (!TestGrounded(other.GetContact(0).point, _lastPosition)) return;
+            _groundedFrames = maxGroundedFrames;
             Grounded = true;
         }
 
@@ -161,14 +160,14 @@ namespace Controllers.Player
             var speed = velocity.magnitude;
 
             // Apply directional movement
-            _cRigidbody2D.AddForce(MovementInput * _movementScale * (Grounded ? 1.5f : .5f));
+            _cRigidbody2D.AddForce(MovementInput * _movementScale * (Grounded ? 1f : .5f));
 
             // Apply jump movement
             var jumpInput = Grounded && TestJumpInput(MovementInput) && _jumpCooldown == 0;
             if (jumpInput)
             {
                 _cRigidbody2D.AddForce(_jumpVector, ForceMode2D.Impulse);
-                _jumpCooldown = maxOnGroundFrames + 1;
+                _jumpCooldown = maxGroundedFrames + 1;
             }
 
             // Apply boost movement

@@ -151,7 +151,7 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDrag: 0.2
+  m_LinearDrag: 0.75
   m_AngularDrag: 0
   m_GravityScale: 1
   m_Material: {fileID: 6200000, guid: f5804d60985b1ab65b65e4ce4b78161a, type: 2}
@@ -202,9 +202,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a6aee8084966ee7b90ed74611bd98be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementForce: 20
-  jumpForce: 12
-  maxOnGroundFrames: 5
+  movementForce: 30
+  jumpForce: 15
+  maxGroundedFrames: 5
 --- !u!114 &328550718412262110
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -244,9 +244,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e02e0473101b76d9bee7f36177b3755, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  boostThreshold: 30
-  boostCap: 1000
-  particleMultiplier: 3
+  boostThreshold: 40
+  particleMultiplier: 1
   deathParticleClamp: 3
   cTouchParticleSystem: {fileID: 799340086311092629}
   cSlideParticleSystem: {fileID: 4654329193152478705}
@@ -267,8 +266,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0bb7c28fedab2677a8ba3d025bb1b22a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shakeScale: 0.05
-  shakeCap: 5
+  shakeScale: 0.1
+  shakeCap: 3
 --- !u!1 &2730403350328093100
 GameObject:
   m_ObjectHideFlags: 0

@@ -17,7 +17,6 @@ namespace Controllers.Player
 
         // Config options
         public float boostThreshold;
-        public float boostCap;
         public float particleMultiplier;
         public float deathParticleClamp;
 
@@ -89,7 +88,7 @@ namespace Controllers.Player
 
         public void DisplayBoostParticles(float speed)
         {
-            if (speed >= boostThreshold && speed < boostCap && _lastSpeed < boostThreshold)
+            if (speed >= boostThreshold && speed < 1000f && _lastSpeed < boostThreshold)
             {
                 cBoostParticleSystem.Play();
             }

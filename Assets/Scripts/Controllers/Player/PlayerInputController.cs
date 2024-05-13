@@ -54,7 +54,7 @@ namespace Controllers.Player
         {
             if (Dummy || Status < Ready) return;
             MovementInput = _iMovement.ReadValue<Vector2>();
-            BoostInput = _iBoost.IsPressed();
+            BoostInput = _iBoost.ReadValue<float>() > 0f;
             if (autoSendInput)
             {
                 _mMovement.SendInput(MovementInput, BoostInput);
