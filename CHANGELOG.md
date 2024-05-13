@@ -1,3 +1,13 @@
+## *Nightly 2024.05.12*
+
+#### CHANGED
+- limited size of followcam view to size of map
+- camera no longer follows targets outside of map bounds
+- map background no longer reacts to player lights
+- reformatted stringified lcs data to be more readable
+- logic links are now serialized as 6 digit hexadecimal codes instead of two integers
+
+
 ## *Nightly 2024.05.11*
 
 #### ADDED
