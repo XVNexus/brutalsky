@@ -32,6 +32,7 @@ namespace Utils.Lcs
         };
         public static readonly Dictionary<char, char> SpecialCodes =
             SpecialChars.ToDictionary(kv => kv.Value, kv => kv.Key);
+
         public static readonly Dictionary<LcsType, LcsInfo> TypeTable = new()
         {
             { LcsType.Bool, BoolInfo() },
@@ -109,7 +110,7 @@ namespace Utils.Lcs
         }
 
         public static LcsInfo UShortInfo() {
-            return new LcsInfo(2, "ush", 0x03,
+            return new LcsInfo(2, "usr", 0x03,
                 value => BitConverter.GetBytes((ushort)value),
                 raw => BitConverter.ToUInt16(raw),
                 value => value.ToString(),
@@ -133,7 +134,7 @@ namespace Utils.Lcs
         }
 
         public static LcsInfo SByteInfo() {
-            return new LcsInfo(1, "sby", 0x06,
+            return new LcsInfo(1, "byt", 0x06,
                 value => new[] { (byte)value },
                 raw => (sbyte)raw[0],
                 value => value.ToString(),
@@ -141,7 +142,7 @@ namespace Utils.Lcs
         }
 
         public static LcsInfo ShortInfo() {
-            return new LcsInfo(2, "ssh", 0x07,
+            return new LcsInfo(2, "srt", 0x07,
                 value => BitConverter.GetBytes((short)value),
                 raw => BitConverter.ToInt16(raw),
                 value => value.ToString(),
@@ -149,7 +150,7 @@ namespace Utils.Lcs
         }
 
         public static LcsInfo IntInfo() {
-            return new LcsInfo(4, "sin", 0x08,
+            return new LcsInfo(4, "int", 0x08,
                 value => BitConverter.GetBytes((int)value),
                 raw => BitConverter.ToInt32(raw),
                 value => value.ToString(),
@@ -157,7 +158,7 @@ namespace Utils.Lcs
         }
 
         public static LcsInfo LongInfo() {
-            return new LcsInfo(8, "slo", 0x09,
+            return new LcsInfo(8, "lng", 0x09,
                 value => BitConverter.GetBytes((long)value),
                 raw => BitConverter.ToInt64(raw),
                 value => value.ToString(),

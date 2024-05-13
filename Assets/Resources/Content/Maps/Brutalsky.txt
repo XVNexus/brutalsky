@@ -1,9 +1,9 @@
 1 !$#%^ @
 ! str: Brutalsky / str: Xveon / rec: -20 -10 40 20 / col: 404040FF / col: FFFFFFCC / dir: Down / flt: 20 / flt: 100 / bol: True
-$ fl2: -16 1 / sin: 1
-$ fl2: -14 1 / sin: 0
-$ fl2: 14 1 / sin: 0
-$ fl2: 16 1 / sin: 1
+$ fl2: -16 1 / int: 1
+$ fl2: -14 1 / int: 0
+$ fl2: 14 1 / int: 0
+$ fl2: 16 1 / int: 1
 # str: sh / str: wall-left / str:  / str:  / trn: -19.5 0 0 / lay: Midground / bol: True / for: Rectangle 1 20 / mat: 2 0 0 10 0 / bol: False / col: B2B2B2FF / bol: False
 # str: sh / str: wall-right / str:  / str:  / trn: 19.5 0 0 / lay: Midground / bol: True / for: Rectangle 1 20 / mat: 2 0 0 10 0 / bol: False / col: B2B2B2FF / bol: False
 # str: sh / str: wall-top / str:  / str:  / trn: 0 10 0 / lay: Midground / bol: True / for: Polygon -15 0 15 0 14 -0.5 -14 -0.5 / mat: 2 0 0 10 0 / bol: False / col: B2B2B2FF / bol: False
@@ -43,11 +43,11 @@ $ fl2: 16 1 / sin: 1
 # str: sn / str: spinner-sensor / str:  / str:  / trn: 0 5 0 / lay: Midground / bol: True / flt: 12 / bol: False / bol: True / bol: False
 % str: bcfl / flt: 50
 % str: bcfl / flt: 5000
-% str: fmux / sin: 2
+% str: fmux / int: 2
 % str: bcfl / flt: 1
 % str: bcfl / flt: -1
-% str: mmul / sin: 2
-% str: mmul / sin: 2
+% str: mmul / int: 2
+% str: mmul / int: 2
 ^ prt: 000900 / prt: 000200
 ^ prt: 000000 / prt: 000201
 ^ prt: 000100 / prt: 000202

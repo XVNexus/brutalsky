@@ -1,9 +1,9 @@
 1 !$#%^ @
 ! str: Tossup / str: Xveon / rec: -20 -10 40 20 / col: 404040FF / col: FFFFFFCC / dir: Down / flt: 20 / flt: 100 / bol: True
-$ fl2: -7 -8.5 / sin: 1
-$ fl2: -5 -8.5 / sin: 0
-$ fl2: 5 -8.5 / sin: 0
-$ fl2: 7 -8.5 / sin: 1
+$ fl2: -7 -8.5 / int: 1
+$ fl2: -5 -8.5 / int: 0
+$ fl2: 5 -8.5 / int: 0
+$ fl2: 7 -8.5 / int: 1
 # str: sh / str: wall-bottom / str:  / str:  / trn: 0 -10 0 / lay: Midground / bol: True / for: Polygon -15 0 -10 1 10 1 15 0 / mat: 2 0 0 10 0 / bol: False / col: B2B2B2FF / bol: False
 # str: sh / str: wall-left / str:  / str:  / trn: -20 10 0 / lay: Midground / bol: True / for: Polygon 0 0 10 0 5 -1 1 -1 1 -10 0 -15 / mat: 2 0 0 10 0 / bol: False / col: B2B2B2FF / bol: False
 # str: sh / str: wall-right / str:  / str:  / trn: 20 10 0 / lay: Midground / bol: True / for: Polygon 0 0 -10 0 -5 -1 -1 -1 -1 -10 0 -15 / mat: 2 0 0 10 0 / bol: False / col: B2B2B2FF / bol: False
@@ -18,14 +18,14 @@ $ fl2: 7 -8.5 / sin: 1
 @ str: jn / str: spinner-right-motor / trn: 0 0 0 / jnt: Hinge / str:  / bol: False / flt: Infinity / flt: Infinity / bol: True / flt: 0 / flt: 10000 / bol: False / flt: 0 / flt: 0
 % str: ftmr
 % str: bcfl / flt: 3.141593
-% str: mmul / sin: 2
+% str: mmul / int: 2
 % str: msin
 % str: bcfl / flt: 1000
-% str: mmul / sin: 2
-% str: fclk / sin: 50
+% str: mmul / int: 2
+% str: fclk / int: 50
 % str: fchl
-% str: brin / sin: 0 / sin: 2
-% str: fdmx / sin: 3
+% str: brin / int: 0 / int: 2
+% str: fdmx / int: 3
 ^ prt: 000000 / prt: 000200
 ^ prt: 000100 / prt: 000201
 ^ prt: 000200 / prt: 000300

@@ -1,9 +1,9 @@
 1 !$#%^ @
 ! str: Doomring / str: Xveon / rec: -15 -15 30 30 / col: 404040FF / col: FFFFFFCC / dir: None / flt: 0 / flt: 100 / bol: True
-$ fl2: 0 5 / sin: 0
-$ fl2: 5 0 / sin: 0
-$ fl2: 0 -5 / sin: 0
-$ fl2: -5 0 / sin: 0
+$ fl2: 0 5 / int: 0
+$ fl2: 5 0 / int: 0
+$ fl2: 0 -5 / int: 0
+$ fl2: -5 0 / int: 0
 # str: sh / str: background-top / str:  / str:  / trn: 0 0 45 / lay: Background / bol: False / for: Vector 0 0 0 0 15 1 15 15 15 0 / mat: 0 0 0 0 0 / bol: False / col: FF3F3F0D / bol: False
 # str: sh / str: quadrant-top / str:  / str:  / trn: 0 0 45 / lay: Midground / bol: True / for: Vector 0 15 1 15 15 15 0 0 14 0 1 14 14 0 14 / mat: 2 2 0 10 -10 / bol: False / col: B2B2B2FF / bol: False
 # str: sh / str: background-right / str:  / str:  / trn: 0 0 -45 / lay: Background / bol: False / for: Vector 0 0 0 0 15 1 15 15 15 0 / mat: 0 0 0 0 0 / bol: False / col: 9FFF3F0D / bol: False
