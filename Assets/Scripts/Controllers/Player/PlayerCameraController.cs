@@ -53,7 +53,7 @@ namespace Controllers.Player
         private void OnPlayerDie(BsMap map, BsPlayer player)
         {
             if (player.Id != Master.Object.Id) return;
-            CameraSystem._.AddShake(shakeCap);
+            CameraSystem._.AddShake(shakeCap * 1.5f);
         }
 
         private void OnCollisionEnter2D(Collision2D other)

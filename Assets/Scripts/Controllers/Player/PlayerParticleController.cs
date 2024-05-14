@@ -121,10 +121,17 @@ namespace Controllers.Player
         public void DisplayDeathParticles()
         {
             if (!MapSystem._.MapLoaded) return;
-            cDeathParticleSystem.gameObject.SetActive(true);
-            cDeathParticleSystem.transform.localPosition = (Vector3)MathfExt.Clamp(transform.localPosition,
+            var positionOffset = (Vector3)MathfExt.Clamp(transform.localPosition,
                 MapSystem._.ActiveMap.PlayArea.Expand(deathParticleClamp)) - transform.localPosition;
+            cDeathParticleSystem.gameObject.SetActive(true);
+            cDeathParticleSystem.transform.localPosition = positionOffset;
             cDeathParticleSystem.Play();
+            cImpactParticleSystem.gameObject.SetActive(true);
+            cImpactParticleSystem.transform.localPosition = positionOffset;
+            var psMain = cImpactParticleSystem.main;
+            psMain.startSize = 10f;
+            psMain.startLifetime = 1f;
+            cImpactParticleSystem.Play();
         }
 
         // Event functions
@@ -137,6 +144,7 @@ namespace Controllers.Player
             }
             _lastSpeed = 0f;
             _lastHealth = -1;
+            cImpactParticleSystem.transform.localPosition = Vector3.zero;
         }
 
         private void OnPlayerDie(BsMap map, BsPlayer player)

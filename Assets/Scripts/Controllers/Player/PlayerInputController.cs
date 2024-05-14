@@ -56,20 +56,21 @@ namespace Controllers.Player
         // Event functions
         private void FixedUpdate()
         {
+            // Get input data
             if (Dummy || Status < Ready) return;
-
+            // The _last buffers are used to cover up frame gaps when using multiple keyboards
             var movementInput = _iMovement.ReadValue<Vector2>();
             MovementInput = movementInput.magnitude != 0f || _lastMovementInput.magnitude == 0f
                 ? movementInput
                 : _lastMovementInput;
             _lastMovementInput = movementInput;
-
             var boostInput = _iBoost.ReadValue<float>() > 0f;
             BoostInput = boostInput || !_lastBoostInput
                 ? boostInput
                 : _lastBoostInput;
             _lastBoostInput = boostInput;
 
+            // Send input data to movement controller
             if (autoSendInput)
             {
                 _mMovement.SendInput(MovementInput, BoostInput);
