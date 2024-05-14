@@ -165,7 +165,7 @@ namespace Controllers.Player
             var speed = velocity.magnitude;
 
             // Apply directional movement
-            _cRigidbody2D.AddForce(MovementInput * _movementScale * (Grounded ? Mathf.Max(_groundFriction, .5f) : .5f));
+            _cRigidbody2D.AddForce(MovementInput * _movementScale * (Grounded ? Mathf.Clamp(_groundFriction, .5f, 2f) : .5f));
 
             // Apply jump movement
             var jumpInput = Grounded && TestJumpInput(MovementInput) && _jumpCooldown == 0;

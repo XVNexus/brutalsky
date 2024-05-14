@@ -1,6 +1,6 @@
 namespace Utils.Shape
 {
-    public class ShapeMaterial
+    public struct ShapeMaterial
     {
         public static readonly ShapeMaterial Wood = new(2f, 0f, 0f, .1f);
         public static readonly ShapeMaterial Metal = new(2f, 0f, 0f, 1f);
@@ -24,10 +24,6 @@ namespace Utils.Shape
             Adhesion = adhesion;
             Density = density;
             Health = health;
-        }
-
-        public ShapeMaterial()
-        {
         }
 
         public ShapeMaterial Modify(float? friction = null, float? restitution = null, float? adhesion = null,

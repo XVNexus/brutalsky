@@ -1,6 +1,6 @@
 namespace Utils.Pool
 {
-    public class PoolChemical
+    public struct PoolChemical
     {
         public static readonly PoolChemical Oil = new(2.5f, 1f);
         public static readonly PoolChemical Water = new(25f, 1f);
@@ -17,10 +17,6 @@ namespace Utils.Pool
             Buoyancy = buoyancy;
             Viscosity = viscosity;
             Health = health;
-        }
-
-        public PoolChemical()
-        {
         }
 
         public PoolChemical Modify(float? buoyancy = null, float? viscosity = null, float? health = null)

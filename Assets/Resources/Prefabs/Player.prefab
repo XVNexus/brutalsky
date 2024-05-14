@@ -245,7 +245,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e02e0473101b76d9bee7f36177b3755, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  boostThreshold: 40
+  boostThreshold: 30
   particleMultiplier: 1
   deathParticleClamp: 3
   cTouchParticleSystem: {fileID: 799340086311092629}

@@ -122,8 +122,8 @@ namespace Controllers.Player
         {
             if (!MapSystem._.MapLoaded) return;
             cDeathParticleSystem.gameObject.SetActive(true);
-            cDeathParticleSystem.transform.position = MathfExt.Clamp(transform.localPosition,
-                MapSystem._.ActiveMap.PlayArea.Expand(deathParticleClamp));
+            cDeathParticleSystem.transform.localPosition = (Vector3)MathfExt.Clamp(transform.localPosition,
+                MapSystem._.ActiveMap.PlayArea.Expand(deathParticleClamp)) - transform.localPosition;
             cDeathParticleSystem.Play();
         }
 
@@ -168,7 +168,7 @@ namespace Controllers.Player
             _lastSpeed = speed;
 
             // Display heal/hurt particles
-            if (!_mHealth || !_mHealth.Alive) return;
+            if (!_mHealth) return;
             var health = Mathf.CeilToInt(_mHealth.Health * particleMultiplier);
             if (_lastHealth < 0)
             {

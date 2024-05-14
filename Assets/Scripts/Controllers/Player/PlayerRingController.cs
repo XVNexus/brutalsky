@@ -1,3 +1,4 @@
+using System;
 using Brutalsky;
 using Brutalsky.Object;
 using Controllers.Base;
@@ -84,13 +85,12 @@ namespace Controllers.Player
             }
 
             // Transition current ring properties to calculated target properties
-            _ringThickness = MathfExt.MoveToLinear(_ringThickness, targetRingThickness, Time.deltaTime);
+            _ringThickness = MathfExt.MoveToExponential(_ringThickness, targetRingThickness, 5f * Time.deltaTime);
             _ringAlpha = MathfExt.MoveToLinear(_ringAlpha, targetRingAlpha, Time.deltaTime);
             _ringSpin = MathfExt.MoveToLinear(_ringSpin, targetRingSpin, 1440f * Time.deltaTime);
 
             // Apply current ring properties
-            var ringMaskScale = 1.8f - _ringThickness * .6f;
-            cSpriteMask.transform.localScale = new Vector3(ringMaskScale, ringMaskScale, 1f);
+            cSpriteMask.transform.localScale = Vector2.one * (2f - _ringThickness * .8f);
             var ringColor = cRingSpriteRenderer.color;
             ringColor.a = _ringAlpha;
             cRingSpriteRenderer.color = ringColor;

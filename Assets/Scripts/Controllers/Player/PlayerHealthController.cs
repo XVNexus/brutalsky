@@ -14,9 +14,6 @@ namespace Controllers.Player
         public override string Id => "health";
         public override bool IsUnused => Mathf.Approximately(Master.Object.Health, -1f);
 
-        // Config options
-        public float animationTime;
-
         // Exposed properties
         public float MaxHealth { get; private set; }
         public float Health { get; private set; } = -1f;
@@ -83,14 +80,9 @@ namespace Controllers.Player
             Alive = false;
             _cRigidbody2D.simulated = false;
             _cCircleCollider2D.enabled = false;
-            gameObject.LeanScale(new Vector2(0f, 0f), animationTime)
-                .setEaseInBack()
-                .setOnComplete(() =>
-                {
-                    _cSpriteRenderer.enabled = false;
-                    gameObject.SetChildrenActive(false);
-                    EventSystem._.EmitPlayerDie(MapSystem._.ActiveMap, Master.Object);
-                });
+            _cSpriteRenderer.enabled = false;
+            gameObject.SetChildrenActive(false);
+            EventSystem._.EmitPlayerDie(MapSystem._.ActiveMap, Master.Object);
         }
 
         // Event functions
@@ -99,7 +91,6 @@ namespace Controllers.Player
             if (player.Id != Master.Object.Id) return;
             MaxHealth = player.Health;
             Health = MaxHealth;
-            transform.localScale = Vector3.one;
             Revive();
         }
 
