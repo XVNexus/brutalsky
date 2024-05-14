@@ -29,11 +29,13 @@ namespace Controllers.Player
         protected override void OnInit()
         {
             EventSystem._.OnPlayerSpawn += OnPlayerSpawn;
+            EventSystem._.OnPlayerDie += OnPlayerDie;
         }
 
         private void OnDestroy()
         {
             EventSystem._.OnPlayerSpawn -= OnPlayerSpawn;
+            EventSystem._.OnPlayerDie -= OnPlayerDie;
         }
 
         protected override void OnLink()
@@ -46,6 +48,12 @@ namespace Controllers.Player
         {
             if (player.Id != Master.Object.Id) return;
             _lastHealth = -1f;
+        }
+
+        private void OnPlayerDie(BsMap map, BsPlayer player)
+        {
+            if (player.Id != Master.Object.Id) return;
+            CameraSystem._.AddShake(shakeCap);
         }
 
         private void OnCollisionEnter2D(Collision2D other)
@@ -75,10 +83,6 @@ namespace Controllers.Player
             {
                 var shakeForce = Mathf.Min(-deltaHealth * shakeScale, shakeCap);
                 CameraSystem._.AddShake(shakeForce);
-            }
-            if (health == 0f && _lastHealth > 0f)
-            {
-                CameraSystem._.AddShake(shakeCap);
             }
             _lastHealth = health;
         }

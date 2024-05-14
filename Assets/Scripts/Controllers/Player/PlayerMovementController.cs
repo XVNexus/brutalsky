@@ -157,9 +157,8 @@ namespace Controllers.Player
             if (Dummy) return;
 
             // Update ground status
-            Grounded = _groundedFrames > 0;
             _groundedFrames = Mathf.Max(_groundedFrames - 1, 0);
-            _lastPosition = transform.localPosition;
+            Grounded = _groundedFrames > 0;
 
             // Get movement data
             var velocity = _cRigidbody2D.velocity;
@@ -173,7 +172,11 @@ namespace Controllers.Player
             if (jumpInput)
             {
                 _cRigidbody2D.AddForce(_jumpVector, ForceMode2D.Impulse);
-                _jumpCooldown = maxGroundedFrames + 1;
+                _jumpCooldown = maxGroundedFrames;
+            }
+            if (_jumpCooldown > 0)
+            {
+                _jumpCooldown--;
             }
 
             // Apply boost movement
@@ -196,12 +199,9 @@ namespace Controllers.Player
             }
             _lastBoostInput = safeBoostInput;
 
-            // Save the current speed for future reference and update jump cooldown
+            // Save the current position and speed for future reference
+            _lastPosition = transform.localPosition;
             _lastSpeed = _cRigidbody2D.velocity.magnitude;
-            if (_jumpCooldown > 0)
-            {
-                _jumpCooldown--;
-            }
         }
     }
 }

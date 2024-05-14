@@ -60,7 +60,7 @@ namespace Controllers.Player
             _ringAlpha = 0f;
             _ringThickness = 0f;
             _ringSpin = 0f;
-            cRingSpriteRenderer.transform.rotation = Quaternion.identity;
+            cRingSpriteRenderer.transform.localRotation = Quaternion.identity;
         }
 
         private void Update()
