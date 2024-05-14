@@ -56,7 +56,7 @@ namespace Controllers.Gui
             });
             GuiSystem._.RegisterButton(PaneId, "reld", () =>
             {
-                GameManager.LoadData();
+                GameManager._.LoadData();
             });
         }
 

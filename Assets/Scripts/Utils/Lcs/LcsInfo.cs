@@ -586,36 +586,24 @@ namespace Utils.Lcs
             return HexToInt(hex) / 255f;
         }
 
-        // TODO: REPLACE CONCAT STUFF WITH STRING.JOIN
         public static string ConcatProps(params string[] items)
         {
-            return ConcatList(items, PropertySeparator);
+            return string.Join(PropertySeparator, items);
         }
 
         public static string[] SplitProps(string items)
         {
-            return SplitList(items, PropertySeparator);
+            return items.Split(PropertySeparator);
         }
 
         public static string ConcatFields(params string[] items)
         {
-            return ConcatList(items, FieldSeparator);
+            return string.Join(FieldSeparator, items);
         }
 
         public static string[] SplitFields(string items)
         {
-            return SplitList(items, FieldSeparator);
-        }
-
-        public static string ConcatList(string[] items, string separator)
-        {
-            return items.Length > 0
-                ? items.Aggregate("", (current, property) => current + $"{separator}{property}")[1..] : "";
-        }
-
-        public static string[] SplitList(string items, string separator)
-        {
-            return items.Length > 0 ? items.Split(separator) : Array.Empty<string>();
+            return items.Split(FieldSeparator);
         }
     }
 }

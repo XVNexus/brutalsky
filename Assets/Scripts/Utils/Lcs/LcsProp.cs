@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Utils.Lcs
 {
-    public class LcsProp
+    public struct LcsProp
     {
         public LcsType Type { get; set; }
         public object Value { get; set; }

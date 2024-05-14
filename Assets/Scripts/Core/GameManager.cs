@@ -18,6 +18,7 @@ namespace Core
         private void Awake() => _ = this;
 
         // Config options
+        public string[] builtinMaps;
         public bool autoRestart;
         public Color loadingColor;
 
@@ -46,7 +47,7 @@ namespace Core
         }
 
         // System functions
-        public static void LoadData()
+        public void LoadData()
         {
             // Clear any previously loaded maps
             if (MapSystem._.MapList.Count > 0)
@@ -55,13 +56,13 @@ namespace Core
             }
 
             // Load builtin maps
-            MapSystem._.RegisterMaps(ResourceSystem._.LoadMapAssets(new[]
+            foreach (var filename in builtinMaps)
             {
-                "Void", "Brutalsky", "Doomring", "Tossup", "Racetrack"
-            }));
+                MapSystem._.RegisterMap(BsMap.FromLcs(ResourceSystem._.LoadAsset("Maps", filename)));
+            }
 
             // Load custom maps
-            MapSystem._.RegisterMaps(ResourceSystem._.LoadMapFiles());
+            MapSystem._.RegisterMaps(ResourceSystem._.LoadFolder("Maps").Select(BsMap.FromLcs));
 
             // Generate box maps
             var shapes = new[] { 0b1000, 0b1011, 0b1111, 0b1100 };

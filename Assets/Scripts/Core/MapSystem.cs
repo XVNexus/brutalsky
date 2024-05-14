@@ -12,6 +12,7 @@ using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using Utils.Constants;
 using Utils.Ext;
+using Utils.Lcs;
 using Utils.Object;
 using Utils.Player;
 
@@ -129,7 +130,7 @@ namespace Core
         public void RegisterMap(BsMap map)
         {
             EventSystem._.EmitMapPreload(map);
-            MapList[map.Id] = map.Binify(true);
+            MapList[map.Id] = map.ToLcs().Binify(true);
         }
 
         public void UnregisterMaps()
@@ -145,7 +146,7 @@ namespace Core
 
         public void BuildMap(uint id)
         {
-            BuildMap(id > 0 ? BsMap.Parse(MapList[id], true) : null);
+            BuildMap(id > 0 ? BsMap.FromLcs(LcsDocument.Parse(MapList[id], true)) : null);
         }
 
         public void BuildMap([CanBeNull] BsMap map = null)

@@ -6,7 +6,7 @@ using Utils.Constants;
 
 namespace Utils.Lcs
 {
-    public class LcsDocument
+    public struct LcsDocument
     {
         public int Version { get; set; }
         public List<LcsLine> Lines { get; set; }
@@ -82,7 +82,7 @@ namespace Utils.Lcs
 
         public string Stringify()
         {
-            return Version + ' ' + LcsInfo.ConcatList(LineLevels, " ") + LcsInfo.LineSeparator +
+            return Version + " " + string.Join(" ", LineLevels) + LcsInfo.LineSeparator +
                 Lines.Aggregate("", (current, line) => current + line.Stringify());
         }
 

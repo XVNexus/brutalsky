@@ -9,6 +9,7 @@ using Brutalsky.Base;
 using Brutalsky.Object;
 using Controllers.Base;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Utils.Constants;
 using Utils.Lcs;
 using Random = Unity.Mathematics.Random;
@@ -35,8 +36,13 @@ namespace Core
 
         // Config options
         public string[] dataDirectories;
-        public string[] lcsFormatExtensions;
-        public LcsFormat lcsPreferredFormat;
+        public string stringExtension;
+        public string binaryExtension;
+        public string gzipExtension;
+        public LcsFormat saveFormat;
+
+        // Local variables
+        private string[] _formatExtensions;
 
         // External references
         public GameObject pPlayer;
@@ -87,85 +93,87 @@ namespace Core
             return $"{DataPath}/{directory}/{filename}.{extension}";
         }
 
-        public static T LoadContent<T>(string directory, string filename) where T : UnityEngine.Object
+        public LcsDocument LoadAsset(string directory, string filename)
         {
-            return Resources.Load<T>($"Content/{directory}/{filename}");
+            return LcsDocument.Parse(Resources.Load<TextAsset>($"Content/{directory}/{filename}").text);
         }
 
-        public IEnumerable<BsMap> LoadMapAssets(IEnumerable<string> filenames)
+        public LcsDocument[] LoadFolder(string directory)
         {
-            return filenames.Select(filename => LoadMapAsset(filename)).ToList();
-        }
-
-        public BsMap LoadMapAsset(string filename)
-        {
-            return BsMap.Parse(LoadContent<TextAsset>("Maps", filename).text);
-        }
-
-        public IEnumerable<BsMap> LoadMapFiles()
-        {
-            var path = GetDataPath("Maps");
+            var path = GetDataPath(directory);
             return Directory.Exists(path)
-                ? Directory.GetFiles(path).Select(mapPath => LoadMapFile(Regex.Match(mapPath,
-                    $@"\d+(?=\.({string.Join('|', lcsFormatExtensions)}))").Value)).ToList()
-                : new List<BsMap>();
+                ? Directory.GetFiles(path).Select(filepath => LoadFile(directory, Regex.Match(filepath,
+                    $@"\d+(?=\.({string.Join('|', _formatExtensions)}))").Value)).ToArray()
+                : throw Errors.NoItemFound("document folder", directory);
         }
 
-        public BsMap LoadMapFile(string filename)
+        public LcsDocument LoadFile(string directory, string filename)
         {
-            var pathString = GetDataPath("Maps", filename, lcsFormatExtensions[0]);
-            var pathBinary = GetDataPath("Maps", filename, lcsFormatExtensions[1]);
-            var pathGzip = GetDataPath("Maps", filename, lcsFormatExtensions[2]);
+            var pathString = GetDataPath(directory, filename, stringExtension);
+            var pathBinary = GetDataPath(directory, filename, binaryExtension);
+            var pathGzip = GetDataPath(directory, filename, gzipExtension);
             if (File.Exists(pathString))
             {
                 using var reader = new StreamReader(pathString);
-                return BsMap.Parse(reader.ReadToEnd());
+                return LcsDocument.Parse(reader.ReadToEnd());
             }
             if (File.Exists(pathBinary))
             {
                 using var stream = new FileStream(pathBinary, FileMode.Open);
                 using var reader = new BinaryReader(stream);
-                return BsMap.Parse(reader.ReadBytes((int)stream.Length), false);
+                return LcsDocument.Parse(reader.ReadBytes((int)stream.Length));
             }
             if (File.Exists(pathGzip))
             {
                 using var stream = new FileStream(pathBinary, FileMode.Open);
                 using var reader = new BinaryReader(stream);
-                return BsMap.Parse(reader.ReadBytes((int)stream.Length));
+                return LcsDocument.Parse(reader.ReadBytes((int)stream.Length), true);
             }
-            throw Errors.NoItemFound("map file", filename);
+            throw Errors.NoItemFound("document file", $"{directory}/{filename}");
         }
 
-        public void SaveMapFile(BsMap map)
+        public void SaveFile(string directory, string filename, LcsDocument document, LcsFormat? format = null)
         {
-            switch (lcsPreferredFormat)
+            switch (format ?? saveFormat)
             {
                 case LcsFormat.String:
                 {
-                    var pathString = GetDataPath("Maps", map.Id.ToString(), lcsFormatExtensions[0]);
+                    var pathString = GetDataPath(directory, filename, stringExtension);
                     using var writer = new StreamWriter(pathString);
-                    writer.Write(map.Stringify());
+                    writer.Write(document.Stringify());
                     break;
                 }
                 case LcsFormat.Binary:
                 {
-                    var pathGzip = GetDataPath("Maps", map.Id.ToString(), lcsFormatExtensions[1]);
+                    var pathGzip = GetDataPath(directory, filename, binaryExtension);
                     using var stream = new FileStream(pathGzip, FileMode.Create);
                     using var writer = new BinaryWriter(stream);
-                    writer.Write(map.Binify());
+                    writer.Write(document.Binify());
                     break;
                 }
                 case LcsFormat.Gzip:
                 {
-                    var pathGzip = GetDataPath("Maps", map.Id.ToString(), lcsFormatExtensions[2]);
+                    var pathGzip = GetDataPath(directory, filename, gzipExtension);
                     using var stream = new FileStream(pathGzip, FileMode.Create);
                     using var writer = new BinaryWriter(stream);
-                    writer.Write(map.Binify(true));
+                    writer.Write(document.Binify(true));
                     break;
                 }
                 default:
-                    throw Errors.InvalidItem("lcs format", lcsPreferredFormat);
+                    throw Errors.InvalidItem("lcs format", saveFormat);
             }
+        }
+
+        public bool HasFolder(string directory)
+        {
+            return Directory.Exists(GetDataPath(directory));
+        }
+
+        public bool HasFile(string directory, string filename)
+        {
+            return File.Exists(GetDataPath(directory, filename, stringExtension))
+                || File.Exists(GetDataPath(directory, filename, binaryExtension))
+                || File.Exists(GetDataPath(directory, filename, gzipExtension));
         }
     }
 }

@@ -4,7 +4,7 @@ using JetBrains.Annotations;
 
 namespace Utils.Lcs
 {
-    public class LcsLine
+    public struct LcsLine
     {
         public char Prefix { get; set; }
         public LcsProp[] Props { get; set; }

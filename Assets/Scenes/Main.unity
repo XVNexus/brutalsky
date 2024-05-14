@@ -900,6 +900,7 @@ GameObject:
   - component: {fileID: 581734016}
   - component: {fileID: 581734024}
   - component: {fileID: 581734023}
+  - component: {fileID: 581734025}
   - component: {fileID: 581734015}
   - component: {fileID: 581734022}
   - component: {fileID: 581734021}
@@ -1046,12 +1047,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dataDirectories:
+  - Config
   - Maps
-  lcsFormatExtensions:
-  - lcs
-  - lcb
-  - lcz
-  lcsPreferredFormat: 2
+  stringExtension: lcs
+  binaryExtension: lcb
+  gzipExtension: lcz
+  saveFormat: 2
   pPlayer: {fileID: 333419446728189740, guid: 375f78b96aebf21d19b4d456bb0d980e, type: 3}
   pShape: {fileID: 3486895176260509872, guid: 8015059a29a18574584e3375fa2053cc, type: 3}
   pPool: {fileID: 916318484910277029, guid: 03ad247d5d92f3916986acd6db4520cb, type: 3}
@@ -1072,8 +1073,43 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d69867b827df4193b3040d4e03c4d9dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  builtinMaps:
+  - Void
+  - Brutalsky
+  - Doomring
+  - Tossup
+  - Racetrack
   autoRestart: 0
   loadingColor: {r: 0.15, g: 0.15, b: 0.15, a: 1}
+--- !u!114 &581734025
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 581734014}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5f3806d43524873a878a7c2c56164b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  blueprints:
+  - id: grphx
+    name: Graphics
+    options:
+    - id: shake
+      name: Camera Shake Strength
+      type: 9
+      value: 1
+    - id: light
+      name: Dynamic Lighting Enabled
+      type: 0
+      value: True
+    - id: bloom
+      name: Glow Effects Enabled
+      type: 0
+      value: True
+  saveFormat: 0
 --- !u!1 &601674925
 GameObject:
   m_ObjectHideFlags: 0
