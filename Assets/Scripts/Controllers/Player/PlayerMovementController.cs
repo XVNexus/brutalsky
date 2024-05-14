@@ -36,6 +36,7 @@ namespace Controllers.Player
         private bool _lastBoostInput;
         private float _lastSpeed;
         private int _groundedFrames;
+        private float _groundFriction;
         private Vector2 _lastPosition;
 
         // Local functions
@@ -140,9 +141,14 @@ namespace Controllers.Player
         private void OnCollision(Collision2D other)
         {
             // Update ground status
-            if (!other.gameObject.CompareTag(Tags.ShapeTag) && !other.gameObject.CompareTag(Tags.PlayerTag)) return;
+            var isShape = other.gameObject.CompareTag(Tags.ShapeTag);
+            var isPlayer = other.gameObject.CompareTag(Tags.PlayerTag);
+            if (!isShape && !isPlayer) return;
             if (!TestGrounded(other.GetContact(0).point, _lastPosition)) return;
             _groundedFrames = maxGroundedFrames;
+            _groundFriction = isShape
+                ? other.gameObject.GetComponent<PolygonCollider2D>().sharedMaterial.friction
+                : .1f;
             Grounded = true;
         }
 
@@ -160,7 +166,7 @@ namespace Controllers.Player
             var speed = velocity.magnitude;
 
             // Apply directional movement
-            _cRigidbody2D.AddForce(MovementInput * _movementScale * (Grounded ? 1f : .5f));
+            _cRigidbody2D.AddForce(MovementInput * _movementScale * (Grounded ? Mathf.Max(_groundFriction, .5f) : .5f));
 
             // Apply jump movement
             var jumpInput = Grounded && TestJumpInput(MovementInput) && _jumpCooldown == 0;
