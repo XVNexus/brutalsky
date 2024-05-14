@@ -22,6 +22,10 @@ namespace Controllers.Player
         public bool BoostInput { get; private set; }
         public bool Dummy { get; private set; }
 
+        // Local variables
+        private Vector2 _lastMovementInput;
+        private bool _lastBoostInput;
+
         // External references
         private InputAction _iMovement;
         private InputAction _iBoost;
@@ -53,8 +57,19 @@ namespace Controllers.Player
         private void FixedUpdate()
         {
             if (Dummy || Status < Ready) return;
-            MovementInput = _iMovement.ReadValue<Vector2>();
-            BoostInput = _iBoost.ReadValue<float>() > 0f;
+
+            var movementInput = _iMovement.ReadValue<Vector2>();
+            MovementInput = movementInput.magnitude != 0f || _lastMovementInput.magnitude == 0f
+                ? movementInput
+                : _lastMovementInput;
+            _lastMovementInput = movementInput;
+
+            var boostInput = _iBoost.ReadValue<float>() > 0f;
+            BoostInput = boostInput || !_lastBoostInput
+                ? boostInput
+                : _lastBoostInput;
+            _lastBoostInput = boostInput;
+
             if (autoSendInput)
             {
                 _mMovement.SendInput(MovementInput, BoostInput);

@@ -44,12 +44,12 @@
                 },
                 {
                     "name": "Boost",
-                    "type": "Button",
+                    "type": "Value",
                     "id": "4303ea8b-f740-48a4-ad99-8dc581e3f314",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": false
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -327,19 +327,19 @@
                     "name": "Movement",
                     "type": "Value",
                     "id": "02af72ac-195d-444d-8880-65ef8bbf1d94",
-                    "expectedControlType": "Vector2",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
                 },
                 {
                     "name": "Boost",
-                    "type": "Button",
+                    "type": "Value",
                     "id": "e98cda0c-4cf8-4b21-b1e1-72cebbd7bd34",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "Integer",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": false
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -485,19 +485,19 @@
                     "name": "Movement",
                     "type": "Value",
                     "id": "0fe1fe22-2c8f-4987-a27f-a7b7be9b0d6e",
-                    "expectedControlType": "Vector2",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
                 },
                 {
                     "name": "Boost",
-                    "type": "Button",
+                    "type": "Value",
                     "id": "8c7113cd-2677-4cda-a0c7-9b719760c55e",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "Integer",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": false
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
