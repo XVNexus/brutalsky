@@ -5,6 +5,8 @@ using Brutalsky.Base;
 using Brutalsky.Object;
 using Controllers.Base;
 using UnityEngine;
+using UnityEngine.Rendering;
+using Utils.Config;
 using Utils.Ext;
 
 namespace Core
@@ -24,6 +26,8 @@ namespace Core
         public float followScale;
         public float followMinSize;
         public float followViewSizeThreshold;
+        private float _cfgShakeScale;
+        private bool _cfgEnableBloom;
 
         // Exposed properties
         public Rect BaseRect { get; private set; } = new(-20f, -10f, 40f, 20f);
@@ -46,11 +50,13 @@ namespace Core
         // External references
         public GameObject gCameraMount;
         public SpriteRenderer cCameraCover;
+        public Volume cVolume;
         private Camera _cCamera;
 
         // Init functions
         protected override void OnStart()
         {
+            EventSystem._.OnConfigUpdate += OnConfigUpdate;
             EventSystem._.OnPlayerSpawn += OnPlayerSpawn;
             EventSystem._.OnPlayerDie += OnPlayerDie;
 
@@ -61,6 +67,7 @@ namespace Core
 
         private void OnDestroy()
         {
+            EventSystem._.OnConfigUpdate -= OnConfigUpdate;
             EventSystem._.OnPlayerSpawn -= OnPlayerSpawn;
             EventSystem._.OnPlayerDie -= OnPlayerDie;
         }
@@ -121,6 +128,15 @@ namespace Core
         }
 
         // Event functions
+        private void OnConfigUpdate(ConfigList cfg)
+        {
+            var sec = cfg["cmsys"];
+            _cfgShakeScale = (float)sec["shake"];
+            _cfgEnableBloom = (bool)sec["bloom"];
+
+            cVolume.sharedProfile.components.Find(component => component.name == "Bloom").active = _cfgEnableBloom;
+        }
+
         private void OnPlayerSpawn(BsMap map, BsPlayer player, Vector2 position, bool visible)
         {
             if (visible)
@@ -157,7 +173,7 @@ namespace Core
 
             // Apply position and size
             var cameraTransform = _cCamera.transform;
-            var newPosition = ViewPosition + _shoveOffset * _cCamera.orthographicSize;
+            var newPosition = ViewPosition + _shoveOffset * (_cfgShakeScale * _cCamera.orthographicSize);
             cameraTransform.localPosition = new Vector3(newPosition.x, newPosition.y, cameraTransform.localPosition.z);
             _cCamera.orthographicSize = ViewSize;
 

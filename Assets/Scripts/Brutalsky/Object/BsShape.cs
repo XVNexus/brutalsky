@@ -53,7 +53,7 @@ namespace Brutalsky.Object
             controller.Object = this;
 
             // Convert path to mesh
-            var points = Form.ToFillPoints(Transform.Rotation);
+            var points = Form.ToPoints(Transform.Rotation);
             var vertices = points.Select(point => (Vector3)point).ToArray();
             var mesh = new Mesh
             {

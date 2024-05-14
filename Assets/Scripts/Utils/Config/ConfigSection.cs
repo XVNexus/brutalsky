@@ -26,6 +26,12 @@ namespace Utils.Config
             Options = new Dictionary<string, ConfigOption>();
         }
 
+        public object this[string optionId]
+        {
+            get => GetOption(optionId).Value;
+            set => GetOption(optionId).Value = value;
+        }
+
         public ConfigOption GetOption(string id)
         {
             return ContainsOption(id) ? Options[id] : throw Errors.NoItemFound("config option", id);

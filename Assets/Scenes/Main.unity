@@ -959,10 +959,11 @@ MonoBehaviour:
   followSpeed: {x: 2.5, y: 2.5}
   followLead: {x: 0.5, y: 100}
   followScale: 1.5
-  followMinSize: 25
+  followMinSize: 30
   followViewSizeThreshold: 50
   gCameraMount: {fileID: 223431134}
   cCameraCover: {fileID: 1875631436}
+  cVolume: {fileID: 601674927}
 --- !u!114 &581734019
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1018,7 +1019,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8542157c84b4a99a48df8f8fa37683b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxFps: 120
 --- !u!114 &581734022
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1094,19 +1094,49 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   blueprints:
-  - id: grphx
+  - id: gmmgr
+    name: Gameplay
+    options:
+    - id: start
+      name: Starting Map
+      type: 13
+      value: Void
+    - id: encst
+      name: Enable Custom Maps
+      type: 0
+      value: True
+    - id: enbox
+      name: Enable Box Maps
+      type: 0
+      value: True
+    - id: enptf
+      name: Enable Platformer Maps
+      type: 0
+      value: True
+    - id: entrn
+      name: Enable Terrain Maps
+      type: 0
+      value: True
+    - id: enmaz
+      name: Enable Maze Maps
+      type: 0
+      value: True
+  - id: tmsys
+    name: System
+    options:
+    - id: mxfps
+      name: Maximum Framerate
+      type: 7
+      value: 120
+  - id: cmsys
     name: Graphics
     options:
     - id: shake
       name: Camera Shake Strength
       type: 9
       value: 1
-    - id: light
-      name: Dynamic Lighting Enabled
-      type: 0
-      value: True
     - id: bloom
-      name: Glow Effects Enabled
+      name: Enable Glow Effects
       type: 0
       value: True
   saveFormat: 0

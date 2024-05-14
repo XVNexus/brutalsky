@@ -5,6 +5,7 @@ using Controllers;
 using Controllers.Base;
 using Controllers.Player;
 using UnityEngine;
+using Utils.Config;
 using Utils.Ext;
 using Utils.Map;
 using Utils.Player;
@@ -21,6 +22,12 @@ namespace Core
         public string[] builtinMaps;
         public bool autoRestart;
         public Color loadingColor;
+        private string _cfgStartingMap;
+        private bool _cfgEnableCustomMaps;
+        private bool _cfgEnableBoxMaps;
+        private bool _cfgEnablePlatformerMaps;
+        private bool _cfgEnableTerrainMaps;
+        private bool _cfgEnableMazeMaps;
 
         // Local variables
         private bool _mapChangeActive;
@@ -28,18 +35,20 @@ namespace Core
         // Init functions
         protected override void OnStart()
         {
+            EventSystem._.OnConfigUpdate += OnConfigUpdate;
             EventSystem._.OnPlayerDie += OnPlayerDie;
         }
 
         private void OnDestroy()
         {
+            EventSystem._.OnConfigUpdate -= OnConfigUpdate;
             EventSystem._.OnPlayerDie -= OnPlayerDie;
         }
 
         protected override void OnLink()
         {
             LoadData();
-            InitMap(MapSystem.GenerateId("Void", "Xveon"), new[]
+            InitMap(MapSystem.GenerateId(_cfgStartingMap, "Xveon"), new[]
             {
                 new BsPlayer(PlayerType.Local1, "Player 1", new Color(1f, .5f, 0f)),
                 new BsPlayer(PlayerType.Local2, "Player 2", new Color(0f, .5f, 1f))
@@ -62,27 +71,44 @@ namespace Core
             }
 
             // Load custom maps
-            MapSystem._.RegisterMaps(ResourceSystem._.LoadFolder("Maps").Select(BsMap.FromLcs));
+            if (_cfgEnableCustomMaps)
+            {
+                MapSystem._.RegisterMaps(ResourceSystem._.LoadFolder("Maps").Select(BsMap.FromLcs));
+            }
 
             // Generate box maps
-            var shapes = new[] { 0b1000, 0b1011, 0b1111, 0b1100 };
-            var sizes = new[] { new Vector2(20f, 10f), new Vector2(40f, 20f), new Vector2(80f, 40f) };
-            for (var i = 0; i < shapes.Length; i++) for (var j = 0; j < sizes.Length; j++)
+            if (_cfgEnableBoxMaps)
             {
-                MapSystem._.RegisterMap(MapGenerator.Box($"Box {i * sizes.Length + j + 1}", shapes[i], sizes[j]));
+                var shapes = new[] { 0b1000, 0b1011, 0b1111, 0b1100 };
+                var sizes = new[] { new Vector2(20f, 10f), new Vector2(40f, 20f), new Vector2(80f, 40f) };
+                for (var i = 0; i < shapes.Length; i++) for (var j = 0; j < sizes.Length; j++)
+                {
+                    MapSystem._.RegisterMap(MapGenerator.Box($"Box {i * sizes.Length + j + 1}", shapes[i], sizes[j]));
+                }
             }
 
             // Generate platformer maps
-            const int variantCount = 5;
-            for (var i = 1; i < variantCount + 1; i++)
+            if (_cfgEnablePlatformerMaps)
             {
-                MapSystem._.RegisterMap(MapGenerator.Platformer($"Platformer {i}", 50f + i * 50f,
-                    (uint)(i * 0x69), i < variantCount ? $"Platformer {i + 1}" : ""));
+                const int variantCount = 5;
+                for (var i = 1; i < variantCount + 1; i++)
+                {
+                    MapSystem._.RegisterMap(MapGenerator.Platformer($"Platformer {i}", 50f + i * 50f,
+                        (uint)(i * 0x69), i < variantCount ? $"Platformer {i + 1}" : ""));
+                }
             }
 
-            // TODO: GENERATE TERRAIN MAPS
+            // Generate terrain maps
+            if (_cfgEnableTerrainMaps)
+            {
+                // TODO: GENERATE TERRAIN MAPS
+            }
 
-            // TODO: GENERATE MAZE MAPS
+            // Generate maze maps
+            if (_cfgEnableMazeMaps)
+            {
+                // TODO: GENERATE MAZE MAPS
+            }
         }
 
         public bool StartRound(uint mapId)
@@ -155,6 +181,17 @@ namespace Core
         }
 
         // Event functions
+        private void OnConfigUpdate(ConfigList cfg)
+        {
+            var sec = cfg["gmmgr"];
+            _cfgStartingMap = (string)sec["start"];
+            _cfgEnableCustomMaps = (bool)sec["encst"];
+            _cfgEnableBoxMaps = (bool)sec["enbox"];
+            _cfgEnablePlatformerMaps = (bool)sec["enptf"];
+            _cfgEnableTerrainMaps = (bool)sec["entrn"];
+            _cfgEnableMazeMaps = (bool)sec["enmaz"];
+        }
+
         private void OnPlayerDie(BsMap map, BsPlayer player)
         {
             if (_mapChangeActive) return;

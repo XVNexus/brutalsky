@@ -134,7 +134,7 @@ namespace Controllers.Gui
             {
                 case Tags.ShapePrefix:
                     var shape = (BsShape)obj;
-                    PaintObjectPreview(painter, shape.Transform, shape.Form.ToFillPoints(shape.Transform.Rotation),
+                    PaintObjectPreview(painter, shape.Transform, shape.Form.ToPoints(shape.Transform.Rotation),
                         shape.Color * map.LightingTint);
                     break;
                 case Tags.PoolPrefix:

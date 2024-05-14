@@ -146,12 +146,7 @@ namespace Utils.Shape
             return result;
         }
 
-        public static Form Invalid()
-        {
-            return Star(10, 100f, 1f);
-        }
-
-        public Vector2[] ToFillPoints(float rotation)
+        public Vector2[] ToPoints(float rotation)
         {
             var result = new List<Vector2>{MathfExt.RotateVector(StartNode.EndPoint, rotation)};
             var currentNode = StartNode.Next;
@@ -165,17 +160,6 @@ namespace Utils.Shape
                 currentNode = currentNode.Next;
             }
             if (result[^1] == result[0]) result.RemoveAt(result.Count - 1);
-            return result.ToArray();
-        }
-
-        public Vector2[] ToStrokePoints(float rotation, float width)
-        {
-            var result = new List<Vector2>();
-            var fillPoints = ToFillPoints(rotation);
-            foreach (var point in fillPoints)
-            {
-                // TODO: CONNECT THE DOTS
-            }
             return result.ToArray();
         }
     }

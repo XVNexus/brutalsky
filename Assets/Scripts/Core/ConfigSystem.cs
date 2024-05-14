@@ -37,7 +37,10 @@ namespace Core
                 }
                 List.AddSection(section);
             }
+        }
 
+        protected override void OnLoad()
+        {
             // Load existing config if available and resave to disk
             if (ResourceSystem._.HasFile("Config", "Options"))
             {
@@ -47,19 +50,10 @@ namespace Core
         }
 
         // System functions
-        public object this[string sectionId, string optionId]
-        {
-            get => List.GetSection(sectionId).GetOption(optionId).Value;
-            set
-            {
-                var option = List.GetSection(sectionId).GetOption(optionId);
-                option.Value = value;
-            }
-        }
-
         public void SaveToFile()
         {
             ResourceSystem._.SaveFile("Config", "Options", List.ToLcs(), saveFormat);
+            EventSystem._.EmitConfigUpdate(List);
         }
 
         public void LoadFromFile()

@@ -443,7 +443,7 @@ namespace Utils.Lcs
                         FormType.Ellipse => Form.Ellipse(parts[0], parts[1]),
                         FormType.Ngon => Form.Ngon(Mathf.RoundToInt(parts[0]), parts[1]),
                         FormType.Star => Form.Star(Mathf.RoundToInt(parts[0]), parts[1], parts[2]),
-                        _ => Form.Invalid()
+                        _ => throw Errors.InvalidItem("form type", type)
                     };
                 },
                 value => ((Form)value).Args.Aggregate(value.ToString(),
@@ -463,7 +463,7 @@ namespace Utils.Lcs
                         FormType.Ellipse => Form.Ellipse(args[0], args[1]),
                         FormType.Ngon => Form.Ngon((int)args[0], args[1]),
                         FormType.Star => Form.Star((int)args[0], args[1], args[2]),
-                        _ => Form.Invalid()
+                        _ => throw Errors.InvalidItem("form type", type)
                     };
                 });
         }

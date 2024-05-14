@@ -4,6 +4,7 @@ using Brutalsky.Object;
 using Controllers.Base;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Utils.Config;
 
 namespace Core
 {
@@ -28,6 +29,9 @@ namespace Core
         }
 
         // Event functions
+        public void EmitConfigUpdate(ConfigList cfg) => OnConfigUpdate?.Invoke(cfg);
+        public event Action<ConfigList> OnConfigUpdate;
+
         public void EmitPlayerSpawn(BsMap map, BsPlayer player, Vector2 position, bool visble)
             => OnPlayerSpawn?.Invoke(map, player, position, visble);
         public event Action<BsMap, BsPlayer, Vector2, bool> OnPlayerSpawn;

@@ -1,5 +1,6 @@
 using Controllers.Base;
 using UnityEngine;
+using Utils.Config;
 
 namespace Core
 {
@@ -10,7 +11,7 @@ namespace Core
         private void Awake() => _ = this;
 
         // Config options
-        public int maxFps;
+        private int _cfgMaxFps;
 
         // Local variables
         private bool _userPaused;
@@ -20,7 +21,12 @@ namespace Core
         // Init functions
         protected override void OnStart()
         {
-            Application.targetFrameRate = maxFps;
+            EventSystem._.OnConfigUpdate += OnConfigUpdate;
+        }
+
+        private void OnDestroy()
+        {
+            EventSystem._.OnConfigUpdate -= OnConfigUpdate;
         }
 
         // System functions
@@ -59,6 +65,15 @@ namespace Core
         public void UpdateTimeScale()
         {
             Time.timeScale = (_forcePauseActive ? _forcePaused : _userPaused) ? 0f : 1f;
+        }
+
+        // Event functions
+        private void OnConfigUpdate(ConfigList cfg)
+        {
+            var sec = cfg["tmsys"];
+            _cfgMaxFps = (int)sec["mxfps"];
+
+            Application.targetFrameRate = _cfgMaxFps;
         }
     }
 }

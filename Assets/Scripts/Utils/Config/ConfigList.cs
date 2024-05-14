@@ -18,6 +18,17 @@ namespace Utils.Config
             }
         }
 
+        public ConfigSection this[string sectionId]
+        {
+            get => GetSection(sectionId);
+        }
+
+        public object this[string sectionId, string optionId]
+        {
+            get => GetSection(sectionId).GetOption(optionId).Value;
+            set => GetSection(sectionId).GetOption(optionId).Value = value;
+        }
+
         public ConfigSection GetSection(string id)
         {
             return ContainsSection(id) ? Sections[id] : throw Errors.NoItemFound("config section", id);
