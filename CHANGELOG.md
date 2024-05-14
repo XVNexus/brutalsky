@@ -11,7 +11,6 @@
 - simplified tags for lcs signed integer types
 
 #### FIXED
-- input system shut down when the game was paused
 - player input on one keyboard got shut off for one frame when a button was pressed on another keyboard
 
 
