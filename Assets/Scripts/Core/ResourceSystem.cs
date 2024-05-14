@@ -1,15 +1,12 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using Brutalsky;
 using Brutalsky.Addon;
 using Brutalsky.Base;
 using Brutalsky.Object;
 using Controllers.Base;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Utils.Constants;
 using Utils.Lcs;
 using Random = Unity.Mathematics.Random;
@@ -53,6 +50,12 @@ namespace Core
         public GameObject pGoal;
         public Material aLitMaterial;
         public Material aUnlitMaterial;
+
+        // Init functions
+        protected override void OnStart()
+        {
+            _formatExtensions = new[] { stringExtension, binaryExtension, gzipExtension };
+        }
 
         // System functions
         public static BsObject GetTemplateObject(string tag)

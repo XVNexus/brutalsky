@@ -131,8 +131,8 @@ namespace Core
         private void OnConfigUpdate(ConfigList cfg)
         {
             var sec = cfg["cmsys"];
-            _cfgShakeScale = (float)sec["shake"];
-            _cfgEnableBloom = (bool)sec["bloom"];
+            _cfgShakeScale = (float)sec["shake"].Value;
+            _cfgEnableBloom = (bool)sec["bloom"].Value;
 
             cVolume.sharedProfile.components.Find(component => component.name == "Bloom").active = _cfgEnableBloom;
         }

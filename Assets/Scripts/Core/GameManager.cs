@@ -47,7 +47,7 @@ namespace Core
 
         protected override void OnLink()
         {
-            LoadData();
+            LoadMaps();
             InitMap(MapSystem.GenerateId(_cfgStartingMap, "Xveon"), new[]
             {
                 new BsPlayer(PlayerType.Local1, "Player 1", new Color(1f, .5f, 0f)),
@@ -56,7 +56,7 @@ namespace Core
         }
 
         // System functions
-        public void LoadData()
+        public void LoadMaps()
         {
             // Clear any previously loaded maps
             if (MapSystem._.MapList.Count > 0)
@@ -184,12 +184,12 @@ namespace Core
         private void OnConfigUpdate(ConfigList cfg)
         {
             var sec = cfg["gmmgr"];
-            _cfgStartingMap = (string)sec["start"];
-            _cfgEnableCustomMaps = (bool)sec["encst"];
-            _cfgEnableBoxMaps = (bool)sec["enbox"];
-            _cfgEnablePlatformerMaps = (bool)sec["enptf"];
-            _cfgEnableTerrainMaps = (bool)sec["entrn"];
-            _cfgEnableMazeMaps = (bool)sec["enmaz"];
+            _cfgStartingMap = (string)sec["start"].Value;
+            _cfgEnableCustomMaps = (bool)sec["encst"].Value;
+            _cfgEnableBoxMaps = (bool)sec["enbox"].Value;
+            _cfgEnablePlatformerMaps = (bool)sec["enptf"].Value;
+            _cfgEnableTerrainMaps = (bool)sec["entrn"].Value;
+            _cfgEnableMazeMaps = (bool)sec["enmaz"].Value;
         }
 
         private void OnPlayerDie(BsMap map, BsPlayer player)

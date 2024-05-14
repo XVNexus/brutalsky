@@ -71,7 +71,7 @@ namespace Core
         private void OnConfigUpdate(ConfigList cfg)
         {
             var sec = cfg["tmsys"];
-            _cfgMaxFps = (int)sec["mxfps"];
+            _cfgMaxFps = (int)sec["mxfps"].Value;
 
             Application.targetFrameRate = _cfgMaxFps;
         }

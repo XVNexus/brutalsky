@@ -17,7 +17,7 @@ namespace Core
 
         // Exposed properties
         public ConfigList List { get; private set; }
-        public Dictionary<string, string> NameTable { get; } = new();
+        public Dictionary<(string, string), string> NameTable { get; } = new();
 
         // Init functions
         protected override void OnStart()
@@ -27,12 +27,12 @@ namespace Core
             foreach (var sectionBlueprint in blueprints)
             {
                 var section = new ConfigSection(sectionBlueprint.id);
-                NameTable[section.Id] = sectionBlueprint.name;
+                NameTable[(section.Id, "")] = sectionBlueprint.name;
                 foreach (var optionBlueprint in sectionBlueprint.options)
                 {
                     var option = new ConfigOption(optionBlueprint.id, optionBlueprint.type,
                         LcsInfo.TypeTable[optionBlueprint.type].FromStr(optionBlueprint.value));
-                    NameTable[$"{section.Id}.{option.Id}"] = optionBlueprint.name;
+                    NameTable[(section.Id, option.Id)] = optionBlueprint.name;
                     section.AddOption(option);
                 }
                 List.AddSection(section);
@@ -44,19 +44,19 @@ namespace Core
             // Load existing config if available and resave to disk
             if (ResourceSystem._.HasFile("Config", "Options"))
             {
-                LoadFromFile();
+                LoadFile();
             }
-            SaveToFile();
+            SaveFile();
         }
 
         // System functions
-        public void SaveToFile()
+        public void SaveFile()
         {
             ResourceSystem._.SaveFile("Config", "Options", List.ToLcs(), saveFormat);
             EventSystem._.EmitConfigUpdate(List);
         }
 
-        public void LoadFromFile()
+        public void LoadFile()
         {
             var loadedList = ConfigList.FromLcs(ResourceSystem._.LoadFile("Config", "Options"));
             foreach (var loadedSection in loadedList.Sections.Values)

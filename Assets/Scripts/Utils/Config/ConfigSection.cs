@@ -26,10 +26,9 @@ namespace Utils.Config
             Options = new Dictionary<string, ConfigOption>();
         }
 
-        public object this[string optionId]
+        public ConfigOption this[string optionId]
         {
-            get => GetOption(optionId).Value;
-            set => GetOption(optionId).Value = value;
+            get => GetOption(optionId);
         }
 
         public ConfigOption GetOption(string id)

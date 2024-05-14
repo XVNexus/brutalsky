@@ -60,6 +60,18 @@
     border-left-color: rgba(0, 0, 0, 0.2);
 }
 
+.bs-list > * > * > #unity-content-container {
+    width: 100%;
+    flex-direction: column;
+    flex-wrap: nowrap;
+}
+
+.bs-grid > * > * > #unity-content-container {
+    width: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
 .bs-title {
     -unity-font-style: bold;
     font-size: 125%;
@@ -96,38 +108,27 @@
     width: 100%;
 }
 
-.bs-grid {
-    width: 100%;
-    flex-direction: row;
-    flex-wrap: wrap;
-}
-
-.bs-grid > * > * > #unity-content-container {
-    width: 100%;
-    flex-direction: row;
-    flex-wrap: wrap;
-}
-
-.bs-cell {
-}
-
 .bs-label {
     height: 40px;
-    width: 100%;
+    flex-grow: 1;
+    flex-basis: 1%;
+    margin-top: 1px;
+    margin-right: 1px;
+    margin-bottom: 1px;
+    margin-left: 1px;
 }
 
 .bs-button {
     flex-grow: 1;
     flex-basis: 1%;
-    height: 40px;
     margin-top: 1px;
     margin-right: 1px;
     margin-bottom: 1px;
     margin-left: 1px;
     background-color: rgba(255, 255, 255, 0.02);
-    width: 100%;
     border-top-color: rgba(0, 0, 0, 0.2);
     border-bottom-color: rgba(255, 255, 255, 0.2);
+    height: 40px;
 }
 
 .bs-button:focus {
@@ -149,6 +150,36 @@
     border-top-width: 5px;
     border-bottom-width: 0;
     font-size: 110%;
+}
+
+.bs-text {
+    flex-grow: 1;
+    flex-basis: 1%;
+    margin-top: 1px;
+    margin-right: 1px;
+    margin-bottom: 1px;
+    margin-left: 1px;
+    background-color: rgba(255, 255, 255, 0.02);
+    border-top-color: rgba(0, 0, 0, 0.2);
+    border-bottom-color: rgba(255, 255, 255, 0.2);
+    height: 40px;
+}
+
+.bs-text > Label {
+    display: none;
+}
+
+.bs-text > #unity-text-input {
+    border-top-width: 0;
+    border-right-width: 0;
+    border-bottom-width: 0;
+    border-left-width: 0;
+    color: rgb(255, 255, 255);
+    background-color: rgba(0, 0, 0, 0);
+    margin-top: 0;
+    margin-right: 0;
+    margin-bottom: 0;
+    margin-left: 0;
 }
 
 .bs-spacer {
@@ -178,7 +209,7 @@
     background-color: rgba(255, 255, 255, 0.02);
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
-    transition-duration: 50ms;
+    transition-duration: 100ms;
     transition-timing-function: ease-out-sine;
 }
 
@@ -195,7 +226,7 @@
     background-color: rgba(255, 255, 255, 0.02);
     border-bottom-right-radius: 5px;
     border-bottom-left-radius: 5px;
-    transition-duration: 50ms;
+    transition-duration: 100ms;
     transition-timing-function: ease-out-sine;
 }
 
@@ -220,7 +251,7 @@
     left: 5px;
     width: 20px;
     background-color: rgba(255, 255, 255, 0.1);
-    transition-duration: 50ms;
+    transition-duration: 100ms;
     transition-timing-function: ease-out-sine;
 }
 

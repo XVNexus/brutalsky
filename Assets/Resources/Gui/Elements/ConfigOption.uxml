@@ -1,0 +1,7 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/Resources/Gui/Theme.uss?fileID=7433441132597879392&amp;guid=6528c61135849952387c3681c08489c6&amp;type=3#Theme" />
+    <ui:GroupBox name="row" class="bs bs-row">
+        <ui:Label tabindex="-1" text="Label" parse-escape-sequences="true" display-tooltip-when-elided="true" name="title" class="bs bs-label" style="-unity-text-align: middle-left; padding-left: 10px;" />
+        <ui:TextField picking-mode="Ignore" label="Text Field" value="filler text" name="value" focusable="false" class="bs bs-text" style="flex-grow: 2;" />
+    </ui:GroupBox>
+</ui:UXML>

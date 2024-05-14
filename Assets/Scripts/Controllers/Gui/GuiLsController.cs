@@ -23,7 +23,7 @@ namespace Controllers.Gui
         private readonly List<string> _loadMapButtons = new();
 
         // External references
-        private VisualTreeAsset _eMapTileCell;
+        private VisualTreeAsset _eMapTile;
 
         // Init functions
         protected override void OnStart()
@@ -40,7 +40,7 @@ namespace Controllers.Gui
 
         protected override void OnLoad()
         {
-            _eMapTileCell = Resources.Load<VisualTreeAsset>("Gui/Elements/MapTile");
+            _eMapTile = Resources.Load<VisualTreeAsset>("Gui/Elements/MapTile");
 
             GuiSystem._.RegisterPane(PaneId, this, GuiPmController.PaneId);
             GuiSystem._.RegisterButton(PaneId, "back", () =>
@@ -56,20 +56,19 @@ namespace Controllers.Gui
             });
             GuiSystem._.RegisterButton(PaneId, "reld", () =>
             {
-                GameManager._.LoadData();
+                GameManager._.LoadMaps();
             });
         }
 
-        // Gui functions
+        // Module functions
         private void AddMapTile(BsMap map)
         {
             // Create new map tile element
             var mapTileBox = new VisualElement();
             mapTileBox.AddToClassList("bs");
             mapTileBox.AddToClassList("bs-box");
-            var mapTileCell = _eMapTileCell.Instantiate();
-            mapTileCell.AddToClassList("bs");
-            mapTileCell.AddToClassList("bs-cell");
+            var mapTileCell = _eMapTile.Instantiate();
+            mapTileBox.Add(mapTileCell);
 
             // Register load map button
             mapTileCell.Q<Label>("title").text = $"<b>{map.Title}</b>\n{map.Author}";
@@ -89,7 +88,6 @@ namespace Controllers.Gui
             mapTileCell.Q<VisualElement>("preview").style.backgroundImage = new StyleBackground(preview.Print());
 
             // Add map tile to map picker view
-            mapTileBox.Add(mapTileCell);
             var mapTileContainer = GuiSystem._.GetPane(PaneId).Element.Q<VisualElement>("unity-content-container");
             mapTileContainer.Add(mapTileBox);
         }
