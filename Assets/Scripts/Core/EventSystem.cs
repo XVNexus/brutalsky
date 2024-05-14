@@ -27,13 +27,6 @@ namespace Core
             return result;
         }
 
-        public InputAction SetInputAction(string mapId, string actionId, Action<InputAction.CallbackContext> callback)
-        {
-            var action = GetInputAction(mapId, actionId);
-            action.performed += callback;
-            return action;
-        }
-
         // Event functions
         public void EmitPlayerSpawn(BsMap map, BsPlayer player, Vector2 position, bool visble)
             => OnPlayerSpawn?.Invoke(map, player, position, visble);

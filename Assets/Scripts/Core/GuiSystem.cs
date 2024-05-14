@@ -1,9 +1,11 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Controllers.Base;
 using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 using Utils.Constants;
 using Utils.Gui;
@@ -35,7 +37,7 @@ namespace Core
             _root = cUIDocument.rootVisualElement;
             _panes[""] = new GuiPane("", _root, this, true);
 
-            EventSystem._.SetInputAction("Gui", "Escape", _ => EscapeOne());
+            EventSystem._.GetInputAction("Gui", "Escape").performed += _ => EscapeOne();
         }
 
         // System functions
