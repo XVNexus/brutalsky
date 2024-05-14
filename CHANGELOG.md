@@ -1,3 +1,20 @@
+## *Nightly 2024.05.13*
+
+#### ADDED
+- controls for player 2
+
+#### CHANGED
+- updated car on car map to have larger wheels and more ground clearance
+- decreased maximum movement speed of players
+- increased speed required for player boost particles to show
+- made map background affected by player lights again
+- simplified tags for lcs signed integer types
+
+#### FIXED
+- input system shut down when the game was paused
+- player input on one keyboard got shut off for one frame when a button was pressed on another keyboard
+
+
 ## *Nightly 2024.05.12*
 
 #### CHANGED
