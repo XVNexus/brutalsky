@@ -1,3 +1,21 @@
+## *Nightly 2024.05.14*
+
+#### ADDED
+- config system with basic graphics and gameplay settings
+- ui page for changing settings on the config system
+- in-game guide (copied from readme page on github)
+
+#### CHANGED
+- limited player acceleration due to ground friction to 2x
+- added shockwave to death explosion
+- increased camera shake on death explosion
+- player health indicator now uses exponential interpolation instead of linear interpolation
+- lowered speed threshold for boost particles
+
+#### FIXED
+- lcs string files contained excessive property separators
+
+
 ## *Nightly 2024.05.13*
 
 #### ADDED
@@ -5,6 +23,7 @@
 
 #### CHANGED
 - updated car on car map to have larger wheels and more ground clearance
+- players now accelerate on the ground proportional to the surface friction
 - decreased maximum movement speed of players
 - increased speed required for player boost particles to show
 - made map background affected by player lights again
