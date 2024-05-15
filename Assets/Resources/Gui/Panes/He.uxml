@@ -2,9 +2,28 @@
     <Style src="project://database/Assets/Resources/Gui/Theme.uss?fileID=7433441132597879392&amp;guid=6528c61135849952387c3681c08489c6&amp;type=3#Theme" />
     <ui:VisualElement class="bs bs-pane" style="width: 80%; height: 80%;">
         <ui:Label tabindex="-1" text="GUIDE" parse-escape-sequences="true" display-tooltip-when-elided="true" class="bs bs-title" />
-        <ui:GroupBox class="bs bs-spacer">
-            <ui:Label tabindex="-1" text="idk lol" parse-escape-sequences="true" display-tooltip-when-elided="true" />
-        </ui:GroupBox>
+        <ui:ScrollView class="bs bs-list bs-spacer" style="margin-right: 10%; margin-left: 10%;">
+            <ui:GroupBox class="bs bs-spacer">
+                <ui:Label tabindex="-1" text="Chaotic Combat" parse-escape-sequences="true" display-tooltip-when-elided="true" style="-unity-font-style: bold;" />
+                <ui:Label tabindex="-1" text="Take control of a powerful radioactive sphere. Use the arrow keys to roll and jump. Press and hold the spacebar to build up energy, and release to multiply your speed and fly through the air. Ram into your opponents to damage and weaken their containment shield. Don&apos;t let your containment shield get too thin!" parse-escape-sequences="true" display-tooltip-when-elided="true" style="white-space: normal;" />
+            </ui:GroupBox>
+            <ui:GroupBox class="bs bs-spacer">
+                <ui:Label tabindex="-1" text="Magnificent Maps" parse-escape-sequences="true" display-tooltip-when-elided="true" style="-unity-font-style: bold;" />
+                <ui:Label tabindex="-1" text="Maps are the main element of Brutalsky. Each map is a unique play area with it&apos;s own layout, obstacles, and special interactions. Add walls, movable boxes, and pools of lava. Use joints to create balance beams, elevators, or deadly gears. Use the map editor to create the world of your dreams!" parse-escape-sequences="true" display-tooltip-when-elided="true" style="white-space: normal;" />
+            </ui:GroupBox>
+            <ui:GroupBox class="bs bs-spacer">
+                <ui:Label tabindex="-1" text="Superpowered Simulation" parse-escape-sequences="true" display-tooltip-when-elided="true" style="-unity-font-style: bold;" />
+                <ui:Label tabindex="-1" text="Brutalsky uses the full power of Unity&apos;s 2D physics engine. Build intriciate mazes with traps and obstacles, duel in zero-gravity arenas with killer sawblades, drive war mechs in an apocalyptic city, your imagination is the limit!" parse-escape-sequences="true" display-tooltip-when-elided="true" style="white-space: normal;" />
+            </ui:GroupBox>
+            <ui:GroupBox class="bs bs-spacer">
+                <ui:Label tabindex="-1" text="Mathematical Madness" parse-escape-sequences="true" display-tooltip-when-elided="true" style="-unity-font-style: bold;" />
+                <ui:Label tabindex="-1" text="Add triggers to detect players going where they shouldn&apos;t go. Build a controllable claw machine using mounts. Use the logic system to make fun special effects, proximity activated traps, or even fully controllable vehicles!" parse-escape-sequences="true" display-tooltip-when-elided="true" style="white-space: normal;" />
+            </ui:GroupBox>
+            <ui:GroupBox class="bs bs-spacer">
+                <ui:Label tabindex="-1" text="Limitless Levels" parse-escape-sequences="true" display-tooltip-when-elided="true" style="-unity-font-style: bold;" />
+                <ui:Label tabindex="-1" text="Why limit yourself to one screen? If your map is too large, the camera will zoom in and follow the players. Create a map as large as you like, and Brutalsky will handle the rest!" parse-escape-sequences="true" display-tooltip-when-elided="true" style="white-space: normal;" />
+            </ui:GroupBox>
+        </ui:ScrollView>
         <ui:GroupBox class="bs bs-box">
             <ui:GroupBox class="bs bs-row">
                 <ui:Button text="Back" parse-escape-sequences="true" display-tooltip-when-elided="true" name="he-btn-back" class="bs bs-button" style="color: rgb(128, 255, 128);" />
