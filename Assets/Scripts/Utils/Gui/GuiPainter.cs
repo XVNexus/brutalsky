@@ -84,7 +84,7 @@ namespace Utils.Gui
 
         public void Start(float x, float y)
         {
-            Start(MakePoint(x, y));
+            Start(new Vector2(x, y));
         }
 
         public void Start(Vector2 point)
@@ -95,7 +95,7 @@ namespace Utils.Gui
 
         public void Move(float x, float y)
         {
-            Move(MakePoint(x, y));
+            Move(new Vector2(x, y));
         }
 
         public void Move(Vector2 point)
@@ -105,7 +105,7 @@ namespace Utils.Gui
 
         public void Line(float x, float y)
         {
-            Line(MakePoint(x, y));
+            Line(new Vector2(x, y));
         }
 
         public void Line(Vector2 point)
@@ -115,7 +115,7 @@ namespace Utils.Gui
 
         public void Arc(float a, float b, float x, float y, float r)
         {
-            Arc(MakePoint(a, b), MakePoint(x, y), r);
+            Arc(new Vector2(a, b), new Vector2(x, y), r);
         }
 
         public void Arc(Vector2 control, Vector2 point, float radius)
@@ -125,7 +125,7 @@ namespace Utils.Gui
 
         public void Quadratic(float a, float b, float x, float y)
         {
-            Quadratic(MakePoint(a, b), MakePoint(x, y));
+            Quadratic(new Vector2(a, b), new Vector2(x, y));
         }
 
         public void Quadratic(Vector2 control, Vector2 point)
@@ -135,7 +135,7 @@ namespace Utils.Gui
 
         public void Bezier(float a, float b, float c, float d, float x, float y)
         {
-            Bezier(MakePoint(a, b), MakePoint(c, d), MakePoint(x, y));
+            Bezier(new Vector2(a, b), new Vector2(c, d), new Vector2(x, y));
         }
 
         public void Bezier(Vector2 control1, Vector2 control2, Vector2 point)
