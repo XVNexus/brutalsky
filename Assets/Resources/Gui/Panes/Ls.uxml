@@ -1,24 +1,13 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <ui:Template name="MapTile" src="project://database/Assets/Resources/Gui/Elements/MapTile.uxml?fileID=9197481963319205126&amp;guid=ef37a8ef635839925bf01f87f25c397e&amp;type=3#MapTile" />
     <Style src="project://database/Assets/Resources/Gui/Theme.uss?fileID=7433441132597879392&amp;guid=6528c61135849952387c3681c08489c6&amp;type=3#Theme" />
     <ui:VisualElement class="bs bs-pane" style="width: 90%; height: 90%;">
         <ui:Label tabindex="-1" text="SELECT LEVEL" parse-escape-sequences="true" display-tooltip-when-elided="true" class="bs bs-title" />
-        <ui:ScrollView class="bs bs-grid bs-spacer">
-            <ui:GroupBox class="bs bs-box">
-                <ui:Instance template="MapTile" name="MapTile" />
-            </ui:GroupBox>
-            <ui:GroupBox class="bs bs-box">
-                <ui:Instance template="MapTile" name="MapTile" />
-            </ui:GroupBox>
-            <ui:GroupBox class="bs bs-box">
-                <ui:Instance template="MapTile" name="MapTile" />
-            </ui:GroupBox>
-        </ui:ScrollView>
+        <ui:ScrollView class="bs bs-grid bs-spacer" />
         <ui:GroupBox class="bs bs-box">
             <ui:GroupBox class="bs bs-row">
-                <ui:Button text="Back" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ls-btn-back" focusable="false" class="bs bs-button" style="color: rgb(128, 255, 128); border-top-right-radius: 0; border-bottom-right-radius: 0;" />
-                <ui:Button text="Restart Fight" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ls-btn-rest" focusable="false" class="bs bs-button" style="color: rgb(128, 255, 255); border-top-left-radius: 0; border-bottom-left-radius: 0; flex-grow: 2; border-top-right-radius: 0; border-bottom-right-radius: 0;" />
-                <ui:Button text="Reload Data" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ls-btn-reld" focusable="false" class="bs bs-button" style="color: rgb(128, 191, 255); border-top-left-radius: 0; border-bottom-left-radius: 0;" />
+                <ui:Button text="Back" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ls-btn-back" class="bs bs-button" style="color: rgb(128, 255, 128); border-top-right-radius: 0; border-bottom-right-radius: 0;" />
+                <ui:Button text="Restart Fight" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ls-btn-rest" class="bs bs-button" style="color: rgb(128, 255, 255); border-top-left-radius: 0; border-bottom-left-radius: 0; flex-grow: 2; border-top-right-radius: 0; border-bottom-right-radius: 0;" />
+                <ui:Button text="Reload Data" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ls-btn-reld" class="bs bs-button" style="color: rgb(128, 191, 255); border-top-left-radius: 0; border-bottom-left-radius: 0;" />
             </ui:GroupBox>
         </ui:GroupBox>
     </ui:VisualElement>

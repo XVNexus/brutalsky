@@ -52,8 +52,6 @@ namespace Controllers.Gui
                     optionField.value = LcsInfo.TypeTable[option.Type].ToStr(option.Value);
                 }
                 ConfigSystem._.SaveFile();
-
-                GuiSystem._.DeactivatePane(PaneId);
             });
             GuiSystem._.RegisterButton(PaneId, "rset", () =>
             {
