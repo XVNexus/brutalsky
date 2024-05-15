@@ -5,9 +5,9 @@ $ fl2: 10 -10 / int: 0
 $ fl2: -10 10 / int: 0
 $ fl2: 10 10 / int: 0
 # str: sh / str: spinner / str:  / str:  / trn: 0 0 0 / lay: Midground / bol: True / for: Star 6 5 3 / mat: 2 0 0 10 0 / bol: True / col: E5E5FFFF / bol: False
-@ str: jn / str: spinner-motor / trn: 0 0 0 / jnt: Hinge / str:  / bol: False / flt: Infinity / flt: Infinity / bol: True / flt: 0 / flt: 1000 / bol: False / flt: 0 / flt: 0
-# str: mn / str: mount-1 / str: sh / str: spinner / trn: 0 10 0 / lay: Midground / bol: True / fl2: 1000 0.3 / fl2: 0 0
-# str: mn / str: mount-2 / str: sh / str: spinner / trn: 0 -10 0 / lay: Midground / bol: True / fl2: 1000 0.3 / fl2: 0 0
+@ str: jn / str: spinner-motor / trn: 0 0 0 / jnt: Hinge / str:  / fl2: 0 0 / bol: False / flt: Infinity / flt: Infinity / bol: True / flt: 0 / flt: 1000 / bol: False / flt: 0 / flt: 0
+# str: mn / str: mount-1 / str: sh / str: spinner / trn: 0 10 0 / lay: Midground / bol: True / fl2: 0 0
+# str: mn / str: mount-2 / str: sh / str: spinner / trn: 0 -10 0 / lay: Midground / bol: True / fl2: 0 0
 % str: madd / int: 2
 % str: bcfl / flt: 500
 % str: mmul / int: 2

@@ -54,16 +54,30 @@
     border-top-right-radius: 20px;
     border-bottom-right-radius: 20px;
     border-bottom-left-radius: 20px;
-    border-top-color: rgb(26, 26, 26);
-    border-bottom-color: rgba(0, 0, 0, 0.3);
-    border-right-color: rgba(0, 0, 0, 0.2);
-    border-left-color: rgba(0, 0, 0, 0.2);
+    border-left-color: rgba(0, 0, 0, 0.25);
+    border-right-color: rgba(0, 0, 0, 0.25);
+    border-top-color: rgba(0, 0, 0, 0.25);
+    border-bottom-color: rgba(0, 0, 0, 0.25);
+}
+
+.bs-list {
+    margin-top: 5px;
+    margin-right: 10%;
+    margin-bottom: 5px;
+    margin-left: 10%;
 }
 
 .bs-list > * > * > #unity-content-container {
     width: 100%;
     flex-direction: column;
     flex-wrap: nowrap;
+}
+
+.bs-grid {
+    margin-top: 5px;
+    margin-right: 10%;
+    margin-bottom: 5px;
+    margin-left: 10%;
 }
 
 .bs-grid > * > * > #unity-content-container {
@@ -76,7 +90,7 @@
     -unity-font-style: bold;
     font-size: 125%;
     color: rgb(255, 170, 0);
-    background-color: rgb(26, 26, 26);
+    background-color: rgb(38, 38, 38);
     margin-top: -10px;
     margin-right: -10px;
     margin-bottom: 6px;
@@ -85,15 +99,9 @@
     border-top-right-radius: 20px;
     border-bottom-right-radius: 0;
     border-bottom-left-radius: 0;
-    border-top-width: 5px;
-    border-right-width: 5px;
     border-bottom-width: 5px;
-    border-left-width: 5px;
-    border-bottom-color: rgb(18, 18, 18);
-    border-top-color: rgb(33, 33, 33);
+    border-bottom-color: rgb(13, 13, 13);
     height: 50px;
-    border-right-color: rgb(31, 31, 31);
-    border-left-color: rgb(31, 31, 31);
 }
 
 .bs-box {

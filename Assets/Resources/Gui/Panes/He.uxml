@@ -2,7 +2,7 @@
     <Style src="project://database/Assets/Resources/Gui/Theme.uss?fileID=7433441132597879392&amp;guid=6528c61135849952387c3681c08489c6&amp;type=3#Theme" />
     <ui:VisualElement class="bs bs-pane" style="width: 80%; height: 80%;">
         <ui:Label tabindex="-1" text="GUIDE" parse-escape-sequences="true" display-tooltip-when-elided="true" class="bs bs-title" />
-        <ui:ScrollView class="bs bs-list bs-spacer" style="margin-right: 10%; margin-left: 10%;">
+        <ui:ScrollView class="bs bs-list bs-spacer">
             <ui:GroupBox class="bs bs-spacer">
                 <ui:Label tabindex="-1" text="Chaotic Combat" parse-escape-sequences="true" display-tooltip-when-elided="true" style="-unity-font-style: bold;" />
                 <ui:Label tabindex="-1" text="Take control of a powerful radioactive sphere. Use the arrow keys to roll and jump. Press and hold the spacebar to build up energy, and release to multiply your speed and fly through the air. Ram into your opponents to damage and weaken their containment shield. Don&apos;t let your containment shield get too thin!" parse-escape-sequences="true" display-tooltip-when-elided="true" style="white-space: normal;" />

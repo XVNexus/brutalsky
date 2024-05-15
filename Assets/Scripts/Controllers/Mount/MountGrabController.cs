@@ -16,6 +16,8 @@ namespace Controllers.Mount
         public override bool IsUnused => !Master.Object.Simulated;
 
         // Config options
+        public float springForce;
+        public float springDamping;
         public float cooldownTime;
         public float indicatorScale;
         public float animationTime;
@@ -28,8 +30,8 @@ namespace Controllers.Mount
         private string _activePlayerId;
         private PlayerInputController _activePlayer;
         private Rigidbody2D _activeRigidbody;
-        private RelativeJoint2D _activeClamp;
         private bool _cooldown;
+        private Vector2 _lastPosition;
 
         // External references
         public GameObject gIndicatorRing;
@@ -51,21 +53,12 @@ namespace Controllers.Mount
         public void GrabPlayer(PlayerInputController player)
         {
             // Set the tracker variables
+            player.autoSendInput = false;
             Active = true;
             _activePlayerId = player.Master.Object.Id;
             _activePlayer = player;
             _activeRigidbody = player.gameObject.GetComponent<Rigidbody2D>();
-
-            // Lock the player to the mount
-            player.autoSendInput = false;
-            _activeClamp = gameObject.AddComponent<RelativeJoint2D>();
-            _activeClamp.connectedBody = _activeRigidbody;
-            _activeClamp.autoConfigureOffset = false;
-            _activeClamp.linearOffset = Vector2.zero;
-            _activeClamp.angularOffset = 0f;
-            _activeClamp.maxForce = Master.Object.GripStrength.x;
-            _activeClamp.maxTorque = 0f;
-            _activeClamp.correctionScale = Master.Object.GripStrength.y;
+            _lastPosition = transform.position;
 
             // Set the indicator ring to the player color and scale
             gIndicatorRing.LeanScale(Vector2.one * indicatorScale, animationTime)
@@ -76,17 +69,13 @@ namespace Controllers.Mount
 
         public void UngrabPlayer()
         {
-            // Reset the logic output
-            Input = Vector2.zero;
-
             // Eject the player from the mount
-            _activePlayer.autoSendInput = true;
-            Destroy(_activeClamp);
-            _activeClamp = null;
+            Input = Vector2.zero;
             _activeRigidbody.AddForce(MathfExt.ToVector(Master.Object.EjectionForce.x * Mathf.Deg2Rad,
                 Master.Object.EjectionForce.y), ForceMode2D.Impulse);
 
             // Reset the tracker variables
+            _activePlayer.autoSendInput = true;
             Active = false;
             _activePlayerId = "";
             _activePlayer = null;
@@ -137,6 +126,14 @@ namespace Controllers.Mount
             // Send player movement input to public variable for use in the logic system
             if (!Active) return;
             Input = _activePlayer.MovementInput;
+
+            // Add force to the player to keep it within the mount
+            var position = (Vector2)transform.position;
+            _activeRigidbody.AddForce((transform.position - _activeRigidbody.transform.position)
+                * springForce, ForceMode2D.Impulse);
+            _activeRigidbody.AddForce(((position - _lastPosition) / Time.fixedDeltaTime - _activeRigidbody.velocity)
+                * springDamping, ForceMode2D.Impulse);
+            _lastPosition = position;
 
             // Ungrab the active player if the boost input is triggered
             if (!_activePlayer.BoostInput) return;

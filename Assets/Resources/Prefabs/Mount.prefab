@@ -122,6 +122,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ce2565933aa41dcbbf8aae7fefe21a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  springForce: 2
+  springDamping: 0.1
   cooldownTime: 1
   indicatorScale: 1.7777778
   animationTime: 0.2

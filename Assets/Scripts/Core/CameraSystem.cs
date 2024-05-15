@@ -178,39 +178,30 @@ namespace Core
             _cCamera.orthographicSize = ViewSize;
 
             // Focus on follow targets
-            if (!_enableFollow) return;
-            Rect targetRect;
-            if (_hasFollowTargets)
+            if (!_enableFollow || !_hasFollowTargets) return;
+            var followPositions = FollowTargets.Values.Select(transform =>
+                MathfExt.Clamp(transform.position, BaseRect)).ToArray();
+            var min = followPositions[0];
+            var max = followPositions[0];
+            for (var i = 1; i < FollowTargets.Count; i++)
             {
-                var followPositions = FollowTargets.Values.Select(transform =>
-                    MathfExt.Clamp(transform.position, BaseRect)).ToArray();
-                var min = followPositions[0];
-                var max = followPositions[0];
-                for (var i = 1; i < FollowTargets.Count; i++)
-                {
-                    var target = followPositions[i];
-                    min = MathfExt.Min(target, min);
-                    max = MathfExt.Max(target, max);
-                }
-                var followPosition = MathfExt.Mean(min, max);
-                var followVelocity = (followPosition - _lastFollowPosition) / Time.fixedDeltaTime;
-                _lastFollowPosition = followPosition;
-                var lookAhead = Vector2.zero;
-                var followTargetCount = FollowTargets.Count;
-                // Do not lead the target during teleportation
-                if (followVelocity.magnitude <= 1000f && followTargetCount == _lastFollowTargetCount)
-                {
-                    lookAhead = followVelocity * (followLead.x *
-                        Mathf.Min(followVelocity.magnitude / followLead.y, 1f));
-                }
-                _lastFollowTargetCount = followTargetCount;
-                targetRect = new Rect(followPosition + lookAhead, Vector2.zero).Resize(MathfExt.Min(Vector2.one *
-                    Mathf.Max((max - min).magnitude * followScale, followMinSize), BaseRect.size));
+                var target = followPositions[i];
+                min = MathfExt.Min(target, min);
+                max = MathfExt.Max(target, max);
             }
-            else
+            var followPosition = MathfExt.Mean(min, max);
+            var followVelocity = (followPosition - _lastFollowPosition) / Time.fixedDeltaTime;
+            _lastFollowPosition = followPosition;
+            var lookAhead = Vector2.zero;
+            var followTargetCount = FollowTargets.Count;
+            // Do not lead the target during teleportation
+            if (followVelocity.magnitude <= 1000f && followTargetCount == _lastFollowTargetCount)
             {
-                targetRect = BaseRect;
+                lookAhead = followVelocity * (followLead.x * Mathf.Min(followVelocity.magnitude / followLead.y, 1f));
             }
+            _lastFollowTargetCount = followTargetCount;
+            var targetRect = new Rect(followPosition + lookAhead, Vector2.zero).Resize(MathfExt.Min(Vector2.one *
+                Mathf.Max((max - min).magnitude * followScale, followMinSize), BaseRect.size));
             SetViewRectSmooth(targetRect, followSpeed.x * Time.fixedDeltaTime, followSpeed.y * Time.fixedDeltaTime);
         }
 

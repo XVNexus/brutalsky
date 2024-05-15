@@ -18,14 +18,12 @@ namespace Brutalsky.Object
         public override string Tag => Tags.MountPrefix;
         public override bool HasLogic => true;
 
-        public Vector2 GripStrength { get; set; }
         public Vector2 EjectionForce { get; set; }
 
         public BsMount(string id, ObjectTransform transform, bool simulated,
-            Vector2 gripStrength, Vector2 ejectionForce)
+            Vector2 ejectionForce)
             : base(id, transform, ObjectLayer.Midground, simulated)
         {
-            GripStrength = gripStrength;
             EjectionForce = ejectionForce;
         }
 
@@ -59,15 +57,13 @@ namespace Brutalsky.Object
         {
             return new LcsProp[]
             {
-                new(LcsType.Float2, GripStrength),
                 new(LcsType.Float2, EjectionForce)
             };
         }
 
         protected override void _FromLcs(LcsProp[] props)
         {
-            GripStrength = (Vector2)props[0].Value;
-            EjectionForce = (Vector2)props[1].Value;
+            EjectionForce = (Vector2)props[0].Value;
         }
     }
 }
