@@ -1,3 +1,26 @@
+## *Nightly 2024.05.15*
+
+#### ADDED
+- suspension and body shape for car on car map
+- added beacons to parkour start, platforms, and goal
+- config option to control whether or not to automatically restart the level on last man standing
+- config options to disable player 1 or player 2 if desired
+
+#### CHANGED
+- player mounts now use a less aggressive clamping method because the old method was causing issues with the car
+- improved ui style
+- replaced rectangular parkour platforms with spike platforms
+- increased number of parkour levels from 5 to 12
+- parkour maps now greatly increase in difficulty with each level
+- reduced performance impact of non-simulated objects
+
+#### FIXED
+- spawns were drawn incorrectly in level previews
+- some objects did not respect the simulated setting
+- round restarted any time a player died due to all players being assumed dead at all times
+- multiple copies of the same player could be spawned which caused a lot of second-hand glitches
+
+
 ## *Nightly 2024.05.14*
 
 #### ADDED
