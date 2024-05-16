@@ -1,50 +1,44 @@
 ## *Nightly 2024.05.15*
 
-#### ADDED
-- suspension and body shape for car on car map
-- added beacons to parkour start, platforms, and goal
-- config option to control whether or not to automatically restart the level on last man standing
-- config options to disable player 1 or player 2 if desired
-
-#### CHANGED
-- player mounts now use a less aggressive clamping method because the old method was causing issues with the car
-- improved ui style
-- replaced rectangular parkour platforms with spike platforms
+#### UPDATES
 - increased number of parkour levels from 5 to 12
 - parkour maps now greatly increase in difficulty with each level
+- replaced rectangular parkour platforms with spike platforms
+- added beacons to parkour start, platforms, and goal
+- added suspension and body shape for car on car map
+- added config option to control whether or not to automatically restart the level on last man standing
+- added config options to disable player 1 or player 2 if desired
+- player mounts now use a less aggressive clamping method because the old method was causing issues with the car
+- improved ui style
 - reduced performance impact of non-simulated objects
 
-#### FIXED
-- spawns were drawn incorrectly in level previews
-- some objects did not respect the simulated setting
+#### BUGFIXES
 - round restarted any time a player died due to all players being assumed dead at all times
 - multiple copies of the same player could be spawned which caused a lot of second-hand glitches
+- spawns were drawn incorrectly in level previews
+- some objects did not respect the simulated setting
 
 
 ## *Nightly 2024.05.14*
 
-#### ADDED
-- config system with basic graphics and gameplay settings
-- ui page for changing settings on the config system
-- in-game guide (copied from readme page on github)
-
-#### CHANGED
+#### UPDATES
+- added config system with basic graphics and gameplay settings
+- added ui page for changing settings on the config system
+- added in-game guide (copied from readme page on github)
 - limited player acceleration due to ground friction to 2x
 - added shockwave to death explosion
 - increased camera shake on death explosion
 - player health indicator now uses exponential interpolation instead of linear interpolation
 - lowered speed threshold for boost particles
 
-#### FIXED
+#### BUGFIXES
 - lcs string files contained excessive property separators
 
 
 ## *Nightly 2024.05.13*
 
-#### ADDED
-- controls for player 2
-
-#### CHANGED
+#### UPDATES
+- added controls for player 2
 - updated car on car map to have larger wheels and more ground clearance
 - players now accelerate on the ground proportional to the surface friction
 - decreased maximum movement speed of players
@@ -52,13 +46,13 @@
 - made map background affected by player lights again
 - simplified tags for lcs signed integer types
 
-#### FIXED
+#### BUGFIXES
 - player input on one keyboard got shut off for one frame when a button was pressed on another keyboard
 
 
 ## *Nightly 2024.05.12*
 
-#### CHANGED
+#### UPDATES
 - limited size of followcam view to size of map
 - camera no longer follows targets outside of map bounds
 - map background no longer reacts to player lights
@@ -68,34 +62,30 @@
 
 ## *Nightly 2024.05.11*
 
-#### ADDED
-- new default map with a working car that has a driver and passenger mount
-- checkerboard background with 1x1 and 10x10 meter squares for all maps to visualize movement better
-
-#### CHANGED
+#### UPDATES
+- added new default map with a working car that has a driver and passenger mount
+- added checkerboard background with 1x1 and 10x10 meter squares for all maps to visualize movement better
 - increased map size limit to 2.5 kilometers
 - decreased size of void map to 250x250 meters
 - slightly changed ui pane title border colors
 - logic nodes for joints no longer continually output the joint's properties
 
-#### FIXED
+#### BUGFIXES
 - binary lcs parser did not allow strings and shape forms longer than 255 bytes
 
 
 ## *Nightly 2024.05.08*
 
-#### ADDED
-- particle effect for goals, previously known as redirects
-- options for player sensor to select whether or not to output a logic signal for enter, stay, and exit events
-- target leading for followcam so fast moving targets do not leave the frame
-
-#### CHANGED
+#### UPDATES
+- added particle effect for goals, previously known as redirects
+- added options for player sensor to select whether or not to output a logic signal for enter, stay, and exit events
+- added target leading for followcam so fast moving targets do not leave the frame
 - increased size of void map to one square kilometer
 - improved followcam leading algorithm so it doesn't overshoot very fast targets
 - limited map size to one square kilometer
 - made goals their own object instead of a standalone logic node
 
-#### FIXED
+#### BUGFIXES
 - camera did not adapt to screen aspect ratio automatically on maps without followcam
 - followcam jolted when a player died close to another player
 - logic links did not get saved with the map if there were no logic nodes
@@ -103,19 +93,17 @@
 
 ## *Nightly 2024.05.07*
 
-#### ADDED
-- procedurally generated platformer maps that increase in length with each level
-- ejection force option for player mounts
-- load in animation on game start
-
-#### CHANGED
+#### UPDATES
+- added procedurally generated platformer maps that increase in length with each level
 - player mounts now use orthodox physics joints instead of rigid walls and tween animations
 - the camera will now automatically zoom and pan on players on large maps
 - player mounts now allow the player to dismount and stay dismounted without first leaving the mount's hitbox
+- added ejection force option for player mounts
 - map picker menu now sorts maps by default > custom > generated
 - map system now generates maps on the spot instead of generating files and then loading those files back again
+- added load in animation on game start
 
-#### FIXED
+#### BUGFIXES
 - players were immortal while on a player mount
 - smooth cam jolted when changing aspect ratio from horizontal to vertical or vice versa relative to the screen's aspect ratio
 - data folders did not get automatically created on game start
@@ -123,77 +111,69 @@
 
 ## *Nightly 2024.05.06*
 
-#### ADDED
-- ui buttons to restart the current round or refresh the map list from the level selector
+#### UPDATES
+- added ui buttons to restart the current round or refresh the map list from the level selector
 - logic redirect node that switches to a different map when triggered
 - player mounts that grab any nearby player and send their joystick input to the logic system
 - ability to make objects children of other objects which causes them to be welded to their parent
-
-#### CHANGED
 - map loading gracefully fails when encountering bad map data
 
-#### FIXED
+#### BUGFIXES
 - the active map was reloaded from disk instead of reloaded from memory on map restart
 
 
 ## *Nightly 2024.05.05*
 
-#### ADDED
-- compressed binary lcs format
-
-#### CHANGED
-- fight automatically restarts if there is one player remaining
+#### UPDATES
+- round automatically restarts if there is one player remaining
 - maps are now lazy loaded
 - improved level transition to cover up lag spikes caused by loading a new map
 - improved ui
 - improved logic serialization
+- added compressed binary lcs format
 - lcs files now use .lcs and .lcb extensions in place of .txt and .bin
 
 
 ## *Nightly 2024.05.04*
 
-#### ADDED
-- level transition animations
-- logic player sensor
-
-#### CHANGED
+#### UPDATES
+- added level transition animations
+- added logic player sensor
 - ui automatically closes when a map is selected from the pause menu or level selector
 
 
 ## *Nightly 2024.05.03*
 
-#### ADDED
-- new default map
-- delay logic node
-
-#### CHANGED
+#### UPDATES
+- added new default map
+- added delay logic node
 - improved default maps
 - random generator logic nodes now only generate on input high
 - shortened lcs object and addon tags
 
-#### FIXED
+#### BUGFIXES
 - logic was serialized even if no logic parts were present
 - jointed adhesive shapes haphazardly teleported around when hit by the player
 
 
 ## *Nightly 2024.05.02*
 
-#### ADDED
-- node-based logic programming system
+#### UPDATES
+- added node-based logic programming system
 
 
 ## *Nightly 2024.04.30*
 
-#### CHANGED
+#### UPDATES
 - improved ui theme
 
-#### FIXED
+#### BUGFIXES
 - player death particles were invisible
 
 
 ## *Nightly 2024.04.29*
 
-#### CHANGED
+#### UPDATES
 - improved map background
 - improved default maps
 - improved player heal/hurt particles
@@ -201,32 +181,28 @@
 
 ## *Nightly 2024.04.28*
 
-#### ADDED
-- custom cursor
-
-#### CHANGED
+#### UPDATES
 - overhauled textures and map background
+- added custom cursor
 
-#### FIXED
+#### BUGFIXES
 - objects were visible outside of map bounds
 
 
 ## *Nightly 2024.04.27*
 
-#### ADDED
-- bezier shape form node
-
-#### CHANGED
-- improved lcs file header
+#### UPDATES
+- added bezier shape form node
 - map files are now named by numeric id instead of title
+- improved lcs file header
 
-#### FIXED
+#### BUGFIXES
 - one player pushing another caused glitchy movement
 
 
 ## *Nightly 2024.04.21*
 
-#### CHANGED
+#### UPDATES
 - improved default maps
 - improved joint handling
 - improved shape adhesion handling
@@ -234,109 +210,97 @@
 
 ## *Nightly 2024.04.20*
 
-#### ADDED
-- map gravity setting
-
-#### CHANGED
+#### UPDATES
+- added map gravity setting
 - improved default maps
 - improved map previews
 
-#### FIXED
+#### BUGFIXES
 - players did not respawn correctly
 
 
 ## *Nightly 2024.04.19*
 
-#### ADDED
-- more map settings
+#### UPDATES
+- added more map settings
 
 
 ## *Nightly 2024.04.14*
 
-#### ADDED
-- new experimental default map
-
-#### CHANGED
+#### UPDATES
+- added new experimental default map
 - improved map previews
 
-#### FIXED
+#### BUGFIXES
 - map previews did not properly sort objects by their layer
 
 
 ## *Nightly 2024.04.13*
 
-#### ADDED
-- map previews in the level selector menu
-- players can unstick from glue by attempting to move away
-
-#### CHANGED
+#### UPDATES
+- added map previews in the level selector menu
+- players can now unstick from glue by attempting to move away
 - improved pool wave animations
 
-#### FIXED
+#### BUGFIXES
 - lcs parser did not properly handle child lines
 
 
 ## *Nightly 2024.04.12*
 
-#### ADDED
-- map background texture
-
-#### CHANGED
+#### UPDATES
+- added map background texture
 - reduced map file size
 
 
 ## *Nightly 2024.04.11*
 
-#### CHANGED
+#### UPDATES
 - reduced map file size
 - increased player movement speed when on ground
 
 
 ## *Nightly 2024.04.07*
 
-#### CHANGED
+#### UPDATES
 - improved color serialization
 
 
 ## *Nightly 2024.04.06*
 
-#### CHANGED
+#### UPDATES
 - reformatted map files to line-based format to reduce file size
 
 
 ## *Nightly 2024.04.05*
 
-#### FIXED
+#### BUGFIXES
 - map ids did not generate correctly
 
 
 ## *Nightly 2024.04.02*
 
-#### CHANGED
+#### UPDATES
 - reduced map file size
 
 
 ## *Nightly 2024.04.01*
 
-#### CHANGED
+#### UPDATES
 - improved touch and slide particles
 
 
 ## Dev 0.1 (2024.03.07)
 
-#### ADDED
-- map picker ui
-
-#### CHANGED
+#### UPDATES
+- added map picker ui
 - improved map loading and generation
 
 
 ## *Nightly 2024.03.02*
 
-#### ADDED
-- simple autogenerated maps
-
-#### CHANGED
+#### UPDATES
+- added simple autogenerated maps
 - improved particles
 - improved camera shake
 - improved map saving and loading
@@ -344,32 +308,30 @@
 
 ## *Nightly 2024.03.01*
 
-#### CHANGED
+#### UPDATES
 - improved particles
 
 
 ## *Nightly 2024.02.29*
 
-#### CHANGED
+#### UPDATES
 - improved physics and wave effects
 
 
 ## *Nightly 2024.02.28*
 
-#### ADDED
-- gravity
-- player jumping
+#### UPDATES
+- added gravity
+- added player jumping
 
-#### FIXED
+#### BUGFIXES
 - player death particles repeated every frame
 
 
 ## *Nightly 2024.02.24*
 
-#### ADDED
-- basic pause menu
-
-#### CHANGED
+#### UPDATES
+- added basic pause menu
 - improved map and player handling
 - improved ui style
 - improved player damage particles
@@ -377,73 +339,73 @@
 
 ## *Nightly 2024.02.23*
 
-#### ADDED
-- map saving and loading
+#### UPDATES
+- added map saving and loading
 
 
 ## *Nightly 2024.02.22*
 
-#### ADDED
-- advanced joint system
-- more map and shape lighting options
+#### UPDATES
+- added advanced joint system
+- added more map and shape lighting options
 
 
 ## *Nightly 2024.02.21*
 
-#### ADDED
-- reactive animated waves for pools
+#### UPDATES
+- added reactive animated waves for pools
 
 
 ## *Nightly 2024.02.20*
 
-#### ADDED
-- adhesion material property
-- heal/hurt material property
+#### UPDATES
+- added adhesion material property
+- added heal/hurt material property
 
 
 ## *Nightly 2024.02.16*
 
-#### ADDED
-- map save file system
+#### UPDATES
+- added map save file system
 
 
 ## *Nightly 2024.02.15*
 
-#### CHANGED
+#### UPDATES
 - improved damage system
 
 
 ## *Nightly 2024.02.14*
 
-#### ADDED
-- shape joints
+#### UPDATES
+- added shape joints
 
-#### CHANGED
+#### UPDATES
 - player speed is reduced on collision with another player
 - improved default map
 
 
 ## *Nightly 2024.02.13*
 
-#### ADDED
-- default map
-- pools
+#### UPDATES
+- added default map
+- added pools
 
 
 ## *Nightly 2024.02.12*
 
-#### ADDED
-- map and shape system
+#### UPDATES
+- added map and shape system
 
 
 ## *Nightly 2024.02.11*
 
-#### ADDED
-- basic player particle effects
-- camera shake
+#### UPDATES
+- added basic player particle effects
+- added camera shake
 
 
 ## *Nightly 2024.02.10*
 
-#### ADDED
-- player with indicator ring
+#### UPDATES
+- added player with indicator ring
