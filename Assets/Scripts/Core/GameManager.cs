@@ -71,6 +71,8 @@ namespace Core
             MapSystem._.RegisterMap(MapBuiltins.Void());
             MapSystem._.RegisterMap(MapBuiltins.Brutalsky());
             MapSystem._.RegisterMap(MapBuiltins.Doomring());
+            MapSystem._.RegisterMap(MapBuiltins.Tossup());
+            MapSystem._.RegisterMap(MapBuiltins.Racetrack());
 
             // Load custom maps
             if (_cfgEnableCustomMaps)

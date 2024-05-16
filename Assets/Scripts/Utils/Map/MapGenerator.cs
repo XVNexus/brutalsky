@@ -75,7 +75,7 @@ namespace Utils.Map
                 result.AddObject(new BsShape("corner-tl")
                 {
                     Position = new Vector2(size.x * -.5f + 1f, size.y * .5f - 1f),
-                    Path = PathString.Vector(new[] { 0f, 0f, 0f, 3f, 0f, 1f, 0f, 0f, 0f, -3f })
+                    Path = PathString.Vector(0f, 0f, 0f, 3f, 0f, 1f, 0f, 0f, 0f, -3f)
                 });
             }
             if (top && right)
@@ -83,7 +83,7 @@ namespace Utils.Map
                 result.AddObject(new BsShape("corner-tr")
                 {
                     Position = new Vector2(size.x * .5f - 1f, size.y * .5f - 1f),
-                    Path = PathString.Vector(new[] { 0f, 0f, 0f, -3f, 0f, 1f, 0f, 0f, 0f, -3f })
+                    Path = PathString.Vector(0f, 0f, 0f, -3f, 0f, 1f, 0f, 0f, 0f, -3f)
                 });
             }
             if (bottom && left)
@@ -91,7 +91,7 @@ namespace Utils.Map
                 result.AddObject(new BsShape("corner-bl")
                 {
                     Position = new Vector2(size.x * -.5f + 1f, size.y * -.5f + 1f),
-                    Path = PathString.Vector(new[] { 0f, 0f, 0f, 3f, 0f, 1f, 0f, 0f, 0f, 3f })
+                    Path = PathString.Vector(0f, 0f, 0f, 3f, 0f, 1f, 0f, 0f, 0f, 3f)
                 });
             }
             if (bottom && right)
@@ -99,7 +99,7 @@ namespace Utils.Map
                 result.AddObject(new BsShape("corner-br")
                 {
                     Position = new Vector2(size.x * .5f - 1f, size.y * -.5f + 1f),
-                    Path = PathString.Vector(new[] { 0f, 0f, 0f, -3f, 0f, 1f, 0f, 0f, 0f, 3f })
+                    Path = PathString.Vector(0f, 0f, 0f, -3f, 0f, 1f, 0f, 0f, 0f, 3f)
                 });
             }
 
@@ -129,12 +129,12 @@ namespace Utils.Map
             result.AddObject(new BsDecal("spawn-bg")
             {
                 Layer = -1,
-                Path = PathString.Vector(new[] { -5f, 0f, 0, 5f, 0f, 1, 5f, -3f, 0f, -3f, 1, -5f, -3f, -5f, 0f }),
+                Path = PathString.Vector(-5f, 0f, 0, 5f, 0f, 1, 5f, -3f, 0f, -3f, 1, -5f, -3f, -5f, 0f),
                 Color = ColorExt.Lava.MultiplyTint(.5f)
             });
             result.AddObject(new BsShape("spawn-platform")
             {
-                Path = PathString.Polygon(new[] { -2.5f, -1f, -5f, 0f, 5f, 0f, 2.5f, -1f }),
+                Path = PathString.Polygon(-2.5f, -1f, -5f, 0f, 5f, 0f, 2.5f, -1f),
                 Material = MaterialExt.Metal,
                 Color = ColorExt.Lava
             });
@@ -148,14 +148,14 @@ namespace Utils.Map
             result.AddObject(new BsDecal("goal-bg")
             {
                 Position = new Vector2(length + 20f, 0f),
-                Path = PathString.Vector(new[] { -5f, 0f, 0, 5f, 0f, 1, 5f, -3f, 0f, -3f, 1, -5f, -3f, -5f, 0f }),
+                Path = PathString.Vector(-5f, 0f, 0, 5f, 0f, 1, 5f, -3f, 0f, -3f, 1, -5f, -3f, -5f, 0f),
                 Layer = -1,
                 Color = ColorExt.Medicine.MultiplyTint(.5f)
             });
             result.AddObject(new BsShape("goal-platform")
             {
                 Position = new Vector2(length + 20f, 0f),
-                Path = PathString.Polygon(new[] { -2.5f, -1f, -5f, 0f, 5f, 0f, 2.5f, -1f }),
+                Path = PathString.Polygon(-2.5f, -1f, -5f, 0f, 5f, 0f, 2.5f, -1f),
                 Material = MaterialExt.Metal,
                 Color = ColorExt.Medicine
             });
@@ -186,9 +186,8 @@ namespace Utils.Map
                 result.AddObject(new BsShape($"platform-{platform}")
                 {
                     Position = new Vector2(cursor, platformHeight),
-                    Path = PathString.Polygon(new [] { 0f, platformLength * difficulty * -.5f,
-                        platformLength * -.5f, 0f, platformLength * -.5f, 1f, platformLength * .5f, 1f,
-                        platformLength * .5f, 0f }),
+                    Path = PathString.Polygon(0f, platformLength * difficulty * -.5f, platformLength * -.5f, 0f,
+                        platformLength * -.5f, 1f, platformLength * .5f, 1f, platformLength * .5f, 0f),
                     Material = material,
                     Color = color
                 });
@@ -237,12 +236,12 @@ namespace Utils.Map
             result.AddObject(new BsDecal("finish-bg")
             {
                 Layer = -1,
-                Path = PathString.Vector(new[] { -5f, 0f, 0, 5f, 0f, 1, 5f, -5f, 0f, -5f, 1, -5f, -5f, -5f, 0f }),
+                Path = PathString.Vector(-5f, 0f, 0, 5f, 0f, 1, 5f, -5f, 0f, -5f, 1, -5f, -5f, -5f, 0f),
                 Color = ColorExt.Medkit.MultiplyTint(.5f)
             });
             result.AddObject(new BsShape("finish-platform")
             {
-                Path = PathString.Polygon(new[] { -2.5f, -1f, -5f, 0f, 5f, 0f, 2.5f, -1f }),
+                Path = PathString.Polygon(-2.5f, -1f, -5f, 0f, 5f, 0f, 2.5f, -1f),
                 Material = MaterialExt.Metal,
                 Color = ColorExt.Medkit
             });

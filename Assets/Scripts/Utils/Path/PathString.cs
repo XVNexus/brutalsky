@@ -8,7 +8,7 @@ namespace Utils.Path
     {
         public PathType Type { get; private set; }
         public float[] Args { get; private set; }
-        public PathNode StartNode { get; set; }
+        public PathNode StartNode { get; }
 
         public PathString(Vector2 startPoint, IEnumerable<PathNode> nodes)
         {
@@ -21,7 +21,7 @@ namespace Utils.Path
             }
         }
 
-        public static PathString Vector(float[] args)
+        public static PathString Vector(params float[] args)
         {
             var startPoint = new Vector2(args[0], args[1]);
             var nodes = new List<PathNode>();
@@ -52,7 +52,7 @@ namespace Utils.Path
             return result;
         }
 
-        public static PathString Polygon(float[] args)
+        public static PathString Polygon(params float[] args)
         {
             var startPoint = new Vector2(args[0], args[1]);
             var nodes = new PathLine[args.Length / 2 - 1];
@@ -100,14 +100,14 @@ namespace Utils.Path
 
         public static PathString Ellipse(float width, float height)
         {
-            var result = Vector(new[]
-            {
+            var result = Vector
+            (
                 0f, height * .5f,
                 1f, width * .5f, height * .5f, width * .5f, 0f,
                 1f, width * .5f, -height * .5f, 0f, -height * .5f,
                 1f, -width * .5f, -height * .5f, -width * .5f, 0f,
                 1f, -width * .5f, height * .5f, 0f, height * .5f
-            });
+            );
             result.Type = PathType.Ellipse;
             result.Args = new[] { width, height };
             return result;
