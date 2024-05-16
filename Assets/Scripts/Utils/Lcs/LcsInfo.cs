@@ -4,28 +4,25 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using Brutalsky.Logic;
 using UnityEngine;
 using Utils.Constants;
 using Utils.Joint;
-using Utils.Object;
+using Utils.Path;
 using Utils.Player;
-using Utils.Pool;
-using Utils.Shape;
 
 namespace Utils.Lcs
 {
     public struct LcsInfo
     {
-        public const string LineSeparator = "\n";
-        public const string PrefixSeparator = " ";
         public const string PropertySeparator = " / ";
-        public const string TypeSeparator = ": ";
         public const string FieldSeparator = " ";
         public static readonly Dictionary<char, char> SpecialChars = new()
         {
-            {'/', 'p'},
-            {':', 'y'},
+            {'\'', 'q'},
+            {'"', 'u'},
+            {'/', 'd'},
             {' ', 's'},
             {'\t', 't'},
             {'\n', 'n'}
@@ -55,46 +52,79 @@ namespace Utils.Lcs
             { LcsType.Float3, Float3Info() },
             { LcsType.Rect, RectInfo() },
             { LcsType.Color, ColorInfo() },
-            { LcsType.PlayerType, PlayerTypeInfo() },
             { LcsType.Direction, DirectionInfo() },
-            { LcsType.Layer, LayerInfo() },
-            { LcsType.FormType, FormTypeInfo() },
+            { LcsType.PlayerType, PlayerTypeInfo() },
+            { LcsType.FormType, PathTypeInfo() },
             { LcsType.JointType, JointTypeInfo() },
-            { LcsType.Transform, TransformInfo() },
-            { LcsType.Form, FormInfo() },
-            { LcsType.Material, MaterialInfo() },
-            { LcsType.Chemical, ChemicalInfo() },
+            { LcsType.Path, PathInfo() },
             { LcsType.Port, PortInfo() }
         };
-        public static readonly Dictionary<string, LcsType> StringTagTable =
-            TypeTable.ToDictionary(kv => kv.Value.StringTag, kv => kv.Key);
+        public static readonly Dictionary<Regex, LcsType> StringPatternTable =
+            TypeTable.ToDictionary(kv => kv.Value.StringPattern, kv => kv.Key);
         public static readonly Dictionary<byte, LcsType> ByteTagTable =
             TypeTable.ToDictionary(kv => kv.Value.ByteTag, kv => kv.Key);
 
         public int Size { get; }
-        public string StringTag { get; }
+        public Regex StringPattern { get; }
         public byte ByteTag { get; }
-        public Func<object, byte[]> ToBin { get; }
-        public Func<byte[], object> FromBin { get; }
-        public Func<object, string> ToStr { get; }
-        public Func<string, object> FromStr { get; }
+        public object DefaultValue { get; }
 
-        public LcsInfo(int size, string stringTag, byte byteTag,
+        private Func<object, byte[]> _toBin;
+        private Func<byte[], object> _fromBin;
+        private Func<object, string> _toStr;
+        private Func<string, object> _fromStr;
+
+        public LcsInfo(int size, string stringPattern, byte byteTag, object defaultValue,
             Func<object, byte[]> toBin, Func<byte[], object> fromBin,
             Func<object, string> toStr, Func<string, object> fromStr)
         {
             Size = size;
-            StringTag = stringTag;
+            StringPattern = new Regex('^' + stringPattern + '$');
             ByteTag = byteTag;
-            ToBin = toBin;
-            FromBin = fromBin;
-            ToStr = toStr;
-            FromStr = fromStr;
+            DefaultValue = defaultValue;
+            _toBin = toBin;
+            _fromBin = fromBin;
+            _toStr = toStr;
+            _fromStr = fromStr;
+        }
+
+        public byte[] Binify(object value)
+        {
+            return _toBin(value);
+        }
+
+        public object Parse(byte[] raw)
+        {
+            try
+            {
+                return _fromBin(raw);
+            }
+            catch
+            {
+                return DefaultValue;
+            }
+        }
+
+        public string Stringify(object value)
+        {
+            return _toStr(value);
+        }
+
+        public object Parse(string raw)
+        {
+            try
+            {
+                return _fromStr(raw);
+            }
+            catch
+            {
+                return DefaultValue;
+            }
         }
 
         // Primitive types
         public static LcsInfo BoolInfo() {
-            return new LcsInfo(1, "bol", 0x01,
+            return new LcsInfo(1, "True|False", 0x01, false,
                 value => BitConverter.GetBytes((bool)value),
                 raw => BitConverter.ToBoolean(raw),
                 value => value.ToString(),
@@ -102,119 +132,119 @@ namespace Utils.Lcs
         }
 
         public static LcsInfo ByteInfo() {
-            return new LcsInfo(1, "uby", 0x02,
+            return new LcsInfo(1, @"\d+B", 0x02, (byte)0,
                 value => new[] { (byte)value },
                 raw => raw[0],
-                value => value.ToString(),
-                raw => byte.Parse(raw));
+                value => value.ToString() + 'B',
+                raw => byte.Parse(raw[..^1]));
         }
 
         public static LcsInfo UShortInfo() {
-            return new LcsInfo(2, "usr", 0x03,
+            return new LcsInfo(2, @"\d+S", 0x03, (ushort)0,
                 value => BitConverter.GetBytes((ushort)value),
                 raw => BitConverter.ToUInt16(raw),
-                value => value.ToString(),
-                raw => ushort.Parse(raw));
+                value => value.ToString() + 'S',
+                raw => ushort.Parse(raw[..^1]));
         }
 
         public static LcsInfo UIntInfo() {
-            return new LcsInfo(4, "uin", 0x04,
+            return new LcsInfo(4, @"\d+I", 0x04, 0u,
                 value => BitConverter.GetBytes((uint)value),
                 raw => BitConverter.ToUInt32(raw),
-                value => value.ToString(),
-                raw => uint.Parse(raw));
+                value => value.ToString() + 'I',
+                raw => uint.Parse(raw[..^1]));
         }
 
         public static LcsInfo ULongInfo() {
-            return new LcsInfo(8, "ulo", 0x05,
+            return new LcsInfo(8, @"\d+L", 0x05, 0uL,
                 value => BitConverter.GetBytes((ulong)value),
                 raw => BitConverter.ToUInt64(raw),
-                value => value.ToString(),
-                raw => ulong.Parse(raw));
+                value => value.ToString() + 'L',
+                raw => ulong.Parse(raw[..^1]));
         }
 
         public static LcsInfo SByteInfo() {
-            return new LcsInfo(1, "byt", 0x06,
-                value => new[] { (byte)value },
+            return new LcsInfo(1, @"\d+b", 0x06, (sbyte)0,
+                value => new[] { (byte)(sbyte)value },
                 raw => (sbyte)raw[0],
-                value => value.ToString(),
-                raw => sbyte.Parse(raw));
+                value => value.ToString() + 'b',
+                raw => sbyte.Parse(raw[..^1]));
         }
 
         public static LcsInfo ShortInfo() {
-            return new LcsInfo(2, "srt", 0x07,
+            return new LcsInfo(2, @"\d+s", 0x07, (short)0,
                 value => BitConverter.GetBytes((short)value),
                 raw => BitConverter.ToInt16(raw),
-                value => value.ToString(),
-                raw => short.Parse(raw));
+                value => value.ToString() + 's',
+                raw => short.Parse(raw[..^1]));
         }
 
         public static LcsInfo IntInfo() {
-            return new LcsInfo(4, "int", 0x08,
+            return new LcsInfo(4, @"\d+i", 0x08, 0,
                 value => BitConverter.GetBytes((int)value),
                 raw => BitConverter.ToInt32(raw),
-                value => value.ToString(),
-                raw => int.Parse(raw));
+                value => value.ToString() + 'i',
+                raw => int.Parse(raw[..^1]));
         }
 
         public static LcsInfo LongInfo() {
-            return new LcsInfo(8, "lng", 0x09,
+            return new LcsInfo(8, @"\d+l", 0x09, 0L,
                 value => BitConverter.GetBytes((long)value),
                 raw => BitConverter.ToInt64(raw),
-                value => value.ToString(),
-                raw => long.Parse(raw));
+                value => value.ToString() + 'l',
+                raw => long.Parse(raw[..^1]));
         }
 
         public static LcsInfo FloatInfo() {
-            return new LcsInfo(4, "flt", 0x0A,
+            return new LcsInfo(4, @"([\d\.]+|NaN|Infinity|-Infinity)f", 0x0A, 0f,
                 value => BitConverter.GetBytes((float)value),
                 raw => BitConverter.ToSingle(raw),
-                value => value.ToString(),
-                raw => float.Parse(raw));
+                value => value.ToString() + 'f',
+                raw => float.Parse(raw[..^1]));
         }
 
         public static LcsInfo DoubleInfo() {
-            return new LcsInfo(8, "dbl", 0x0B,
+            return new LcsInfo(8, @"([\d\.]+|NaN|Infinity|-Infinity)d", 0x0B, 0d,
                 value => BitConverter.GetBytes((double)value),
                 raw => BitConverter.ToDouble(raw),
-                value => value.ToString(),
-                raw => double.Parse(raw));
+                value => value.ToString() + 'd',
+                raw => double.Parse(raw[..^1]));
         }
 
         public static LcsInfo DecimalInfo() {
-            return new LcsInfo(16, "dec", 0x0C,
-                value => throw new NotImplementedException(),
-                raw => throw new NotImplementedException(),
-                value => throw new NotImplementedException(),
-                raw => throw new NotImplementedException());
+            return new LcsInfo(16, @"([\d\.]+|NaN|Infinity|-Infinity)m", 0x0C, 0m,
+                _ => throw new NotImplementedException(),
+                _ => throw new NotImplementedException(),
+                _ => throw new NotImplementedException(),
+                _ => throw new NotImplementedException());
         }
 
         public static LcsInfo CharInfo() {
-            return new LcsInfo(2, "chr", 0x0D,
+            return new LcsInfo(2, @"'(.|\\.)'", 0x0D, ' ',
                 value => BitConverter.GetBytes((char)value),
                 raw => BitConverter.ToChar(raw),
                 value =>
                 {
                     var cast = (char)value;
-                    return !SpecialChars.ContainsKey(cast) ? value.ToString() : $@"\{SpecialChars[cast]}";
+                    return !SpecialChars.ContainsKey(cast) ? $"'{value}'" : $@"'\{SpecialChars[cast]}'";
                 },
                 raw => !raw.StartsWith(@"\") ? raw[0] : SpecialCodes[raw[1]]);
         }
 
         public static LcsInfo StringInfo() {
-            return new LcsInfo(-1, "str", 0x0E,
+            return new LcsInfo(-1, @"\""\S*\""", 0x0E, "",
                 value => Encoding.UTF8.GetBytes((string)value),
                 raw => Encoding.UTF8.GetString(raw),
-                value => SpecialChars.Keys.Aggregate(((string)value).Replace(@"\", @"\\"),
-                    (current, to) => current.Replace($"{to}", $@"\{SpecialChars[to]}")),
-                raw => SpecialChars.Keys.Aggregate(raw.Replace(@"\\", @"\\ "),
+                value => '"' + SpecialChars.Keys.Aggregate(((string)value).Replace(@"\", @"\\"),
+                    (current, to) => current.Replace($"{to}", $@"\{SpecialChars[to]}")) + '"',
+                raw => SpecialChars.Keys.Aggregate(raw[1..^1].Replace(@"\\", @"\\ "),
                     (current, to) => current.Replace($@"\{SpecialChars[to]}", $"{to}"))
                     .Replace(@"\\ ", @"\"));
         }
 
         // Compound types
         public static LcsInfo Int2Info() {
-            return new LcsInfo(8, "in2", 0x10,
+            return new LcsInfo(8, @"\(\d+ \d+\)i", 0x10, Vector2Int.zero,
                 value =>
                 {
                     var cast = (Vector2Int)value;
@@ -224,17 +254,17 @@ namespace Utils.Lcs
                 value =>
                 {
                     var cast = (Vector2Int)value;
-                    return ConcatFields(cast.x.ToString(), cast.y.ToString());
+                    return '(' + ConcatFields(cast.x.ToString(), cast.y.ToString()) + ")i";
                 },
                 raw =>
                 {
-                    var parts = SplitFields(raw);
+                    var parts = SplitFields(raw[1..^2]);
                     return new Vector2Int(int.Parse(parts[0]), int.Parse(parts[1]));
                 });
         }
 
         public static LcsInfo Int3Info() {
-            return new LcsInfo(12, "in3", 0x11,
+            return new LcsInfo(12, @"\(\d+ \d+\ \d+\)i", 0x11, Vector3Int.zero,
                 value =>
                 {
                     var cast = (Vector3Int)value;
@@ -245,17 +275,17 @@ namespace Utils.Lcs
                 value =>
                 {
                     var cast = (Vector3Int)value;
-                    return ConcatFields(cast.x.ToString(), cast.y.ToString(), cast.z.ToString());
+                    return '(' + ConcatFields(cast.x.ToString(), cast.y.ToString(), cast.z.ToString()) + ")i";
                 },
                 raw =>
                 {
-                    var parts = SplitFields(raw);
+                    var parts = SplitFields(raw[1..^2]);
                     return new Vector3Int(int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]));
                 });
         }
 
         public static LcsInfo Float2Info() {
-            return new LcsInfo(8, "fl2", 0x12,
+            return new LcsInfo(8, @"\([\d\.]+ [\d\.]+\)f", 0x12, Vector2.zero,
                 value =>
                 {
                     var cast = (Vector2)value;
@@ -265,17 +295,17 @@ namespace Utils.Lcs
                 value =>
                 {
                     var cast = (Vector2)value;
-                    return ConcatFields(cast.x.ToString(), cast.y.ToString());
+                    return '(' + ConcatFields(cast.x.ToString(), cast.y.ToString()) + ")f";
                 },
                 raw =>
                 {
-                    var parts = SplitFields(raw);
+                    var parts = SplitFields(raw[1..^2]);
                     return new Vector2(float.Parse(parts[0]), float.Parse(parts[1]));
                 });
         }
 
         public static LcsInfo Float3Info() {
-            return new LcsInfo(12, "fl3", 0x13,
+            return new LcsInfo(12, @"\([\d\.]+ [\d\.]+ [\d\.]+\)f", 0x13, Vector3.zero,
                 value =>
                 {
                     var cast = (Vector3)value;
@@ -287,17 +317,17 @@ namespace Utils.Lcs
                 value =>
                 {
                     var cast = (Vector3)value;
-                    return ConcatFields(cast.x.ToString(), cast.y.ToString(), cast.z.ToString());
+                    return '(' + ConcatFields(cast.x.ToString(), cast.y.ToString(), cast.z.ToString()) + ")f";
                 },
                 raw =>
                 {
-                    var parts = SplitFields(raw);
+                    var parts = SplitFields(raw[1..^2]);
                     return new Vector3(float.Parse(parts[0]), float.Parse(parts[1]), float.Parse(parts[2]));
                 });
         }
 
         public static LcsInfo RectInfo() {
-            return new LcsInfo(16, "rec", 0x14,
+            return new LcsInfo(16, @"\([\d\.]+ [\d\.]+ [\d\.]+ [\d\.]+\)", 0x14, Rect.zero,
                 value =>
                 {
                     var cast = (Rect)value;
@@ -310,19 +340,19 @@ namespace Utils.Lcs
                 value =>
                 {
                     var cast = (Rect)value;
-                    return ConcatFields(cast.x.ToString(), cast.y.ToString(),
-                        cast.width.ToString(), cast.height.ToString());
+                    return '(' + ConcatFields(cast.x.ToString(), cast.y.ToString(),
+                        cast.width.ToString(), cast.height.ToString()) + ')';
                 },
                 raw =>
                 {
-                    var parts = SplitFields(raw);
+                    var parts = SplitFields(raw[1..^1]);
                     return new Rect(float.Parse(parts[0]), float.Parse(parts[1]),
                         float.Parse(parts[2]), float.Parse(parts[3]));
                 });
         }
 
         public static LcsInfo ColorInfo() {
-            return new LcsInfo(4, "col", 0x15,
+            return new LcsInfo(4, "[0-9A-F]{8}", 0x15, Color.black,
                 value =>
                 {
                     var cast = (Color)value;
@@ -343,39 +373,31 @@ namespace Utils.Lcs
 
         // Enum types
         public static LcsInfo DirectionInfo() {
-            return new LcsInfo(1, "dir", 0x20,
+            return new LcsInfo(1, "None|Down|Up|Left|Right", 0x20, Direction.None,
                 value => new[] { (byte)(Direction)value },
                 raw => (Direction)raw[0],
                 value => value.ToString(),
                 raw => (Direction)Enum.Parse(typeof(Direction), raw));
         }
 
-        public static LcsInfo LayerInfo() {
-            return new LcsInfo(1, "lay", 0x21,
-                value => new[] { (byte)(ObjectLayer)value },
-                raw => (ObjectLayer)raw[0],
-                value => value.ToString(),
-                raw => (ObjectLayer)Enum.Parse(typeof(ObjectLayer), raw));
-        }
-
         public static LcsInfo PlayerTypeInfo() {
-            return new LcsInfo(1, "plt", 0x22,
+            return new LcsInfo(1, "Dummy|Main|Local1|Local2|Bot", 0x21, PlayerType.Dummy,
                 value => new[] { (byte)(PlayerType)value },
                 raw => (PlayerType)raw[0],
                 value => value.ToString(),
                 raw => (PlayerType)Enum.Parse(typeof(PlayerType), raw));
         }
 
-        public static LcsInfo FormTypeInfo() {
-            return new LcsInfo(1, "frt", 0x23,
-                value => new[] { (byte)(FormType)value },
-                raw => (FormType)raw[0],
+        public static LcsInfo PathTypeInfo() {
+            return new LcsInfo(1, "Vector|Polygon|Square|Rectangle|Circle|Ellipse|Ngon|Star", 0x22, PathType.Vector,
+                value => new[] { (byte)(PathType)value },
+                raw => (PathType)raw[0],
                 value => value.ToString(),
-                raw => (FormType)Enum.Parse(typeof(FormType), raw));
+                raw => (PathType)Enum.Parse(typeof(PathType), raw));
         }
 
         public static LcsInfo JointTypeInfo() {
-            return new LcsInfo(1, "jnt", 0x24,
+            return new LcsInfo(1, "Fixed|Distance|Spring|Hinge|Slider|Wheel", 0x23, JointType.Fixed,
                 value => new[] { (byte)(JointType)value },
                 raw => (JointType)raw[0],
                 value => value.ToString(),
@@ -383,34 +405,12 @@ namespace Utils.Lcs
         }
 
         // Brutalsky types
-        public static LcsInfo TransformInfo() {
-            return new LcsInfo(12, "trn", 0x30,
+        public static LcsInfo PathInfo() {
+            return new LcsInfo(-1, @"(Vector|Polygon|Square|Rectangle|Circle|Ellipse|Ngon|Star)( [\d\.]+)+", 0x31,
+                PathString.Ngon(3, 1f),
                 value =>
                 {
-                    var cast = (ObjectTransform)value;
-                    return BitConverter.GetBytes(cast.Position.x).Concat(BitConverter.GetBytes(cast.Position.y))
-                        .Concat(BitConverter.GetBytes(cast.Rotation)).ToArray();
-                },
-                raw => new ObjectTransform(BitConverter.ToSingle(raw[..4]),
-                    BitConverter.ToSingle(raw[4..8]), BitConverter.ToSingle(raw[8..12])),
-                value =>
-                {
-                    var cast = (ObjectTransform)value;
-                    return ConcatFields(cast.Position.x.ToString(), cast.Position.y.ToString(),
-                        cast.Rotation.ToString());
-                },
-                raw =>
-                {
-                    var parts = SplitFields(raw);
-                    return new ObjectTransform(float.Parse(parts[0]), float.Parse(parts[1]), float.Parse(parts[2]));
-                });
-        }
-
-        public static LcsInfo FormInfo() {
-            return new LcsInfo(-1, "for", 0x31,
-                value =>
-                {
-                    var cast = (Form)value;
+                    var cast = (PathString)value;
                     var result = new byte[cast.Args.Length * 4 + 1];
                     result[0] = (byte)cast.Type;
                     for (var i = 0; i < cast.Args.Length; i++)
@@ -426,7 +426,7 @@ namespace Utils.Lcs
                 },
                 raw =>
                 {
-                    var type = (FormType)raw[0];
+                    var type = (PathType)raw[0];
                     var parts = new float[(raw.Length - 1) / 4];
                     for (var i = 0; i < parts.Length; i++)
                     {
@@ -435,90 +435,41 @@ namespace Utils.Lcs
                     }
                     return type switch
                     {
-                        FormType.Vector => Form.Vector(parts),
-                        FormType.Polygon => Form.Polygon(parts),
-                        FormType.Square => Form.Square(parts[0]),
-                        FormType.Rectangle => Form.Rectangle(parts[0], parts[1]),
-                        FormType.Circle => Form.Circle(parts[0]),
-                        FormType.Ellipse => Form.Ellipse(parts[0], parts[1]),
-                        FormType.Ngon => Form.Ngon(Mathf.RoundToInt(parts[0]), parts[1]),
-                        FormType.Star => Form.Star(Mathf.RoundToInt(parts[0]), parts[1], parts[2]),
-                        _ => throw Errors.InvalidItem("form type", type)
+                        PathType.Vector => PathString.Vector(parts),
+                        PathType.Polygon => PathString.Polygon(parts),
+                        PathType.Square => PathString.Square(parts[0]),
+                        PathType.Rectangle => PathString.Rectangle(parts[0], parts[1]),
+                        PathType.Circle => PathString.Circle(parts[0]),
+                        PathType.Ellipse => PathString.Ellipse(parts[0], parts[1]),
+                        PathType.Ngon => PathString.Ngon(Mathf.RoundToInt(parts[0]), parts[1]),
+                        PathType.Star => PathString.Star(Mathf.RoundToInt(parts[0]), parts[1], parts[2]),
+                        _ => throw Errors.InvalidItem("path type", type)
                     };
                 },
-                value => ((Form)value).Args.Aggregate(value.ToString(),
+                value => ((PathString)value).Args.Aggregate(value.ToString(),
                     (current, arg) => current + FieldSeparator + arg),
                 raw =>
                 {
                     var parts = raw.Split(FieldSeparator);
-                    var type = (FormType)Enum.Parse(typeof(FormType), parts[0]);
+                    var type = (PathType)Enum.Parse(typeof(PathType), parts[0]);
                     var args = parts[1..].Select(part => float.Parse(part)).ToArray();
                     return type switch
                     {
-                        FormType.Vector => Form.Vector(args),
-                        FormType.Polygon => Form.Polygon(args),
-                        FormType.Square => Form.Square(args[0]),
-                        FormType.Rectangle => Form.Rectangle(args[0], args[1]),
-                        FormType.Circle => Form.Circle(args[0]),
-                        FormType.Ellipse => Form.Ellipse(args[0], args[1]),
-                        FormType.Ngon => Form.Ngon((int)args[0], args[1]),
-                        FormType.Star => Form.Star((int)args[0], args[1], args[2]),
-                        _ => throw Errors.InvalidItem("form type", type)
+                        PathType.Vector => PathString.Vector(args),
+                        PathType.Polygon => PathString.Polygon(args),
+                        PathType.Square => PathString.Square(args[0]),
+                        PathType.Rectangle => PathString.Rectangle(args[0], args[1]),
+                        PathType.Circle => PathString.Circle(args[0]),
+                        PathType.Ellipse => PathString.Ellipse(args[0], args[1]),
+                        PathType.Ngon => PathString.Ngon((int)args[0], args[1]),
+                        PathType.Star => PathString.Star((int)args[0], args[1], args[2]),
+                        _ => throw Errors.InvalidItem("path type", type)
                     };
                 });
         }
 
-        public static LcsInfo MaterialInfo() {
-            return new LcsInfo(20, "mat", 0x32,
-                value =>
-                {
-                    var cast = (ShapeMaterial)value;
-                    return BitConverter.GetBytes(cast.Friction).Concat(BitConverter.GetBytes(cast.Restitution))
-                        .Concat(BitConverter.GetBytes(cast.Adhesion)).Concat(BitConverter.GetBytes(cast.Density))
-                        .Concat(BitConverter.GetBytes(cast.Health)).ToArray();
-                },
-                raw => new ShapeMaterial(BitConverter.ToSingle(raw[..4]), BitConverter.ToSingle(raw[4..8]),
-                    BitConverter.ToSingle(raw[8..12]), BitConverter.ToSingle(raw[12..16]),
-                    BitConverter.ToSingle(raw[16..20])),
-                value =>
-                {
-                    var cast = (ShapeMaterial)value;
-                    return ConcatFields(cast.Friction.ToString(), cast.Restitution.ToString(),
-                        cast.Adhesion.ToString(), cast.Density.ToString(), cast.Health.ToString());
-                },
-                raw =>
-                {
-                    var parts = SplitFields(raw);
-                    return new ShapeMaterial(float.Parse(parts[0]), float.Parse(parts[1]),
-                        float.Parse(parts[2]), float.Parse(parts[3]), float.Parse(parts[4]));
-                });
-        }
-
-        public static LcsInfo ChemicalInfo() {
-            return new LcsInfo(12, "cem", 0x33,
-                value =>
-                {
-                    var cast = (PoolChemical)value;
-                    return BitConverter.GetBytes(cast.Buoyancy).Concat(BitConverter.GetBytes(cast.Viscosity))
-                        .Concat(BitConverter.GetBytes(cast.Health)).ToArray();
-                },
-                raw => new PoolChemical(BitConverter.ToSingle(raw[..4]),
-                    BitConverter.ToSingle(raw[4..8]), BitConverter.ToSingle(raw[8..12])),
-                value =>
-                {
-                    var cast = (PoolChemical)value;
-                    return ConcatFields(cast.Buoyancy.ToString(),
-                        cast.Viscosity.ToString(), cast.Health.ToString());
-                },
-                raw =>
-                {
-                    var parts = SplitFields(raw);
-                    return new PoolChemical(float.Parse(parts[0]), float.Parse(parts[1]), float.Parse(parts[2]));
-                });
-        }
-
         public static LcsInfo PortInfo() {
-            return new LcsInfo(3, "prt", 0x34,
+            return new LcsInfo(3, "[0-9A-F]{6}", 0x34, new BsPort(0, 0),
                 value =>
                 {
                     var cast = (BsPort)value;

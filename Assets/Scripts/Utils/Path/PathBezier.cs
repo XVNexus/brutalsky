@@ -1,29 +1,31 @@
 using UnityEngine;
 using Utils.Ext;
 
-namespace Utils.Shape
+namespace Utils.Path
 {
-    public class FormArc : FormNode
+    public class PathBezier : PathNode
     {
         public override int DetailLevel => Mathf.CeilToInt(Length * 2f * Mathf.PI);
-        public Vector2 Handle { get; set; }
+        public Vector2 Handle1 { get; set; }
+        public Vector2 Handle2 { get; set; }
 
-        private static readonly float HandleMultiplier = Mathf.Pow(1f / 6f, 1f / 3f);
         private Vector2 P0 => StartPoint;
-        private Vector2 P1 => MathfExt.Lerp(StartPoint, Handle, HandleMultiplier);
-        private Vector2 P2 => MathfExt.Lerp(EndPoint, Handle, HandleMultiplier);
+        private Vector2 P1 => Handle1;
+        private Vector2 P2 => Handle2;
         private Vector2 P3 => EndPoint;
         private float Length => ((P3 - P0).magnitude + (P1 - P0).magnitude + (P2 - P1).magnitude + (P3 - P2).magnitude) * .5f;
 
-        public FormArc(Vector2 handle, Vector2 point)
+        public PathBezier(Vector2 handle1, Vector2 handle2, Vector2 point)
         {
-            Handle = handle;
+            Handle1 = handle1;
+            Handle2 = handle2;
             EndPoint = point;
         }
 
-        public FormArc(float a, float b, float x, float y)
+        public PathBezier(float a, float b, float c, float d, float x, float y)
         {
-            Handle = new Vector2(a, b);
+            Handle1 = new Vector2(a, b);
+            Handle2 = new Vector2(c, d);
             EndPoint = new Vector2(x, y);
         }
 

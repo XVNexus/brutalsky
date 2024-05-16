@@ -10,7 +10,7 @@ namespace Controllers.Goal
     {
         // Controller metadata
         public override string Id => "redirect";
-        public override bool IsUnused => !Master.Object.Simulated;
+        public override bool IsUnused => false;
 
         // Local variables
         private bool _redirecting;
@@ -30,7 +30,7 @@ namespace Controllers.Goal
         {
             if (_redirecting) return;
             cParticleSystem.Play();
-            GameManager._.StartRound(MapSystem.GenerateId(Master.Object.MapTitle, Master.Object.MapAuthor));
+            GameManager._.StartRound(Master.Object.Redirect);
             _redirecting = true;
         }
 

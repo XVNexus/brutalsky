@@ -8,7 +8,6 @@ using Core;
 using UnityEngine;
 using Utils.Constants;
 using Utils.Lcs;
-using Utils.Object;
 
 namespace Brutalsky.Object
 {
@@ -16,20 +15,11 @@ namespace Brutalsky.Object
     {
         public override GameObject Prefab => ResourceSystem._.pMount;
         public override string Tag => Tags.MountPrefix;
-        public override bool HasLogic => true;
 
-        public Vector2 EjectionForce { get; set; }
+        public Vector2 Position { get; set; } = Vector2.zero;
+        public Vector2 EjectionForce { get; set; } = Vector2.zero;
 
-        public BsMount(string id, ObjectTransform transform, bool simulated,
-            Vector2 ejectionForce)
-            : base(id, transform, ObjectLayer.Midground, simulated)
-        {
-            EjectionForce = ejectionForce;
-        }
-
-        public BsMount()
-        {
-        }
+        public BsMount(string id = "") : base(id) { }
 
         protected override BsBehavior _Init(GameObject gameObject, BsMap map)
         {
@@ -37,14 +27,8 @@ namespace Brutalsky.Object
             var controller = gameObject.GetComponent<MountController>();
             controller.Object = this;
 
-            // Apply config
-            if (!Simulated)
-            {
-                UnityEngine.Object.Destroy(gameObject.GetComponent<CircleCollider2D>());
-            }
-
-            // Apply position
-            gameObject.transform.localPosition = Transform.Position;
+            // Apply transform
+            gameObject.transform.localPosition = Position;
 
             return controller;
         }
@@ -63,13 +47,16 @@ namespace Brutalsky.Object
         {
             return new LcsProp[]
             {
+                new(LcsType.Float2, Position),
                 new(LcsType.Float2, EjectionForce)
             };
         }
 
         protected override void _FromLcs(LcsProp[] props)
         {
-            EjectionForce = (Vector2)props[0].Value;
+            var i = 0;
+            Position = (Vector2)props[i++].Value;
+            EjectionForce = (Vector2)props[i++].Value;
         }
     }
 }

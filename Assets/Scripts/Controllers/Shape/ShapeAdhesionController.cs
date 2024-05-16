@@ -9,7 +9,7 @@ namespace Controllers.Shape
     {
         // Controller metadata
         public override string Id => "adhesion";
-        public override bool IsUnused => Master.Object.Material.Adhesion == 0f || !Master.Object.Simulated;
+        public override bool IsUnused => Master.Object.Adhesion == 0f;
 
         // External references
         private Rigidbody2D _cRigidbody2D;
@@ -28,7 +28,7 @@ namespace Controllers.Shape
             // Allow players to unstick from low to moderate adhesion
             var playerRigidbody = other.rigidbody;
             var playerDirection = -playerRigidbody.velocity.normalized;
-            var adhesionForce = Master.Object.Material.Adhesion * playerDirection;
+            var adhesionForce = Master.Object.Adhesion * playerDirection;
             playerRigidbody.position += playerDirection * .025f;
             playerRigidbody.AddForce(adhesionForce, ForceMode2D.Impulse);
         }
@@ -44,7 +44,7 @@ namespace Controllers.Shape
 
             // Apply adhesion force
             var contact = other.GetContact(0);
-            var adhesionForce = Master.Object.Material.Adhesion * contact.normal;
+            var adhesionForce = Master.Object.Adhesion * contact.normal;
             if (thisDynamic)
             {
                 _cRigidbody2D.AddForceAtPosition(-adhesionForce, contact.point, ForceMode2D.Impulse);

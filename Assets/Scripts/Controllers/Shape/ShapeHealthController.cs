@@ -10,7 +10,7 @@ namespace Controllers.Shape
     {
         // Controller metadata
         public override string Id => "health";
-        public override bool IsUnused => Master.Object.Material.Health == 0f || !Master.Object.Simulated;
+        public override bool IsUnused => Master.Object.Health == 0f;
 
         // Event functions
         private void OnCollisionEnter2D(Collision2D other)
@@ -19,7 +19,7 @@ namespace Controllers.Shape
 
             // Apply health to player
             if (!other.gameObject.CompareTag(Tags.PlayerTag)) return;
-            var health = Master.Object.Material.Health;
+            var health = Master.Object.Health;
             var playerController = other.gameObject.GetComponent<PlayerController>();
             if (health > 0f)
             {

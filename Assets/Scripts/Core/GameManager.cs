@@ -18,9 +18,8 @@ namespace Core
         private void Awake() => _ = this;
 
         // Config options
-        public string[] builtinMaps;
         public Color loadingColor;
-        private string _cfgStartingMap;
+        private uint _cfgStartingMap;
         private bool _cfgAutoRestart;
         private bool _cfgUsePlayer1;
         private bool _cfgUsePlayer2;
@@ -31,8 +30,8 @@ namespace Core
         private bool _cfgEnableMazeMaps;
 
         // Local variables
-        private BsPlayer _player1 = new(PlayerType.Local1, "Player 1", new Color(1f, .5f, 0f));
-        private BsPlayer _player2 = new(PlayerType.Local2, "Player 2", new Color(0f, .5f, 1f));
+        private BsPlayer _player1 = new("Player 1") { Type = PlayerType.Local1, Color = new Color(1f, .5f, 0f) };
+        private BsPlayer _player2 = new("Player 2") { Type = PlayerType.Local2, Color = new Color(0f, .5f, 1f) };
         private Dictionary<string, BsPlayer> _livingPlayers = new();
         private bool _mapChangeActive;
 
@@ -43,13 +42,12 @@ namespace Core
             EventSystem._.OnPlayerUnregister += OnPlayerUnregister;
             EventSystem._.OnPlayerSpawn += OnPlayerSpawn;
             EventSystem._.OnPlayerDie += OnPlayerDie;
-
         }
 
         protected override void OnLink()
         {
             LoadMaps();
-            InitMap(MapSystem.GenerateId(_cfgStartingMap, "Xveon"), 1f);
+            InitMap(_cfgStartingMap > 0 ? _cfgStartingMap : MapSystem._.MapList.Keys.First(), 1f);
         }
 
         private void OnDestroy()
@@ -70,10 +68,9 @@ namespace Core
             }
 
             // Load builtin maps
-            foreach (var filename in builtinMaps)
-            {
-                MapSystem._.RegisterMap(BsMap.FromLcs(ResourceSystem._.LoadAsset("Maps", filename)));
-            }
+            MapSystem._.RegisterMap(MapBuiltins.Void());
+            MapSystem._.RegisterMap(MapBuiltins.Brutalsky());
+            MapSystem._.RegisterMap(MapBuiltins.Doomring());
 
             // Load custom maps
             if (_cfgEnableCustomMaps)
@@ -95,12 +92,11 @@ namespace Core
             // Generate platformer maps
             if (_cfgEnablePlatformerMaps)
             {
-                const int difficultyLevels = 12;
-                for (var i = 1; i < difficultyLevels + 1; i++)
+                for (var i = 1; i <= 12; i++)
                 {
-                    MapSystem._.RegisterMap(MapGenerator.Platformer($"Platformer {i}", i, (uint)(i * 0x69),
-                        i < difficultyLevels ? $"Platformer {i + 1}" : ""));
+                    MapSystem._.RegisterMap(MapGenerator.Platformer($"Platformer {i}", i, (uint)(i * 0x69), i < 12));
                 }
+                MapSystem._.RegisterMap(MapGenerator.PlatformerGoal("Platformer Goal"));
             }
 
             // Generate terrain maps
@@ -206,7 +202,7 @@ namespace Core
         private void OnConfigUpdate(ConfigList cfg)
         {
             var sec = cfg["gmmgr"];
-            _cfgStartingMap = (string)sec["start"].Value;
+            _cfgStartingMap = (uint)sec["start"].Value;
             _cfgAutoRestart = (bool)sec["arest"].Value;
             _cfgUsePlayer1 = (bool)sec["uspl1"].Value;
             _cfgUsePlayer2 = (bool)sec["uspl2"].Value;

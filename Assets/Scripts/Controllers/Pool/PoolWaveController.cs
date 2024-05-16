@@ -11,7 +11,7 @@ namespace Controllers.Pool
     {
         // Controller metadata
         public override string Id => "wave";
-        public override bool IsUnused => !Master.Object.Simulated;
+        public override bool IsUnused => false;
 
         // Config options
         public float wavePointDensity;

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Brutalsky.Base;
@@ -19,20 +18,9 @@ namespace Brutalsky
         public uint Id => MapSystem.GenerateId(Title, Author);
         public string Title { get; set; }
         public string Author { get; set; }
-        public Rect PlayArea
-        {
-            get => _playArea;
-            set
-            {
-                if (value.width > MapSystem._.maxMapSize || value.height > MapSystem._.maxMapSize)
-                    throw Errors.OversizedMap(value.size, MapSystem._.maxMapSize);
-                _playArea = value;
-            }
-        }
-
-        private Rect _playArea;
-        public Color BackgroundColor { get => _backgroundColor; set => _backgroundColor = value.StripAlpha(); }
-        private Color _backgroundColor;
+        public Rect PlayArea { get; set; } = new(-10f, -10f, 20f, 20f);
+        public Color BackgroundColor { get; set; } = Color.white.MultiplyTint(.25f);
+        public Color LightingColor = Color.white.SetAlpha(.8f);
         public Color LightingTint
         {
             get => LightingColor.MergeAlpha();
@@ -43,11 +31,10 @@ namespace Brutalsky
             get => LightingColor.a;
             set => LightingColor = new Color(LightingColor.r, LightingColor.g, LightingColor.b, value);
         }
-        public Color LightingColor;
-        public Direction GravityDirection { get; set; }
+        public Direction GravityDirection { get; set; } = Direction.None;
         public float GravityStrength { get; set; }
-        public float PlayerHealth { get; set; }
-        public bool AllowDummies { get; set; }
+        public float PlayerHealth { get; set; } = 100f;
+        public bool AllowDummies { get; set; } = true;
 
         public List<BsSpawn> Spawns { get; } = new();
         public Dictionary<(string, string), BsObject> Objects { get; } = new();

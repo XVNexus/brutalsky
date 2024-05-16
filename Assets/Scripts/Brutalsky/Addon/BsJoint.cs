@@ -7,23 +7,22 @@ using UnityEngine;
 using Utils.Constants;
 using Utils.Joint;
 using Utils.Lcs;
-using Utils.Object;
 
 namespace Brutalsky.Addon
 {
     public class BsJoint : BsAddon
     {
         public override string Tag => Tags.JointPrefix;
-        public override bool HasLogic => true;
 
-        public JointType Type { get; private set; }
-        public string MountShape { get; set; }
-        public Vector2 MountPoint { get; set; }
+        public JointType Type { get; set; }
+        public Vector2 Anchor { get; set; } = Vector2.zero;
 
-        public bool SelfCollision { get; set; } // Universal
+        public string MountShape { get; set; } = "";
+        public Vector2 MountAnchor { get; set; } = Vector2.zero;
+        public bool MountCollision { get; set; } // Universal
 
-        public float BreakForce { get; set; } // Universal
-        public float BreakTorque { get; set; } // Universal
+        public float BreakForce { get; set; } = float.PositiveInfinity; // Universal
+        public float BreakTorque { get; set; } = float.PositiveInfinity; // Universal
 
         public float AngleValue { get; set; } // Slider, Wheel
         public bool AngleAuto { get; set; } // Slider, Wheel
@@ -32,8 +31,8 @@ namespace Brutalsky.Addon
         public bool DistanceAuto { get; set; } // Distance, Spring
         public bool DistanceMax { get; set; } // Distance
 
-        public float DampingRatio { get; set; } // Fixed, Spring, Wheel
-        public float DampingFrequency { get; set; } // Fixed, Spring, Wheel
+        public float DampingRatio { get; set; } = .2f; // Fixed, Spring, Wheel
+        public float DampingFrequency { get; set; } = 2f; // Fixed, Spring, Wheel
 
         public bool MotorEnabled { get; set; } // Hinge, Slider, Wheel
         public float MotorSpeed { get; set; } // Hinge, Slider, Wheel
@@ -43,19 +42,7 @@ namespace Brutalsky.Addon
         public float LimitMin { get; set; } // Hinge, Slider
         public float LimitMax { get; set; } // Hinge, Slider
 
-        public BsJoint(string id, ObjectTransform transform, string mountShape, Vector2 mountPoint, bool selfCollision,
-            float breakForce, float breakTorque) : base(id, transform)
-        {
-            MountShape = mountShape;
-            MountPoint = mountPoint;
-            SelfCollision = selfCollision;
-            BreakForce = breakForce;
-            BreakTorque = breakTorque;
-        }
-
-        public BsJoint()
-        {
-        }
+        public BsJoint(string id = "") : base(id) { }
 
         protected override Component _Init(GameObject gameObject, BsObject parentObject, BsMap map)
         {
@@ -72,8 +59,7 @@ namespace Brutalsky.Addon
             };
 
             // Apply universal joint config
-            component.anchor = Transform.Position;
-            component.enableCollision = SelfCollision;
+            component.anchor = Anchor;
             component.breakForce = BreakForce;
             component.breakTorque = BreakTorque;
 
@@ -168,12 +154,13 @@ namespace Brutalsky.Addon
             component.autoConfigureConnectedAnchor = false;
             if (MountShape.Length > 0)
             {
+                component.enableCollision = MountCollision;
                 var mountShape = map.GetObject<BsShape>(Tags.ShapePrefix, MountShape);
                 if (!mountShape.InstanceObject) throw Errors.ParentObjectUnbuilt();
                 component.connectedBody = mountShape.InstanceObject.GetComponent<Rigidbody2D>();
-                component.connectedAnchor = MountPoint;
+                component.connectedAnchor = MountAnchor;
             }
-            component.connectedAnchor = MountPoint;
+            component.connectedAnchor = MountAnchor;
 
             return component;
         }
@@ -199,7 +186,7 @@ namespace Brutalsky.Addon
             (
                 new[]
                 {
-                    BsMatrix.ToLogic(SelfCollision), BreakForce, BreakTorque, DampingRatio, DampingFrequency
+                    BsMatrix.ToLogic(MountCollision), BreakForce, BreakTorque, DampingRatio, DampingFrequency
                 },
                 Array.Empty<float>(), (inputs, _) =>
                 {
@@ -220,7 +207,7 @@ namespace Brutalsky.Addon
             (
                 new[]
                 {
-                    BsMatrix.ToLogic(SelfCollision), BreakForce, BreakTorque, DistanceValue,
+                    BsMatrix.ToLogic(MountCollision), BreakForce, BreakTorque, DistanceValue,
                     BsMatrix.ToLogic(DistanceAuto), BsMatrix.ToLogic(DistanceMax)
                 },
                 Array.Empty<float>(), (inputs, _) =>
@@ -243,7 +230,7 @@ namespace Brutalsky.Addon
             (
                 new[]
                 {
-                    BsMatrix.ToLogic(SelfCollision), BreakForce, BreakTorque, DistanceValue,
+                    BsMatrix.ToLogic(MountCollision), BreakForce, BreakTorque, DistanceValue,
                     BsMatrix.ToLogic(DistanceAuto), DampingRatio, DampingFrequency
                 },
                 Array.Empty<float>(), (inputs, _) =>
@@ -267,7 +254,7 @@ namespace Brutalsky.Addon
             (
                 new[]
                 {
-                    BsMatrix.ToLogic(SelfCollision), BreakForce, BreakTorque, BsMatrix.ToLogic(MotorEnabled),
+                    BsMatrix.ToLogic(MountCollision), BreakForce, BreakTorque, BsMatrix.ToLogic(MotorEnabled),
                     MotorSpeed, MotorForce, BsMatrix.ToLogic(LimitEnabled), LimitMin, LimitMax
                 },
                 Array.Empty<float>(), (inputs, _) =>
@@ -303,7 +290,7 @@ namespace Brutalsky.Addon
             (
                 new[]
                 {
-                    BsMatrix.ToLogic(SelfCollision), BreakForce, BreakTorque, AngleValue,
+                    BsMatrix.ToLogic(MountCollision), BreakForce, BreakTorque, AngleValue,
                     BsMatrix.ToLogic(AngleAuto), BsMatrix.ToLogic(MotorEnabled), MotorSpeed, MotorForce,
                     BsMatrix.ToLogic(LimitEnabled), LimitMin, LimitMax
                 },
@@ -342,7 +329,7 @@ namespace Brutalsky.Addon
             (
                 new[]
                 {
-                    BsMatrix.ToLogic(SelfCollision), BreakForce, BreakTorque, DampingRatio, DampingFrequency,
+                    BsMatrix.ToLogic(MountCollision), BreakForce, BreakTorque, DampingRatio, DampingFrequency,
                     AngleValue, BsMatrix.ToLogic(MotorEnabled), MotorSpeed, MotorForce
                 },
                 Array.Empty<float>(), (inputs, _) =>
@@ -373,9 +360,10 @@ namespace Brutalsky.Addon
             var result = new List<LcsProp>
             {
                 new(LcsType.JointType, Type),
+                new(LcsType.Float2, Anchor),
                 new(LcsType.String, MountShape),
-                new(LcsType.Float2, MountPoint),
-                new(LcsType.Bool, SelfCollision),
+                new(LcsType.Float2, MountAnchor),
+                new(LcsType.Bool, MountCollision),
                 new(LcsType.Float, BreakForce),
                 new(LcsType.Float, BreakTorque)
             };
@@ -431,128 +419,61 @@ namespace Brutalsky.Addon
 
         protected override void _FromLcs(LcsProp[] props)
         {
-            Type = (JointType)props[0].Value;
-            MountShape = (string)props[1].Value;
-            MountPoint = (Vector2)props[2].Value;
-            SelfCollision = (bool)props[3].Value;
-            BreakForce = (float)props[4].Value;
-            BreakTorque = (float)props[5].Value;
+            var i = 0;
+            Type = (JointType)props[i++].Value;
+            Anchor = (Vector2)props[i++].Value;
+            MountShape = (string)props[i++].Value;
+            MountAnchor = (Vector2)props[i++].Value;
+            MountCollision = (bool)props[i++].Value;
+            BreakForce = (float)props[i++].Value;
+            BreakTorque = (float)props[i++].Value;
             switch (Type)
             {
                 case JointType.Fixed:
-                    DampingRatio = (float)props[6].Value;
-                    DampingFrequency = (float)props[7].Value;
+                    DampingRatio = (float)props[i++].Value;
+                    DampingFrequency = (float)props[i++].Value;
                     break;
                 case JointType.Distance:
-                    DistanceValue = (float)props[6].Value;
-                    DistanceAuto = (bool)props[7].Value;
-                    DistanceMax = (bool)props[8].Value;
+                    DistanceValue = (float)props[i++].Value;
+                    DistanceAuto = (bool)props[i++].Value;
+                    DistanceMax = (bool)props[i++].Value;
                     break;
                 case JointType.Spring:
-                    DistanceValue = (float)props[6].Value;
-                    DistanceAuto = (bool)props[7].Value;
-                    DampingRatio = (float)props[8].Value;
-                    DampingFrequency = (float)props[9].Value;
+                    DistanceValue = (float)props[i++].Value;
+                    DistanceAuto = (bool)props[i++].Value;
+                    DampingRatio = (float)props[i++].Value;
+                    DampingFrequency = (float)props[i++].Value;
                     break;
                 case JointType.Hinge:
-                    MotorEnabled = (bool)props[6].Value;
-                    MotorSpeed = (float)props[7].Value;
-                    MotorForce = (float)props[8].Value;
-                    LimitEnabled = (bool)props[9].Value;
-                    LimitMin = (float)props[10].Value;
-                    LimitMax = (float)props[11].Value;
+                    MotorEnabled = (bool)props[i++].Value;
+                    MotorSpeed = (float)props[i++].Value;
+                    MotorForce = (float)props[i++].Value;
+                    LimitEnabled = (bool)props[i++].Value;
+                    LimitMin = (float)props[i++].Value;
+                    LimitMax = (float)props[i++].Value;
                     break;
                 case JointType.Slider:
-                    AngleValue = (float)props[6].Value;
-                    AngleAuto = (bool)props[7].Value;
-                    MotorEnabled = (bool)props[8].Value;
-                    MotorSpeed = (float)props[9].Value;
-                    MotorForce = (float)props[10].Value;
-                    LimitEnabled = (bool)props[11].Value;
-                    LimitMin = (float)props[12].Value;
-                    LimitMax = (float)props[13].Value;
+                    AngleValue = (float)props[i++].Value;
+                    AngleAuto = (bool)props[i++].Value;
+                    MotorEnabled = (bool)props[i++].Value;
+                    MotorSpeed = (float)props[i++].Value;
+                    MotorForce = (float)props[i++].Value;
+                    LimitEnabled = (bool)props[i++].Value;
+                    LimitMin = (float)props[i++].Value;
+                    LimitMax = (float)props[i++].Value;
                     break;
                 case JointType.Wheel:
-                    DampingRatio = (float)props[6].Value;
-                    DampingFrequency = (float)props[7].Value;
-                    AngleValue = (float)props[8].Value;
-                    AngleAuto = (bool)props[9].Value;
-                    MotorEnabled = (bool)props[10].Value;
-                    MotorSpeed = (float)props[11].Value;
-                    MotorForce = (float)props[12].Value;
+                    DampingRatio = (float)props[i++].Value;
+                    DampingFrequency = (float)props[i++].Value;
+                    AngleValue = (float)props[i++].Value;
+                    AngleAuto = (bool)props[i++].Value;
+                    MotorEnabled = (bool)props[i++].Value;
+                    MotorSpeed = (float)props[i++].Value;
+                    MotorForce = (float)props[i++].Value;
                     break;
                 default:
                     throw Errors.InvalidItem("joint type", Type);
             }
-        }
-
-        public BsJoint FixedJoint(float dampingRatio, float dampingFrequency)
-        {
-            Type = JointType.Fixed;
-            DampingRatio = dampingRatio;
-            DampingFrequency = dampingFrequency;
-            return this;
-        }
-
-        public BsJoint DistanceJoint(float distanceValue, bool distanceAuto, bool distanceMax)
-        {
-            Type = JointType.Distance;
-            DistanceValue = distanceValue;
-            DistanceAuto = distanceAuto;
-            DistanceMax = distanceMax;
-            return this;
-        }
-
-        public BsJoint SpringJoint(float distanceValue, bool distanceAuto, float dampingRatio, float dampingFrequency)
-        {
-            Type = JointType.Spring;
-            DistanceValue = distanceValue;
-            DistanceAuto = distanceAuto;
-            DampingRatio = dampingRatio;
-            DampingFrequency = dampingFrequency;
-            return this;
-        }
-
-        public BsJoint HingeJoint(bool motorEnabled, float motorSpeed, float motorForce, bool limitEnabled,
-            float limitMin, float limitMax)
-        {
-            Type = JointType.Hinge;
-            MotorEnabled = motorEnabled;
-            MotorSpeed = motorSpeed;
-            MotorForce = motorForce;
-            LimitEnabled = limitEnabled;
-            LimitMin = limitMin;
-            LimitMax = limitMax;
-            return this;
-        }
-
-        public BsJoint SliderJoint(float angleValue, bool angleAuto, bool motorEnabled, float motorSpeed,
-            float motorForce, bool limitEnabled, float limitMin, float limitMax)
-        {
-            Type = JointType.Slider;
-            AngleValue = angleValue;
-            AngleAuto = angleAuto;
-            MotorEnabled = motorEnabled;
-            MotorSpeed = motorSpeed;
-            MotorForce = motorForce;
-            LimitEnabled = limitEnabled;
-            LimitMin = limitMin;
-            LimitMax = limitMax;
-            return this;
-        }
-
-        public BsJoint WheelJoint(float dampingRatio, float dampingFrequency, float angleValue, bool angleAuto,
-            bool motorEnabled, float motorSpeed, float motorForce)
-        {
-            Type = JointType.Wheel;
-            DampingRatio = dampingRatio;
-            DampingFrequency = dampingFrequency;
-            AngleValue = angleValue;
-            AngleAuto = angleAuto;
-            MotorEnabled = motorEnabled;
-            MotorSpeed = motorSpeed;
-            MotorForce = motorForce;
-            return this;
         }
     }
 }

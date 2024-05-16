@@ -1,16 +1,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Utils.Shape
+namespace Utils.Path
 {
     // This class can be used to split a 2D polygon into triangles.
     // The algorithm supports concave polygons, but not polygons with holes, or multiple polygons at once.
     // Taken from http://wiki.unity3d.com/index.php?title=Triangulator
-    public class ShapeTriangulator
+    public class PathTriangulator
     {
         private readonly List<Vector2> _mPoints;
 
-        public ShapeTriangulator(IEnumerable<Vector2> points)
+        public PathTriangulator(IEnumerable<Vector2> points)
         {
             _mPoints = new List<Vector2>(points);
         }

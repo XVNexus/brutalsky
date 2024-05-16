@@ -1,8 +1,6 @@
-using System;
 using System.Collections.Generic;
 using Controllers.Base;
 using Core;
-using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Utils.Config;
@@ -42,14 +40,14 @@ namespace Controllers.Gui
                     var optionField = _configOptionFields[key];
                     try
                     {
-                        var newValue = LcsInfo.TypeTable[option.Type].FromStr(optionField.value);
+                        var newValue = LcsInfo.TypeTable[option.Type].Parse(optionField.value);
                         option.Value = newValue;
                     }
                     catch
                     {
-                        // pass
+                        //
                     }
-                    optionField.value = LcsInfo.TypeTable[option.Type].ToStr(option.Value);
+                    optionField.value = LcsInfo.TypeTable[option.Type].Stringify(option.Value);
                 }
                 ConfigSystem._.SaveFile();
             });
@@ -59,7 +57,7 @@ namespace Controllers.Gui
                 foreach (var key in _configOptionFields.Keys)
                 {
                     var option = cfg[key.Item1][key.Item2];
-                    _configOptionFields[key].value = LcsInfo.TypeTable[option.Type].ToStr(option.Value);
+                    _configOptionFields[key].value = LcsInfo.TypeTable[option.Type].Stringify(option.Value);
                 }
             });
         }
@@ -91,7 +89,7 @@ namespace Controllers.Gui
                 var configOption = _eConfigOption.Instantiate();
                 configOption.Q<Label>("title").text = ConfigSystem._.NameTable[(section.Id, option.Id)];
                 var valueField = configOption.Q<TextField>("value");
-                valueField.value = LcsInfo.TypeTable[option.Type].ToStr(option.Value);
+                valueField.value = LcsInfo.TypeTable[option.Type].Stringify(option.Value);
                 configSectionBox.Add(configOption);
                 _configOptionFields[(section.Id, option.Id)] = valueField;
             }

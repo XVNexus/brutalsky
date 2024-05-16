@@ -82,14 +82,14 @@ namespace Utils.Lcs
 
         public string Stringify()
         {
-            return Version + " " + string.Join(" ", LineLevels) + LcsInfo.LineSeparator +
+            return Version + " " + string.Join(" ", LineLevels) + '\n' +
                 Lines.Aggregate("", (current, line) => current + line.Stringify());
         }
 
         public static LcsDocument Parse(string raw)
         {
             var lines = new List<LcsLine>();
-            var rawLines = raw.Trim().Split(LcsInfo.LineSeparator);
+            var rawLines = raw.Trim().Split('\n');
             var headerParts = rawLines[0].Split(' ');
             var version = int.Parse(headerParts[0]);
             var lineLevels = headerParts[1..];

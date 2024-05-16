@@ -15,9 +15,10 @@ namespace Utils.Constants
         public const string MountTag = "Mount";
         public const string GoalPrefix = "gl";
         public const string GoalTag = "Goal";
+        public const string DecalPrefix = "dc";
+        public const string DecalTag = "Decal";
 
         // Addons
         public const string JointPrefix = "jn";
-        public const string JointTag = "Joint";
     }
 }

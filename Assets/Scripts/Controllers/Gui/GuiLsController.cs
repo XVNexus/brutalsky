@@ -10,7 +10,6 @@ using UnityEngine.UIElements;
 using Utils.Constants;
 using Utils.Ext;
 using Utils.Gui;
-using Utils.Object;
 
 namespace Controllers.Gui
 {
@@ -115,16 +114,26 @@ namespace Controllers.Gui
             painter.Stroke(new Color(1f, 1f, 1f, .25f), 2f);
             painter.AutoTransform = true;
 
-            // Sort objects by layer
-            var objects = new Dictionary<ObjectLayer, List<BsObject>>
+            // Collect objects by layer
+            var objects = new Dictionary<int, List<BsObject>>();
+            for (int i = sbyte.MinValue; i <= sbyte.MaxValue; i++)
             {
-                [ObjectLayer.Background] = new(),
-                [ObjectLayer.Midground] = new(),
-                [ObjectLayer.Foreground] = new()
-            };
-            foreach (var obj in map.Objects.Values)
+                objects[i] = new List<BsObject>();
+            }
+            foreach (var obj in map.Objects.Values) switch (obj.Tag)
             {
-                objects[obj.Layer].Add(obj);
+                case Tags.ShapePrefix:
+                    var shape = (BsShape)obj;
+                    objects[shape.Layer].Add(shape);
+                    break;
+                case Tags.PoolPrefix:
+                    var pool = (BsPool)obj;
+                    objects[pool.Layer].Add(pool);
+                    break;
+                case Tags.DecalPrefix:
+                    var decal = (BsDecal)obj;
+                    objects[decal.Layer].Add(decal);
+                    break;
             }
 
             // Paint objects
@@ -132,12 +141,12 @@ namespace Controllers.Gui
             {
                 case Tags.ShapePrefix:
                     var shape = (BsShape)obj;
-                    PaintObjectPreview(painter, shape.Transform, shape.Form.ToPoints(shape.Transform.Rotation),
+                    PaintObjectPreview(painter, shape.Position, shape.Path.ToPoints(shape.Rotation),
                         shape.Color * map.LightingTint);
                     break;
                 case Tags.PoolPrefix:
                     var pool = (BsPool)obj;
-                    var rotation = pool.Transform.Rotation;
+                    var rotation = pool.Rotation;
                     var points = new[]
                     {
                         MathfExt.RotateVector(new Vector2(-pool.Size.x * .5f, -pool.Size.y * .5f), rotation),
@@ -145,7 +154,12 @@ namespace Controllers.Gui
                         MathfExt.RotateVector(new Vector2(pool.Size.x * .5f, pool.Size.y * .5f), rotation),
                         MathfExt.RotateVector(new Vector2(-pool.Size.x * .5f, pool.Size.y * .5f), rotation)
                     };
-                    PaintObjectPreview(painter, pool.Transform, points, pool.Color * map.LightingTint);
+                    PaintObjectPreview(painter, pool.Position, points, pool.Color * map.LightingTint);
+                    break;
+                case Tags.DecalPrefix:
+                    var decal = (BsDecal)obj;
+                    PaintObjectPreview(painter, decal.Position, decal.Path.ToPoints(decal.Rotation),
+                        decal.Color * map.LightingTint);
                     break;
             }
 
@@ -164,12 +178,12 @@ namespace Controllers.Gui
             painter.Stroke(new Color(1f, 1f, 1f, .1f), 2f);
         }
 
-        private void PaintObjectPreview(GuiPainter painter, ObjectTransform transform, Vector2[] points, Color color)
+        private void PaintObjectPreview(GuiPainter painter, Vector2 position, Vector2[] points, Color color)
         {
             var transformedPoints = new Vector2[points.Length];
             for (var i = 0; i < points.Length; i++)
             {
-                transformedPoints[i] = MathfExt.TranslateVector(points[i], transform.Position);
+                transformedPoints[i] = MathfExt.TranslateVector(points[i], position);
             }
             painter.DrawPolygon(transformedPoints);
             painter.Fill(color);

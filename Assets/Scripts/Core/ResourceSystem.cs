@@ -48,6 +48,7 @@ namespace Core
         public GameObject pSensor;
         public GameObject pMount;
         public GameObject pGoal;
+        public GameObject pDecal;
         public Material aLitMaterial;
         public Material aUnlitMaterial;
 
@@ -68,6 +69,7 @@ namespace Core
                 Tags.SensorPrefix => new BsSensor(),
                 Tags.MountPrefix => new BsMount(),
                 Tags.GoalPrefix => new BsGoal(),
+                Tags.DecalPrefix => new BsDecal(),
                 _ => throw Errors.InvalidItem("object tag", tag)
             };
         }

@@ -18,7 +18,7 @@ namespace Utils.Lcs
         {
             var typeInfo = LcsInfo.TypeTable[Type];
             var typeBytes = new[] { typeInfo.ByteTag };
-            var valueBytes = typeInfo.ToBin(Value);
+            var valueBytes = typeInfo.Binify(Value);
             var size = typeInfo.Size;
             if (size > -1) return typeBytes.Concat(valueBytes).ToArray();
             var headerBytes = new List<byte>();
@@ -53,22 +53,21 @@ namespace Utils.Lcs
             {
                 valueBytes[i] = raw[cursor++];
             }
-            var value = typeInfo.FromBin(valueBytes);
+            var value = typeInfo.Parse(valueBytes);
             return new LcsProp(type, value);
         }
 
         public string Stringify()
         {
             var typeInfo = LcsInfo.TypeTable[Type];
-            return $"{typeInfo.StringTag}{LcsInfo.TypeSeparator}{typeInfo.ToStr(Value)}";
+            return typeInfo.Stringify(Value);
         }
 
         public static LcsProp Parse(string raw)
         {
-            var parts = raw.Split(LcsInfo.TypeSeparator);
-            var type = LcsInfo.StringTagTable[parts[0]];
+            var type = LcsInfo.TypeTable.Keys.First(type => LcsInfo.TypeTable[type].StringPattern.IsMatch(raw));
             var typeInfo = LcsInfo.TypeTable[type];
-            var value = typeInfo.FromStr(parts[1]);
+            var value = typeInfo.Parse(raw);
             return new LcsProp(type, value);
         }
 

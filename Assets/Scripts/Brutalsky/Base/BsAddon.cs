@@ -4,25 +4,20 @@ using Core;
 using JetBrains.Annotations;
 using UnityEngine;
 using Utils.Lcs;
-using Utils.Object;
 
 namespace Brutalsky.Base
 {
     public abstract class BsAddon
     {
         public abstract string Tag { get; }
-        public abstract bool HasLogic { get; }
-        public string Id { get => _id; set => _id = MapSystem.CleanId(value); }
-        private string _id;
-        public ObjectTransform Transform { get; set; }
+        public string Id { get; set; }
 
         [CanBeNull] public Component InstanceComponent { get; private set; }
         public bool Active { get; private set; }
 
-        protected BsAddon(string id, ObjectTransform transform)
+        protected BsAddon(string id)
         {
             Id = id;
-            Transform = transform;
         }
 
         protected BsAddon()
@@ -58,8 +53,7 @@ namespace Brutalsky.Base
             var props = new List<LcsProp>
             {
                 new(LcsType.String, Tag),
-                new(LcsType.String, Id),
-                new(LcsType.Transform, Transform)
+                new(LcsType.String, Id)
             };
             props.AddRange(_ToLcs());
             return new LcsLine('@', props.ToArray());
@@ -75,8 +69,7 @@ namespace Brutalsky.Base
         private void ParseLcs(LcsLine line)
         {
             Id = (string)line.Props[1].Value;
-            Transform = (ObjectTransform)line.Props[2].Value;
-            _FromLcs(line.Props[3..]);
+            _FromLcs(line.Props[2..]);
         }
 
         public override string ToString()

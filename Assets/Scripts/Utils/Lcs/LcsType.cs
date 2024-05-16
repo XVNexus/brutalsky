@@ -25,16 +25,12 @@ namespace Utils.Lcs
         Rect,
         Color,
         // Enum types
-        PlayerType,
         Direction,
-        Layer,
+        PlayerType,
         FormType,
         JointType,
         // Brutalsky types
-        Transform,
-        Form,
-        Material,
-        Chemical,
+        Path,
         Port
     }
 }

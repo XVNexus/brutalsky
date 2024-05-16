@@ -9,8 +9,7 @@ namespace Controllers.Pool
     {
         // Controller metadata
         public override string Id => "float";
-        public override bool IsUnused => (Master.Object.Chemical.Buoyancy == 0f &&
-            Master.Object.Chemical.Viscosity == 0f) || !Master.Object.Simulated;
+        public override bool IsUnused => Master.Object.Buoyancy == 0f && Master.Object.Buoyancy == 0f;
 
         // Local variables
         private Vector2 _buoyancyForce;
@@ -23,7 +22,7 @@ namespace Controllers.Pool
             // Set up fluid properties
             _surfaceAngle = (transform.rotation.eulerAngles.z + 90f) * Mathf.Deg2Rad;
             _surfacePosition = Master.Object.Size.y * .5f;
-            _buoyancyForce = new Vector2(Mathf.Cos(_surfaceAngle), Mathf.Sin(_surfaceAngle)) * Master.Object.Chemical.Buoyancy;
+            _buoyancyForce = new Vector2(Mathf.Cos(_surfaceAngle), Mathf.Sin(_surfaceAngle)) * Master.Object.Buoyancy;
         }
 
         // Event functions
@@ -44,9 +43,10 @@ namespace Controllers.Pool
 
             // Apply fluid force
             var velocity = otherRigidbody.velocity;
-            otherRigidbody.velocity = velocity - velocity * (Master.Object.Chemical.Viscosity * Time.fixedDeltaTime);
+            otherRigidbody.velocity = velocity - velocity * (Master.Object.Viscosity * Time.fixedDeltaTime);
             var angularVelocity = otherRigidbody.angularVelocity;
-            otherRigidbody.angularVelocity = angularVelocity - angularVelocity * (Master.Object.Chemical.Viscosity * Time.fixedDeltaTime);
+            otherRigidbody.angularVelocity = angularVelocity - angularVelocity
+                * (Master.Object.Viscosity * Time.fixedDeltaTime);
             otherRigidbody.AddForceAtPosition(_buoyancyForce * submersionFactor, otherRigidbody.worldCenterOfMass);
         }
     }

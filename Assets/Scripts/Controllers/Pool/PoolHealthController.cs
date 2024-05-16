@@ -10,13 +10,13 @@ namespace Controllers.Pool
     {
         // Controller metadata
         public override string Id => "health";
-        public override bool IsUnused => Master.Object.Chemical.Health == 0f || !Master.Object.Simulated;
+        public override bool IsUnused => Master.Object.Health == 0f;
 
         // Event functions
         private void OnTriggerStay2D(Collider2D other)
         {
             // Apply damage to player
-            var health = Master.Object.Chemical.Health;
+            var health = Master.Object.Health;
             if (!other.gameObject.CompareTag(Tags.PlayerTag)) return;
             var playerController = other.gameObject.GetComponent<PlayerController>();
             if (health > 0f)

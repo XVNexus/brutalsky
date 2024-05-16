@@ -7,7 +7,6 @@ using JetBrains.Annotations;
 using UnityEngine;
 using Utils.Constants;
 using Utils.Lcs;
-using Utils.Object;
 
 namespace Brutalsky.Base
 {
@@ -15,39 +14,27 @@ namespace Brutalsky.Base
     {
         public abstract GameObject Prefab { get; }
         public abstract string Tag { get; }
-        public abstract bool HasLogic { get; }
-        public string Id { get => _id; set => _id = MapSystem.CleanId(value); }
-        private string _id;
+        public string Id { get; set; }
         public string ParentTag { get; set; }
-        public string ParentId { get => _parentId; set => _parentId = MapSystem.CleanId(value); }
-        private string _parentId;
-        public ObjectTransform Transform { get; set; }
-        public ObjectLayer Layer { get; set; }
-        public bool Simulated { get; set; }
+        public string ParentId { get; set; }
         public List<BsAddon> Addons { get; } = new();
 
         [CanBeNull] public GameObject InstanceObject { get; private set; }
         [CanBeNull] public BsBehavior InstanceController { get; private set; }
         public bool Active { get; private set; }
 
-        protected BsObject(string id, string parentTag, string parentId, ObjectTransform transform, ObjectLayer layer, bool simulated)
+        protected BsObject(string id, string parentTag, string parentId)
         {
             Id = id;
             ParentTag = parentTag;
             ParentId = parentId;
-            Transform = transform;
-            Layer = layer;
-            Simulated = simulated;
         }
 
-        protected BsObject(string id, ObjectTransform transform, ObjectLayer layer, bool simulated)
+        protected BsObject(string id)
         {
             Id = id;
             ParentTag = "";
             ParentId = "";
-            Transform = transform;
-            Layer = layer;
-            Simulated = simulated;
         }
 
         protected BsObject()
@@ -66,18 +53,25 @@ namespace Brutalsky.Base
 
         protected abstract void _FromLcs(LcsProp[] props);
 
+        public BsObject AppendAddon(BsAddon addon)
+        {
+            Addons.Add(addon);
+            return this;
+        }
+
         public List<BsNode> RegisterLogic()
         {
             var result = new List<BsNode>();
-            if (HasLogic)
+            var objectNode = _RegisterLogic();
+            if (objectNode != null)
             {
-                var objectNode = _RegisterLogic();
                 objectNode.Tag = Tag;
                 result.Add(objectNode);
             }
-            foreach (var addon in Addons.Where(addon => addon.HasLogic))
+            foreach (var addon in Addons)
             {
                 var addonNode = addon.RegisterLogic();
+                if (addonNode == null) continue;
                 addonNode.Tag = addon.Tag;
                 result.Add(addonNode);
             }
@@ -117,10 +111,7 @@ namespace Brutalsky.Base
                 new(LcsType.String, Tag),
                 new(LcsType.String, Id),
                 new(LcsType.String, ParentTag),
-                new(LcsType.String, ParentId),
-                new(LcsType.Transform, Transform),
-                new(LcsType.Layer, Layer),
-                new(LcsType.Bool, Simulated),
+                new(LcsType.String, ParentId)
             };
             props.AddRange(_ToLcs());
             return new LcsLine('#', props.ToArray(), Addons.Select(addon => addon.ToLcs()).ToList());
@@ -138,10 +129,7 @@ namespace Brutalsky.Base
             Id = (string)line.Props[1].Value;
             ParentTag = (string)line.Props[2].Value;
             ParentId = (string)line.Props[3].Value;
-            Transform = (ObjectTransform)line.Props[4].Value;
-            Layer = (ObjectLayer)line.Props[5].Value;
-            Simulated = (bool)line.Props[6].Value;
-            _FromLcs(line.Props[7..]);
+            _FromLcs(line.Props[4..]);
             foreach (var child in line.Children)
             {
                 Addons.Add(BsAddon.FromLcs(child));

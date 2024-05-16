@@ -1,18 +1,18 @@
 using UnityEngine;
 using Utils.Ext;
 
-namespace Utils.Shape
+namespace Utils.Path
 {
-    public class FormLine : FormNode
+    public class PathLine : PathNode
     {
         public override int DetailLevel => 1;
 
-        public FormLine(Vector2 point)
+        public PathLine(Vector2 point)
         {
             EndPoint = point;
         }
 
-        public FormLine(float x, float y)
+        public PathLine(float x, float y)
         {
             EndPoint = new Vector2(x, y);
         }

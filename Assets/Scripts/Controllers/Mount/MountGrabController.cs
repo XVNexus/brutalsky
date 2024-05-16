@@ -13,7 +13,7 @@ namespace Controllers.Mount
     {
         // Controller metadata
         public override string Id => "grab";
-        public override bool IsUnused => !Master.Object.Simulated;
+        public override bool IsUnused => false;
 
         // Config options
         public float springForce;

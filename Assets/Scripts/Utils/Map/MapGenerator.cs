@@ -1,25 +1,23 @@
+using System.Text.RegularExpressions;
 using Brutalsky;
 using Brutalsky.Map;
 using Brutalsky.Object;
+using Core;
 using UnityEngine;
 using Utils.Constants;
 using Utils.Ext;
-using Utils.Object;
-using Utils.Shape;
+using Utils.Path;
 using Random = Unity.Mathematics.Random;
 
 namespace Utils.Map
 {
     public static class MapGenerator
     {
-        public static readonly Color MapBackground = new(.25f, .25f, .25f);
-        public static readonly Color MapLighting = new(1f, 1f, 1f, .8f);
-        public static readonly ShapeMaterial ObjectMaterial = ShapeMaterial.Stone;
-        public static readonly Color ObjectColor = ColorExt.Stone;
         public const string Author = "Brutalsky";
 
         public static BsMap Box(string title, int shape, Vector2 size)
         {
+            // Create map
             var bottom = (shape & 0b1000) > 0;
             var top = (shape & 0b0100) > 0;
             var left = (shape & 0b0010) > 0;
@@ -27,199 +25,149 @@ namespace Utils.Map
             var result = new BsMap(title, Author)
             {
                 PlayArea = new Rect(size * -.5f, size),
-                BackgroundColor = MapBackground,
-                LightingColor = MapLighting,
                 GravityDirection = Direction.Down,
-                GravityStrength = 20f,
-                PlayerHealth = 100f,
-                AllowDummies = true
+                GravityStrength = 20f
             };
+
+            // Add spawns
             result.AddSpawn(new BsSpawn(new Vector2(-3f, -size.y * .5f + 1.5f), 0));
             result.AddSpawn(new BsSpawn(new Vector2(-1f, -size.y * .5f + 1.5f), 0));
             result.AddSpawn(new BsSpawn(new Vector2(1f, -size.y * .5f + 1.5f), 0));
             result.AddSpawn(new BsSpawn(new Vector2(3f, -size.y * .5f + 1.5f), 0));
-            if (bottom) result.AddObject(new BsShape
-            (
-                "wall-bottom",
-                new ObjectTransform(0f, size.y * -.5f + .5f),
-                ObjectLayer.Midground,
-                true,
-                Form.Rectangle(size.x, 1f),
-                ObjectMaterial,
-                false,
-                ObjectColor
-            ));
-            if (top) result.AddObject(new BsShape
-            (
-                "wall-top",
-                new ObjectTransform(0f, size.y * .5f - .5f),
-                ObjectLayer.Midground,
-                true,
-                Form.Rectangle(size.x, 1f),
-                ObjectMaterial,
-                false,
-                ObjectColor
-            ));
-            if (left) result.AddObject(new BsShape
-            (
-                "wall-left",
-                new ObjectTransform(size.x * -.5f + .5f, 0f),
-                ObjectLayer.Midground,
-                true,
-                Form.Rectangle(1f, size.y),
-                ObjectMaterial,
-                false,
-                ObjectColor
-            ));
-            if (right) result.AddObject(new BsShape
-            (
-                "wall-right",
-                new ObjectTransform(size.x * .5f - .5f, 0f),
-                ObjectLayer.Midground,
-                true,
-                Form.Rectangle(1f, size.y),
-                ObjectMaterial,
-                false,
-                ObjectColor
-            ));
-            if (top && left) result.AddObject(new BsShape
-            (
-                "corner-tl",
-                new ObjectTransform(size.x * -.5f + 1f, size.y * .5f - 1f),
-                ObjectLayer.Midground,
-                true,
-                Form.Vector(new[] { 0f, 0f, 0f, 3f, 0f, 1f, 0f, 0f, 0f, -3f }),
-                ObjectMaterial,
-                false,
-                ObjectColor
-            ));
-            if (top && right) result.AddObject(new BsShape
-            (
-                "corner-tr",
-                new ObjectTransform(size.x * .5f - 1f, size.y * .5f - 1f),
-                ObjectLayer.Midground,
-                true,
-                Form.Vector(new[] { 0f, 0f, 0f, -3f, 0f, 1f, 0f, 0f, 0f, -3f }),
-                ObjectMaterial,
-                false,
-                ObjectColor
-            ));
-            if (bottom && left) result.AddObject(new BsShape
-            (
-                "corner-bl",
-                new ObjectTransform(size.x * -.5f + 1f, size.y * -.5f + 1f),
-                ObjectLayer.Midground,
-                true,
-                Form.Vector(new[] { 0f, 0f, 0f, 3f, 0f, 1f, 0f, 0f, 0f, 3f }),
-                ObjectMaterial,
-                false,
-                ObjectColor
-            ));
-            if (bottom && right) result.AddObject(new BsShape
-            (
-                "corner-br",
-                new ObjectTransform(size.x * .5f - 1f, size.y * -.5f + 1f),
-                ObjectLayer.Midground,
-                true,
-                Form.Vector(new[] { 0f, 0f, 0f, -3f, 0f, 1f, 0f, 0f, 0f, 3f }),
-                ObjectMaterial,
-                false,
-                ObjectColor
-            ));
+
+            // Add walls
+            if (bottom)
+            {
+                result.AddObject(new BsShape("wall-bottom")
+                {
+                    Position = new Vector2(0f, size.y * -.5f + .5f),
+                    Path = PathString.Rectangle(size.x, 1f)
+                });
+            }
+            if (top)
+            {
+                result.AddObject(new BsShape("wall-top")
+                {
+                    Position = new Vector2(0f, size.y * .5f - .5f),
+                    Path = PathString.Rectangle(size.x, 1f)
+                });
+            }
+            if (left)
+            {
+                result.AddObject(new BsShape("wall-left")
+                {
+                    Position = new Vector2(size.x * -.5f + .5f, 0f),
+                    Path = PathString.Rectangle(1f, size.y)
+                });
+            }
+            if (right)
+            {
+                result.AddObject(new BsShape("wall-right")
+                {
+                    Position = new Vector2(size.x * .5f - .5f, 0f),
+                    Path = PathString.Rectangle(1f, size.y)
+                });
+            }
+
+            // Add corners
+            if (top && left)
+            {
+                result.AddObject(new BsShape("corner-tl")
+                {
+                    Position = new Vector2(size.x * -.5f + 1f, size.y * .5f - 1f),
+                    Path = PathString.Vector(new[] { 0f, 0f, 0f, 3f, 0f, 1f, 0f, 0f, 0f, -3f })
+                });
+            }
+            if (top && right)
+            {
+                result.AddObject(new BsShape("corner-tr")
+                {
+                    Position = new Vector2(size.x * .5f - 1f, size.y * .5f - 1f),
+                    Path = PathString.Vector(new[] { 0f, 0f, 0f, -3f, 0f, 1f, 0f, 0f, 0f, -3f })
+                });
+            }
+            if (bottom && left)
+            {
+                result.AddObject(new BsShape("corner-bl")
+                {
+                    Position = new Vector2(size.x * -.5f + 1f, size.y * -.5f + 1f),
+                    Path = PathString.Vector(new[] { 0f, 0f, 0f, 3f, 0f, 1f, 0f, 0f, 0f, 3f })
+                });
+            }
+            if (bottom && right)
+            {
+                result.AddObject(new BsShape("corner-br")
+                {
+                    Position = new Vector2(size.x * .5f - 1f, size.y * -.5f + 1f),
+                    Path = PathString.Vector(new[] { 0f, 0f, 0f, -3f, 0f, 1f, 0f, 0f, 0f, 3f })
+                });
+            }
+
             return result;
         }
 
-        public static BsMap Platformer(string title, float difficulty, uint seed, string nextTitle = "")
+        public static BsMap Platformer(string title, float difficulty, uint seed, bool hasNextLevel)
         {
+            // Create map
             var length = difficulty * 50f + 50f;
             var height = difficulty * 10f + 20f;
             var rand = new Random(seed);
             var result = new BsMap(title, Author)
             {
                 PlayArea = new Rect(-10f, height * -.5f, length + 40f, height),
-                BackgroundColor = MapBackground,
-                LightingColor = MapLighting,
                 GravityDirection = Direction.Down,
-                GravityStrength = 20f,
-                PlayerHealth = 100f,
-                AllowDummies = false
+                GravityStrength = 20f
             };
+
+            // Add spawns
             result.AddSpawn(new BsSpawn(new Vector2(-3f, .5f), 0));
             result.AddSpawn(new BsSpawn(new Vector2(-1f, .5f), 0));
             result.AddSpawn(new BsSpawn(new Vector2(1f, .5f), 0));
             result.AddSpawn(new BsSpawn(new Vector2(3f, .5f), 0));
-            result.AddObject(new BsShape
-            (
-                "platform-spawn",
-                new ObjectTransform(0f, 0f),
-                ObjectLayer.Background,
-                true,
-                Form.Vector(new[] { -5f, 0f, 0, 5f, 0f, 1, 5f, -5f, 0f, -5f, 1, -5f, -5f, -5f, 0f }),
-                ObjectMaterial,
-                false,
-                ColorExt.Lava.MultiplyTint(.5f),
-                true
-            ));
-            result.AddObject(new BsShape
-            (
-                "platform-spawn-fg",
-                new ObjectTransform(0f, 0f),
-                ObjectLayer.Midground,
-                false,
-                Form.Polygon(new[] { -2.5f, -1f, -5f, 0f, 5f, 0f, 2.5f, -1f }),
-                ObjectMaterial,
-                false,
-                ColorExt.Lava,
-                true
-            ));
-            result.AddObject(new BsShape
-            (
-                "platform-spawn-beacon",
-                new ObjectTransform(0f, height * .5f),
-                ObjectLayer.Foreground,
-                false,
-                Form.Rectangle(10f, height),
-                ObjectMaterial,
-                false,
-                ColorExt.Lava.SetAlpha(.1f),
-                true
-            ));
-            result.AddObject(new BsShape
-            (
-                "platform-goal",
-                new ObjectTransform(length + 20f, 0f),
-                ObjectLayer.Background,
-                true,
-                Form.Vector(new[] { -5f, 0f, 0, 5f, 0f, 1, 5f, -5f, 0f, -5f, 1, -5f, -5f, -5f, 0f }),
-                ObjectMaterial,
-                false,
-                ColorExt.Medicine.MultiplyTint(.5f),
-                true
-            ));
-            result.AddObject(new BsShape
-            (
-                "platform-goal-fg",
-                new ObjectTransform(length + 20f, 0f),
-                ObjectLayer.Midground,
-                false,
-                Form.Polygon(new[] { -2.5f, -1f, -5f, 0f, 5f, 0f, 2.5f, -1f }),
-                ObjectMaterial,
-                false,
-                ColorExt.Medicine,
-                true
-            ));
-            result.AddObject(new BsShape
-            (
-                "platform-goal-beacon",
-                new ObjectTransform(length + 20f, height * .5f),
-                ObjectLayer.Foreground,
-                false,
-                Form.Rectangle(10f, height),
-                ObjectMaterial,
-                false,
-                ColorExt.Medicine.SetAlpha(.1f),
-                true
-            ));
+
+            // Add start and finish platforms
+            result.AddObject(new BsDecal("spawn-bg")
+            {
+                Layer = -1,
+                Path = PathString.Vector(new[] { -5f, 0f, 0, 5f, 0f, 1, 5f, -3f, 0f, -3f, 1, -5f, -3f, -5f, 0f }),
+                Color = ColorExt.Lava.MultiplyTint(.5f)
+            });
+            result.AddObject(new BsShape("spawn-platform")
+            {
+                Path = PathString.Polygon(new[] { -2.5f, -1f, -5f, 0f, 5f, 0f, 2.5f, -1f }),
+                Material = MaterialExt.Metal,
+                Color = ColorExt.Lava
+            });
+            result.AddObject(new BsDecal("spawn-beacon")
+            {
+                Position = new Vector2(0f, height * .5f),
+                Layer = 1,
+                Path = PathString.Rectangle(10f, height),
+                Color = ColorExt.Lava.SetAlpha(.1f)
+            });
+            result.AddObject(new BsDecal("goal-bg")
+            {
+                Position = new Vector2(length + 20f, 0f),
+                Path = PathString.Vector(new[] { -5f, 0f, 0, 5f, 0f, 1, 5f, -3f, 0f, -3f, 1, -5f, -3f, -5f, 0f }),
+                Layer = -1,
+                Color = ColorExt.Medicine.MultiplyTint(.5f)
+            });
+            result.AddObject(new BsShape("goal-platform")
+            {
+                Position = new Vector2(length + 20f, 0f),
+                Path = PathString.Polygon(new[] { -2.5f, -1f, -5f, 0f, 5f, 0f, 2.5f, -1f }),
+                Material = MaterialExt.Metal,
+                Color = ColorExt.Medicine
+            });
+            result.AddObject(new BsDecal("goal-beacon")
+            {
+                Position = new Vector2(length + 20f, height * .5f),
+                Layer = 1,
+                Path = PathString.Rectangle(10f, height),
+                Color = ColorExt.Medicine.SetAlpha(.1f)
+            });
+
+            // Add main platforms
             var cursor = 5f;
             var limit = length + 15f;
             var platform = 0;
@@ -233,57 +181,79 @@ namespace Utils.Map
                 var platformIce = rand.NextFloat(Mathf.Max(26f - difficulty * 2f, 1f)) < 1f;
                 platform++;
                 cursor += platformLength * .5f;
-                var material = platformIce ? ShapeMaterial.Ice : ShapeMaterial.Stone;
+                var material = platformIce ? MaterialExt.Ice : MaterialExt.Stone;
                 var color = platformIce ? ColorExt.Ice : ColorExt.Stone;
-                result.AddObject(new BsShape
-                (
-                    $"platform-{platform}",
-                    new ObjectTransform(cursor, platformHeight),
-                    ObjectLayer.Midground,
-                    true,
-                    Form.Polygon(new []
-                    {
-                        0f, platformLength * difficulty * -.5f,
-                        platformLength * -.5f, 0f,
-                        platformLength * -.5f, 1f,
-                        platformLength * .5f, 1f,
-                        platformLength * .5f, 0f
-                    }),
-                    material,
-                    false,
-                    color
-                ));
-                result.AddObject(new BsShape
-                (
-                    $"platform-{platform}-beacon",
-                    new ObjectTransform(cursor, platformHeight + 1f),
-                    ObjectLayer.Foreground,
-                    false,
-                    Form.Polygon(new []
-                    {
-                        platformLength * -.5f, 0f,
-                        platformLength * -.5f, height,
-                        platformLength * .5f, height,
-                        platformLength * .5f, 0f
-                    }),
-                    ObjectMaterial,
-                    false, 
-                    color.SetAlpha(.05f)
-                ));
+                result.AddObject(new BsShape($"platform-{platform}")
+                {
+                    Position = new Vector2(cursor, platformHeight),
+                    Path = PathString.Polygon(new [] { 0f, platformLength * difficulty * -.5f,
+                        platformLength * -.5f, 0f, platformLength * -.5f, 1f, platformLength * .5f, 1f,
+                        platformLength * .5f, 0f }),
+                    Material = material,
+                    Color = color
+                });
+                result.AddObject(new BsDecal($"beacon-{platform}")
+                {
+                    Position = new Vector2(cursor, platformHeight + 1f + height * .5f),
+                    Layer = 1,
+                    Path = PathString.Rectangle(platformLength, height),
+                    Color = color.SetAlpha(.05f)
+                });
                 cursor += platformLength * .5f;
             }
-            if (nextTitle.Length > 0)
+
+            // Add goal redirect
+            var nextLevelTitle = hasNextLevel
+                ? Regex.Replace(title, @"\d+", match => $"{int.Parse(match.Value) + 1}")
+                : Regex.Replace(title, @"\d+", "Goal");
+            result.AddObject(new BsGoal("goal")
             {
-                result.AddObject(new BsGoal(
-                    "goal",
-                    new ObjectTransform(length + 20f, 0f),
-                    true,
-                    8f,
-                    ColorExt.Medicine,
-                    nextTitle,
-                    Author
-                ));
-            }
+                Position = new Vector2(length + 20f, 0f),
+                Size = 8f,
+                Color = ColorExt.Medicine,
+                Redirect = MapSystem.GenerateId(nextLevelTitle, Author)
+            });
+
+            return result;
+        }
+
+        public static BsMap PlatformerGoal(string title)
+        {
+            // Create map
+            var result = new BsMap(title, Author)
+            {
+                PlayArea = new Rect(-15f, -15f, 30f, 30f),
+                GravityDirection = Direction.Down,
+                GravityStrength = 20f
+            };
+
+            // Add spawns
+            result.AddSpawn(new BsSpawn(new Vector2(-3f, .5f), 0));
+            result.AddSpawn(new BsSpawn(new Vector2(-1f, .5f), 0));
+            result.AddSpawn(new BsSpawn(new Vector2(1f, .5f), 0));
+            result.AddSpawn(new BsSpawn(new Vector2(3f, .5f), 0));
+
+            // Add finish platform
+            result.AddObject(new BsDecal("finish-bg")
+            {
+                Layer = -1,
+                Path = PathString.Vector(new[] { -5f, 0f, 0, 5f, 0f, 1, 5f, -5f, 0f, -5f, 1, -5f, -5f, -5f, 0f }),
+                Color = ColorExt.Medkit.MultiplyTint(.5f)
+            });
+            result.AddObject(new BsShape("finish-platform")
+            {
+                Path = PathString.Polygon(new[] { -2.5f, -1f, -5f, 0f, 5f, 0f, 2.5f, -1f }),
+                Material = MaterialExt.Metal,
+                Color = ColorExt.Medkit
+            });
+            result.AddObject(new BsDecal("finish-beacon")
+            {
+                Position = new Vector2(0f, 15f),
+                Layer = 1,
+                Path = PathString.Rectangle(10f, 30f),
+                Color = ColorExt.Medkit.SetAlpha(.1f)
+            });
+
             return result;
         }
     }

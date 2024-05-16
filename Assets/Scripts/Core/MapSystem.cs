@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using Brutalsky;
 using Brutalsky.Base;
 using Brutalsky.Logic;
@@ -13,7 +12,6 @@ using UnityEngine.Rendering.Universal;
 using Utils.Constants;
 using Utils.Ext;
 using Utils.Lcs;
-using Utils.Object;
 using Utils.Player;
 
 namespace Core
@@ -303,16 +301,6 @@ namespace Core
         }
 
         // Utility functions
-        public static int LayerToOrder(ObjectLayer layer)
-        {
-            return layer switch
-            {
-                ObjectLayer.Background => -2,
-                ObjectLayer.Foreground => 2,
-                _ => 0
-            };
-        }
-
         public static Vector2 GravityToVector(Direction direction, float strength)
         {
             return direction switch
@@ -323,11 +311,6 @@ namespace Core
                 Direction.Right => Vector2.right,
                 _ => Vector2.zero
             } * strength;
-        }
-
-        public static string CleanId(string id)
-        {
-            return Regex.Replace(id.Replace(' ', '-').ToLower(), "[^a-z0-9-.]|-(?=-)", "");
         }
 
         public static uint GenerateId(string title, string author)

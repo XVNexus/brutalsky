@@ -1,7 +1,9 @@
 1 !$#%^ @
 ! str: Racetrack / str: Xveon / rec: -1250 0 2500 250 / col: 404040FF / col: FFFFFFCC / dir: Down / flt: 20 / flt: 100 / bol: True
-$ fl2: -4 11 / int: 0
-$ fl2: 4 11 / int: 0
+$ fl2: -5 11 / int: 1
+$ fl2: -3 11 / int: 0
+$ fl2: 3 11 / int: 0
+$ fl2: 5 11 / int: 1
 # str: sh / str: wall-bottom / str:  / str:  / trn: 0 -5 0 / lay: Midground / bol: True / for: Rectangle 2500 12 / mat: 2 0 0 10 0 / bol: False / col: B2B2B2FF / bol: False
 # str: sh / str: wall-left / str:  / str:  / trn: -1255 10 0 / lay: Midground / bol: True / for: Rectangle 12 42 / mat: 2 0 0 10 0 / bol: False / col: B2B2B2FF / bol: False
 # str: sh / str: wall-right / str:  / str:  / trn: 1255 10 0 / lay: Midground / bol: True / for: Rectangle 12 42 / mat: 2 0 0 10 0 / bol: False / col: B2B2B2FF / bol: False

@@ -5,7 +5,6 @@ using Core;
 using UnityEngine;
 using Utils.Constants;
 using Utils.Lcs;
-using Utils.Object;
 using Utils.Player;
 
 namespace Brutalsky.Object
@@ -14,25 +13,12 @@ namespace Brutalsky.Object
     {
         public override GameObject Prefab => ResourceSystem._.pPlayer;
         public override string Tag => Tags.PlayerPrefix;
-        public override bool HasLogic => false;
 
-        public PlayerType Type { get; set; }
-        public string Name { get; set; }
-        public Color Color { get; set; }
-        public float Health { get; set; }
+        public PlayerType Type { get; set; } = PlayerType.Dummy;
+        public Color Color { get; set; } = Color.white;
+        public float Health { get; set; } = 100f;
 
-        public BsPlayer(PlayerType type, string name, Color color, float health = 100f)
-            : base(name, new ObjectTransform(), ObjectLayer.Midground, true)
-        {
-            Type = type;
-            Name = name;
-            Color = color;
-            Health = health;
-        }
-
-        public BsPlayer()
-        {
-        }
+        public BsPlayer(string id = "") : base(id) { }
 
         protected override BsBehavior _Init(GameObject gameObject, BsMap map)
         {
@@ -42,11 +28,6 @@ namespace Brutalsky.Object
 
             // Apply config
             controller.GetComponent<SpriteRenderer>().color = Color;
-            if (!Simulated)
-            {
-                UnityEngine.Object.Destroy(gameObject.GetComponent<Rigidbody2D>());
-                UnityEngine.Object.Destroy(gameObject.GetComponent<CircleCollider2D>());
-            }
 
             return controller;
         }
@@ -56,7 +37,6 @@ namespace Brutalsky.Object
             return new LcsProp[]
             {
                 new(LcsType.PlayerType, Type),
-                new(LcsType.String, Name),
                 new(LcsType.Color, Color),
                 new(LcsType.Float, Health)
             };
@@ -64,10 +44,10 @@ namespace Brutalsky.Object
 
         protected override void _FromLcs(LcsProp[] props)
         {
-            Type = (PlayerType)props[0].Value;
-            Name = (string)props[1].Value;
-            Color = (Color)props[2].Value;
-            Health = (float)props[3].Value;
+            var i = 0;
+            Type = (PlayerType)props[i++].Value;
+            Color = (Color)props[i++].Value;
+            Health = (float)props[i++].Value;
         }
     }
 }

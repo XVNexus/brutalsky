@@ -17,8 +17,6 @@ namespace Utils.Ext
         public static readonly Color Honey = new(.9f, .7f, 0f, 1f);
         public static readonly Color Medicine = new(.3f, 1f, .2f, 1f);
         public static readonly Color Lava = new(1f, .3f, .2f, 1f);
-        public static readonly Color Void = new(0f, 0f, 0f, 1f);
-        public static readonly Color Ether = new(1f, 1f, 1f, 1f);
 
         public static Color MultiplyTint(this Color _, float value)
         {

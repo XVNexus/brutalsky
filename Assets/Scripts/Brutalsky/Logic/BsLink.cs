@@ -13,6 +13,12 @@ namespace Brutalsky.Logic
             ToPort = toPort;
         }
 
+        public BsLink(ushort fromNode, byte fromPort, ushort toNode, byte toPort)
+        {
+            FromPort = new BsPort(fromNode, fromPort);
+            ToPort = new BsPort(toNode, toPort);
+        }
+
         public LcsLine ToLcs()
         {
             return new LcsLine('^', new LcsProp[] { new(LcsType.Port, FromPort), new(LcsType.Port, ToPort) });

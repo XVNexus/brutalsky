@@ -1,6 +1,6 @@
-namespace Utils.Shape
+namespace Utils.Path
 {
-    public enum FormType
+    public enum PathType
     {
         Vector,
         Polygon,

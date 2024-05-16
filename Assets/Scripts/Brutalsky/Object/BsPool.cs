@@ -6,8 +6,6 @@ using UnityEngine;
 using Utils.Constants;
 using Utils.Ext;
 using Utils.Lcs;
-using Utils.Object;
-using Utils.Pool;
 
 namespace Brutalsky.Object
 {
@@ -15,26 +13,28 @@ namespace Brutalsky.Object
     {
         public override GameObject Prefab => ResourceSystem._.pPool;
         public override string Tag => Tags.PoolPrefix;
-        public override bool HasLogic => false;
 
-        public Vector2 Size { get; set; }
-        public PoolChemical Chemical { get; set; }
-        public Color Color { get; set; }
+        public Vector2 Position { get; set; } = Vector2.zero;
+        public float Rotation { get; set; }
+        public sbyte Layer { get; set; }
+        public Vector2 Size { get; set; } = Vector2.zero;
+        public (float, float, float) Chemical
+        {
+            get => (Buoyancy, Viscosity, Health);
+            set
+            {
+                Buoyancy = value.Item1;
+                Viscosity = value.Item2;
+                Health = value.Item3;
+            }
+        }
+        public float Buoyancy { get; set; }
+        public float Viscosity { get; set; }
+        public float Health { get; set; }
+        public Color Color { get; set; } = Color.white;
         public bool Glow { get; set; }
 
-        public BsPool(string id, ObjectTransform transform, ObjectLayer layer, bool simulated,
-            Vector2 size, PoolChemical chemical, Color? color = null, bool glow = false)
-            : base(id, transform, layer, simulated)
-        {
-            Size = size;
-            Chemical = chemical;
-            Color = color ?? ColorExt.Ether;
-            Glow = glow;
-        }
-
-        public BsPool()
-        {
-        }
+        public BsPool(string id = "") : base(id) { }
 
         protected override BsBehavior _Init(GameObject gameObject, BsMap map)
         {
@@ -49,17 +49,11 @@ namespace Brutalsky.Object
             var spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
             spriteRenderer.material = Glow ? ResourceSystem._.aUnlitMaterial : ResourceSystem._.aLitMaterial;
             spriteRenderer.material.color = Color;
-            spriteRenderer.sortingOrder = MapSystem.LayerToOrder(Layer);
+            spriteRenderer.sortingOrder = Layer * 2;
 
-            // Apply chemical
-            if (!Simulated)
-            {
-                UnityEngine.Object.Destroy(gameObject.GetComponent<BoxCollider2D>());
-            }
-
-            // Apply position and rotation
-            gameObject.transform.localPosition = Transform.Position;
-            gameObject.transform.localRotation = Quaternion.Euler(0f, 0f, Transform.Rotation);
+            // Apply transform
+            gameObject.transform.localPosition = Position;
+            gameObject.transform.localRotation = Quaternion.Euler(0f, 0f, Rotation);
 
             return controller;
         }
@@ -68,8 +62,13 @@ namespace Brutalsky.Object
         {
             return new LcsProp[]
             {
+                new(LcsType.Float2, Position),
+                new(LcsType.Float, Rotation),
+                new(LcsType.SByte, Layer),
                 new(LcsType.Float2, Size),
-                new(LcsType.Chemical, Chemical),
+                new(LcsType.Float, Buoyancy),
+                new(LcsType.Float, Viscosity),
+                new(LcsType.Float, Health),
                 new(LcsType.Color, Color),
                 new(LcsType.Bool, Glow)
             };
@@ -77,10 +76,16 @@ namespace Brutalsky.Object
 
         protected override void _FromLcs(LcsProp[] props)
         {
-            Size = (Vector2)props[0].Value;
-            Chemical = (PoolChemical)props[1].Value;
-            Color = (Color)props[2].Value;
-            Glow = (bool)props[3].Value;
+            var i = 0;
+            Position = (Vector2)props[i++].Value;
+            Rotation = (float)props[i++].Value;
+            Layer = (sbyte)props[i++].Value;
+            Size = (Vector2)props[i++].Value;
+            Buoyancy = (float)props[i++].Value;
+            Viscosity = (float)props[i++].Value;
+            Health = (float)props[i++].Value;
+            Color = (Color)props[i++].Value;
+            Glow = (bool)props[i++].Value;
         }
     }
 }

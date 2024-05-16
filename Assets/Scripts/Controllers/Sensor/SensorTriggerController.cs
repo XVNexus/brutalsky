@@ -9,7 +9,7 @@ namespace Controllers.Sensor
     {
         // Controller metadata
         public override string Id => "trigger";
-        public override bool IsUnused => !Master.Object.Simulated;
+        public override bool IsUnused => false;
 
         // Config options
         public int maxTriggeredFrames;
