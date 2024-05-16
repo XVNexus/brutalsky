@@ -43,5 +43,10 @@ namespace Brutalsky.Map
         {
             return new BsSpawn((Vector2)line.Props[0].Value, (int)line.Props[1].Value);
         }
+
+        public override string ToString()
+        {
+            return $"SPAWN :: {ToLcs()}";
+        }
     }
 }

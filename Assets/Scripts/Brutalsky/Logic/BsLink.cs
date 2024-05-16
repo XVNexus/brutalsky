@@ -22,5 +22,10 @@ namespace Brutalsky.Logic
         {
             return new BsLink((BsPort)line.Props[0].Value, (BsPort)line.Props[1].Value);
         }
+
+        public override string ToString()
+        {
+            return $"LINK :: {ToLcs()}";
+        }
     }
 }

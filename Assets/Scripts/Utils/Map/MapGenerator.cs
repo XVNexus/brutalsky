@@ -129,12 +129,14 @@ namespace Utils.Map
             return result;
         }
 
-        public static BsMap Platformer(string title, float length, uint seed, string nextTitle = "")
+        public static BsMap Platformer(string title, float difficulty, uint seed, string nextTitle = "")
         {
+            var length = difficulty * 50f + 50f;
+            var height = difficulty * 10f + 20f;
             var rand = new Random(seed);
             var result = new BsMap(title, Author)
             {
-                PlayArea = new Rect(-10f, -10f, length + 40f, 20f),
+                PlayArea = new Rect(-10f, height * -.5f, length + 40f, height),
                 BackgroundColor = MapBackground,
                 LightingColor = MapLighting,
                 GravityDirection = Direction.Down,
@@ -142,17 +144,29 @@ namespace Utils.Map
                 PlayerHealth = 100f,
                 AllowDummies = false
             };
-            result.AddSpawn(new BsSpawn(new Vector2(-3f, 1f), 0));
-            result.AddSpawn(new BsSpawn(new Vector2(-1f, 1f), 0));
-            result.AddSpawn(new BsSpawn(new Vector2(1f, 1f), 0));
-            result.AddSpawn(new BsSpawn(new Vector2(3f, 1f), 0));
+            result.AddSpawn(new BsSpawn(new Vector2(-3f, .5f), 0));
+            result.AddSpawn(new BsSpawn(new Vector2(-1f, .5f), 0));
+            result.AddSpawn(new BsSpawn(new Vector2(1f, .5f), 0));
+            result.AddSpawn(new BsSpawn(new Vector2(3f, .5f), 0));
             result.AddObject(new BsShape
             (
                 "platform-spawn",
                 new ObjectTransform(0f, 0f),
-                ObjectLayer.Midground,
+                ObjectLayer.Background,
                 true,
-                Form.Rectangle(10f, 1f),
+                Form.Vector(new[] { -5f, 0f, 0, 5f, 0f, 1, 5f, -5f, 0f, -5f, 1, -5f, -5f, -5f, 0f }),
+                ObjectMaterial,
+                false,
+                ColorExt.Lava.MultiplyTint(.5f),
+                true
+            ));
+            result.AddObject(new BsShape
+            (
+                "platform-spawn-fg",
+                new ObjectTransform(0f, 0f),
+                ObjectLayer.Midground,
+                false,
+                Form.Polygon(new[] { -2.5f, -1f, -5f, 0f, 5f, 0f, 2.5f, -1f }),
                 ObjectMaterial,
                 false,
                 ColorExt.Lava,
@@ -160,46 +174,111 @@ namespace Utils.Map
             ));
             result.AddObject(new BsShape
             (
+                "platform-spawn-beacon",
+                new ObjectTransform(0f, height * .5f),
+                ObjectLayer.Foreground,
+                false,
+                Form.Rectangle(10f, height),
+                ObjectMaterial,
+                false,
+                ColorExt.Lava.SetAlpha(.1f),
+                true
+            ));
+            result.AddObject(new BsShape
+            (
                 "platform-goal",
                 new ObjectTransform(length + 20f, 0f),
-                ObjectLayer.Midground,
+                ObjectLayer.Background,
                 true,
-                Form.Rectangle(10f, 1f),
+                Form.Vector(new[] { -5f, 0f, 0, 5f, 0f, 1, 5f, -5f, 0f, -5f, 1, -5f, -5f, -5f, 0f }),
+                ObjectMaterial,
+                false,
+                ColorExt.Medicine.MultiplyTint(.5f),
+                true
+            ));
+            result.AddObject(new BsShape
+            (
+                "platform-goal-fg",
+                new ObjectTransform(length + 20f, 0f),
+                ObjectLayer.Midground,
+                false,
+                Form.Polygon(new[] { -2.5f, -1f, -5f, 0f, 5f, 0f, 2.5f, -1f }),
                 ObjectMaterial,
                 false,
                 ColorExt.Medicine,
                 true
             ));
-            var cursor = 10f;
+            result.AddObject(new BsShape
+            (
+                "platform-goal-beacon",
+                new ObjectTransform(length + 20f, height * .5f),
+                ObjectLayer.Foreground,
+                false,
+                Form.Rectangle(10f, height),
+                ObjectMaterial,
+                false,
+                ColorExt.Medicine.SetAlpha(.1f),
+                true
+            ));
+            var cursor = 5f;
+            var limit = length + 15f;
             var platform = 0;
-            while (cursor < length)
+            while (cursor < limit)
             {
-                var platformSpacing = Mathf.Pow(rand.NextFloat(), 3f) * 10f + 10f;
-                var platformLength = Mathf.Pow(rand.NextFloat(-1.5f, 1.5f), 3f) + 5f;
-                var platformHeight = rand.NextFloat(-5f, 5f);
-                cursor += platformSpacing;
-                if (cursor >= length) break;
+                cursor += Mathf.Pow(rand.NextFloat(-1.5f, 1.5f), 3f) + difficulty * 5f;
+                if (cursor >= limit) break;
+                var platformLength = Mathf.Min(Mathf.Pow(rand.NextFloat(-1.5f, 1.5f), 3f)
+                    + Mathf.Max(20f - difficulty, 4f), limit - cursor - 1f);
+                var platformHeight = rand.NextFloat(height * -.25f, height * .25f);
+                var platformIce = rand.NextFloat(Mathf.Max(26f - difficulty * 2f, 1f)) < 1f;
                 platform++;
+                cursor += platformLength * .5f;
+                var material = platformIce ? ShapeMaterial.Ice : ShapeMaterial.Stone;
+                var color = platformIce ? ColorExt.Ice : ColorExt.Stone;
                 result.AddObject(new BsShape
                 (
                     $"platform-{platform}",
-                    new ObjectTransform(cursor + platformSpacing * .5f, platformHeight),
+                    new ObjectTransform(cursor, platformHeight),
                     ObjectLayer.Midground,
                     true,
-                    Form.Rectangle(platformLength, 1f),
-                    ObjectMaterial,
+                    Form.Polygon(new []
+                    {
+                        0f, platformLength * difficulty * -.5f,
+                        platformLength * -.5f, 0f,
+                        platformLength * -.5f, 1f,
+                        platformLength * .5f, 1f,
+                        platformLength * .5f, 0f
+                    }),
+                    material,
                     false,
-                    ObjectColor
+                    color
                 ));
-                cursor += platformLength;
+                result.AddObject(new BsShape
+                (
+                    $"platform-{platform}-beacon",
+                    new ObjectTransform(cursor, platformHeight + 1f),
+                    ObjectLayer.Foreground,
+                    false,
+                    Form.Polygon(new []
+                    {
+                        platformLength * -.5f, 0f,
+                        platformLength * -.5f, height,
+                        platformLength * .5f, height,
+                        platformLength * .5f, 0f
+                    }),
+                    ObjectMaterial,
+                    false, 
+                    color.SetAlpha(.05f)
+                ));
+                cursor += platformLength * .5f;
             }
             if (nextTitle.Length > 0)
             {
                 result.AddObject(new BsGoal(
                     "goal",
-                    new ObjectTransform(length + 20f, 2.5f),
+                    new ObjectTransform(length + 20f, 0f),
                     true,
-                    5f,
+                    8f,
                     ColorExt.Medicine,
                     nextTitle,
                     Author

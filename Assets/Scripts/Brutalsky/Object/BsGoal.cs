@@ -43,6 +43,12 @@ namespace Brutalsky.Object
             var controller = gameObject.GetComponent<GoalController>();
             controller.Object = this;
 
+            // Apply config
+            if (!Simulated)
+            {
+                UnityEngine.Object.Destroy(gameObject.GetComponent<CircleCollider2D>());
+            }
+
             // Apply size and position
             gameObject.transform.localScale = Vector2.one * Size;
             gameObject.transform.localPosition = Transform.Position;

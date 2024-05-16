@@ -59,7 +59,7 @@ namespace Utils.Lcs
 
         public override string ToString()
         {
-            return Props.Aggregate("[[   ", (current, prop) => current + $"{prop}   ") + "]]";
+            return Props.Aggregate("[[ ", (current, prop) => current + $"{prop} ") + "]]";
         }
     }
 }

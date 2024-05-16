@@ -37,6 +37,12 @@ namespace Brutalsky.Object
             var controller = gameObject.GetComponent<MountController>();
             controller.Object = this;
 
+            // Apply config
+            if (!Simulated)
+            {
+                UnityEngine.Object.Destroy(gameObject.GetComponent<CircleCollider2D>());
+            }
+
             // Apply position
             gameObject.transform.localPosition = Transform.Position;
 

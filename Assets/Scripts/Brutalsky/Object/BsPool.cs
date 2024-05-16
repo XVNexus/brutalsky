@@ -54,8 +54,7 @@ namespace Brutalsky.Object
             // Apply chemical
             if (!Simulated)
             {
-                gameObject.GetComponent<BoxCollider2D>().enabled = false;
-                controller.enabled = false;
+                UnityEngine.Object.Destroy(gameObject.GetComponent<BoxCollider2D>());
             }
 
             // Apply position and rotation

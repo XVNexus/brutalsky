@@ -57,6 +57,7 @@ namespace Core
         protected override void OnStart()
         {
             EventSystem._.OnConfigUpdate += OnConfigUpdate;
+            EventSystem._.OnPlayerUnregister += OnPlayerUnregister;
             EventSystem._.OnPlayerSpawn += OnPlayerSpawn;
             EventSystem._.OnPlayerDie += OnPlayerDie;
 
@@ -68,6 +69,7 @@ namespace Core
         private void OnDestroy()
         {
             EventSystem._.OnConfigUpdate -= OnConfigUpdate;
+            EventSystem._.OnPlayerUnregister -= OnPlayerUnregister;
             EventSystem._.OnPlayerSpawn -= OnPlayerSpawn;
             EventSystem._.OnPlayerDie -= OnPlayerDie;
         }
@@ -135,6 +137,11 @@ namespace Core
             _cfgEnableBloom = (bool)sec["bloom"].Value;
 
             cVolume.sharedProfile.components.Find(component => component.name == "Bloom").active = _cfgEnableBloom;
+        }
+
+        private void OnPlayerUnregister(BsPlayer player)
+        {
+            StopFollowing(player);
         }
 
         private void OnPlayerSpawn(BsMap map, BsPlayer player, Vector2 position, bool visible)

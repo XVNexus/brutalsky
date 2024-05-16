@@ -256,5 +256,10 @@ namespace Brutalsky
             }
             return result;
         }
+
+        public override string ToString()
+        {
+            return $"MAP :: {Title} by {Author}";
+        }
     }
 }

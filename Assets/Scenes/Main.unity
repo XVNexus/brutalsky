@@ -1079,7 +1079,6 @@ MonoBehaviour:
   - Doomring
   - Tossup
   - Racetrack
-  autoRestart: 0
   loadingColor: {r: 0.15, g: 0.15, b: 0.15, a: 1}
 --- !u!114 &581734025
 MonoBehaviour:
@@ -1101,6 +1100,18 @@ MonoBehaviour:
       name: Starting Map
       type: 13
       value: Void
+    - id: arest
+      name: Automatically Restart
+      type: 0
+      value: True
+    - id: uspl1
+      name: Use Player 1
+      type: 0
+      value: True
+    - id: uspl2
+      name: Use Player 2
+      type: 0
+      value: True
     - id: encst
       name: Enable Custom Maps
       type: 0

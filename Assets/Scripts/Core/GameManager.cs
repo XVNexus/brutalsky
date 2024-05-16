@@ -1,9 +1,8 @@
+using System.Collections.Generic;
 using System.Linq;
 using Brutalsky;
 using Brutalsky.Object;
-using Controllers;
 using Controllers.Base;
-using Controllers.Player;
 using UnityEngine;
 using Utils.Config;
 using Utils.Ext;
@@ -20,9 +19,11 @@ namespace Core
 
         // Config options
         public string[] builtinMaps;
-        public bool autoRestart;
         public Color loadingColor;
         private string _cfgStartingMap;
+        private bool _cfgAutoRestart;
+        private bool _cfgUsePlayer1;
+        private bool _cfgUsePlayer2;
         private bool _cfgEnableCustomMaps;
         private bool _cfgEnableBoxMaps;
         private bool _cfgEnablePlatformerMaps;
@@ -30,29 +31,33 @@ namespace Core
         private bool _cfgEnableMazeMaps;
 
         // Local variables
+        private BsPlayer _player1 = new(PlayerType.Local1, "Player 1", new Color(1f, .5f, 0f));
+        private BsPlayer _player2 = new(PlayerType.Local2, "Player 2", new Color(0f, .5f, 1f));
+        private Dictionary<string, BsPlayer> _livingPlayers = new();
         private bool _mapChangeActive;
 
         // Init functions
         protected override void OnStart()
         {
             EventSystem._.OnConfigUpdate += OnConfigUpdate;
+            EventSystem._.OnPlayerUnregister += OnPlayerUnregister;
+            EventSystem._.OnPlayerSpawn += OnPlayerSpawn;
             EventSystem._.OnPlayerDie += OnPlayerDie;
-        }
 
-        private void OnDestroy()
-        {
-            EventSystem._.OnConfigUpdate -= OnConfigUpdate;
-            EventSystem._.OnPlayerDie -= OnPlayerDie;
         }
 
         protected override void OnLink()
         {
             LoadMaps();
-            InitMap(MapSystem.GenerateId(_cfgStartingMap, "Xveon"), new[]
-            {
-                new BsPlayer(PlayerType.Local1, "Player 1", new Color(1f, .5f, 0f)),
-                new BsPlayer(PlayerType.Local2, "Player 2", new Color(0f, .5f, 1f))
-            }, 1f);
+            InitMap(MapSystem.GenerateId(_cfgStartingMap, "Xveon"), 1f);
+        }
+
+        private void OnDestroy()
+        {
+            EventSystem._.OnConfigUpdate -= OnConfigUpdate;
+            EventSystem._.OnPlayerUnregister -= OnPlayerUnregister;
+            EventSystem._.OnPlayerSpawn -= OnPlayerSpawn;
+            EventSystem._.OnPlayerDie -= OnPlayerDie;
         }
 
         // System functions
@@ -90,11 +95,11 @@ namespace Core
             // Generate platformer maps
             if (_cfgEnablePlatformerMaps)
             {
-                const int variantCount = 5;
-                for (var i = 1; i < variantCount + 1; i++)
+                const int difficultyLevels = 12;
+                for (var i = 1; i < difficultyLevels + 1; i++)
                 {
-                    MapSystem._.RegisterMap(MapGenerator.Platformer($"Platformer {i}", 50f + i * 50f,
-                        (uint)(i * 0x69), i < variantCount ? $"Platformer {i + 1}" : ""));
+                    MapSystem._.RegisterMap(MapGenerator.Platformer($"Platformer {i}", i, (uint)(i * 0x69),
+                        i < difficultyLevels ? $"Platformer {i + 1}" : ""));
                 }
             }
 
@@ -121,9 +126,26 @@ namespace Core
             return ChangeMap(0, false, 1f);
         }
 
-        public void InitMap(uint starterMapId, BsPlayer[] activePlayers, float animationTime)
+        public void UpdatePlayerRegistration(BsPlayer player, bool registered)
         {
-            MapSystem._.RegisterPlayers(activePlayers);
+            if (registered)
+            {
+                if (!player.Active)
+                {
+                    MapSystem._.RegisterPlayer(player);
+                }
+            }
+            else
+            {
+                if (player.Active)
+                {
+                    MapSystem._.UnregisterPlayer(player);
+                }
+            }
+        }
+
+        public void InitMap(uint starterMapId, float animationTime)
+        {
             MapSystem._.BuildMap(starterMapId);
             MapSystem._.SpawnPlayers();
             var camCover = CameraSystem._.cCameraCover.gameObject;
@@ -185,21 +207,40 @@ namespace Core
         {
             var sec = cfg["gmmgr"];
             _cfgStartingMap = (string)sec["start"].Value;
+            _cfgAutoRestart = (bool)sec["arest"].Value;
+            _cfgUsePlayer1 = (bool)sec["uspl1"].Value;
+            _cfgUsePlayer2 = (bool)sec["uspl2"].Value;
             _cfgEnableCustomMaps = (bool)sec["encst"].Value;
             _cfgEnableBoxMaps = (bool)sec["enbox"].Value;
             _cfgEnablePlatformerMaps = (bool)sec["enptf"].Value;
             _cfgEnableTerrainMaps = (bool)sec["entrn"].Value;
             _cfgEnableMazeMaps = (bool)sec["enmaz"].Value;
+
+            UpdatePlayerRegistration(_player1, _cfgUsePlayer1);
+            UpdatePlayerRegistration(_player2, _cfgUsePlayer2);
+        }
+
+        private void OnPlayerUnregister(BsPlayer player)
+        {
+            _livingPlayers.Remove(player.Id);
+            if (_mapChangeActive) return;
+            if ((_cfgAutoRestart && _livingPlayers.Count == 1) || _livingPlayers.Count == 0)
+            {
+                Invoke(nameof(RestartRound), 3f);
+            }
+        }
+
+        private void OnPlayerSpawn(BsMap map, BsPlayer player, Vector2 position, bool visible)
+        {
+            if (!visible) return;
+            _livingPlayers[player.Id] = player;
         }
 
         private void OnPlayerDie(BsMap map, BsPlayer player)
         {
+            _livingPlayers.Remove(player.Id);
             if (_mapChangeActive) return;
-            var livingPlayers = (from activePlayer in MapSystem._.ActivePlayers.Values
-                where ((PlayerController)activePlayer.InstanceController).GetSub<PlayerHealthController>("health").Alive
-                    && !MapSystem._.GetPlayerFrozen(player.InstanceObject)
-                select activePlayer).ToList();
-            if ((autoRestart && livingPlayers.Count == 1) || livingPlayers.Count == 0)
+            if ((_cfgAutoRestart && _livingPlayers.Count == 1) || _livingPlayers.Count == 0)
             {
                 Invoke(nameof(RestartRound), 3f);
             }

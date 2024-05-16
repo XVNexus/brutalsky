@@ -57,8 +57,14 @@ namespace Core
 
         public void RegisterPlayer(BsPlayer player)
         {
+            if (player.Active) throw Errors.RegisterActivePlayer(player);
             player.Activate(gPlayerParent.transform, ActiveMap);
             ActivePlayers[player.Id] = player;
+            EventSystem._.EmitPlayerRegister(player);
+            if (MapLoaded)
+            {
+                SpawnPlayer(player);
+            }
         }
 
         public void UnregisterPlayers()
@@ -71,8 +77,10 @@ namespace Core
 
         public void UnregisterPlayer(BsPlayer player)
         {
+            if (!player.Active) throw Errors.UnregisterInactivePlayer(player);
             player.Deactivate();
             ActivePlayers.Remove(player.Id);
+            EventSystem._.EmitPlayerUnregister(player);
         }
 
         public void SpawnPlayers()

@@ -32,6 +32,12 @@ namespace Core
         public void EmitConfigUpdate(ConfigList cfg) => OnConfigUpdate?.Invoke(cfg);
         public event Action<ConfigList> OnConfigUpdate;
 
+        public void EmitPlayerRegister(BsPlayer player) => OnPlayerRegister?.Invoke(player);
+        public event Action<BsPlayer> OnPlayerRegister;
+
+        public void EmitPlayerUnregister(BsPlayer player) => OnPlayerUnregister?.Invoke(player);
+        public event Action<BsPlayer> OnPlayerUnregister;
+
         public void EmitPlayerSpawn(BsMap map, BsPlayer player, Vector2 position, bool visble)
             => OnPlayerSpawn?.Invoke(map, player, position, visble);
         public event Action<BsMap, BsPlayer, Vector2, bool> OnPlayerSpawn;

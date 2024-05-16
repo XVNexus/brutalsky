@@ -57,8 +57,11 @@ namespace Controllers.Player
             // Disable movement if the player is a dummy
             Dummy = Master.Object.Type == PlayerType.Dummy;
 
-            // Force scanning map settings
-            OnMapBuild(MapSystem._.ActiveMap);
+            // Automatically grab map settings if there is a loaded map
+            if (MapSystem._.MapLoaded)
+            {
+                OnMapBuild(MapSystem._.ActiveMap);
+            }
         }
 
         private void OnDestroy()

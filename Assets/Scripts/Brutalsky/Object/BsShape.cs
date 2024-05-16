@@ -96,7 +96,8 @@ namespace Brutalsky.Object
             }
             else
             {
-                rigidbody.simulated = false;
+                UnityEngine.Object.Destroy(rigidbody);
+                UnityEngine.Object.Destroy(polygonCollider);
             }
 
             // Apply position

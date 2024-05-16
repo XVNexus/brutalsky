@@ -1,10 +1,8 @@
-using System;
 using System.Collections.Generic;
 using Brutalsky.Logic;
 using Core;
 using JetBrains.Annotations;
 using UnityEngine;
-using Utils.Constants;
 using Utils.Lcs;
 using Utils.Object;
 
@@ -79,6 +77,11 @@ namespace Brutalsky.Base
             Id = (string)line.Props[1].Value;
             Transform = (ObjectTransform)line.Props[2].Value;
             _FromLcs(line.Props[3..]);
+        }
+
+        public override string ToString()
+        {
+            return $"ADDON :: {ToLcs()}";
         }
     }
 }

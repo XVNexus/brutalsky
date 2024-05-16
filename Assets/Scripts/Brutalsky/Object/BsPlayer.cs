@@ -42,6 +42,11 @@ namespace Brutalsky.Object
 
             // Apply config
             controller.GetComponent<SpriteRenderer>().color = Color;
+            if (!Simulated)
+            {
+                UnityEngine.Object.Destroy(gameObject.GetComponent<Rigidbody2D>());
+                UnityEngine.Object.Destroy(gameObject.GetComponent<CircleCollider2D>());
+            }
 
             return controller;
         }

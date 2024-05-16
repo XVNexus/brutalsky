@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using Brutalsky.Object;
 using UnityEngine;
 
 namespace Utils.Constants
@@ -11,6 +12,12 @@ namespace Utils.Constants
 
         public static ArgumentOutOfRangeException NoItemFound(string type, object id)
             => new("", $"No {type} found with id '{id}'");
+
+        public static InvalidOperationException RegisterActivePlayer(BsPlayer player)
+            => new($"Player '{player.Id}' is already active and cannot be registered again");
+
+        public static InvalidOperationException UnregisterInactivePlayer(BsPlayer player)
+            => new($"Player '{player.Id}' is already inactive and cannot be unregistered again");
 
         public static ArgumentNullException BuildNullMap()
             => new("", "Cannot rebuild the map when no map is currently loaded");

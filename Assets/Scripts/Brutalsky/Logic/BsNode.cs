@@ -446,5 +446,10 @@ namespace Brutalsky.Logic
                 _ => throw Errors.InvalidItem("node tag", tag)
             };
         }
+
+        public override string ToString()
+        {
+            return $"NODE :: {ToLcs()}";
+        }
     }
 }

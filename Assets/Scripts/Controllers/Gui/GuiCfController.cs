@@ -61,7 +61,6 @@ namespace Controllers.Gui
                     var option = cfg[key.Item1][key.Item2];
                     _configOptionFields[key].value = LcsInfo.TypeTable[option.Type].ToStr(option.Value);
                 }
-                ConfigSystem._.SaveFile();
             });
         }
 

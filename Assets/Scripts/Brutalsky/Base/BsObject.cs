@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Brutalsky.Logic;
@@ -147,6 +146,11 @@ namespace Brutalsky.Base
             {
                 Addons.Add(BsAddon.FromLcs(child));
             }
+        }
+
+        public override string ToString()
+        {
+            return $"OBJECT :: {ToLcs()}";
         }
     }
 }
