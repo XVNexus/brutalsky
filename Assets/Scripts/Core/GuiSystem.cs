@@ -1,11 +1,9 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Controllers.Base;
 using JetBrains.Annotations;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 using Utils.Constants;
 using Utils.Gui;
@@ -35,6 +33,12 @@ namespace Core
         protected override void OnStart()
         {
             _root = cUIDocument.rootVisualElement;
+            _root.RegisterCallback<KeyDownEvent>(evt =>
+            {
+                if (evt.keyCode != KeyCode.Tab) return;
+                evt.StopPropagation();
+                evt.PreventDefault();
+            });
             _panes[""] = new GuiPane("", _root, this, true);
 
             EventSystem._.GetInputAction("Gui", "Escape").performed += _ => EscapeOne();

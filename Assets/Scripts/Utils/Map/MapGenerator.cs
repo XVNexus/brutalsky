@@ -200,13 +200,20 @@ namespace Utils.Map
                     length, ice ? 1f : 0f));
                 cursor += spacing + length;
             }
-            var posMin = placements[0].xMin;
-            var posMax = placements[^1].xMax;
-            var centerOffset = (posMin + posMax) / 2f;
+            var averageSpacing = 0f;
+            for (var i = 1; i < placements.Count; i++)
+            {
+                averageSpacing += placements[i].xMin - placements[i - 1].xMax;
+            }
+            averageSpacing /= placements.Count - 1f;
+            var rangeFrom = new Vector2(placements[0].xMin, placements[^1].xMax);
+            var rangeTo = new Vector2(spawnX + 5f + averageSpacing, goalX - 5f - averageSpacing);
+            var scaleFactor = (rangeTo.y - rangeFrom.x) / (rangeFrom.y - rangeFrom.x);
             for (var i = 0; i < placements.Count; i++)
             {
                 var placement = placements[i];
-                placement.x -= centerOffset;
+                placement.x += MathfExt.Relerp(placement.center.x, rangeFrom, rangeTo) - placement.center.x;
+                placement = placement.Resize(new Vector2(placement.width * scaleFactor, placement.height));
                 placements[i] = placement;
             }
 

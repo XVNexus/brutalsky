@@ -127,6 +127,16 @@ namespace Utils.Ext
         }
 
         // Dataset tools
+        public static float Relerp(float t, float a, float b, float c, float d)
+        {
+            return Mathf.Lerp(c, d, Mathf.InverseLerp(a, b, t));
+        }
+
+        public static float Relerp(float t, Vector2 from, Vector2 to)
+        {
+            return Relerp(t, from.x, from.y, to.x, to.y);
+        }
+
         public static float Mean(float a, float b)
         {
             return (a + b) * .5f;
