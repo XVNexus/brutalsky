@@ -64,57 +64,6 @@ namespace Utils.Lcs
             _fromStr = fromStr;
         }
 
-        public static byte[] Binify(object value)
-        {
-            var typeInfo = GetTypeInfo(value);
-            var typeBytes = new[] { typeInfo.ByteTag };
-            var valueBytes = typeInfo._toBin(value);
-            var size = typeInfo.Size;
-            if (size > -1) return typeBytes.Concat(valueBytes).ToArray();
-            var headerBytes = new List<byte>();
-            var byteCount = valueBytes.Length;
-            while (byteCount > 127)
-            {
-                headerBytes.Add((byte)(byteCount | 0x80));
-                byteCount /= 128;
-            }
-            headerBytes.Add((byte)byteCount);
-            return typeBytes.Concat(headerBytes).Concat(valueBytes).ToArray();
-        }
-
-        public static object Parse(byte[] raw, ref int cursor)
-        {
-            var typeInfo = ByteTagTable[raw[cursor++]];
-            var size = typeInfo.Size;
-            if (size == -1)
-            {
-                size = 0;
-                var power = 1;
-                while ((raw[cursor] & 0x80) > 0)
-                {
-                    size += (raw[cursor++] & 0x7F) * power; 
-                    power *= 128;
-                }
-                size += raw[cursor++] * power;
-            }
-            var valueBytes = new byte[size];
-            for (var i = 0; i < size; i++)
-            {
-                valueBytes[i] = raw[cursor++];
-            }
-            return typeInfo._fromBin(valueBytes);
-        }
-
-        public static string Stringify(object value)
-        {
-            return GetTypeInfo(value)._toStr(value);
-        }
-
-        public static object Parse(string raw)
-        {
-            return TypeInfoList.First(type => type.StringPattern.IsMatch(raw))._fromStr(raw);
-        }
-
         public static LcsInfo GetTypeInfo(object value)
         {
             return value switch
@@ -147,6 +96,43 @@ namespace Utils.Lcs
                 BsPort => PortInfo(),
                 _ => throw Errors.InvalidItem("lcs type", value)
             };
+        }
+
+        public static byte[] Binify(object value)
+        {
+            var typeInfo = GetTypeInfo(value);
+            var typeBytes = new[] { typeInfo.ByteTag };
+            var valueBytes = typeInfo._toBin(value);
+            var size = typeInfo.Size;
+            return size > -1
+                ? typeBytes.Concat(valueBytes).ToArray()
+                : typeBytes.Concat(WriteLengthBytes(valueBytes.Length)).Concat(valueBytes).ToArray();
+        }
+
+        public static object Parse(byte[] raw, ref int cursor)
+        {
+            var typeInfo = ByteTagTable[raw[cursor++]];
+            var size = typeInfo.Size;
+            if (size == -1)
+            {
+                size = ReadLengthBytes(raw, ref cursor);
+            }
+            var valueBytes = new byte[size];
+            for (var i = 0; i < size; i++)
+            {
+                valueBytes[i] = raw[cursor++];
+            }
+            return typeInfo._fromBin(valueBytes);
+        }
+
+        public static string Stringify(object value)
+        {
+            return GetTypeInfo(value)._toStr(value);
+        }
+
+        public static object Parse(string raw)
+        {
+            return TypeInfoList.First(type => type.StringPattern.IsMatch(raw))._fromStr(raw);
         }
 
         // Primitive types
@@ -523,6 +509,30 @@ namespace Utils.Lcs
         public static float ByteToFloat01(byte value)
         {
             return value / 255f;
+        }
+
+        public static byte[] WriteLengthBytes(int length)
+        {
+            var result = new List<byte>();
+            while (length > 127)
+            {
+                result.Add((byte)(length | 0x80));
+                length /= 128;
+            }
+            result.Add((byte)length);
+            return result.ToArray();
+        }
+
+        public static int ReadLengthBytes(byte[] raw, ref int cursor)
+        {
+            var result = 0;
+            var power = 1;
+            while ((raw[cursor] & 0x80) > 0)
+            {
+                result += (raw[cursor++] & 0x7F) * power; 
+                power *= 128;
+            }
+            return result + raw[cursor++] * power;
         }
 
         public static byte[] GzipCompress(byte[] source)
