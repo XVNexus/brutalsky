@@ -1,3 +1,23 @@
+## *Nightly 2024.05.16*
+
+#### UPDATES
+- made parkour platforms more consistently spaced
+- parkour platforms now decrease in size linearly with each level down to 2 units at maximum difficulty
+- reduced chance of ice platforms spawning on low to mid level parkour maps
+- added more visual detail to parkour platforms
+- added subtle background coloring to parkour maps from blue to red indicating the difficulty level
+- touching the spike under a parkour platform now instantly kills players
+- changed shape of sensors and goals to squares to allow for more precise sizing
+- parkour map goals now cover the entire height of the beacon for the sake of visual consistency
+- reduced width of parkour goal hitboxes so player contact occurs in the middle of the goal platform instead of on the edge
+- parkour platforms are now snapped to the grid
+- parkour platform beacons are now in the background instead of the foreground
+- split shapes into shapes and decals, the latter taking the place of a shape with simulated set to false
+- replaced background/midground/foreground layer system with signed byte, allowing up to 128 background layers and 127 foreground layers
+- removed simulated setting and some other useless variables for objects
+- lcs string parser now uses implicit typing instead of explicit type tags for properties, resulting in cleaner syntax for config file and map files
+
+
 ## *Nightly 2024.05.15*
 
 #### UPDATES
