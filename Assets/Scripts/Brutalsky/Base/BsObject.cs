@@ -37,10 +37,6 @@ namespace Brutalsky.Base
             ParentId = "";
         }
 
-        protected BsObject()
-        {
-        }
-
         protected abstract BsBehavior _Init(GameObject gameObject, BsMap map);
 
         [CanBeNull]
@@ -49,9 +45,9 @@ namespace Brutalsky.Base
             return null;
         }
 
-        protected abstract LcsProp[] _ToLcs();
+        protected abstract object[] _ToLcs();
 
-        protected abstract void _FromLcs(LcsProp[] props);
+        protected abstract void _FromLcs(object[] props);
 
         public BsObject AppendAddon(BsAddon addon)
         {
@@ -106,29 +102,23 @@ namespace Brutalsky.Base
 
         public LcsLine ToLcs()
         {
-            var props = new List<LcsProp>
-            {
-                new(Tag),
-                new(Id),
-                new(ParentTag),
-                new(ParentId)
-            };
+            var props = new List<object> { Tag, Id, ParentTag, ParentId };
             props.AddRange(_ToLcs());
             return new LcsLine('#', props.ToArray(), Addons.Select(addon => addon.ToLcs()).ToList());
         }
 
         public static BsObject FromLcs(LcsLine line)
         {
-            var result = ResourceSystem.GetTemplateObject((string)line.Props[0].Value);
+            var result = ResourceSystem.GetTemplateObject((string)line.Props[0]);
             result.ParseLcs(line);
             return result;
         }
 
         private void ParseLcs(LcsLine line)
         {
-            Id = (string)line.Props[1].Value;
-            ParentTag = (string)line.Props[2].Value;
-            ParentId = (string)line.Props[3].Value;
+            Id = (string)line.Props[1];
+            ParentTag = (string)line.Props[2];
+            ParentId = (string)line.Props[3];
             _FromLcs(line.Props[4..]);
             foreach (var child in line.Children)
             {

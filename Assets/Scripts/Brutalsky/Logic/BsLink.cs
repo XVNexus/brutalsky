@@ -21,12 +21,12 @@ namespace Brutalsky.Logic
 
         public LcsLine ToLcs()
         {
-            return new LcsLine('^', new LcsProp[] { new(FromPort), new(ToPort) });
+            return new LcsLine('^', FromPort, ToPort);
         }
 
         public static BsLink FromLcs(LcsLine line)
         {
-            return new BsLink((BsPort)line.Props[0].Value, (BsPort)line.Props[1].Value);
+            return new BsLink((BsPort)line.Props[0], (BsPort)line.Props[1]);
         }
 
         public override string ToString()

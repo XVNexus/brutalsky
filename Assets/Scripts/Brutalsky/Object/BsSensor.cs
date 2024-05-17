@@ -46,26 +46,19 @@ namespace Brutalsky.Object
             });
         }
 
-        protected override LcsProp[] _ToLcs()
+        protected override object[] _ToLcs()
         {
-            return new LcsProp[]
-            {
-                new(Position),
-                new(Size),
-                new(OnEnter),
-                new(OnStay),
-                new(OnExit)
-            };
+            return new object[] { Position, Size, OnEnter, OnStay, OnExit };
         }
 
-        protected override void _FromLcs(LcsProp[] props)
+        protected override void _FromLcs(object[] props)
         {
             var i = 0;
-            Position = (Vector2)props[i++].Value;
-            Size = (Vector2)props[i++].Value;
-            OnEnter = (bool)props[i++].Value;
-            OnStay = (bool)props[i++].Value;
-            OnExit = (bool)props[i++].Value;
+            Position = (Vector2)props[i++];
+            Size = (Vector2)props[i++];
+            OnEnter = (bool)props[i++];
+            OnStay = (bool)props[i++];
+            OnExit = (bool)props[i++];
         }
     }
 }

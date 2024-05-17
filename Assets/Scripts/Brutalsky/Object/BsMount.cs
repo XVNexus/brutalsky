@@ -43,20 +43,16 @@ namespace Brutalsky.Object
             });
         }
 
-        protected override LcsProp[] _ToLcs()
+        protected override object[] _ToLcs()
         {
-            return new LcsProp[]
-            {
-                new(Position),
-                new(EjectionForce)
-            };
+            return new object[] { Position, EjectionForce };
         }
 
-        protected override void _FromLcs(LcsProp[] props)
+        protected override void _FromLcs(object[] props)
         {
             var i = 0;
-            Position = (Vector2)props[i++].Value;
-            EjectionForce = (Vector2)props[i++].Value;
+            Position = (Vector2)props[i++];
+            EjectionForce = (Vector2)props[i++];
         }
     }
 }

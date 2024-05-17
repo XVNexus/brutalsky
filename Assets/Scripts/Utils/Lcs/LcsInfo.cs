@@ -64,38 +64,55 @@ namespace Utils.Lcs
             _fromStr = fromStr;
         }
 
-        public byte[] Binify(object value)
+        public static byte[] Binify(object value)
         {
-            return _toBin(value);
+            var typeInfo = GetTypeInfo(value);
+            var typeBytes = new[] { typeInfo.ByteTag };
+            var valueBytes = typeInfo._toBin(value);
+            var size = typeInfo.Size;
+            if (size > -1) return typeBytes.Concat(valueBytes).ToArray();
+            var headerBytes = new List<byte>();
+            var byteCount = valueBytes.Length;
+            while (byteCount > 127)
+            {
+                headerBytes.Add((byte)(byteCount | 0x80));
+                byteCount /= 128;
+            }
+            headerBytes.Add((byte)byteCount);
+            return typeBytes.Concat(headerBytes).Concat(valueBytes).ToArray();
         }
 
-        public object Parse(byte[] raw)
+        public static object Parse(byte[] raw, ref int cursor)
         {
-            try
+            var typeInfo = ByteTagTable[raw[cursor++]];
+            var size = typeInfo.Size;
+            if (size == -1)
             {
-                return _fromBin(raw);
+                size = 0;
+                var power = 1;
+                while ((raw[cursor] & 0x80) > 0)
+                {
+                    size += (raw[cursor++] & 0x7F) * power; 
+                    power *= 128;
+                }
+                size += raw[cursor++] * power;
             }
-            catch
+            var valueBytes = new byte[size];
+            for (var i = 0; i < size; i++)
             {
-                return DefaultValue;
+                valueBytes[i] = raw[cursor++];
             }
+            return typeInfo._fromBin(valueBytes);
         }
 
-        public string Stringify(object value)
+        public static string Stringify(object value)
         {
-            return _toStr(value);
+            return GetTypeInfo(value)._toStr(value);
         }
 
-        public object Parse(string raw)
+        public static object Parse(string raw)
         {
-            try
-            {
-                return _fromStr(raw);
-            }
-            catch
-            {
-                return DefaultValue;
-            }
+            return TypeInfoList.First(type => type.StringPattern.IsMatch(raw))._fromStr(raw);
         }
 
         public static LcsInfo GetTypeInfo(object value)

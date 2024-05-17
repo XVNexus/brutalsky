@@ -184,22 +184,8 @@ namespace Brutalsky
 
         public LcsDocument ToLcs()
         {
-            var lines = new List<LcsLine>
-            {
-                new('!', new[]
-                {
-                    new LcsProp(Title),
-                    new LcsProp(Author),
-                    new LcsProp(PlayArea),
-                    new LcsProp(BackgroundColor),
-                    new LcsProp(LightingColor),
-                    new LcsProp(GravityDirection),
-                    new LcsProp(GravityStrength),
-                    new LcsProp(AirResistance),
-                    new LcsProp(PlayerHealth),
-                    new LcsProp(AllowDummies)
-                })
-            };
+            var lines = new List<LcsLine> { new('!', Title, Author, PlayArea, BackgroundColor, LightingColor,
+                GravityDirection, GravityStrength, AirResistance, PlayerHealth, AllowDummies) };
             lines.AddRange(Spawns.Select(spawn => spawn.ToLcs()));
             lines.AddRange(Objects.Values.Select(obj => obj.ToLcs()));
             lines.AddRange(Nodes.Select(node => node.ToLcs()));
@@ -214,16 +200,16 @@ namespace Brutalsky
             var metadata = document.Lines[0].Props;
             if (document.Lines[0].Prefix != '!') throw Errors.InvalidItem("map LCS metadata line", metadata);
             var i = 0;
-            result.Title = (string)metadata[i++].Value;
-            result.Author = (string)metadata[i++].Value;
-            result.PlayArea = (Rect)metadata[i++].Value;
-            result.BackgroundColor = (Color)metadata[i++].Value;
-            result.LightingColor = (Color)metadata[i++].Value;
-            result.GravityDirection = (Direction)metadata[i++].Value;
-            result.GravityStrength = (float)metadata[i++].Value;
-            result.AirResistance = (float)metadata[i++].Value;
-            result.PlayerHealth = (float)metadata[i++].Value;
-            result.AllowDummies = (bool)metadata[i++].Value;
+            result.Title = (string)metadata[i++];
+            result.Author = (string)metadata[i++];
+            result.PlayArea = (Rect)metadata[i++];
+            result.BackgroundColor = (Color)metadata[i++];
+            result.LightingColor = (Color)metadata[i++];
+            result.GravityDirection = (Direction)metadata[i++];
+            result.GravityStrength = (float)metadata[i++];
+            result.AirResistance = (float)metadata[i++];
+            result.PlayerHealth = (float)metadata[i++];
+            result.AllowDummies = (bool)metadata[i++];
             for (var j = 1; j < document.Lines.Count; j++)
             {
                 var line = document.Lines[j];

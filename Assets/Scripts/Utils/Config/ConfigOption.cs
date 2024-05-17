@@ -5,36 +5,24 @@ namespace Utils.Config
     public class ConfigOption
     {
         public string Id { get; }
-        public object Value
-        {
-            get => _prop.Value;
-            set => _prop.Value = value;
-        }
-
-        private LcsProp _prop;
+        public object Value { get; set; }
 
         public ConfigOption(string id, object value)
         {
             Id = id;
-            _prop = new LcsProp(value);
-        }
-
-        public ConfigOption(string id, LcsProp prop)
-        {
-            Id = id;
-            _prop = prop;
+            Value = value;
         }
 
         public string Stringify()
         {
-            return _prop.Stringify();
+            return LcsInfo.Stringify(Value);
         }
 
         public bool Parse(string raw)
         {
             try
             {
-                Value = LcsProp.Parse(raw);
+                Value = LcsInfo.Parse(raw);
                 return true;
             }
             catch
@@ -45,12 +33,12 @@ namespace Utils.Config
 
         public LcsLine ToLcs()
         {
-            return new LcsLine('$', new[] { new LcsProp(Id), _prop });
+            return new LcsLine('$', Id, Value);
         }
 
         public static ConfigOption FromLcs(LcsLine line)
         {
-            return new ConfigOption((string)line.Props[0].Value, line.Props[1]);
+            return new ConfigOption((string)line.Props[0], line.Props[1]);
         }
     }
 }

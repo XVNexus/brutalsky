@@ -36,24 +36,18 @@ namespace Brutalsky.Object
             return controller;
         }
 
-        protected override LcsProp[] _ToLcs()
+        protected override object[] _ToLcs()
         {
-            return new LcsProp[]
-            {
-                new(Position),
-                new(Size),
-                new(Color),
-                new(Redirect)
-            };
+            return new object[] { Position, Size, Color, Redirect };
         }
 
-        protected override void _FromLcs(LcsProp[] props)
+        protected override void _FromLcs(object[] props)
         {
             var i = 0;
-            Position = (Vector2)props[i++].Value;
-            Size = (Vector2)props[i++].Value;
-            Color = (Color)props[i++].Value;
-            Redirect = (uint)props[i++].Value;
+            Position = (Vector2)props[i++];
+            Size = (Vector2)props[i++];
+            Color = (Color)props[i++];
+            Redirect = (uint)props[i++];
         }
     }
 }

@@ -32,22 +32,17 @@ namespace Brutalsky.Object
             return controller;
         }
 
-        protected override LcsProp[] _ToLcs()
+        protected override object[] _ToLcs()
         {
-            return new LcsProp[]
-            {
-                new(Type),
-                new(Color),
-                new(Health)
-            };
+            return new object[] { Type, Color, Health };
         }
 
-        protected override void _FromLcs(LcsProp[] props)
+        protected override void _FromLcs(object[] props)
         {
             var i = 0;
-            Type = (PlayerType)props[i++].Value;
-            Color = (Color)props[i++].Value;
-            Health = (float)props[i++].Value;
+            Type = (PlayerType)props[i++];
+            Color = (Color)props[i++];
+            Health = (float)props[i++];
         }
     }
 }

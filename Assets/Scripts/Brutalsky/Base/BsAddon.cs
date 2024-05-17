@@ -20,15 +20,11 @@ namespace Brutalsky.Base
             Id = id;
         }
 
-        protected BsAddon()
-        {
-        }
-
         protected abstract Component _Init(GameObject gameObject, BsObject parentObject, BsMap map);
 
-        protected abstract LcsProp[] _ToLcs();
+        protected abstract object[] _ToLcs();
 
-        protected abstract void _FromLcs(LcsProp[] props);
+        protected abstract void _FromLcs(object[] props);
 
         [CanBeNull]
         public virtual BsNode RegisterLogic()
@@ -50,25 +46,21 @@ namespace Brutalsky.Base
 
         public LcsLine ToLcs()
         {
-            var props = new List<LcsProp>
-            {
-                new(Tag),
-                new(Id)
-            };
+            var props = new List<object> { Tag, Id };
             props.AddRange(_ToLcs());
             return new LcsLine('@', props.ToArray());
         }
 
         public static BsAddon FromLcs(LcsLine line)
         {
-            var result = ResourceSystem.GetTemplateAddon((string)line.Props[0].Value);
+            var result = ResourceSystem.GetTemplateAddon((string)line.Props[0]);
             result.ParseLcs(line);
             return result;
         }
 
         private void ParseLcs(LcsLine line)
         {
-            Id = (string)line.Props[1].Value;
+            Id = (string)line.Props[1];
             _FromLcs(line.Props[2..]);
         }
 

@@ -96,40 +96,27 @@ namespace Brutalsky.Object
             return controller;
         }
 
-        protected override LcsProp[] _ToLcs()
+        protected override object[] _ToLcs()
         {
-            return new LcsProp[]
-            {
-                new(Position),
-                new(Rotation),
-                new(Layer),
-                new(Path),
-                new(Friction),
-                new(Restitution),
-                new(Adhesion),
-                new(Density),
-                new(Health),
-                new(Dynamic),
-                new(Color),
-                new(Glow)
-            };
+            return new object[] { Position, Rotation, Layer, Path, Friction, Restitution, Adhesion, Density, Health,
+                Dynamic, Color, Glow };
         }
 
-        protected override void _FromLcs(LcsProp[] props)
+        protected override void _FromLcs(object[] props)
         {
             var i = 0;
-            Position = (Vector2)props[i++].Value;
-            Rotation = (float)props[i++].Value;
-            Layer = (sbyte)props[i++].Value;
-            Path = (PathString)props[i++].Value;
-            Friction = (float)props[i++].Value;
-            Restitution = (float)props[i++].Value;
-            Adhesion = (float)props[i++].Value;
-            Density = (float)props[i++].Value;
-            Health = (float)props[i++].Value;
-            Dynamic = (bool)props[i++].Value;
-            Color = (Color)props[i++].Value;
-            Glow = (bool)props[i++].Value;
+            Position = (Vector2)props[i++];
+            Rotation = (float)props[i++];
+            Layer = (sbyte)props[i++];
+            Path = (PathString)props[i++];
+            Friction = (float)props[i++];
+            Restitution = (float)props[i++];
+            Adhesion = (float)props[i++];
+            Density = (float)props[i++];
+            Health = (float)props[i++];
+            Dynamic = (bool)props[i++];
+            Color = (Color)props[i++];
+            Glow = (bool)props[i++];
         }
     }
 }

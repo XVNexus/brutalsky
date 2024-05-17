@@ -67,13 +67,12 @@ namespace Utils.Config
 
         public LcsLine ToLcs()
         {
-            return new LcsLine('#', new[] { new LcsProp(Id) },
-                Options.Values.Select(option => option.ToLcs()).ToList());
+            return new LcsLine('#', new object[] { Id }, Options.Values.Select(option => option.ToLcs()).ToList());
         }
 
         public static ConfigSection FromLcs(LcsLine line)
         {
-            return new ConfigSection((string)line.Props[0].Value,
+            return new ConfigSection((string)line.Props[0],
                 line.Children.Select(child => ConfigOption.FromLcs(child)).ToList());
         }
     }
