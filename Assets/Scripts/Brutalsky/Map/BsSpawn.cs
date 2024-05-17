@@ -46,7 +46,7 @@ namespace Brutalsky.Map
 
         public override string ToString()
         {
-            return $"SPAWN :: {ToLcs()}";
+            return $"SPAWN :: {Position}";
         }
     }
 }

@@ -31,7 +31,7 @@ namespace Brutalsky.Logic
 
         public override string ToString()
         {
-            return $"LINK :: {ToLcs()}";
+            return $"LINK :: {FromPort} > {ToPort}";
         }
     }
 }

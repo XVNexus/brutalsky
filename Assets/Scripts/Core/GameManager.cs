@@ -96,9 +96,9 @@ namespace Core
             {
                 for (var i = 1; i <= 12; i++)
                 {
-                    MapSystem._.RegisterMap(MapGenerator.Platformer($"Platformer {i}", i, (uint)(i * 0x69), i < 12));
+                    MapSystem._.RegisterMap(MapGenerator.Parkour($"Parkour {i}", i, (uint)(i * 0x69), i < 12));
                 }
-                MapSystem._.RegisterMap(MapGenerator.PlatformerGoal("Platformer Goal"));
+                MapSystem._.RegisterMap(MapGenerator.ParkourFinish("Parkour Finish"));
             }
 
             // Generate terrain maps

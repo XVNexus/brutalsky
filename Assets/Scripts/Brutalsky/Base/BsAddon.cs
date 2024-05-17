@@ -74,7 +74,7 @@ namespace Brutalsky.Base
 
         public override string ToString()
         {
-            return $"ADDON :: {ToLcs()}";
+            return $"ADDON :: {Tag}.{Id}";
         }
     }
 }

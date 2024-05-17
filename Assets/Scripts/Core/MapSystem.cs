@@ -157,11 +157,9 @@ namespace Core
 
         public void BuildMap([CanBeNull] BsMap map = null)
         {
-            // If the map parameter is null, build the current map
-            if (map == null)
-            {
-                map = ActiveMap ?? throw Errors.BuildNullMap();
-            }
+            map ??= ActiveMap ?? throw Errors.BuildNullMap();
+            if (map.PlayArea.width > maxMapSize || map.PlayArea.height > maxMapSize)
+                throw Errors.OversizedMap(map.PlayArea.size, maxMapSize);
 
             // Make sure there is not already an active map
             if (MapLoaded)

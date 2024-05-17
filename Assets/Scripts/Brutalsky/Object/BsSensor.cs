@@ -17,7 +17,7 @@ namespace Brutalsky.Object
         public override string Tag => Tags.SensorPrefix;
 
         public Vector2 Position { get; set; } = Vector2.zero;
-        public float Size { get; set; } = 1f;
+        public Vector2 Size { get; set; } = Vector2.one;
         public bool OnEnter { get; set; }
         public bool OnStay { get; set; } = true;
         public bool OnExit { get; set; }
@@ -32,7 +32,7 @@ namespace Brutalsky.Object
 
             // Apply transform
             gameObject.transform.localPosition = Position;
-            gameObject.transform.localScale = Vector2.one * Size;
+            gameObject.transform.localScale = Size;
 
             return controller;
         }
@@ -51,7 +51,7 @@ namespace Brutalsky.Object
             return new LcsProp[]
             {
                 new(LcsType.Float2, Position),
-                new(LcsType.Float, Size),
+                new(LcsType.Float2, Size),
                 new(LcsType.Bool, OnEnter),
                 new(LcsType.Bool, OnStay),
                 new(LcsType.Bool, OnExit)
@@ -62,7 +62,7 @@ namespace Brutalsky.Object
         {
             var i = 0;
             Position = (Vector2)props[i++].Value;
-            Size = (float)props[i++].Value;
+            Size = (Vector2)props[i++].Value;
             OnEnter = (bool)props[i++].Value;
             OnStay = (bool)props[i++].Value;
             OnExit = (bool)props[i++].Value;

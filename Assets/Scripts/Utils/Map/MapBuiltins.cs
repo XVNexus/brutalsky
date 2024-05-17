@@ -29,43 +29,6 @@ namespace Utils.Map
             result.AddSpawn(new BsSpawn(new Vector2(-10f, 10f), 0));
             result.AddSpawn(new BsSpawn(new Vector2(10f, 10f), 0));
 
-            // Add objects
-            result.AddObject(new BsShape("spinner")
-            {
-                Path = PathString.Star(6, 5f, 3f),
-                Material = MaterialExt.Stone,
-                Dynamic = true,
-                Color = ColorExt.Metal
-            }
-            .AppendAddon(new BsJoint("spinner-motor")
-            {
-                Type = JointType.Hinge,
-                MotorEnabled = true,
-                MotorForce = 1000f
-            }));
-            result.AddObject(new BsMount("mount-1")
-            {
-                ParentTag = Tags.ShapePrefix,
-                ParentId = "spinner",
-                Position = new Vector2(0f, 10f)
-            });
-            result.AddObject(new BsMount("mount-2")
-            {
-                ParentTag = Tags.ShapePrefix,
-                ParentId = "spinner",
-                Position = new Vector2(0f, -10f)
-            });
-
-            // Add logic
-            result.AddNode(BsNode.Add(2));
-            result.AddNode(BsNode.ConstantFloat(500f));
-            result.AddNode(BsNode.Multiply(2));
-            result.AddLink(new BsLink(4, 1, 0, 0));
-            result.AddLink(new BsLink(5, 1, 0, 1));
-            result.AddLink(new BsLink(0, 0, 2, 0));
-            result.AddLink(new BsLink(1, 0, 2, 1));
-            result.AddLink(new BsLink(2, 0, 3, 4));
-
             return result;
         }
 
@@ -76,7 +39,8 @@ namespace Utils.Map
             {
                 PlayArea = new Rect(-20f, -10f, 40f, 20f),
                 GravityDirection = Direction.Down,
-                GravityStrength = 20f
+                GravityStrength = 20f,
+                AirResistance = .5f
             };
 
             // Add spawns
@@ -208,7 +172,7 @@ namespace Utils.Map
                 Type = JointType.Hinge,
                 MountAnchor = new Vector2(-2.5f, 0f),
                 MotorEnabled = true,
-                MotorForce = 200f
+                MotorForce = 500f
             }));
             result.AddObject(new BsDecal("spinner-right-bg")
             {
@@ -231,12 +195,12 @@ namespace Utils.Map
                 Type = JointType.Hinge,
                 MountAnchor = new Vector2(2.5f, 0f),
                 MotorEnabled = true,
-                MotorForce = 200f
+                MotorForce = 500f
             }));
             result.AddObject(new BsSensor("spinner-sensor")
             {
                 Position = new Vector2(0f, 5f),
-                Size = 12f
+                Size = new Vector2(10f, 10f)
             });
             result.AddObject(new BsPool("water-left")
             {
@@ -547,7 +511,8 @@ namespace Utils.Map
             {
                 PlayArea = new Rect(-20f, -10f, 40f, 20f),
                 GravityDirection = Direction.Down,
-                GravityStrength = 20f
+                GravityStrength = 20f,
+                AirResistance = .5f
             };
 
             // Add spawns
@@ -679,7 +644,8 @@ namespace Utils.Map
             {
                 PlayArea = new Rect(-1250f, 0f, 2500f, 250f),
                 GravityDirection = Direction.Down,
-                GravityStrength = 20f
+                GravityStrength = 20f,
+                AirResistance = .5f
             };
 
             // Add spawns

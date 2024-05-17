@@ -80,7 +80,7 @@ namespace Controllers.Player
         // Event functions
         private void OnMapBuild(BsMap map)
         {
-            // Configure movement to fit with current gravity
+            // Configure movement to fit with current map settings
             _movementScale = map.GravityDirection switch
             {
                 Direction.Down => new Vector2(movementForce, map.GravityStrength * .5f),
@@ -113,6 +113,7 @@ namespace Controllers.Player
                 Direction.Right => m => m.x < 0f,
                 _ => _ => false
             };
+            _cRigidbody2D.drag = map.AirResistance;
         }
 
         private void OnPlayerSpawn(BsMap map, BsPlayer player, Vector2 position, bool visible)

@@ -449,7 +449,7 @@ namespace Brutalsky.Logic
 
         public override string ToString()
         {
-            return $"NODE :: {ToLcs()}";
+            return $"NODE :: {Tag}";
         }
     }
 }

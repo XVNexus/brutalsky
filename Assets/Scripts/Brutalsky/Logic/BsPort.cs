@@ -10,5 +10,10 @@ namespace Brutalsky.Logic
             NodeId = nodeId;
             PortId = portId;
         }
+
+        public override string ToString()
+        {
+            return $"{NodeId}:{PortId}";
+        }
     }
 }

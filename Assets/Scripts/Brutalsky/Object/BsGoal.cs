@@ -17,7 +17,7 @@ namespace Brutalsky.Object
         public override string Tag => Tags.GoalPrefix;
 
         public Vector2 Position { get; set; } = Vector2.zero;
-        public float Size { get; set; } = 1f;
+        public Vector2 Size { get; set; } = Vector2.one;
         public Color Color { get; set; } = Color.white;
         public uint Redirect { get; set; }
 
@@ -31,22 +31,9 @@ namespace Brutalsky.Object
 
             // Apply transform
             gameObject.transform.localPosition = Position;
-            gameObject.transform.localScale = Vector2.one * Size;
+            gameObject.transform.localScale = Size;
 
             return controller;
-        }
-
-        protected override BsNode _RegisterLogic()
-        {
-            var redirectController = ((GoalController)InstanceController).GetSub<GoalRedirectController>("redirect");
-            return new BsNode(new float[1], Array.Empty<float>(), (inputs, _) =>
-            {
-                if (BsMatrix.ToBool(inputs[0]))
-                {
-                    redirectController.ActivateRedirect();
-                }
-                return Array.Empty<float>();
-            });
         }
 
         protected override LcsProp[] _ToLcs()
@@ -54,7 +41,7 @@ namespace Brutalsky.Object
             return new LcsProp[]
             {
                 new(LcsType.Float2, Position),
-                new(LcsType.Float, Size),
+                new(LcsType.Float2, Size),
                 new(LcsType.Color, Color),
                 new(LcsType.UInt, Redirect)
             };
@@ -64,7 +51,7 @@ namespace Brutalsky.Object
         {
             var i = 0;
             Position = (Vector2)props[i++].Value;
-            Size = (float)props[i++].Value;
+            Size = (Vector2)props[i++].Value;
             Color = (Color)props[i++].Value;
             Redirect = (uint)props[i++].Value;
         }

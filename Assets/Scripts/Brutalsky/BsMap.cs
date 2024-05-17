@@ -33,6 +33,7 @@ namespace Brutalsky
         }
         public Direction GravityDirection { get; set; } = Direction.None;
         public float GravityStrength { get; set; }
+        public float AirResistance { get; set; }
         public float PlayerHealth { get; set; } = 100f;
         public bool AllowDummies { get; set; } = true;
 
@@ -194,6 +195,7 @@ namespace Brutalsky
                     new LcsProp(LcsType.Color, LightingColor),
                     new LcsProp(LcsType.Direction, GravityDirection),
                     new LcsProp(LcsType.Float, GravityStrength),
+                    new LcsProp(LcsType.Float, AirResistance),
                     new LcsProp(LcsType.Float, PlayerHealth),
                     new LcsProp(LcsType.Bool, AllowDummies)
                 })
@@ -211,18 +213,20 @@ namespace Brutalsky
             if (document.Lines.Count == 0) throw Errors.EmptyLcsDocument();
             var metadata = document.Lines[0].Props;
             if (document.Lines[0].Prefix != '!') throw Errors.InvalidItem("map LCS metadata line", metadata);
-            result.Title = (string)metadata[0].Value;
-            result.Author = (string)metadata[1].Value;
-            result.PlayArea = (Rect)metadata[2].Value;
-            result.BackgroundColor = (Color)metadata[3].Value;
-            result.LightingColor = (Color)metadata[4].Value;
-            result.GravityDirection = (Direction)metadata[5].Value;
-            result.GravityStrength = (float)metadata[6].Value;
-            result.PlayerHealth = (float)metadata[7].Value;
-            result.AllowDummies = (bool)metadata[8].Value;
-            for (var i = 1; i < document.Lines.Count; i++)
+            var i = 0;
+            result.Title = (string)metadata[i++].Value;
+            result.Author = (string)metadata[i++].Value;
+            result.PlayArea = (Rect)metadata[i++].Value;
+            result.BackgroundColor = (Color)metadata[i++].Value;
+            result.LightingColor = (Color)metadata[i++].Value;
+            result.GravityDirection = (Direction)metadata[i++].Value;
+            result.GravityStrength = (float)metadata[i++].Value;
+            result.AirResistance = (float)metadata[i++].Value;
+            result.PlayerHealth = (float)metadata[i++].Value;
+            result.AllowDummies = (bool)metadata[i++].Value;
+            for (var j = 1; j < document.Lines.Count; j++)
             {
-                var line = document.Lines[i];
+                var line = document.Lines[j];
                 switch (line.Prefix)
                 {
                     case '$':
@@ -238,7 +242,7 @@ namespace Brutalsky
                         result.AddLink(BsLink.FromLcs(line));
                         break;
                     default:
-                        throw Errors.InvalidItem("LCS line prefix", line.Prefix);
+                        throw Errors.InvalidItem("map LCS line prefix", line.Prefix);
                 }
             }
             return result;

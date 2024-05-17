@@ -41,6 +41,21 @@ namespace Utils.Ext
             return v.normalized * Mathf.Pow(v.magnitude, p);
         }
 
+        public static Vector2 Round(Vector2 v)
+        {
+            return new Vector2(Mathf.Round(v.x), Mathf.Round(v.y));
+        }
+
+        public static float PowSign(float f, float p)
+        {
+            return Mathf.Abs(Mathf.Pow(f, p)) * Mathf.Sin(f);
+        }
+
+        public static float BellPoint(float t, float center, float variance, float power = 2f)
+        {
+            return PowSign(t, power) * variance + center;
+        }
+
         // Vector tools
         public static Vector2 ToVector(float angle, float magnitude)
         {

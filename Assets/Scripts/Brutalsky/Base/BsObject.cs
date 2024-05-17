@@ -138,7 +138,7 @@ namespace Brutalsky.Base
 
         public override string ToString()
         {
-            return $"OBJECT :: {ToLcs()}";
+            return $"OBJECT :: {Tag}.{Id}";
         }
     }
 }
