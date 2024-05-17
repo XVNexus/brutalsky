@@ -67,7 +67,7 @@ namespace Utils.Config
 
         public LcsLine ToLcs()
         {
-            return new LcsLine('#', new[] { new LcsProp(LcsType.String, Id) },
+            return new LcsLine('#', new[] { new LcsProp(Id) },
                 Options.Values.Select(option => option.ToLcs()).ToList());
         }
 

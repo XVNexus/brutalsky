@@ -40,10 +40,10 @@ namespace Brutalsky.Object
         {
             return new LcsProp[]
             {
-                new(LcsType.Float2, Position),
-                new(LcsType.Float2, Size),
-                new(LcsType.Color, Color),
-                new(LcsType.UInt, Redirect)
+                new(Position),
+                new(Size),
+                new(Color),
+                new(Redirect)
             };
         }
 

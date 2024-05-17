@@ -52,8 +52,8 @@ namespace Brutalsky.Base
         {
             var props = new List<LcsProp>
             {
-                new(LcsType.String, Tag),
-                new(LcsType.String, Id)
+                new(Tag),
+                new(Id)
             };
             props.AddRange(_ToLcs());
             return new LcsLine('@', props.ToArray());

@@ -359,57 +359,57 @@ namespace Brutalsky.Addon
         {
             var result = new List<LcsProp>
             {
-                new(LcsType.JointType, Type),
-                new(LcsType.Float2, Anchor),
-                new(LcsType.String, MountShape),
-                new(LcsType.Float2, MountAnchor),
-                new(LcsType.Bool, MountCollision),
-                new(LcsType.Float, BreakForce),
-                new(LcsType.Float, BreakTorque)
+                new(Type),
+                new(Anchor),
+                new(MountShape),
+                new(MountAnchor),
+                new(MountCollision),
+                new(BreakForce),
+                new(BreakTorque)
             };
             switch (Type)
             {
                 case JointType.Fixed:
-                    result.Add(new LcsProp(LcsType.Float, DampingRatio));
-                    result.Add(new LcsProp(LcsType.Float, DampingFrequency));
+                    result.Add(new LcsProp(DampingRatio));
+                    result.Add(new LcsProp(DampingFrequency));
                     break;
                 case JointType.Distance:
-                    result.Add(new LcsProp(LcsType.Float, DistanceValue));
-                    result.Add(new LcsProp(LcsType.Bool, DistanceAuto));
-                    result.Add(new LcsProp(LcsType.Bool, DistanceMax));
+                    result.Add(new LcsProp(DistanceValue));
+                    result.Add(new LcsProp(DistanceAuto));
+                    result.Add(new LcsProp(DistanceMax));
                     break;
                 case JointType.Spring:
-                    result.Add(new LcsProp(LcsType.Float, DistanceValue));
-                    result.Add(new LcsProp(LcsType.Bool, DistanceAuto));
-                    result.Add(new LcsProp(LcsType.Float, DampingRatio));
-                    result.Add(new LcsProp(LcsType.Float, DampingFrequency));
+                    result.Add(new LcsProp(DistanceValue));
+                    result.Add(new LcsProp(DistanceAuto));
+                    result.Add(new LcsProp(DampingRatio));
+                    result.Add(new LcsProp(DampingFrequency));
                     break;
                 case JointType.Hinge:
-                    result.Add(new LcsProp(LcsType.Bool, MotorEnabled));
-                    result.Add(new LcsProp(LcsType.Float, MotorSpeed));
-                    result.Add(new LcsProp(LcsType.Float, MotorForce));
-                    result.Add(new LcsProp(LcsType.Bool, LimitEnabled));
-                    result.Add(new LcsProp(LcsType.Float, LimitMin));
-                    result.Add(new LcsProp(LcsType.Float, LimitMax));
+                    result.Add(new LcsProp(MotorEnabled));
+                    result.Add(new LcsProp(MotorSpeed));
+                    result.Add(new LcsProp(MotorForce));
+                    result.Add(new LcsProp(LimitEnabled));
+                    result.Add(new LcsProp(LimitMin));
+                    result.Add(new LcsProp(LimitMax));
                     break;
                 case JointType.Slider:
-                    result.Add(new LcsProp(LcsType.Float, AngleValue));
-                    result.Add(new LcsProp(LcsType.Bool, AngleAuto));
-                    result.Add(new LcsProp(LcsType.Bool, MotorEnabled));
-                    result.Add(new LcsProp(LcsType.Float, MotorSpeed));
-                    result.Add(new LcsProp(LcsType.Float, MotorForce));
-                    result.Add(new LcsProp(LcsType.Bool, LimitEnabled));
-                    result.Add(new LcsProp(LcsType.Float, LimitMin));
-                    result.Add(new LcsProp(LcsType.Float, LimitMax));
+                    result.Add(new LcsProp(AngleValue));
+                    result.Add(new LcsProp(AngleAuto));
+                    result.Add(new LcsProp(MotorEnabled));
+                    result.Add(new LcsProp(MotorSpeed));
+                    result.Add(new LcsProp(MotorForce));
+                    result.Add(new LcsProp(LimitEnabled));
+                    result.Add(new LcsProp(LimitMin));
+                    result.Add(new LcsProp(LimitMax));
                     break;
                 case JointType.Wheel:
-                    result.Add(new LcsProp(LcsType.Float, DampingRatio));
-                    result.Add(new LcsProp(LcsType.Float, DampingFrequency));
-                    result.Add(new LcsProp(LcsType.Float, AngleValue));
-                    result.Add(new LcsProp(LcsType.Bool, AngleAuto));
-                    result.Add(new LcsProp(LcsType.Bool, MotorEnabled));
-                    result.Add(new LcsProp(LcsType.Float, MotorSpeed));
-                    result.Add(new LcsProp(LcsType.Float, MotorForce));
+                    result.Add(new LcsProp(DampingRatio));
+                    result.Add(new LcsProp(DampingFrequency));
+                    result.Add(new LcsProp(AngleValue));
+                    result.Add(new LcsProp(AngleAuto));
+                    result.Add(new LcsProp(MotorEnabled));
+                    result.Add(new LcsProp(MotorSpeed));
+                    result.Add(new LcsProp(MotorForce));
                     break;
                 default:
                     throw Errors.InvalidItem("joint type", Type);

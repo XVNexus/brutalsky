@@ -1074,8 +1074,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d69867b827df4193b3040d4e03c4d9dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  builtinMaps:
-  - Void
   loadingColor: {r: 0.15, g: 0.15, b: 0.15, a: 1}
 --- !u!114 &581734025
 MonoBehaviour:
@@ -1095,61 +1093,48 @@ MonoBehaviour:
     options:
     - id: start
       name: Starting Map Id
-      type: 3
-      value: 0
+      value: 0I
     - id: arest
       name: Automatically Restart
-      type: 0
       value: True
     - id: uspl1
       name: Use Player 1
-      type: 0
       value: True
     - id: uspl2
       name: Use Player 2
-      type: 0
       value: True
     - id: enbtn
       name: Enable Builtin Maps
-      type: 0
       value: True
     - id: encst
       name: Enable Custom Maps
-      type: 0
       value: True
     - id: enbox
       name: Enable Box Maps
-      type: 0
       value: True
     - id: enptf
       name: Enable Platformer Maps
-      type: 0
       value: True
     - id: entrn
       name: Enable Terrain Maps
-      type: 0
       value: True
     - id: enmaz
       name: Enable Maze Maps
-      type: 0
       value: True
   - id: tmsys
     name: System
     options:
     - id: mxfps
       name: Maximum Framerate
-      type: 7
-      value: 120
+      value: 120i
   - id: cmsys
     name: Graphics
     options:
     - id: shake
       name: Camera Shake Strength
-      type: 9
-      value: 1
+      value: 1f
     - id: bloom
       name: Enable Glow Effects
-      type: 0
       value: True
   saveFormat: 0
 --- !u!1 &601674925

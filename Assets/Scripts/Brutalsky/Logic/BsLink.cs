@@ -21,7 +21,7 @@ namespace Brutalsky.Logic
 
         public LcsLine ToLcs()
         {
-            return new LcsLine('^', new LcsProp[] { new(LcsType.Port, FromPort), new(LcsType.Port, ToPort) });
+            return new LcsLine('^', new LcsProp[] { new(FromPort), new(ToPort) });
         }
 
         public static BsLink FromLcs(LcsLine line)

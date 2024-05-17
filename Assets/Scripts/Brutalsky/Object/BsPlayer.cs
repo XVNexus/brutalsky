@@ -36,9 +36,9 @@ namespace Brutalsky.Object
         {
             return new LcsProp[]
             {
-                new(LcsType.PlayerType, Type),
-                new(LcsType.Color, Color),
-                new(LcsType.Float, Health)
+                new(Type),
+                new(Color),
+                new(Health)
             };
         }
 

@@ -50,11 +50,11 @@ namespace Brutalsky.Object
         {
             return new LcsProp[]
             {
-                new(LcsType.Float2, Position),
-                new(LcsType.Float2, Size),
-                new(LcsType.Bool, OnEnter),
-                new(LcsType.Bool, OnStay),
-                new(LcsType.Bool, OnExit)
+                new(Position),
+                new(Size),
+                new(OnEnter),
+                new(OnStay),
+                new(OnExit)
             };
         }
 

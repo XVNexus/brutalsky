@@ -60,12 +60,12 @@ namespace Brutalsky.Object
         {
             return new LcsProp[]
             {
-                new(LcsType.Float2, Position),
-                new(LcsType.Float, Rotation),
-                new(LcsType.SByte, Layer),
-                new(LcsType.Path, Path),
-                new(LcsType.Color, Color),
-                new(LcsType.Bool, Glow)
+                new(Position),
+                new(Rotation),
+                new(Layer),
+                new(Path),
+                new(Color),
+                new(Glow)
             };
         }
 

@@ -30,39 +30,15 @@ namespace Utils.Lcs
         public static readonly Dictionary<char, char> SpecialCodes =
             SpecialChars.ToDictionary(kv => kv.Value, kv => kv.Key);
 
-        public static readonly Dictionary<LcsType, LcsInfo> TypeTable = new()
+        public static readonly List<LcsInfo> TypeInfoList = new()
         {
-            { LcsType.Bool, BoolInfo() },
-            { LcsType.Byte, ByteInfo() },
-            { LcsType.UShort, UShortInfo() },
-            { LcsType.UInt, UIntInfo() },
-            { LcsType.ULong, ULongInfo() },
-            { LcsType.SByte, SByteInfo() },
-            { LcsType.Short, ShortInfo() },
-            { LcsType.Int, IntInfo() },
-            { LcsType.Long, LongInfo() },
-            { LcsType.Float, FloatInfo() },
-            { LcsType.Double, DoubleInfo() },
-            { LcsType.Decimal, DecimalInfo() },
-            { LcsType.Char, CharInfo() },
-            { LcsType.String, StringInfo() },
-            { LcsType.Int2, Int2Info() },
-            { LcsType.Int3, Int3Info() },
-            { LcsType.Float2, Float2Info() },
-            { LcsType.Float3, Float3Info() },
-            { LcsType.Rect, RectInfo() },
-            { LcsType.Color, ColorInfo() },
-            { LcsType.Direction, DirectionInfo() },
-            { LcsType.PlayerType, PlayerTypeInfo() },
-            { LcsType.FormType, PathTypeInfo() },
-            { LcsType.JointType, JointTypeInfo() },
-            { LcsType.Path, PathInfo() },
-            { LcsType.Port, PortInfo() }
+            BoolInfo(), ByteInfo(), UShortInfo(), UIntInfo(), ULongInfo(), SByteInfo(), ShortInfo(), IntInfo(),
+            LongInfo(), FloatInfo(), DoubleInfo(), DecimalInfo(), CharInfo(), StringInfo(), Int2Info(), Int3Info(),
+            Float2Info(), Float3Info(), RectInfo(), ColorInfo(), DirectionInfo(), PlayerTypeInfo(), PathTypeInfo(),
+            JointTypeInfo(), PathInfo(), PortInfo()
         };
-        public static readonly Dictionary<Regex, LcsType> StringPatternTable =
-            TypeTable.ToDictionary(kv => kv.Value.StringPattern, kv => kv.Key);
-        public static readonly Dictionary<byte, LcsType> ByteTagTable =
-            TypeTable.ToDictionary(kv => kv.Value.ByteTag, kv => kv.Key);
+        public static readonly Dictionary<byte, LcsInfo> ByteTagTable =
+            TypeInfoList.ToDictionary(type => type.ByteTag, type => type);
 
         public int Size { get; }
         public Regex StringPattern { get; }
@@ -120,6 +96,40 @@ namespace Utils.Lcs
             {
                 return DefaultValue;
             }
+        }
+
+        public static LcsInfo GetTypeInfo(object value)
+        {
+            return value switch
+            {
+                bool => BoolInfo(),
+                byte => ByteInfo(),
+                ushort => UShortInfo(),
+                uint => UIntInfo(),
+                ulong => ULongInfo(),
+                sbyte => SByteInfo(),
+                short => ShortInfo(),
+                int => IntInfo(),
+                long => LongInfo(),
+                float => FloatInfo(),
+                double => DoubleInfo(),
+                decimal => DecimalInfo(),
+                char => CharInfo(),
+                string => StringInfo(),
+                Vector2Int => Int2Info(),
+                Vector3Int => Int3Info(),
+                Vector2 => Float2Info(),
+                Vector3 => Float3Info(),
+                Rect => RectInfo(),
+                Color => ColorInfo(),
+                Direction => DirectionInfo(),
+                PlayerType => PlayerTypeInfo(),
+                PathType => PathTypeInfo(),
+                JointType => JointTypeInfo(),
+                PathString => PathInfo(),
+                BsPort => PortInfo(),
+                _ => throw Errors.InvalidItem("lcs type", value)
+            };
         }
 
         // Primitive types

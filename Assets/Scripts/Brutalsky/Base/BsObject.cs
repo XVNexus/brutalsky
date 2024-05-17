@@ -108,10 +108,10 @@ namespace Brutalsky.Base
         {
             var props = new List<LcsProp>
             {
-                new(LcsType.String, Tag),
-                new(LcsType.String, Id),
-                new(LcsType.String, ParentTag),
-                new(LcsType.String, ParentId)
+                new(Tag),
+                new(Id),
+                new(ParentTag),
+                new(ParentId)
             };
             props.AddRange(_ToLcs());
             return new LcsLine('#', props.ToArray(), Addons.Select(addon => addon.ToLcs()).ToList());

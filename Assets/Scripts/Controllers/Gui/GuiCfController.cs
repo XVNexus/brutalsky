@@ -38,16 +38,8 @@ namespace Controllers.Gui
                 {
                     var option = cfg[key.Item1][key.Item2];
                     var optionField = _configOptionFields[key];
-                    try
-                    {
-                        var newValue = LcsInfo.TypeTable[option.Type].Parse(optionField.value);
-                        option.Value = newValue;
-                    }
-                    catch
-                    {
-                        //
-                    }
-                    optionField.value = LcsInfo.TypeTable[option.Type].Stringify(option.Value);
+                    option.Parse(optionField.value);
+                    optionField.value = option.Stringify();
                 }
                 ConfigSystem._.SaveFile();
             });
@@ -57,7 +49,7 @@ namespace Controllers.Gui
                 foreach (var key in _configOptionFields.Keys)
                 {
                     var option = cfg[key.Item1][key.Item2];
-                    _configOptionFields[key].value = LcsInfo.TypeTable[option.Type].Stringify(option.Value);
+                    _configOptionFields[key].value = option.Stringify();
                 }
             });
         }
@@ -89,7 +81,7 @@ namespace Controllers.Gui
                 var configOption = _eConfigOption.Instantiate();
                 configOption.Q<Label>("title").text = ConfigSystem._.NameTable[(section.Id, option.Id)];
                 var valueField = configOption.Q<TextField>("value");
-                valueField.value = LcsInfo.TypeTable[option.Type].Stringify(option.Value);
+                valueField.value = option.Stringify();
                 configSectionBox.Add(configOption);
                 _configOptionFields[(section.Id, option.Id)] = valueField;
             }

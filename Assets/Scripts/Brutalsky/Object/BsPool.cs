@@ -61,15 +61,15 @@ namespace Brutalsky.Object
         {
             return new LcsProp[]
             {
-                new(LcsType.Float2, Position),
-                new(LcsType.Float, Rotation),
-                new(LcsType.SByte, Layer),
-                new(LcsType.Float2, Size),
-                new(LcsType.Float, Buoyancy),
-                new(LcsType.Float, Viscosity),
-                new(LcsType.Float, Health),
-                new(LcsType.Color, Color),
-                new(LcsType.Bool, Glow)
+                new(Position),
+                new(Rotation),
+                new(Layer),
+                new(Size),
+                new(Buoyancy),
+                new(Viscosity),
+                new(Health),
+                new(Color),
+                new(Glow)
             };
         }
 

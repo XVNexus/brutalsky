@@ -75,7 +75,7 @@ public class Isolated : MonoBehaviour
     {
         foreach (var sample in samples)
         {
-            var prop = new LcsProp(LcsType.String, sample);
+            var prop = new LcsProp(sample);
             Debug.Log($"Sample length: {((string)prop.Value).Length}");
             var stringified = prop.Stringify();
             var destringified = LcsProp.Parse(stringified);

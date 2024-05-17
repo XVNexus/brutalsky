@@ -285,7 +285,7 @@ namespace Utils.Map
             result.AddObject(new BsDecal("finish-bg")
             {
                 Layer = -1,
-                Path = PathString.Vector(-5f, 0f, 0, 5f, 0f, 1, 5f, -5f, 0f, -5f, 1, -5f, -5f, -5f, 0f),
+                Path = PathString.Vector(-5f, 0f, 0, 5f, 0f, 1, 5f, -3f, 0f, -3f, 1, -5f, -3f, -5f, 0f),
                 Color = ColorExt.Medkit.MultiplyTint(.5f)
             });
             result.AddObject(new BsShape("finish-platform")

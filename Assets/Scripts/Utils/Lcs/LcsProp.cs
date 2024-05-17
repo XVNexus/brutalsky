@@ -5,18 +5,16 @@ namespace Utils.Lcs
 {
     public struct LcsProp
     {
-        public LcsType Type { get; set; }
         public object Value { get; set; }
 
-        public LcsProp(LcsType type, object value)
+        public LcsProp(object value)
         {
-            Type = type;
             Value = value;
         }
 
         public byte[] Binify()
         {
-            var typeInfo = LcsInfo.TypeTable[Type];
+            var typeInfo = LcsInfo.GetTypeInfo(Value);
             var typeBytes = new[] { typeInfo.ByteTag };
             var valueBytes = typeInfo.Binify(Value);
             var size = typeInfo.Size;
@@ -34,8 +32,7 @@ namespace Utils.Lcs
 
         public static LcsProp Parse(byte[] raw, ref int cursor)
         {
-            var type = LcsInfo.ByteTagTable[raw[cursor++]];
-            var typeInfo = LcsInfo.TypeTable[type];
+            var typeInfo = LcsInfo.ByteTagTable[raw[cursor++]];
             var size = typeInfo.Size;
             if (size == -1)
             {
@@ -53,27 +50,22 @@ namespace Utils.Lcs
             {
                 valueBytes[i] = raw[cursor++];
             }
-            var value = typeInfo.Parse(valueBytes);
-            return new LcsProp(type, value);
+            return new LcsProp(typeInfo.Parse(valueBytes));
         }
 
         public string Stringify()
         {
-            var typeInfo = LcsInfo.TypeTable[Type];
-            return typeInfo.Stringify(Value);
+            return LcsInfo.GetTypeInfo(Value).Stringify(Value);
         }
 
         public static LcsProp Parse(string raw)
         {
-            var type = LcsInfo.TypeTable.Keys.First(type => LcsInfo.TypeTable[type].StringPattern.IsMatch(raw));
-            var typeInfo = LcsInfo.TypeTable[type];
-            var value = typeInfo.Parse(raw);
-            return new LcsProp(type, value);
+            return new LcsProp(LcsInfo.TypeInfoList.First(type => type.StringPattern.IsMatch(raw)).Parse(raw));
         }
 
         public override string ToString()
         {
-            return $"({Type}: {Value})";
+            return $"({Value})";
         }
     }
 }

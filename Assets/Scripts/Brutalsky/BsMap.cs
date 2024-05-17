@@ -188,16 +188,16 @@ namespace Brutalsky
             {
                 new('!', new[]
                 {
-                    new LcsProp(LcsType.String, Title),
-                    new LcsProp(LcsType.String, Author),
-                    new LcsProp(LcsType.Rect, PlayArea),
-                    new LcsProp(LcsType.Color, BackgroundColor),
-                    new LcsProp(LcsType.Color, LightingColor),
-                    new LcsProp(LcsType.Direction, GravityDirection),
-                    new LcsProp(LcsType.Float, GravityStrength),
-                    new LcsProp(LcsType.Float, AirResistance),
-                    new LcsProp(LcsType.Float, PlayerHealth),
-                    new LcsProp(LcsType.Bool, AllowDummies)
+                    new LcsProp(Title),
+                    new LcsProp(Author),
+                    new LcsProp(PlayArea),
+                    new LcsProp(BackgroundColor),
+                    new LcsProp(LightingColor),
+                    new LcsProp(GravityDirection),
+                    new LcsProp(GravityStrength),
+                    new LcsProp(AirResistance),
+                    new LcsProp(PlayerHealth),
+                    new LcsProp(AllowDummies)
                 })
             };
             lines.AddRange(Spawns.Select(spawn => spawn.ToLcs()));

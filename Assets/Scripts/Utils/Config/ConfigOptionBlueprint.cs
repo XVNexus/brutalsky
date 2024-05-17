@@ -1,5 +1,3 @@
-using Utils.Lcs;
-
 namespace Utils.Config
 {
     [System.Serializable]
@@ -7,7 +5,6 @@ namespace Utils.Config
     {
         public string id;
         public string name;
-        public LcsType type;
         public string value;
     }
 }

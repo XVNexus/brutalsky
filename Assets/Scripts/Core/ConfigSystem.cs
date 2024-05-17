@@ -30,8 +30,7 @@ namespace Core
                 NameTable[(section.Id, "")] = sectionBlueprint.name;
                 foreach (var optionBlueprint in sectionBlueprint.options)
                 {
-                    var option = new ConfigOption(optionBlueprint.id, optionBlueprint.type,
-                        LcsInfo.TypeTable[optionBlueprint.type].Parse(optionBlueprint.value));
+                    var option = new ConfigOption(optionBlueprint.id, LcsProp.Parse(optionBlueprint.value));
                     NameTable[(section.Id, option.Id)] = optionBlueprint.name;
                     section.AddOption(option);
                 }

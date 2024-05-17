@@ -34,8 +34,8 @@ namespace Brutalsky.Map
         {
             return new LcsLine('$', new[]
             {
-                new LcsProp(LcsType.Float2, Position),
-                new LcsProp(LcsType.Int, Priority)
+                new LcsProp(Position),
+                new LcsProp(Priority)
             });
         }
 

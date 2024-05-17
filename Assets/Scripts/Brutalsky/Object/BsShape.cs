@@ -100,18 +100,18 @@ namespace Brutalsky.Object
         {
             return new LcsProp[]
             {
-                new(LcsType.Float2, Position),
-                new(LcsType.Float, Rotation),
-                new(LcsType.SByte, Layer),
-                new(LcsType.Path, Path),
-                new(LcsType.Float, Friction),
-                new(LcsType.Float, Restitution),
-                new(LcsType.Float, Adhesion),
-                new(LcsType.Float, Density),
-                new(LcsType.Float, Health),
-                new(LcsType.Bool, Dynamic),
-                new(LcsType.Color, Color),
-                new(LcsType.Bool, Glow)
+                new(Position),
+                new(Rotation),
+                new(Layer),
+                new(Path),
+                new(Friction),
+                new(Restitution),
+                new(Adhesion),
+                new(Density),
+                new(Health),
+                new(Dynamic),
+                new(Color),
+                new(Glow)
             };
         }
 

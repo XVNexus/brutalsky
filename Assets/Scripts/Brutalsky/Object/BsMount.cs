@@ -47,8 +47,8 @@ namespace Brutalsky.Object
         {
             return new LcsProp[]
             {
-                new(LcsType.Float2, Position),
-                new(LcsType.Float2, EjectionForce)
+                new(Position),
+                new(EjectionForce)
             };
         }
 
