@@ -1,13 +1,9 @@
-using System;
 using Brutalsky.Base;
-using Brutalsky.Logic;
 using Controllers;
 using Controllers.Base;
-using Controllers.Goal;
 using Core;
 using UnityEngine;
 using Utils.Constants;
-using Utils.Lcs;
 
 namespace Brutalsky.Object
 {
