@@ -26,8 +26,7 @@ namespace Utils.Map
             var result = new BsMap(title, Author)
             {
                 PlayArea = new Rect(size * -.5f, size),
-                BackgroundColor = new Color(.1f, .1f, .2f),
-                LightingColor = new Color(.75f, .75f, 1f, .8f),
+                BackgroundColor = new Color(.2f, .2f, .2f),
                 GravityDirection = Direction.Down,
                 GravityStrength = 20f
             };
@@ -128,7 +127,7 @@ namespace Utils.Map
             var result = new BsMap(title, Author)
             {
                 PlayArea = new Rect(size * -.5f, size),
-                BackgroundColor = Color.HSVToRGB((1f - diffFraction) * 1f / 3f, .25f, .2f),
+                BackgroundColor = Color.HSVToRGB((1f - diffFraction) * 2f / 3f, .1f, .2f),
                 LightingColor = Color.white.SetAlpha(.75f),
                 GravityDirection = Direction.Down,
                 GravityStrength = 20f,
@@ -196,7 +195,7 @@ namespace Utils.Map
                 var spacing = MathfExt.BellPoint(rand.NextFloat(-1f, 1f), difficulty * 5f, difficulty * 2f);
                 var length = MathfExt.BellPoint(rand.NextFloat(-1f, 1f), 26f - difficulty * 2f, 13f - difficulty);
                 if (cursor + spacing + length >= limit) break;
-                var ice = rand.NextFloat(1f / diffFraction) < 1f;
+                var ice = rand.NextFloat(1f / Mathf.Pow(diffFraction, 2f)) < 1f;
                 placements.Add(new Rect(cursor + spacing, rand.NextFloat(size.y * -.25f, size.y * .25f),
                     length, ice ? 1f : 0f));
                 cursor += spacing + length;
@@ -255,8 +254,8 @@ namespace Utils.Map
                 : Regex.Replace(title, @"\d+", "Finish");
             result.AddObject(new BsGoal("goal")
             {
-                Position = new Vector2(goalX, size.y * .5f),
-                Size = new Vector2(6f, size.y),
+                Position = new Vector2(goalX + 2.75f, size.y * .5f),
+                Size = new Vector2(4.5f, size.y),
                 Color = ColorExt.Medicine,
                 Redirect = MapSystem.GenerateId(nextLevelTitle, Author)
             });
@@ -270,7 +269,7 @@ namespace Utils.Map
             var result = new BsMap(title, Author)
             {
                 PlayArea = new Rect(-15f, -15f, 30f, 30f),
-                BackgroundColor = Color.HSVToRGB(.5f, .25f, .2f),
+                BackgroundColor = Color.HSVToRGB(.5f, .75f, .2f),
                 LightingColor = Color.white.SetAlpha(.75f),
                 GravityDirection = Direction.Down,
                 GravityStrength = 20f
