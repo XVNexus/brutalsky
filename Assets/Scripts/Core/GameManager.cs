@@ -221,11 +221,6 @@ namespace Core
         private void OnPlayerUnregister(BsPlayer player)
         {
             _livingPlayers.Remove(player.Id);
-            if (_mapChangeActive) return;
-            if ((_cfgAutoRestart && _livingPlayers.Count == 1) || _livingPlayers.Count == 0)
-            {
-                Invoke(nameof(RestartRound), 3f);
-            }
         }
 
         private void OnPlayerSpawn(BsMap map, BsPlayer player, Vector2 position, bool visible)
