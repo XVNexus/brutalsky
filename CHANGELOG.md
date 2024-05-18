@@ -1,3 +1,19 @@
+## Dev 0.2 (2024.05.18)
+
+#### BUGFIXES
+- round restarted when a player was unregistered but did not actually die
+
+
+## *Nightly 2024.05.17*
+
+#### UPDATES
+- spacing between first platform and spawn and last platform and goal is more consistent with the spacing between other platforms in parkour maps
+
+#### BUGFIXES
+- players did not collide with map objects
+- parkour finish platform was larger than the start and goal platforms
+
+
 ## *Nightly 2024.05.16*
 
 #### UPDATES
