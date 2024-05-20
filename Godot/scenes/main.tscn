@@ -1,0 +1,45 @@
+[gd_scene load_steps=3 format=3 uid="uid://dpi18onr7exqq"]
+
+[ext_resource type="PackedScene" uid="uid://clx41t2tkknpq" path="res://prefabs/player.tscn" id="1_3ghtc"]
+[ext_resource type="PackedScene" uid="uid://s7irwcbhvml1" path="res://prefabs/wall.tscn" id="2_og2hs"]
+
+[node name="Root" type="Node2D"]
+
+[node name="Camera2D" type="Camera2D" parent="."]
+
+[node name="Wall 1" parent="." instance=ExtResource("2_og2hs")]
+position = Vector2(0, 304)
+scale = Vector2(40, 1)
+
+[node name="Polygon2D" parent="Wall 1" index="1"]
+color = Color(0.8, 0.8, 0.8, 1)
+
+[node name="Wall 2" parent="." instance=ExtResource("2_og2hs")]
+position = Vector2(-152, 216)
+scale = Vector2(1, 4)
+
+[node name="Polygon2D" parent="Wall 2" index="1"]
+color = Color(0.8, 0.8, 0.8, 1)
+
+[node name="Player 1" parent="." instance=ExtResource("1_3ghtc")]
+position = Vector2(-128, 0)
+
+[node name="Sprite2D" parent="Player 1" index="1"]
+self_modulate = Color(1, 0.5, 0, 1)
+
+[node name="PointLight2D" parent="Player 1" index="2"]
+color = Color(1, 0.5, 0, 1)
+
+[node name="Player 2" parent="." instance=ExtResource("1_3ghtc")]
+position = Vector2(128, 0)
+
+[node name="Sprite2D" parent="Player 2" index="1"]
+self_modulate = Color(0, 0.5, 1, 1)
+
+[node name="PointLight2D" parent="Player 2" index="2"]
+color = Color(0, 0.5, 1, 1)
+
+[editable path="Wall 1"]
+[editable path="Wall 2"]
+[editable path="Player 1"]
+[editable path="Player 2"]

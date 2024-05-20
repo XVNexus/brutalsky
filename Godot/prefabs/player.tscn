@@ -1,0 +1,29 @@
+[gd_scene load_steps=5 format=3 uid="uid://clx41t2tkknpq"]
+
+[ext_resource type="PhysicsMaterial" uid="uid://bsreqenhvutnq" path="res://materials/player.tres" id="1_bs16e"]
+[ext_resource type="Texture2D" uid="uid://cebh1o8k18r1e" path="res://textures/object/player_body.png" id="2_gu3tk"]
+[ext_resource type="Texture2D" uid="uid://c1jsvyel30nq7" path="res://textures/primitive/circle_solid.png" id="3_w2se6"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_tv42s"]
+radius = 16.0
+
+[node name="Player" type="RigidBody2D"]
+physics_material_override = ExtResource("1_bs16e")
+can_sleep = false
+lock_rotation = true
+continuous_cd = 2
+max_contacts_reported = 4
+contact_monitor = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_tv42s")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.125, 0.125)
+texture = ExtResource("2_gu3tk")
+
+[node name="PointLight2D" type="PointLight2D" parent="."]
+shadow_enabled = true
+shadow_color = Color(0, 0, 0, 1)
+texture = ExtResource("3_w2se6")
+texture_scale = 0.5

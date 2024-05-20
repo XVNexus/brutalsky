@@ -1,0 +1,14 @@
+[remap]
+
+importer="image"
+type="Image"
+uid="uid://bt34nh0sleu8u"
+path="res://.godot/imported/pointer.png-41a3ad0cc2d056c368f006c5f2e7626b.image"
+
+[deps]
+
+source_file="res://textures/cursor/pointer.png"
+dest_files=["res://.godot/imported/pointer.png-41a3ad0cc2d056c368f006c5f2e7626b.image"]
+
+[params]
+

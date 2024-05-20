@@ -1,10 +1,10 @@
-## Dev 0.2 (2024.05.18)
+## Dev μ0.2 (2024-05-18)
 
 #### BUGFIXES
 - round restarted when a player was unregistered but did not actually die
 
 
-## *Nightly 2024.05.17*
+## *Nightly δ24.05.17*
 
 #### UPDATES
 - spacing between first platform and spawn and last platform and goal is more consistent with the spacing between other platforms in parkour maps
@@ -14,7 +14,7 @@
 - parkour finish platform was larger than the start and goal platforms
 
 
-## *Nightly 2024.05.16*
+## *Nightly δ24.05.16*
 
 #### UPDATES
 - made parkour platforms more consistently spaced
@@ -34,7 +34,7 @@
 - lcs string parser now uses implicit typing instead of explicit type tags for properties, resulting in cleaner syntax for config file and map files
 
 
-## *Nightly 2024.05.15*
+## *Nightly δ24.05.15*
 
 #### UPDATES
 - increased number of parkour levels from 5 to 12
@@ -55,7 +55,7 @@
 - some objects did not respect the simulated setting
 
 
-## *Nightly 2024.05.14*
+## *Nightly δ24.05.14*
 
 #### UPDATES
 - added config system with basic graphics and gameplay settings
@@ -71,7 +71,7 @@
 - lcs string files contained excessive property separators
 
 
-## *Nightly 2024.05.13*
+## *Nightly δ24.05.13*
 
 #### UPDATES
 - added controls for player 2
@@ -86,7 +86,7 @@
 - player input on one keyboard got shut off for one frame when a button was pressed on another keyboard
 
 
-## *Nightly 2024.05.12*
+## *Nightly δ24.05.12*
 
 #### UPDATES
 - limited size of followcam view to size of map
@@ -96,7 +96,7 @@
 - logic links are now serialized as 6 digit hexadecimal codes instead of two integers
 
 
-## *Nightly 2024.05.11*
+## *Nightly δ24.05.11*
 
 #### UPDATES
 - added new default map with a working car that has a driver and passenger mount
@@ -110,7 +110,7 @@
 - binary lcs parser did not allow strings and shape forms longer than 255 bytes
 
 
-## *Nightly 2024.05.08*
+## *Nightly δ24.05.08*
 
 #### UPDATES
 - added particle effect for goals, previously known as redirects
@@ -127,7 +127,7 @@
 - logic links did not get saved with the map if there were no logic nodes
 
 
-## *Nightly 2024.05.07*
+## *Nightly δ24.05.07*
 
 #### UPDATES
 - added procedurally generated platformer maps that increase in length with each level
@@ -145,7 +145,7 @@
 - data folders did not get automatically created on game start
 
 
-## *Nightly 2024.05.06*
+## *Nightly δ24.05.06*
 
 #### UPDATES
 - added ui buttons to restart the current round or refresh the map list from the level selector
@@ -158,7 +158,7 @@
 - the active map was reloaded from disk instead of reloaded from memory on map restart
 
 
-## *Nightly 2024.05.05*
+## *Nightly δ24.05.05*
 
 #### UPDATES
 - round automatically restarts if there is one player remaining
@@ -170,7 +170,7 @@
 - lcs files now use .lcs and .lcb extensions in place of .txt and .bin
 
 
-## *Nightly 2024.05.04*
+## *Nightly δ24.05.04*
 
 #### UPDATES
 - added level transition animations
@@ -178,7 +178,7 @@
 - ui automatically closes when a map is selected from the pause menu or level selector
 
 
-## *Nightly 2024.05.03*
+## *Nightly δ24.05.03*
 
 #### UPDATES
 - added new default map
@@ -192,13 +192,13 @@
 - jointed adhesive shapes haphazardly teleported around when hit by the player
 
 
-## *Nightly 2024.05.02*
+## *Nightly δ24.05.02*
 
 #### UPDATES
 - added node-based logic programming system
 
 
-## *Nightly 2024.04.30*
+## *Nightly δ24.04.30*
 
 #### UPDATES
 - improved ui theme
@@ -207,7 +207,7 @@
 - player death particles were invisible
 
 
-## *Nightly 2024.04.29*
+## *Nightly δ24.04.29*
 
 #### UPDATES
 - improved map background
@@ -215,7 +215,7 @@
 - improved player heal/hurt particles
 
 
-## *Nightly 2024.04.28*
+## *Nightly δ24.04.28*
 
 #### UPDATES
 - overhauled textures and map background
@@ -225,7 +225,7 @@
 - objects were visible outside of map bounds
 
 
-## *Nightly 2024.04.27*
+## *Nightly δ24.04.27*
 
 #### UPDATES
 - added bezier shape form node
@@ -236,7 +236,7 @@
 - one player pushing another caused glitchy movement
 
 
-## *Nightly 2024.04.21*
+## *Nightly δ24.04.21*
 
 #### UPDATES
 - improved default maps
@@ -244,7 +244,7 @@
 - improved shape adhesion handling
 
 
-## *Nightly 2024.04.20*
+## *Nightly δ24.04.20*
 
 #### UPDATES
 - added map gravity setting
@@ -255,13 +255,13 @@
 - players did not respawn correctly
 
 
-## *Nightly 2024.04.19*
+## *Nightly δ24.04.19*
 
 #### UPDATES
 - added more map settings
 
 
-## *Nightly 2024.04.14*
+## *Nightly δ24.04.14*
 
 #### UPDATES
 - added new experimental default map
@@ -271,7 +271,7 @@
 - map previews did not properly sort objects by their layer
 
 
-## *Nightly 2024.04.13*
+## *Nightly δ24.04.13*
 
 #### UPDATES
 - added map previews in the level selector menu
@@ -282,58 +282,58 @@
 - lcs parser did not properly handle child lines
 
 
-## *Nightly 2024.04.12*
+## *Nightly δ24.04.12*
 
 #### UPDATES
 - added map background texture
 - reduced map file size
 
 
-## *Nightly 2024.04.11*
+## *Nightly δ24.04.11*
 
 #### UPDATES
 - reduced map file size
 - increased player movement speed when on ground
 
 
-## *Nightly 2024.04.07*
+## *Nightly δ24.04.07*
 
 #### UPDATES
 - improved color serialization
 
 
-## *Nightly 2024.04.06*
+## *Nightly δ24.04.06*
 
 #### UPDATES
 - reformatted map files to line-based format to reduce file size
 
 
-## *Nightly 2024.04.05*
+## *Nightly δ24.04.05*
 
 #### BUGFIXES
 - map ids did not generate correctly
 
 
-## *Nightly 2024.04.02*
+## *Nightly δ24.04.02*
 
 #### UPDATES
 - reduced map file size
 
 
-## *Nightly 2024.04.01*
+## *Nightly δ24.04.01*
 
 #### UPDATES
 - improved touch and slide particles
 
 
-## Dev 0.1 (2024.03.07)
+## Dev μ0.1 (2024-03-07)
 
 #### UPDATES
 - added map picker ui
 - improved map loading and generation
 
 
-## *Nightly 2024.03.02*
+## *Nightly δ24.03.02*
 
 #### UPDATES
 - added simple autogenerated maps
@@ -342,19 +342,19 @@
 - improved map saving and loading
 
 
-## *Nightly 2024.03.01*
+## *Nightly δ24.03.01*
 
 #### UPDATES
 - improved particles
 
 
-## *Nightly 2024.02.29*
+## *Nightly δ24.02.29*
 
 #### UPDATES
 - improved physics and wave effects
 
 
-## *Nightly 2024.02.28*
+## *Nightly δ24.02.28*
 
 #### UPDATES
 - added gravity
@@ -364,7 +364,7 @@
 - player death particles repeated every frame
 
 
-## *Nightly 2024.02.24*
+## *Nightly δ24.02.24*
 
 #### UPDATES
 - added basic pause menu
@@ -373,45 +373,45 @@
 - improved player damage particles
 
 
-## *Nightly 2024.02.23*
+## *Nightly δ24.02.23*
 
 #### UPDATES
 - added map saving and loading
 
 
-## *Nightly 2024.02.22*
+## *Nightly δ24.02.22*
 
 #### UPDATES
 - added advanced joint system
 - added more map and shape lighting options
 
 
-## *Nightly 2024.02.21*
+## *Nightly δ24.02.21*
 
 #### UPDATES
 - added reactive animated waves for pools
 
 
-## *Nightly 2024.02.20*
+## *Nightly δ24.02.20*
 
 #### UPDATES
 - added adhesion material property
 - added heal/hurt material property
 
 
-## *Nightly 2024.02.16*
+## *Nightly δ24.02.16*
 
 #### UPDATES
 - added map save file system
 
 
-## *Nightly 2024.02.15*
+## *Nightly δ24.02.15*
 
 #### UPDATES
 - improved damage system
 
 
-## *Nightly 2024.02.14*
+## *Nightly δ24.02.14*
 
 #### UPDATES
 - added shape joints
@@ -421,27 +421,27 @@
 - improved default map
 
 
-## *Nightly 2024.02.13*
+## *Nightly δ24.02.13*
 
 #### UPDATES
 - added default map
 - added pools
 
 
-## *Nightly 2024.02.12*
+## *Nightly δ24.02.12*
 
 #### UPDATES
 - added map and shape system
 
 
-## *Nightly 2024.02.11*
+## *Nightly δ24.02.11*
 
 #### UPDATES
 - added basic player particle effects
 - added camera shake
 
 
-## *Nightly 2024.02.10*
+## *Nightly δ24.02.10*
 
 #### UPDATES
 - added player with indicator ring

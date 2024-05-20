@@ -1,0 +1,14 @@
+[remap]
+
+importer="image"
+type="Image"
+uid="uid://c1g8m8inem4jd"
+path="res://.godot/imported/app_icon.png-3831c81fedef81c3a9b05857d56e5004.image"
+
+[deps]
+
+source_file="res://textures/logo/app_icon.png"
+dest_files=["res://.godot/imported/app_icon.png-3831c81fedef81c3a9b05857d56e5004.image"]
+
+[params]
+

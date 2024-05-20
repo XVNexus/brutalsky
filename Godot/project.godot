@@ -1,0 +1,43 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[application]
+
+config/name="Brutalsky"
+run/main_scene="res://scenes/main.tscn"
+config/features=PackedStringArray("4.2", "Mobile")
+run/max_fps=120
+config/icon="res://icon.svg"
+
+[display]
+
+window/size/viewport_width=1280
+window/size/viewport_height=640
+
+[dotnet]
+
+project/assembly_name="Brutalsky"
+
+[editor]
+
+naming/node_name_num_separator=1
+
+[filesystem]
+
+import/blender/enabled=false
+import/fbx/enabled=false
+
+[physics]
+
+2d/default_angular_damp=0.1
+
+[rendering]
+
+renderer/rendering_method="mobile"
