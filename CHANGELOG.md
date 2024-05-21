@@ -1,3 +1,12 @@
+## *Nightly δ24.05.20*
+
+#### UPDATES
+- create new godot project alongside unity project to prepare for the engine swap
+- change name casing of assets
+- reduce resolution of player light texture
+- add player input getter script
+
+
 ## Dev μ0.2 (2024-05-18)
 
 #### BUGFIXES
