@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dg8htvmuh17dj"
-path="res://.godot/imported/MenuTitle.png-ff824fdcaafe5c57a1cf54ddb2d2a130.ctex"
+uid="uid://dkl53rtl8gmsq"
+path="res://.godot/imported/icon_old.svg-cc24b5cdd2f6d013a99874f1b5fb406e.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Textures/Logos/MenuTitle.png"
-dest_files=["res://.godot/imported/MenuTitle.png-ff824fdcaafe5c57a1cf54ddb2d2a130.ctex"]
+source_file="res://icon_old.svg"
+dest_files=["res://.godot/imported/icon_old.svg-cc24b5cdd2f6d013a99874f1b5fb406e.ctex"]
 
 [params]
 
@@ -32,3 +32,6 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=1
+svg/scale=1.0
+editor/scale_with_editor_scale=false
+editor/convert_colors_with_editor_theme=false
