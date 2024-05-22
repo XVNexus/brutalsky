@@ -26,7 +26,7 @@ public struct LcsInfo
     public static readonly List<LcsInfo> TypeInfoList = new()
     {
         BoolInfo(), ByteInfo(), UShortInfo(), UIntInfo(), ULongInfo(), SByteInfo(), ShortInfo(), IntInfo(), LongInfo(),
-        FloatInfo(), DoubleInfo(), DecimalInfo(), CharInfo(), StringInfo()
+        FloatInfo(), DoubleInfo(), CharInfo(), StringInfo()
     };
     public static readonly Dictionary<byte, LcsInfo> ByteTagTable =
         TypeInfoList.ToDictionary(type => type.ByteTag, type => type);
@@ -55,6 +55,30 @@ public struct LcsInfo
         _fromStr = fromStr;
     }
 
+    public static LcsDocument Serialize(ILcsDocument source)
+    {
+        return source._ToLcs();
+    }
+
+    public static T Parse<T>(LcsDocument raw) where T : ILcsDocument, new()
+    {
+        var result = new T();
+        result._FromLcs(raw);
+        return result;
+    }
+
+    public static LcsLine Serialize(ILcsLine source)
+    {
+        return source._ToLcs();
+    }
+
+    public static T Parse<T>(LcsLine raw) where T : ILcsLine, new()
+    {
+        var result = new T();
+        result._FromLcs(raw);
+        return result;
+    }
+
     public static LcsInfo GetTypeInfo(object value)
     {
         return value switch
@@ -70,7 +94,6 @@ public struct LcsInfo
             long => LongInfo(),
             float => FloatInfo(),
             double => DoubleInfo(),
-            decimal => DecimalInfo(),
             char => CharInfo(),
             string => StringInfo(),
             _ => throw Errors.InvalidItem("lcs type", value)
@@ -203,16 +226,8 @@ public struct LcsInfo
             raw => double.Parse(raw[..^1]));
     }
 
-    public static LcsInfo DecimalInfo() {
-        return new LcsInfo(16, @"([\d\.]+|NaN|Infinity|-Infinity)m", 0x0C, 0m,
-            _ => throw new NotImplementedException(),
-            _ => throw new NotImplementedException(),
-            _ => throw new NotImplementedException(),
-            _ => throw new NotImplementedException());
-    }
-
     public static LcsInfo CharInfo() {
-        return new LcsInfo(2, @"'(.|\\.)'", 0x0D, ' ',
+        return new LcsInfo(2, @"'(.|\\.)'", 0x0C, ' ',
             value => BitConverter.GetBytes((char)value),
             raw => BitConverter.ToChar(raw),
             value =>
@@ -224,7 +239,7 @@ public struct LcsInfo
     }
 
     public static LcsInfo StringInfo() {
-        return new LcsInfo(-1, @"\""\S*\""", 0x0E, "",
+        return new LcsInfo(-1, @"\""\S*\""", 0x0D, "",
             value => Encoding.UTF8.GetBytes((string)value),
             raw => Encoding.UTF8.GetString(raw),
             value => '"' + SpecialChars.Keys.Aggregate(((string)value).Replace(@"\", @"\\"),

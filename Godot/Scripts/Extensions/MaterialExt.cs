@@ -1,4 +1,4 @@
-namespace Brutalsky.Scripts.Utils;
+namespace Brutalsky.Scripts.Extensions;
 
 public static class MaterialExt
 {

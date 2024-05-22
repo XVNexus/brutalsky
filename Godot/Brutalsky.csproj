@@ -6,7 +6,4 @@
     <EnableDynamicLoading>true</EnableDynamicLoading>
     <Nullable>enable</Nullable>
   </PropertyGroup>
-  <ItemGroup>
-    <Folder Include="Scripts\Core\" />
-  </ItemGroup>
 </Project>

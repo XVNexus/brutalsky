@@ -1,6 +1,6 @@
 using Godot;
 
-namespace Brutalsky.Scripts.Utils;
+namespace Brutalsky.Scripts.Extensions;
 
 public static class Vector2Ext
 {

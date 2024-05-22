@@ -2,7 +2,7 @@ namespace Brutalsky.Scripts.Lcs;
 
 public interface ILcsDocument
 {
-    public LcsDocument ToLcs();
+    public LcsDocument _ToLcs();
 
-    public void FromLcs(LcsDocument line);
+    public void _FromLcs(LcsDocument line);
 }
