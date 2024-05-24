@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://1safi6sn5n1i"]
+
+[node name="RoundPlayer" type="Node2D"]
+
+[node name="Camera2D" type="Camera2D" parent="."]
+
+[node name="PlayerContainer" type="Node" parent="."]
+
+[node name="MapContainer" type="Node" parent="."]
