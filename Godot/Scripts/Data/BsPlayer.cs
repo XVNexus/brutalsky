@@ -1,4 +1,5 @@
 using Brutalsky.Scripts.Lcs;
+using Brutalsky.Scripts.Utils;
 using Godot;
 
 namespace Brutalsky.Scripts.Data;
@@ -11,9 +12,17 @@ public class BsPlayer : ILcsLine
     public const int TypeLocal1 = 3;
     public const int TypeLocal2 = 4;
 
+    public uint Id { get; set; }
+    public string Name { get; set; } = "Anonymous";
     public int Type { get; set; } = TypeDummy;
     public Color Color { get; set; } = new(1f, 1f, 1f);
     public float Health { get; set; } = 100f;
+
+    public BsPlayer(string name, int type)
+    {
+        Id = Tags.GenerateId(name);
+        Type = type;
+    }
 
     public BsPlayer() { }
 

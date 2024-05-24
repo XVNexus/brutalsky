@@ -10,11 +10,14 @@ namespace Brutalsky.Scripts.Lcs;
 public struct LcsInfo
 {
     public const char PropertySeparator = ' ';
+    public const char ItemSeparator = ',';
     public static readonly Dictionary<char, char> SpecialChars = new()
     {
         {'\'', 'q'},
         {'"', 'u'},
-        {'/', 'd'},
+        {',', 'i'},
+        {'(', 'o'},
+        {')', 'c'},
         {' ', 's'},
         {'\t', 't'},
         {'\n', 'n'}
@@ -25,7 +28,7 @@ public struct LcsInfo
     public static readonly List<LcsInfo> TypeInfoList = new()
     {
         BoolInfo(), ByteInfo(), UShortInfo(), UIntInfo(), ULongInfo(), SByteInfo(), ShortInfo(), IntInfo(), LongInfo(),
-        FloatInfo(), DoubleInfo(), CharInfo(), StringInfo(),
+        FloatInfo(), DoubleInfo(), CharInfo(), StringInfo(), ArrayInfo()
     };
     public static readonly Dictionary<byte, LcsInfo> ByteTagTable =
         TypeInfoList.ToDictionary(type => type.ByteTag, type => type);
@@ -52,6 +55,18 @@ public struct LcsInfo
         _fromStr = fromStr;
     }
 
+    public static object Serialize<T>(T value) where T : ILcsProp, new()
+    {
+        return value._ToLcs();
+    }
+
+    public static T Deserialize<T>(object prop) where T : ILcsProp, new()
+    {
+        var result = new T();
+        result._FromLcs(prop);
+        return result;
+    }
+
     public static LcsInfo GetTypeInfo(object value)
     {
         return value switch
@@ -69,6 +84,7 @@ public struct LcsInfo
             double => DoubleInfo(),
             char => CharInfo(),
             string => StringInfo(),
+            object[] => ArrayInfo(),
             _ => throw Errors.InvalidItem("lcs type", value)
         };
     }
@@ -110,7 +126,6 @@ public struct LcsInfo
         return TypeInfoList.First(type => type.StringPattern.IsMatch(raw))._fromStr(raw);
     }
 
-    // Primitive types
     public static LcsInfo BoolInfo() {
         return new LcsInfo(1, 0x01, "True|False",
             value => BitConverter.GetBytes((bool)value),
@@ -220,6 +235,32 @@ public struct LcsInfo
             raw => SpecialChars.Keys.Aggregate(raw[1..^1].Replace(@"\\", @"\\ "),
                     (current, to) => current.Replace($@"\{SpecialChars[to]}", $"{to}"))
                 .Replace(@"\\ ", @"\"));
+    }
+
+    public static LcsInfo ArrayInfo() {
+        return new LcsInfo(-1, 0x10, @"\([^()]+?\)",
+            value =>
+            {
+                var cast = (object[])value;
+                var result = new List<byte>();
+                foreach (var item in cast)
+                {
+                    result.AddRange(Binify(item));
+                }
+                return result.ToArray();
+            },
+            raw =>
+            {
+                var result = new List<object>();
+                var cursor = 0;
+                while (cursor < raw.Length)
+                {
+                    result.Add(Parse(raw, ref cursor));
+                }
+                return result.ToArray();
+            },
+            value => '(' + string.Join(ItemSeparator, ((object[])value).Select(Stringify)) + ')',
+            raw => raw[1..^1].Split(ItemSeparator).Select(Parse).ToArray());
     }
 
     // Utility functions

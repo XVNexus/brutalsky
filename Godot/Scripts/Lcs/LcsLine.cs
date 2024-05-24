@@ -6,10 +6,12 @@ namespace Brutalsky.Scripts.Lcs;
 public struct LcsLine
 {
     public char Prefix { get; }
+    // Only supports primitive datatypes (bool, byte, ushort, uint, ulong, sbyte, short, int, long, float, double, char, string)
+    // and object arrays with items of primitive datatypes
     public object[] Props { get; }
     public List<LcsLine> Children { get; }
 
-    public LcsLine(char prefix, object[] props, List<LcsLine> children = null)
+    public LcsLine(char prefix, object[] props, List<LcsLine>? children = null)
     {
         Prefix = prefix;
         Props = props;

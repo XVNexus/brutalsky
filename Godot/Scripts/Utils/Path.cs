@@ -1,10 +1,12 @@
+using System;
 using System.Collections.Generic;
 using Brutalsky.Scripts.Extensions;
+using Brutalsky.Scripts.Lcs;
 using Godot;
 
 namespace Brutalsky.Scripts.Utils;
 
-public struct Path
+public struct Path : ILcsProp
 {
     public const int TypeVector = 0;
     public const int TypePolygon = 1;
@@ -17,9 +19,9 @@ public struct Path
 
     public static float ArcHandleFactor = Mathf.Pow(1f / 6f, 1f / 3f);
 
-    public int Type { get; }
-    public float[] Args { get; }
-    public List<Vector2> Points { get; } = new();
+    public int Type { get; private set; } = 0;
+    public float[] Args { get; private set; } = Array.Empty<float>();
+    public List<Vector2> Points { get; private set; } = new();
 
     public Path(int type, float[] args, Vector2 start)
     {
@@ -27,6 +29,8 @@ public struct Path
         Args = args;
         Points.Add(start);
     }
+
+    public Path() { }
 
     public static Path Vector(params float[] args)
     {
@@ -190,5 +194,42 @@ public struct Path
             var p123 = MathfExt.Lerp(p12, p23, t);
             Points.Add(MathfExt.Lerp(p012, p123, t));
         }
+    }
+
+    public object _ToLcs()
+    {
+        var result = new object[Args.Length + 1];
+        result[0] = Type;
+        for (var i = 0; i < Args.Length; i++)
+        {
+            result[i + 1] = Args[i];
+        }
+        return result;
+    }
+
+    public void _FromLcs(object prop)
+    {
+        var parts = (object[])prop;
+        var type = (int)parts[0];
+        var args = new float[parts.Length - 1];
+        for (var i = 1; i < parts.Length; i++)
+        {
+            args[i - 1] = (float)parts[i];
+        }
+        var result = type switch
+        {
+            TypeVector => Vector(args),
+            TypePolygon => Vector(args),
+            TypeSquare => Vector(args),
+            TypeRectangle => Vector(args),
+            TypeCircle => Vector(args),
+            TypeEllipse => Vector(args),
+            TypeNgon => Vector(args),
+            TypeStar => Vector(args),
+            _ => throw Errors.InvalidItem("path type", type)
+        };
+        Type = result.Type;
+        Args = result.Args;
+        Points = result.Points;
     }
 }
