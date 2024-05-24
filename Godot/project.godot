@@ -28,6 +28,10 @@ project/assembly_name="Brutalsky"
 
 naming/scene_name_casing=1
 
+[filesystem]
+
+import/blender/enabled=false
+
 [rendering]
 
 renderer/rendering_method="mobile"

@@ -21,8 +21,8 @@ public class BsMap : ILcsDocument
 
     public List<BsSpawn> Spawns { get; set; } = new();
     public IdList<BsObject> Objects { get; set; } = new();
-    public List<BsLogicNode> LogicNodes { get; set; } = new();
-    public List<BsLogicLink> LogicLinks { get; set; } = new();
+    public IdList<BsNode> Nodes { get; set; } = new();
+    public List<BsLink> Links { get; set; } = new();
 
     public BsMap(string title, string author)
     {
@@ -48,8 +48,8 @@ public class BsMap : ILcsDocument
         ));
         lines.AddRange(Spawns.Select(LcsLine.Serialize));
         lines.AddRange(Objects.Values.Select(LcsLine.Serialize));
-        lines.AddRange(LogicNodes.Select(LcsLine.Serialize));
-        lines.AddRange(LogicLinks.Select(LcsLine.Serialize));
+        lines.AddRange(Nodes.Values.Select(LcsLine.Serialize));
+        lines.AddRange(Links.Select(LcsLine.Serialize));
         return new LcsDocument(1, lines, new[] { "!$#%^" });
     }
 
@@ -87,10 +87,10 @@ public class BsMap : ILcsDocument
                     Objects.Add(LcsLine.Deserialize<BsObject>(line));
                     break;
                 case '%':
-                    LogicNodes.Add(LcsLine.Deserialize<BsLogicNode>(line));
+                    Nodes.Add(LcsLine.Deserialize<BsNode>(line));
                     break;
                 case '^':
-                    LogicLinks.Add(LcsLine.Deserialize<BsLogicLink>(line));
+                    Links.Add(LcsLine.Deserialize<BsLink>(line));
                     break;
                 default:
                     throw Errors.InvalidItem("map LCS line prefix", line.Prefix);
