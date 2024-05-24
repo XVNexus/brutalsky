@@ -1,11 +1,12 @@
 using System;
 using System.Collections.Generic;
 using Brutalsky.Scripts.Lcs;
+using Brutalsky.Scripts.Utils;
 using Godot;
 
 namespace Brutalsky.Scripts.Data;
 
-public class BsObject : ILcsLine
+public class BsObject : ILcsLine, IHasId
 {
     public const int TypeGoal = 0;
     public const int TypeDecal = 1;
