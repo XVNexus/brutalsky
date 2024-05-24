@@ -2,22 +2,24 @@ using Brutalsky.Scripts.Lcs;
 
 namespace Brutalsky.Scripts.Data;
 
-public struct BsLink : ILcsLine
+public class BsLogicLink : ILcsLine
 {
     public long FromPort { get; set; }
     public long ToPort { get; set; }
 
-    public BsLink(long fromPort, long toPort)
+    public BsLogicLink(long fromPort, long toPort)
     {
         FromPort = fromPort;
         ToPort = toPort;
     }
 
-    public BsLink(int fromNode, int fromPort, int toNode, int toPort)
+    public BsLogicLink(int fromNode, int fromPort, int toNode, int toPort)
     {
         FromPort = ComposePort(fromNode, fromPort);
         ToPort = ComposePort(toNode, toPort);
     }
+
+    public BsLogicLink() { }
 
     public LcsLine _ToLcs()
     {

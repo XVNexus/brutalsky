@@ -3,9 +3,9 @@ using Godot;
 
 namespace Brutalsky.Scripts.Data;
 
-public struct BsSpawn : ILcsLine
+public class BsSpawn : ILcsLine
 {
-    public Vector2 Position { get; set; }
+    public Vector2 Position { get; set; } = Vector2.Zero;
     public int Priority { get; set; }
 
     public BsSpawn(Vector2 position, int priority)
@@ -13,6 +13,8 @@ public struct BsSpawn : ILcsLine
         Position = position;
         Priority = priority;
     }
+
+    public BsSpawn() { }
 
     public LcsLine _ToLcs()
     {

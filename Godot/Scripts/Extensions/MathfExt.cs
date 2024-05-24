@@ -4,6 +4,8 @@ namespace Brutalsky.Scripts.Extensions;
 
 public static class MathfExt
 {
+    public const float EqualityThreshold = 1e-3f;
+
     // Common tools
     public static Rect2 Clamp(Rect2 rect, Rect2 bounds)
     {
