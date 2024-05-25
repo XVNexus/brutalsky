@@ -1,3 +1,4 @@
+using System;
 using Godot;
 
 namespace Brutalsky.Scripts.Extensions;
@@ -7,6 +8,11 @@ public static class MathfExt
     public const float EqualityThreshold = 1e-3f;
 
     // Common tools
+    public static bool Approximately(float a, float b)
+    {
+        return Math.Abs(a - b) < EqualityThreshold;
+    }
+
     public static Rect2 Clamp(Rect2 rect, Rect2 bounds)
     {
         var min = Max(rect.Position, bounds.Position);

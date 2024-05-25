@@ -13,6 +13,12 @@ public class BsLink : ILcsLine
         ToPort = toPort;
     }
 
+    public BsLink(string fromNode, int fromPort, string toNode, int toPort)
+    {
+        FromPort = $"{fromNode} {fromPort}";
+        ToPort = $"{toNode} {toPort}";
+    }
+
     public BsLink() { }
 
     public LcsLine _ToLcs()
