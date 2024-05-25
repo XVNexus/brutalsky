@@ -34,28 +34,30 @@ public class BsMap : ILcsDocument
 
     public LcsDocument _ToLcs()
     {
-        var lines = new List<LcsLine>();
-        lines.Add(new LcsLine('!',
-            Title,
-            Author,
-            new object[] { PlayArea.Position.X, PlayArea.Position.Y, PlayArea.Size.X, PlayArea.Size.Y },
-            new object[] { BackgroundColor.R, BackgroundColor.G, BackgroundColor.B, BackgroundColor.A },
-            new object[] { LightingColor.R, LightingColor.G, LightingColor.B, LightingColor.A },
-            new object[] { InitialGravity.X, InitialGravity.Y },
-            InitialAtmosphere,
-            PlayerHealth,
-            AllowDummies
-        ));
+        var lines = new List<LcsLine>
+        {
+            new('!',
+                Title,
+                Author,
+                new object[] { PlayArea.Position.X, PlayArea.Position.Y, PlayArea.Size.X, PlayArea.Size.Y },
+                new object[] { BackgroundColor.R, BackgroundColor.G, BackgroundColor.B, BackgroundColor.A },
+                new object[] { LightingColor.R, LightingColor.G, LightingColor.B, LightingColor.A },
+                new object[] { InitialGravity.X, InitialGravity.Y },
+                InitialAtmosphere,
+                PlayerHealth,
+                AllowDummies
+            )
+        };
         lines.AddRange(Spawns.Select(LcsLine.Serialize));
         lines.AddRange(Objects.Values.Select(LcsLine.Serialize));
         lines.AddRange(Nodes.Values.Select(LcsLine.Serialize));
         lines.AddRange(Links.Select(LcsLine.Serialize));
-        return new LcsDocument(1, lines, new[] { "!$#%^" });
+        return new LcsDocument(1, new[] { "!$#%^" }, lines.ToArray());
     }
 
     public void _FromLcs(LcsDocument document)
     {
-        if (document.Lines.Count == 0) throw Errors.EmptyLcsDocument();
+        if (document.Lines.Length == 0) throw Errors.EmptyLcsDocument();
         var metadata = document.Lines[0].Props;
         if (document.Lines[0].Prefix != '!') throw Errors.InvalidItem("map metadata line", metadata);
         var i = 0;
@@ -75,7 +77,7 @@ public class BsMap : ILcsDocument
         InitialAtmosphere = (float)metadata[i++];
         PlayerHealth = (float)metadata[i++];
         AllowDummies = (bool)metadata[i++];
-        for (var j = 1; j < document.Lines.Count; j++)
+        for (var j = 1; j < document.Lines.Length; j++)
         {
             var line = document.Lines[j];
             switch (line.Prefix)

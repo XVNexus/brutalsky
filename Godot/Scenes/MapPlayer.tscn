@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://1safi6sn5n1i"]
+[gd_scene load_steps=9 format=3 uid="uid://1safi6sn5n1i"]
 
 [ext_resource type="Texture2D" uid="uid://cwca061s10ykf" path="res://Textures/Objects/PlayerBody.png" id="1_kmtj3"]
 [ext_resource type="Script" path="res://Scripts/Controllers/PlayerController.cs" id="1_q8s37"]
@@ -14,6 +14,9 @@ radius = 32.0
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wh31f"]
 size = Vector2(2560, 64)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_d6ffa"]
+size = Vector2(128, 128)
+
 [node name="RoundPlayer" type="Node2D"]
 
 [node name="CanvasModulate" type="CanvasModulate" parent="."]
@@ -26,6 +29,7 @@ zoom = Vector2(0.5, 0.5)
 
 [node name="RigidBody2D" type="RigidBody2D" parent="PlayerContainer"]
 physics_material_override = SubResource("PhysicsMaterial_g8tf4")
+can_sleep = false
 lock_rotation = true
 continuous_cd = 2
 max_contacts_reported = 3
@@ -56,4 +60,24 @@ shape = SubResource("RectangleShape2D_wh31f")
 
 [node name="Sprite2D" type="Sprite2D" parent="MapContainer/StaticBody2D"]
 scale = Vector2(5, 0.125)
+texture = ExtResource("4_2177r")
+
+[node name="StaticBody2D2" type="StaticBody2D" parent="MapContainer"]
+position = Vector2(-640, 512)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="MapContainer/StaticBody2D2"]
+shape = SubResource("RectangleShape2D_d6ffa")
+
+[node name="Sprite2D" type="Sprite2D" parent="MapContainer/StaticBody2D2"]
+scale = Vector2(0.25, 0.25)
+texture = ExtResource("4_2177r")
+
+[node name="StaticBody2D3" type="StaticBody2D" parent="MapContainer"]
+position = Vector2(640, 512)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="MapContainer/StaticBody2D3"]
+shape = SubResource("RectangleShape2D_d6ffa")
+
+[node name="Sprite2D" type="Sprite2D" parent="MapContainer/StaticBody2D3"]
+scale = Vector2(0.25, 0.25)
 texture = ExtResource("4_2177r")

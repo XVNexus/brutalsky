@@ -11,14 +11,14 @@ namespace Brutalsky.Scripts.Lcs;
 public struct LcsDocument
 {
     public int Version { get; }
-    public List<LcsLine> Lines { get; }
     public string[] LineLevels { get; }
+    public LcsLine[] Lines { get; }
 
-    public LcsDocument(int version, List<LcsLine> lines, string[] lineLevels)
+    public LcsDocument(int version, string[] lineLevels, params LcsLine[] lines)
     {
         Version = version;
-        Lines = lines;
         LineLevels = lineLevels;
+        Lines = lines;
     }
 
     public static LcsDocument Serialize<T>(T value) where T : ILcsDocument, new()
@@ -91,7 +91,7 @@ public struct LcsDocument
             }
             cursor++;
         }
-        return new LcsDocument(version, lines, lineLevels.ToArray());
+        return new LcsDocument(version, lineLevels.ToArray(), lines.ToArray());
     }
 
     public string Stringify()
@@ -130,7 +130,7 @@ public struct LcsDocument
                 lineCache[lineLevel - 1].Children.Add(line);
             }
         }
-        return new LcsDocument(version, lines, lineLevels);
+        return new LcsDocument(version, lineLevels, lines.ToArray());
     }
 
     public static byte[] GzipCompress(byte[] source)
