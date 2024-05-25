@@ -30,7 +30,7 @@ public partial class PlayerController : RigidBody2D
     private bool _boostInput;
     private bool _grounded;
     private int _groundedFrames;
-    private float _groundFriction;
+    private float _groundFriction = 2f; // TODO: MAKE THIS WORK
     private int _jumpCooldown;
     private float _boostCharge;
     private float _boostCooldown;
@@ -46,8 +46,6 @@ public partial class PlayerController : RigidBody2D
     public override void _Ready()
     {
         EventSystem.Inst.OnMapBuild += OnMapBuild;
-        Connect("body_entered", new Callable(this, MethodName.OnBodyEntered));
-        Connect("body_exited", new Callable(this, MethodName.OnBodyExited));
 
         _collider = GetNode<CollisionShape2D>(Collider);
         _sprite = GetNode<Sprite2D>(Sprite);
@@ -111,16 +109,6 @@ public partial class PlayerController : RigidBody2D
         LinearDamp = map.InitialAtmosphere;
     }
 
-    private void OnBodyEntered(Dictionary data)
-    {
-        GD.Print($"Player:OnBodyEntered({data})");
-    }
-
-    private void OnBodyExited(Dictionary data)
-    {
-        GD.Print($"Player:OnBodyExited({data})");
-    }
-
     public override void _PhysicsProcess(double delta)
     {
         // Get user input
@@ -129,10 +117,63 @@ public partial class PlayerController : RigidBody2D
             _movementInput = Input.GetVector(_inputMap[0], _inputMap[1], _inputMap[2], _inputMap[3]);
             _boostInput = Input.IsActionPressed(_inputMap[4]);
         }
+
+        // Update ground status
+        _groundedFrames = Mathf.Max(_groundedFrames - 1, 0);
+        _grounded = _groundedFrames > 0;
+
+        // Get movement data
+        var speed = LinearVelocity.Length();
+
+        // Apply jump movement
+        var jumpInput = _grounded && _testJumpInput(_movementInput) && _jumpCooldown == 0;
+        if (jumpInput)
+        {
+            ApplyImpulse(_jumpVector);
+            _jumpCooldown = MaxGroundedFrames;
+        }
+        if (_jumpCooldown > 0)
+        {
+            _jumpCooldown--;
+        }
+
+        // Apply boost movement
+        var safeBoostInput = _boostInput && _boostCooldown == 0f;
+        if (safeBoostInput)
+        {
+            _boostCharge = Mathf.Min(_boostCharge + (float)delta, 3f);
+        }
+        else if (_lastBoostInput)
+        {
+            var boost = Mathf.Pow(_boostCharge, 1.5f) + 1.5f;
+            LinearVelocity *= boost;
+            _boostCharge = 0f;
+            _boostCooldown = Mathf.Min(boost, speed);
+        }
+        if (_boostCooldown > 0f)
+        {
+            _boostCooldown = Mathf.Max(_boostCooldown - (float)delta, 0f);
+        }
+        _lastBoostInput = safeBoostInput;
+
+        // Save the current position and speed for future reference
+        _lastPosition = Position;
+        _lastSpeed = speed;
     }
 
     public override void _IntegrateForces(PhysicsDirectBodyState2D state)
     {
-        state.ApplyForce(_movementInput * MovementForce);
+        // Apply directional movement
+        state.ApplyForce(_movementInput * _movementScale * (_grounded ? Mathf.Clamp(_groundFriction, .5f, 2f) : .5f));
+
+        // Update ground status
+        var contactCount = GetContactCount();
+        if (contactCount <= 0) return;
+        for (var i = 0; i < contactCount; i++)
+        {
+            if (!_testGrounded(state.GetContactColliderPosition(0), _lastPosition)) return;
+            _groundedFrames = MaxGroundedFrames;
+            _grounded = true;
+        }
     }
 }
