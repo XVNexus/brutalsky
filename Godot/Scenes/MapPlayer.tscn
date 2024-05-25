@@ -15,7 +15,7 @@ radius = 32.0
 size = Vector2(2560, 64)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_d6ffa"]
-size = Vector2(128, 128)
+size = Vector2(128, 512)
 
 [node name="RoundPlayer" type="Node2D"]
 
@@ -38,7 +38,10 @@ script = ExtResource("1_q8s37")
 Collider = NodePath("CollisionShape2D")
 Sprite = NodePath("Sprite2D")
 Light = NodePath("PointLight2D")
-MovementForce = 2048.0
+MovementForce = 768.0
+JumpForce = 768.0
+GroundSensitivity = 16.0
+MaxGroundedFrames = 5
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerContainer/RigidBody2D"]
 shape = SubResource("CircleShape2D_p1ugn")
@@ -63,21 +66,21 @@ scale = Vector2(5, 0.125)
 texture = ExtResource("4_2177r")
 
 [node name="StaticBody2D2" type="StaticBody2D" parent="MapContainer"]
-position = Vector2(-640, 512)
+position = Vector2(-640, 320)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="MapContainer/StaticBody2D2"]
 shape = SubResource("RectangleShape2D_d6ffa")
 
 [node name="Sprite2D" type="Sprite2D" parent="MapContainer/StaticBody2D2"]
-scale = Vector2(0.25, 0.25)
+scale = Vector2(0.25, 1)
 texture = ExtResource("4_2177r")
 
 [node name="StaticBody2D3" type="StaticBody2D" parent="MapContainer"]
-position = Vector2(640, 512)
+position = Vector2(640, 320)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="MapContainer/StaticBody2D3"]
 shape = SubResource("RectangleShape2D_d6ffa")
 
 [node name="Sprite2D" type="Sprite2D" parent="MapContainer/StaticBody2D3"]
-scale = Vector2(0.25, 0.25)
+scale = Vector2(0.25, 1)
 texture = ExtResource("4_2177r")

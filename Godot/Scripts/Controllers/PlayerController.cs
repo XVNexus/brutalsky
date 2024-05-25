@@ -2,7 +2,6 @@ using System;
 using Brutalsky.Scripts.Data;
 using Brutalsky.Scripts.Systems;
 using Godot;
-using Godot.Collections;
 
 namespace Brutalsky.Scripts.Controllers;
 
@@ -22,6 +21,7 @@ public partial class PlayerController : RigidBody2D
     // Config settings
     [Export] public float MovementForce { get; set; }
     [Export] public float JumpForce { get; set; }
+    [Export] public float GroundSensitivity { get; set; }
     [Export] public int MaxGroundedFrames { get; set; }
 
     // Local variables
@@ -52,6 +52,12 @@ public partial class PlayerController : RigidBody2D
         _light = GetNode<PointLight2D>(Light);
 
         _inputMap = new[] { "player_left", "player_right", "player_up", "player_down", "player_boost" };
+
+        // TODO: TEMPORARY
+        OnMapBuild(new BsMap
+        {
+            InitialGravity = new Vector2(0f, 20f)
+        });
     }
 
     public override void _ExitTree()
@@ -74,29 +80,29 @@ public partial class PlayerController : RigidBody2D
         if (map.InitialGravity.Y < 0f)
         {
             _movementScale = new Vector2(MovementForce, map.InitialGravity.Length() * .5f);
-            _jumpVector = Vector2.Up * JumpForce;
-            _testGrounded = (point, position) => point.Y < position.Y - .25f;
+            _jumpVector = Vector2.Down * JumpForce;
+            _testGrounded = (point, position) => point.Y < position.Y - GroundSensitivity;
             _testJumpInput = movementInput => movementInput.Y > 0f;
         }
         else if (map.InitialGravity.Y > 0f)
         {
             _movementScale = new Vector2(MovementForce, map.InitialGravity.Length() * .5f);
-            _jumpVector = Vector2.Down * JumpForce;
-            _testGrounded = (point, position) => point.Y > position.Y + .25f;
+            _jumpVector = Vector2.Up * JumpForce;
+            _testGrounded = (point, position) => point.Y > position.Y + GroundSensitivity;
             _testJumpInput = movementInput => movementInput.Y < 0f;
         }
         else if (map.InitialGravity.X < 0f)
         {
             _movementScale = new Vector2(map.InitialGravity.Length() * .5f, MovementForce);
             _jumpVector = Vector2.Right * JumpForce;
-            _testGrounded = (point, position) => point.X < position.X - .25f;
+            _testGrounded = (point, position) => point.X < position.X - GroundSensitivity;
             _testJumpInput = movementInput => movementInput.X > 0f;
         }
         else if (map.InitialGravity.X > 0f)
         {
             _movementScale = new Vector2(map.InitialGravity.Length() * .5f, MovementForce);
             _jumpVector = Vector2.Left * JumpForce;
-            _testGrounded = (point, position) => point.X > position.X + .25f;
+            _testGrounded = (point, position) => point.X > position.X + GroundSensitivity;
             _testJumpInput = movementInput => movementInput.X < 0f;
         }
         else
@@ -138,8 +144,8 @@ public partial class PlayerController : RigidBody2D
         }
 
         // Apply boost movement
-        var safeBoostInput = _boostInput && _boostCooldown == 0f;
-        if (safeBoostInput)
+        var boostInput = _boostInput && _boostCooldown == 0f;
+        if (boostInput)
         {
             _boostCharge = Mathf.Min(_boostCharge + (float)delta, 3f);
         }
@@ -154,7 +160,7 @@ public partial class PlayerController : RigidBody2D
         {
             _boostCooldown = Mathf.Max(_boostCooldown - (float)delta, 0f);
         }
-        _lastBoostInput = safeBoostInput;
+        _lastBoostInput = boostInput;
 
         // Save the current position and speed for future reference
         _lastPosition = Position;
@@ -171,9 +177,11 @@ public partial class PlayerController : RigidBody2D
         if (contactCount <= 0) return;
         for (var i = 0; i < contactCount; i++)
         {
-            if (!_testGrounded(state.GetContactColliderPosition(0), _lastPosition)) return;
-            _groundedFrames = MaxGroundedFrames;
-            _grounded = true;
+            if (_testGrounded(state.GetContactColliderPosition(i), _lastPosition))
+            {
+                _groundedFrames = MaxGroundedFrames;
+                _grounded = true;
+            }
         }
     }
 }
