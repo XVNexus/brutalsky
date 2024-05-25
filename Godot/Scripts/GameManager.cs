@@ -2,7 +2,7 @@ using Godot;
 
 namespace Brutalsky.Scripts;
 
-public class GameManager : Node
+public partial class GameManager : Node
 {
     
 }

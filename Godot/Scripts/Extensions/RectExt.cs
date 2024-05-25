@@ -18,7 +18,7 @@ public static class Rect2Ext
     {
         var newSize = _.Size.ForceAspect(aspect, minifyOrMaxify);
         return new Rect2(new Vector2(_.Position.X - (newSize.X - _.Size.X) * .5f,
-                _.Position.Y - (newSize.Y - _.Size.Y) * .5f), newSize);
+            _.Position.Y - (newSize.Y - _.Size.Y) * .5f), newSize);
     }
 
     public static Rect2 Resize(this Rect2 _, Vector2 newSize)

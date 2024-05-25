@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -66,12 +67,12 @@ public struct LcsLine
 
     public string Stringify()
     {
-        return Children.Aggregate($"{Prefix} " + $"{LcsInfo.ConcatProps(Props.Select(LcsInfo.Stringify).ToArray())}\n",
+        return Children.Aggregate($"{Prefix} " + $"{string.Join(' ', Props.Select(LcsInfo.Stringify).ToArray())}\n",
             (current, child) => current + child.Stringify());
     }
 
     public static LcsLine Parse(string raw)
     {
-        return new LcsLine(raw[0], LcsInfo.SplitProps(raw[2..]).Select(LcsInfo.Parse).ToArray());
+        return new LcsLine(raw[0], raw[2..].Split(' ').Select(LcsInfo.Parse).ToArray());
     }
 }

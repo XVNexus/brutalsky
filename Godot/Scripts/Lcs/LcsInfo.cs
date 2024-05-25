@@ -9,8 +9,6 @@ namespace Brutalsky.Scripts.Lcs;
 
 public struct LcsInfo
 {
-    public const char PropertySeparator = ' ';
-    public const char ItemSeparator = ',';
     public static readonly Dictionary<char, char> SpecialChars = new()
     {
         {'\'', 'q'},
@@ -233,8 +231,7 @@ public struct LcsInfo
             value => '"' + SpecialChars.Keys.Aggregate(((string)value).Replace(@"\", @"\\"),
                 (current, to) => current.Replace($"{to}", $@"\{SpecialChars[to]}")) + '"',
             raw => SpecialChars.Keys.Aggregate(raw[1..^1].Replace(@"\\", @"\\ "),
-                    (current, to) => current.Replace($@"\{SpecialChars[to]}", $"{to}"))
-                .Replace(@"\\ ", @"\"));
+                    (current, to) => current.Replace($@"\{SpecialChars[to]}", $"{to}")).Replace(@"\\ ", @"\"));
     }
 
     public static LcsInfo ArrayInfo() {
@@ -259,8 +256,8 @@ public struct LcsInfo
                 }
                 return result.ToArray();
             },
-            value => '(' + string.Join(ItemSeparator, ((object[])value).Select(Stringify)) + ')',
-            raw => raw[1..^1].Split(ItemSeparator).Select(Parse).ToArray());
+            value => '(' + string.Join(',', ((object[])value).Select(Stringify)) + ')',
+            raw => raw[1..^1].Split(',').Select(Parse).ToArray());
     }
 
     // Utility functions
@@ -270,7 +267,7 @@ public struct LcsInfo
         while (length > 127)
         {
             result.Add((byte)(length | 0x80));
-            length /= 128;
+            length >>= 7;
         }
         result.Add((byte)length);
         return result;
@@ -280,21 +277,11 @@ public struct LcsInfo
     {
         var result = 0;
         var power = 1;
-        while ((raw[cursor] & 0x80) > 0)
+        while ((raw[cursor] & 0x80) == 0x80)
         {
             result += (raw[cursor++] & 0x7F) * power; 
-            power *= 128;
+            power <<= 7;
         }
         return result + raw[cursor++] * power;
-    }
-
-    public static string ConcatProps(params string[] items)
-    {
-        return string.Join(PropertySeparator, items);
-    }
-
-    public static string[] SplitProps(string items)
-    {
-        return items.Split(PropertySeparator);
     }
 }
