@@ -27,7 +27,7 @@ public class MapParkour : MapGenerator
             PlayArea = new Rect2(size * -.5f, size),
             BackgroundColor = Color.FromHsv((1f - diffFraction) * 2f / 3f, .1f, .2f),
             LightingColor = new Color(.75f, .75f, .75f),
-            InitialGravity = new Vector2(0f, 20f),
+            InitialGravity = new Vector2(0f, -20f),
             InitialAtmosphere = .5f
         };
 

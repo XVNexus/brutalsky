@@ -13,7 +13,7 @@ public class MapTossup : MapGenerator
         var result = new BsMap("Tossup", AuthorBuiltin)
         {
             PlayArea = new Rect2(-20f, -10f, 40f, 20f),
-            InitialGravity = new Vector2(0f, 20f),
+            InitialGravity = new Vector2(0f, -20f),
             InitialAtmosphere = .5f
         };
 

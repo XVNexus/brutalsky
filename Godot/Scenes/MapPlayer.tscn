@@ -1,9 +1,11 @@
-[gd_scene load_steps=9 format=3 uid="uid://1safi6sn5n1i"]
+[gd_scene load_steps=11 format=3 uid="uid://1safi6sn5n1i"]
 
 [ext_resource type="Texture2D" uid="uid://cwca061s10ykf" path="res://Textures/Objects/PlayerBody.png" id="1_kmtj3"]
 [ext_resource type="Script" path="res://Scripts/Controllers/PlayerController.cs" id="1_q8s37"]
 [ext_resource type="Texture2D" uid="uid://bncq4ayg5kadg" path="res://Textures/Lights/Player.png" id="2_qeby4"]
 [ext_resource type="Texture2D" uid="uid://ciwxnc5ugysp4" path="res://Textures/Primitives/SquareSolid.png" id="4_2177r"]
+[ext_resource type="Texture2D" uid="uid://fatnokg5vcuu" path="res://Textures/Primitives/CircleSolid.png" id="4_nxdg2"]
+[ext_resource type="Texture2D" uid="uid://bowvu54y1awvr" path="res://Textures/Objects/PlayerRing.png" id="4_ugaah"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_g8tf4"]
 friction = 0.1
@@ -27,7 +29,7 @@ zoom = Vector2(0.5, 0.5)
 
 [node name="PlayerContainer" type="Node" parent="."]
 
-[node name="RigidBody2D" type="RigidBody2D" parent="PlayerContainer"]
+[node name="Player" type="RigidBody2D" parent="PlayerContainer"]
 physics_material_override = SubResource("PhysicsMaterial_g8tf4")
 can_sleep = false
 lock_rotation = true
@@ -35,23 +37,33 @@ continuous_cd = 2
 max_contacts_reported = 3
 contact_monitor = true
 script = ExtResource("1_q8s37")
-Collider = NodePath("CollisionShape2D")
-Sprite = NodePath("Sprite2D")
-Light = NodePath("PointLight2D")
+BodyCollider = NodePath("BodyCollider")
+BodySprite = NodePath("BodySprite")
+PointLight = NodePath("PointLight")
+RingSprite = NodePath("RingSprite")
+RingMask = NodePath("RingSprite/RingMask")
 MovementForce = 768.0
 JumpForce = 768.0
 GroundSensitivity = 16.0
 MaxGroundedFrames = 5
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerContainer/RigidBody2D"]
+[node name="BodyCollider" type="CollisionShape2D" parent="PlayerContainer/Player"]
 shape = SubResource("CircleShape2D_p1ugn")
 
-[node name="Sprite2D" type="Sprite2D" parent="PlayerContainer/RigidBody2D"]
+[node name="BodySprite" type="Sprite2D" parent="PlayerContainer/Player"]
 scale = Vector2(0.25, 0.25)
 texture = ExtResource("1_kmtj3")
 
-[node name="PointLight2D" type="PointLight2D" parent="PlayerContainer/RigidBody2D"]
+[node name="PointLight" type="PointLight2D" parent="PlayerContainer/Player"]
 texture = ExtResource("2_qeby4")
+
+[node name="RingSprite" type="Sprite2D" parent="PlayerContainer/Player"]
+clip_children = 1
+scale = Vector2(0.25, 0.25)
+texture = ExtResource("4_ugaah")
+
+[node name="RingMask" type="Sprite2D" parent="PlayerContainer/Player/RingSprite"]
+texture = ExtResource("4_nxdg2")
 
 [node name="MapContainer" type="Node" parent="."]
 

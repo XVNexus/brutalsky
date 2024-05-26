@@ -29,7 +29,7 @@ public class MapBox : MapGenerator
         {
             PlayArea = new Rect2(Size * -.5f, Size),
             BackgroundColor = new Color(.2f, .2f, .2f),
-            InitialGravity = new Vector2(0f, 20f)
+            InitialGravity = new Vector2(0f, -20f)
         };
 
         // Add spawns

@@ -12,16 +12,16 @@ public partial class EventSystem : Node
 	public override void _EnterTree() => Inst = this;
 
 	// Exposed properties
-	public event Action<ConfigList> OnConfigUpdate;
-	public event Action<BsPlayer> OnPlayerRegister;
-	public event Action<BsPlayer> OnPlayerUnregister;
-	public event Action<BsMap, BsPlayer, Vector2, bool> OnPlayerSpawn;
-	public event Action<BsMap, BsPlayer> OnPlayerDie;
-	public event Action<BsMap> OnMapPreload;
-	public event Action OnMapsUnload;
-	public event Action<BsMap> OnMapBuild;
-	public event Action<BsMap> OnMapCleanup;
-	public event Action<BsMap> OnMapUnbuild;
+	public event Action<ConfigList>? OnConfigUpdate;
+	public event Action<BsPlayer>? OnPlayerRegister;
+	public event Action<BsPlayer>? OnPlayerUnregister;
+	public event Action<BsPlayer>? OnPlayerSpawn;
+	public event Action<BsPlayer>? OnPlayerDie;
+	public event Action<BsMap>? OnMapPreload;
+	public event Action? OnMapsUnload;
+	public event Action<BsMap>? OnMapBuild;
+	public event Action<BsMap>? OnMapCleanup;
+	public event Action<BsMap>? OnMapUnbuild;
 
 	// Event functions
 	public void EmitConfigUpdate(ConfigList cfg) => OnConfigUpdate?.Invoke(cfg);
@@ -30,10 +30,9 @@ public partial class EventSystem : Node
 
 	public void EmitPlayerUnregister(BsPlayer player) => OnPlayerUnregister?.Invoke(player);
 
-	public void EmitPlayerSpawn(BsMap map, BsPlayer player, Vector2 position, bool visble)
-		=> OnPlayerSpawn?.Invoke(map, player, position, visble);
+	public void EmitPlayerSpawn(BsPlayer player) => OnPlayerSpawn?.Invoke(player);
 
-	public void EmitPlayerDie(BsMap map, BsPlayer player) => OnPlayerDie?.Invoke(map, player);
+	public void EmitPlayerDie(BsPlayer player) => OnPlayerDie?.Invoke(player);
 
 	public void EmitMapPreload(BsMap map) => OnMapPreload?.Invoke(map);
 

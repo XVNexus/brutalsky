@@ -13,7 +13,7 @@ public class MapRacetrack : MapGenerator
         var result = new BsMap("Racetrack", AuthorBuiltin)
         {
             PlayArea = new Rect2(-1250f, 0f, 2500f, 250f),
-            InitialGravity = new Vector2(0f, 20f),
+            InitialGravity = new Vector2(0f, -20f),
             InitialAtmosphere = .5f
         };
 

@@ -1,7 +1,10 @@
 using System;
 using Brutalsky.Scripts.Data;
+using Brutalsky.Scripts.Extensions;
 using Brutalsky.Scripts.Systems;
+using Brutalsky.Scripts.Utils;
 using Godot;
+using Godot.Collections;
 
 namespace Brutalsky.Scripts.Controllers;
 
@@ -11,18 +14,29 @@ public partial class PlayerController : RigidBody2D
     public BsPlayer Player { get; set; }
 
     // External references
-    [Export] public NodePath Collider { get; set; }
-    private CollisionShape2D _collider;
-    [Export] public NodePath Sprite { get; set; }
-    private Sprite2D _sprite;
-    [Export] public NodePath Light { get; set; }
-    private PointLight2D _light;
+    [Export] public NodePath BodyCollider { get; set; }
+    private CollisionShape2D _bodyCollider;
+    [Export] public NodePath BodySprite { get; set; }
+    private Sprite2D _bodySprite;
+    [Export] public NodePath PointLight { get; set; }
+    private PointLight2D _pointLight;
+    [Export] public NodePath RingSprite { get; set; }
+    private Sprite2D _ringSprite;
+    [Export] public NodePath RingMask { get; set; }
+    private Sprite2D _ringMask;
 
     // Config settings
     [Export] public float MovementForce { get; set; }
     [Export] public float JumpForce { get; set; }
     [Export] public float GroundSensitivity { get; set; }
     [Export] public int MaxGroundedFrames { get; set; }
+
+    // Exposed properties
+    public float MaxHealth { get; private set; }
+    public float Health { get; private set; } = -1f;
+    public bool Alive { get; private set; } = true;
+    public float BoostCharge { get; private set; }
+    public float BoostCooldown { get; private set; }
 
     // Local variables
     private string[]? _inputMap;
@@ -32,24 +46,29 @@ public partial class PlayerController : RigidBody2D
     private int _groundedFrames;
     private float _groundFriction = 2f; // TODO: MAKE THIS WORK
     private int _jumpCooldown;
-    private float _boostCharge;
-    private float _boostCooldown;
+    private Vector2 _movementScale;
+    private Vector2 _jumpVector;
+    private Func<Vector2, Vector2, bool> _testGrounded = (_, _) => false;
+    private Func<Vector2, bool> _testJumpInput = _ => false;
+    private float _ringAlpha;
+    private float _ringThickness;
+    private float _ringSpin;
+
     private bool _lastBoostInput;
-    private float _lastSpeed;
     private Vector2 _lastPosition;
-    public Vector2 _movementScale;
-    public Vector2 _jumpVector;
-    public Func<Vector2, Vector2, bool> _testGrounded = (_, _) => false;
-    public Func<Vector2, bool> _testJumpInput = _ => false;
+    private float _lastSpeed;
 
     // Init functions
     public override void _Ready()
     {
         EventSystem.Inst.OnMapBuild += OnMapBuild;
+        Connect("body_entered", new Callable(this, MethodName.OnBodyEntered));
 
-        _collider = GetNode<CollisionShape2D>(Collider);
-        _sprite = GetNode<Sprite2D>(Sprite);
-        _light = GetNode<PointLight2D>(Light);
+        _bodyCollider = GetNode<CollisionShape2D>(BodyCollider);
+        _bodySprite = GetNode<Sprite2D>(BodySprite);
+        _pointLight = GetNode<PointLight2D>(PointLight);
+        _ringSprite = GetNode<Sprite2D>(RingSprite);
+        _ringMask = GetNode<Sprite2D>(RingMask);
 
         _inputMap = new[] { "player_left", "player_right", "player_up", "player_down", "player_boost" };
 
@@ -68,15 +87,62 @@ public partial class PlayerController : RigidBody2D
     // Controller functions
     public void Reset()
     {
+        MaxHealth = Player.Health;
+        Health = MaxHealth;
+        Revive();
         LinearVelocity = Vector2.Zero;
-        _boostCharge = 0f;
-        _boostCooldown = 0f;
+        BoostCharge = 0f;
+        BoostCooldown = 0f;
+        _ringAlpha = 0f;
+        _ringThickness = 0f;
+        _ringSpin = 0f;
+        _ringSprite.Rotation = 0f;
+        EventSystem.Inst.EmitPlayerSpawn(Player);
+    }
+
+    public void Heal(float amount)
+    {
+        Health = Mathf.Min(Health + amount, MaxHealth);
+    }
+
+    public void Hurt(float amount)
+    {
+        if (amount >= Health)
+        {
+            CallDeferred(MethodName.Kill);
+            return;
+        }
+        Health = Mathf.Max(Health - amount, 0f);
+    }
+
+    public void Revive()
+    {
+        if (Alive) return;
+        Health = MaxHealth;
+        Alive = true;
+        Freeze = false;
+        _bodyCollider.Disabled = false;
+        _bodySprite.Visible = true;
+        _ringSprite.Visible = true;
+    }
+
+    public void Kill()
+    {
+        if (!Alive) return;
+        Health = 0f;
+        Alive = false;
+        Freeze = true;
+        _bodyCollider.Disabled = true;
+        _bodySprite.Visible = false;
+        _ringSprite.Visible = false;
+        EventSystem.Inst.EmitPlayerDie(Player);
     }
 
     // Event functions
     private void OnMapBuild(BsMap map)
     {
-        // Configure movement to fit with current map settings
+        // Configure player to fit current map settings
+        MaxHealth = map.PlayerHealth;
         if (map.InitialGravity.Y < 0f)
         {
             _movementScale = new Vector2(MovementForce, map.InitialGravity.Length() * .5f);
@@ -115,6 +181,52 @@ public partial class PlayerController : RigidBody2D
         LinearDamp = map.InitialAtmosphere;
     }
 
+    private void OnBodyEntered(Node body)
+    {
+        if (!Alive) return;
+
+        // Get collision info
+        var impactForce = (LinearVelocity.Length() * GameManager.Mpp - _lastSpeed) * (body.IsInGroup(Tags.Player) ? 2f : 1f);
+        var impactSpeed = _lastSpeed;
+
+        GD.Print($"force: {impactForce}  /  speed: {impactSpeed}");
+
+        // Apply damage to player
+        var damageApplied = CalculateDamage(impactForce);
+        var damageMultiplier = Mathf.Min(1f / (impactSpeed * 0.2f), 1f);
+        Hurt(damageApplied * damageMultiplier);
+    }
+
+    public override void _Process(double delta)
+    {
+        var deltaF = (float)delta;
+
+        // Calculate target ring properties
+        var targetRingThickness = Health / MaxHealth;
+        var targetRingAlpha = .25f;
+        var targetRingSpin = 40f;
+        if (BoostCharge > 0f)
+        {
+            targetRingAlpha = .25f + BoostCharge * .25f;
+            targetRingSpin = (Mathf.Pow(BoostCharge, 1.5f) + 1.5f) * 360f;
+        }
+        else if (BoostCooldown > 0f)
+        {
+            targetRingAlpha = .05f;
+            targetRingSpin = 10f;
+        }
+
+        // Transition current ring properties to calculated target properties
+        _ringThickness = MathfExt.MoveToExponential(_ringThickness, targetRingThickness, 5f * deltaF);
+        _ringAlpha = MathfExt.MoveToLinear(_ringAlpha, targetRingAlpha, deltaF);
+        _ringSpin = MathfExt.MoveToLinear(_ringSpin, targetRingSpin, 1440f * deltaF);
+
+        // Apply current ring properties
+        _ringMask.Scale = Vector2.One * (.6f + _ringThickness * .4f);
+        _ringMask.Modulate = _ringMask.Modulate.SetAlpha(_ringAlpha);
+        _ringSprite.RotationDegrees -= _ringSpin * deltaF;
+    }
+
     public override void _PhysicsProcess(double delta)
     {
         // Get user input
@@ -129,7 +241,7 @@ public partial class PlayerController : RigidBody2D
         _grounded = _groundedFrames > 0;
 
         // Get movement data
-        var speed = LinearVelocity.Length();
+        var speed = LinearVelocity.Length() * GameManager.Mpp;
 
         // Apply jump movement
         var jumpInput = _grounded && _testJumpInput(_movementInput) && _jumpCooldown == 0;
@@ -144,21 +256,21 @@ public partial class PlayerController : RigidBody2D
         }
 
         // Apply boost movement
-        var boostInput = _boostInput && _boostCooldown == 0f;
+        var boostInput = _boostInput && BoostCooldown == 0f;
         if (boostInput)
         {
-            _boostCharge = Mathf.Min(_boostCharge + (float)delta, 3f);
+            BoostCharge = Mathf.Min(BoostCharge + (float)delta, 3f);
         }
         else if (_lastBoostInput)
         {
-            var boost = Mathf.Pow(_boostCharge, 1.5f) + 1.5f;
+            var boost = Mathf.Pow(BoostCharge, 1.5f) + 1.5f;
             LinearVelocity *= boost;
-            _boostCharge = 0f;
-            _boostCooldown = Mathf.Min(boost, speed);
+            BoostCharge = 0f;
+            BoostCooldown = Mathf.Min(boost, speed);
         }
-        if (_boostCooldown > 0f)
+        if (BoostCooldown > 0f)
         {
-            _boostCooldown = Mathf.Max(_boostCooldown - (float)delta, 0f);
+            BoostCooldown = Mathf.Max(BoostCooldown - (float)delta, 0f);
         }
         _lastBoostInput = boostInput;
 
@@ -183,5 +295,11 @@ public partial class PlayerController : RigidBody2D
                 _grounded = true;
             }
         }
+    }
+
+    // Utility functions
+    public static float CalculateDamage(float impactForce)
+    {
+        return Mathf.Max(impactForce - 20f, 0) * .5f;
     }
 }
