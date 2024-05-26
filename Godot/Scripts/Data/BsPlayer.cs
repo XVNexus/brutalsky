@@ -16,7 +16,6 @@ public class BsPlayer : ILcsLine
     public string Name { get; set; } = "Anonymous";
     public int Type { get; set; } = TypeDummy;
     public Color Color { get; set; } = new(1f, 1f, 1f);
-    public float Health { get; set; } = 100f;
 
     public BsPlayer(string name, int type)
     {
@@ -28,7 +27,7 @@ public class BsPlayer : ILcsLine
 
     public LcsLine _ToLcs()
     {
-        return new LcsLine('@', Type, Color.R, Color.G, Color.B, Color.A, Health);
+        return new LcsLine('@', Type, Color.R, Color.G, Color.B, Color.A);
     }
 
     public void _FromLcs(LcsLine line)
@@ -42,6 +41,5 @@ public class BsPlayer : ILcsLine
             (float)line.Props[i++],
             (float)line.Props[i++]
         );
-        Health = (float)line.Props[i++];
     }
 }

@@ -15,7 +15,7 @@ public class BsMap : ILcsDocument
     public Color BackgroundColor { get; set; } = new(.25f, .25f, .25f);
     public Color LightingColor { get; set; } = new(.8f, .8f, .8f);
     public Vector2 InitialGravity { get; set; } = Vector2.Zero;
-    public float InitialAtmosphere { get; set; } = 0f;
+    public float InitialAtmosphere { get; set; }
     public float PlayerHealth { get; set; } = 100f;
     public bool AllowDummies { get; set; } = true;
 

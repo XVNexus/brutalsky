@@ -62,7 +62,6 @@ public partial class PlayerController : RigidBody2D
     public override void _Ready()
     {
         EventSystem.Inst.OnMapBuild += OnMapBuild;
-        Connect("body_entered", new Callable(this, MethodName.OnBodyEntered));
 
         _bodyCollider = GetNode<CollisionShape2D>(BodyCollider);
         _bodySprite = GetNode<Sprite2D>(BodySprite);
@@ -73,10 +72,8 @@ public partial class PlayerController : RigidBody2D
         _inputMap = new[] { "player_left", "player_right", "player_up", "player_down", "player_boost" };
 
         // TODO: TEMPORARY
-        OnMapBuild(new BsMap
-        {
-            InitialGravity = new Vector2(0f, 20f)
-        });
+        EventSystem.Inst.EmitMapBuild(new BsMap { InitialGravity = new Vector2(0f, 20f) });
+        Reset();
     }
 
     public override void _ExitTree()
@@ -87,7 +84,6 @@ public partial class PlayerController : RigidBody2D
     // Controller functions
     public void Reset()
     {
-        MaxHealth = Player.Health;
         Health = MaxHealth;
         Revive();
         LinearVelocity = Vector2.Zero;
@@ -181,24 +177,9 @@ public partial class PlayerController : RigidBody2D
         LinearDamp = map.InitialAtmosphere;
     }
 
-    private void OnBodyEntered(Node body)
-    {
-        if (!Alive) return;
-
-        // Get collision info
-        var impactForce = (LinearVelocity.Length() * GameManager.Mpp - _lastSpeed) * (body.IsInGroup(Tags.Player) ? 2f : 1f);
-        var impactSpeed = _lastSpeed;
-
-        GD.Print($"force: {impactForce}  /  speed: {impactSpeed}");
-
-        // Apply damage to player
-        var damageApplied = CalculateDamage(impactForce);
-        var damageMultiplier = Mathf.Min(1f / (impactSpeed * 0.2f), 1f);
-        Hurt(damageApplied * damageMultiplier);
-    }
-
     public override void _Process(double delta)
     {
+        if (!Alive) return;
         var deltaF = (float)delta;
 
         // Calculate target ring properties
@@ -224,11 +205,13 @@ public partial class PlayerController : RigidBody2D
         // Apply current ring properties
         _ringMask.Scale = Vector2.One * (.6f + _ringThickness * .4f);
         _ringMask.Modulate = _ringMask.Modulate.SetAlpha(_ringAlpha);
-        _ringSprite.RotationDegrees -= _ringSpin * deltaF;
+        _ringSprite.RotationDegrees += _ringSpin * deltaF;
     }
 
     public override void _PhysicsProcess(double delta)
     {
+        if (!Alive) return;
+
         // Get user input
         if (_inputMap != null)
         {
@@ -239,9 +222,6 @@ public partial class PlayerController : RigidBody2D
         // Update ground status
         _groundedFrames = Mathf.Max(_groundedFrames - 1, 0);
         _grounded = _groundedFrames > 0;
-
-        // Get movement data
-        var speed = LinearVelocity.Length() * GameManager.Mpp;
 
         // Apply jump movement
         var jumpInput = _grounded && _testJumpInput(_movementInput) && _jumpCooldown == 0;
@@ -266,7 +246,7 @@ public partial class PlayerController : RigidBody2D
             var boost = Mathf.Pow(BoostCharge, 1.5f) + 1.5f;
             LinearVelocity *= boost;
             BoostCharge = 0f;
-            BoostCooldown = Mathf.Min(boost, speed);
+            BoostCooldown = Mathf.Min(boost, LinearVelocity.Length() * GameManager.Mpp);
         }
         if (BoostCooldown > 0f)
         {
@@ -276,30 +256,38 @@ public partial class PlayerController : RigidBody2D
 
         // Save the current position and speed for future reference
         _lastPosition = Position;
-        _lastSpeed = speed;
     }
 
     public override void _IntegrateForces(PhysicsDirectBodyState2D state)
     {
+        if (!Alive) return;
+
         // Apply directional movement
         state.ApplyForce(_movementInput * _movementScale * (_grounded ? Mathf.Clamp(_groundFriction, .5f, 2f) : .5f));
 
-        // Update ground status
+        // Update ground status and collision info
         var contactCount = GetContactCount();
-        if (contactCount <= 0) return;
+        if (contactCount == 0) return;
+        var impactForce = 0f;
         for (var i = 0; i < contactCount; i++)
         {
-            if (_testGrounded(state.GetContactColliderPosition(i), _lastPosition))
-            {
-                _groundedFrames = MaxGroundedFrames;
-                _grounded = true;
-            }
+            impactForce += state.GetContactColliderVelocityAtPosition(i).Length();
+            if (!_testGrounded(state.GetContactColliderPosition(i), _lastPosition)) continue;
+            _groundedFrames = MaxGroundedFrames;
+            _grounded = true;
         }
-    }
+        impactForce *= GameManager.Mpp;
+        if (impactForce >= .01f) GD.Print($"force: {impactForce}");
 
-    // Utility functions
-    public static float CalculateDamage(float impactForce)
-    {
-        return Mathf.Max(impactForce - 20f, 0) * .5f;
+        // Apply damage
+        var speed = state.LinearVelocity.Length() * GameManager.Mpp;
+        var damageApplied = Mathf.Max(impactForce - 20f, 0) * .5f;
+        var damageMultiplier = Mathf.Min(1f / (Mathf.Max(speed, _lastSpeed) * 0.2f), 1f);
+        _lastSpeed = speed;
+        if (damageApplied > 0f)
+        {
+            GD.Print($"raw: {damageApplied}  /  mult: {damageMultiplier}  /  force: {impactForce}  /  speed: {speed}");
+        }
+        Hurt(damageApplied * damageMultiplier);
     }
 }
