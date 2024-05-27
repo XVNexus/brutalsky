@@ -81,6 +81,7 @@ player_boost={
 
 [physics]
 
+2d/physics_engine="Rapier2D"
 2d/default_gravity=1280.0
 
 [rendering]

@@ -2,9 +2,7 @@ using System;
 using Brutalsky.Scripts.Data;
 using Brutalsky.Scripts.Extensions;
 using Brutalsky.Scripts.Systems;
-using Brutalsky.Scripts.Utils;
 using Godot;
-using Godot.Collections;
 
 namespace Brutalsky.Scripts.Controllers;
 
@@ -62,6 +60,7 @@ public partial class PlayerController : RigidBody2D
     public override void _Ready()
     {
         EventSystem.Inst.OnMapBuild += OnMapBuild;
+        Connect("body_entered", new Callable(this, MethodName.OnBodyEntered));
 
         _bodyCollider = GetNode<CollisionShape2D>(BodyCollider);
         _bodySprite = GetNode<Sprite2D>(BodySprite);
@@ -141,28 +140,28 @@ public partial class PlayerController : RigidBody2D
         MaxHealth = map.PlayerHealth;
         if (map.InitialGravity.Y < 0f)
         {
-            _movementScale = new Vector2(MovementForce, map.InitialGravity.Length() * .5f);
+            _movementScale = new Vector2(MovementForce, map.InitialGravity.Length() * .5f * GameManager.Ppm);
             _jumpVector = Vector2.Down * JumpForce;
             _testGrounded = (point, position) => point.Y < position.Y - GroundSensitivity;
             _testJumpInput = movementInput => movementInput.Y > 0f;
         }
         else if (map.InitialGravity.Y > 0f)
         {
-            _movementScale = new Vector2(MovementForce, map.InitialGravity.Length() * .5f);
+            _movementScale = new Vector2(MovementForce, map.InitialGravity.Length() * .5f * GameManager.Ppm);
             _jumpVector = Vector2.Up * JumpForce;
             _testGrounded = (point, position) => point.Y > position.Y + GroundSensitivity;
             _testJumpInput = movementInput => movementInput.Y < 0f;
         }
         else if (map.InitialGravity.X < 0f)
         {
-            _movementScale = new Vector2(map.InitialGravity.Length() * .5f, MovementForce);
+            _movementScale = new Vector2(map.InitialGravity.Length() * .5f * GameManager.Ppm, MovementForce);
             _jumpVector = Vector2.Right * JumpForce;
             _testGrounded = (point, position) => point.X < position.X - GroundSensitivity;
             _testJumpInput = movementInput => movementInput.X > 0f;
         }
         else if (map.InitialGravity.X > 0f)
         {
-            _movementScale = new Vector2(map.InitialGravity.Length() * .5f, MovementForce);
+            _movementScale = new Vector2(map.InitialGravity.Length() * .5f * GameManager.Ppm, MovementForce);
             _jumpVector = Vector2.Left * JumpForce;
             _testGrounded = (point, position) => point.X > position.X + GroundSensitivity;
             _testJumpInput = movementInput => movementInput.X < 0f;
@@ -175,6 +174,23 @@ public partial class PlayerController : RigidBody2D
             _testJumpInput = _ => false;
         }
         LinearDamp = map.InitialAtmosphere;
+    }
+
+    private void OnBodyEntered(Node2D body)
+    {
+        // Get collision info
+        var speed = LinearVelocity.Length() * GameManager.Mpp;
+        var impactForce = body is PlayerController player
+            ? speed + player.LinearVelocity.Length() * GameManager.Mpp
+            : speed;
+
+        // Apply damage
+        var damageApplied = Mathf.Max(impactForce - 20f, 0) * .5f;
+        var damageMultiplier = Mathf.Min(1f / (speed * 0.2f), 1f);
+        if (damageApplied > 0f)
+        {
+            Hurt(damageApplied * damageMultiplier);
+        }
     }
 
     public override void _Process(double delta)
@@ -204,7 +220,7 @@ public partial class PlayerController : RigidBody2D
 
         // Apply current ring properties
         _ringMask.Scale = Vector2.One * (.6f + _ringThickness * .4f);
-        _ringMask.Modulate = _ringMask.Modulate.SetAlpha(_ringAlpha);
+        _ringMask.SelfModulate = _ringMask.Modulate.SetAlpha(_ringAlpha);
         _ringSprite.RotationDegrees += _ringSpin * deltaF;
     }
 
@@ -254,7 +270,7 @@ public partial class PlayerController : RigidBody2D
         }
         _lastBoostInput = boostInput;
 
-        // Save the current position and speed for future reference
+        // Save the current position for future reference
         _lastPosition = Position;
     }
 
@@ -265,29 +281,13 @@ public partial class PlayerController : RigidBody2D
         // Apply directional movement
         state.ApplyForce(_movementInput * _movementScale * (_grounded ? Mathf.Clamp(_groundFriction, .5f, 2f) : .5f));
 
-        // Update ground status and collision info
+        // Update ground status
         var contactCount = GetContactCount();
-        if (contactCount == 0) return;
-        var impactForce = 0f;
         for (var i = 0; i < contactCount; i++)
         {
-            impactForce += state.GetContactColliderVelocityAtPosition(i).Length();
             if (!_testGrounded(state.GetContactColliderPosition(i), _lastPosition)) continue;
             _groundedFrames = MaxGroundedFrames;
             _grounded = true;
         }
-        impactForce *= GameManager.Mpp;
-        if (impactForce >= .01f) GD.Print($"force: {impactForce}");
-
-        // Apply damage
-        var speed = state.LinearVelocity.Length() * GameManager.Mpp;
-        var damageApplied = Mathf.Max(impactForce - 20f, 0) * .5f;
-        var damageMultiplier = Mathf.Min(1f / (Mathf.Max(speed, _lastSpeed) * 0.2f), 1f);
-        _lastSpeed = speed;
-        if (damageApplied > 0f)
-        {
-            GD.Print($"raw: {damageApplied}  /  mult: {damageMultiplier}  /  force: {impactForce}  /  speed: {speed}");
-        }
-        Hurt(damageApplied * damageMultiplier);
     }
 }
