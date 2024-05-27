@@ -3,7 +3,7 @@ using Controllers.Base;
 using Utils.Config;
 using Utils.Lcs;
 
-namespace Core
+namespace Systems
 {
     public class ConfigSystem : BsBehavior
     {

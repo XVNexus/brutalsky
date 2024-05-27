@@ -1,7 +1,7 @@
 using System;
-using Brutalsky.Object;
 using Controllers.Base;
-using Core;
+using Data.Object;
+using Systems;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Utils.Player;

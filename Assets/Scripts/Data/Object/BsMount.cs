@@ -1,14 +1,14 @@
 using System;
-using Brutalsky.Base;
-using Brutalsky.Logic;
 using Controllers;
 using Controllers.Base;
 using Controllers.Mount;
-using Core;
+using Data.Base;
+using Data.Logic;
+using Systems;
 using UnityEngine;
 using Utils.Constants;
 
-namespace Brutalsky.Object
+namespace Data.Object
 {
     public class BsMount : BsObject
     {

@@ -1,6 +1,6 @@
 using System;
 using System.IO;
-using Brutalsky.Object;
+using Data.Object;
 using UnityEngine;
 
 namespace Utils.Constants

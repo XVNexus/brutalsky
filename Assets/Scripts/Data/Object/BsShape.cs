@@ -1,13 +1,13 @@
 using System.Linq;
-using Brutalsky.Base;
 using Controllers;
 using Controllers.Base;
-using Core;
+using Data.Base;
+using Systems;
 using UnityEngine;
 using Utils.Constants;
 using Utils.Path;
 
-namespace Brutalsky.Object
+namespace Data.Object
 {
     public class BsShape : BsObject
     {

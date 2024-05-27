@@ -5,7 +5,7 @@ using Utils.Constants;
 using Utils.Lcs;
 using Random = UnityEngine.Random;
 
-namespace Brutalsky.Logic
+namespace Data.Logic
 {
     public class BsNode
     {

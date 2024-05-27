@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
-using Brutalsky;
-using Brutalsky.Base;
-using Brutalsky.Object;
 using Controllers.Base;
-using Core;
+using Data;
+using Data.Base;
+using Data.Object;
+using Systems;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Utils.Constants;

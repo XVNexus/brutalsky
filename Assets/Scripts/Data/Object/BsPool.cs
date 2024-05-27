@@ -1,11 +1,11 @@
-using Brutalsky.Base;
 using Controllers;
 using Controllers.Base;
-using Core;
+using Data.Base;
+using Systems;
 using UnityEngine;
 using Utils.Constants;
 
-namespace Brutalsky.Object
+namespace Data.Object
 {
     public class BsPool : BsObject
     {

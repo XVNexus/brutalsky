@@ -2,7 +2,7 @@ using Controllers.Base;
 using UnityEngine;
 using Utils.Config;
 
-namespace Core
+namespace Systems
 {
     public class TimeSystem : BsBehavior
     {
