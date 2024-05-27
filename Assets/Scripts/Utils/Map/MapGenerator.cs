@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using Brutalsky;
-using Brutalsky.Map;
-using Brutalsky.Object;
-using Core;
+using Data;
+using Data.Map;
+using Data.Object;
+using Systems;
 using UnityEngine;
 using Utils.Constants;
 using Utils.Ext;

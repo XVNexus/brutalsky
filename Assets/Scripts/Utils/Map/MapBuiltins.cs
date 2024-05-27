@@ -1,8 +1,8 @@
-using Brutalsky;
-using Brutalsky.Addon;
-using Brutalsky.Logic;
-using Brutalsky.Map;
-using Brutalsky.Object;
+using Data;
+using Data.Addon;
+using Data.Logic;
+using Data.Map;
+using Data.Object;
 using UnityEngine;
 using Utils.Constants;
 using Utils.Ext;

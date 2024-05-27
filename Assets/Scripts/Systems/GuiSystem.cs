@@ -8,7 +8,7 @@ using UnityEngine.UIElements;
 using Utils.Constants;
 using Utils.Gui;
 
-namespace Core
+namespace Systems
 {
     public class GuiSystem : BsBehavior
     {

@@ -1,4 +1,4 @@
-namespace Brutalsky.Logic
+namespace Data.Logic
 {
     public struct BsPort
     {

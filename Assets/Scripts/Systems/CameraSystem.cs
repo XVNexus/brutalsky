@@ -1,15 +1,15 @@
 using System.Collections.Generic;
 using System.Linq;
-using Brutalsky;
-using Brutalsky.Base;
-using Brutalsky.Object;
 using Controllers.Base;
+using Data;
+using Data.Base;
+using Data.Object;
 using UnityEngine;
 using UnityEngine.Rendering;
 using Utils.Config;
 using Utils.Ext;
 
-namespace Core
+namespace Systems
 {
     public class CameraSystem : BsBehavior
     {
