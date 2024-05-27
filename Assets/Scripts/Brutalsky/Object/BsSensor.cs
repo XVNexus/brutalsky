@@ -1,14 +1,14 @@
 using System;
+using Brutalsky.Base;
+using Brutalsky.Logic;
 using Controllers;
 using Controllers.Base;
 using Controllers.Sensor;
-using Data.Base;
-using Data.Logic;
-using Systems;
+using Core;
 using UnityEngine;
 using Utils.Constants;
 
-namespace Data.Object
+namespace Brutalsky.Object
 {
     public class BsSensor : BsObject
     {

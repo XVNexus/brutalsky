@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Utils.Constants;
 
-namespace Data.Logic
+namespace Brutalsky.Logic
 {
     public class BsMatrix
     {

@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Brutalsky;
+using Brutalsky.Base;
+using Brutalsky.Logic;
+using Brutalsky.Object;
 using Controllers.Base;
-using Data;
-using Data.Base;
-using Data.Logic;
-using Data.Object;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
@@ -14,7 +14,7 @@ using Utils.Ext;
 using Utils.Lcs;
 using Utils.Player;
 
-namespace Systems
+namespace Core
 {
     public class MapSystem : BsBehavior
     {

@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
-using Data.Base;
-using Data.Logic;
-using Data.Object;
+using Brutalsky.Base;
+using Brutalsky.Logic;
+using Brutalsky.Object;
 using UnityEngine;
 using Utils.Constants;
 using Utils.Joint;
 
-namespace Data.Addon
+namespace Brutalsky.Addon
 {
     public class BsJoint : BsAddon
     {

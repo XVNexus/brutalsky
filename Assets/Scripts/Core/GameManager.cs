@@ -1,15 +1,15 @@
 using System.Collections.Generic;
 using System.Linq;
+using Brutalsky;
+using Brutalsky.Object;
 using Controllers.Base;
-using Data;
-using Data.Object;
 using UnityEngine;
 using Utils.Config;
 using Utils.Ext;
 using Utils.Map;
 using Utils.Player;
 
-namespace Systems
+namespace Core
 {
     public class GameManager : BsBehavior
     {

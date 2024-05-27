@@ -1,7 +1,7 @@
 using UnityEngine;
 using Utils.Lcs;
 
-namespace Data.Map
+namespace Brutalsky.Map
 {
     public class BsSpawn
     {

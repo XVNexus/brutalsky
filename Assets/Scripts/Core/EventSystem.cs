@@ -1,12 +1,12 @@
 using System;
+using Brutalsky;
+using Brutalsky.Object;
 using Controllers.Base;
-using Data;
-using Data.Object;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Utils.Config;
 
-namespace Systems
+namespace Core
 {
     public class EventSystem : BsBehavior
     {

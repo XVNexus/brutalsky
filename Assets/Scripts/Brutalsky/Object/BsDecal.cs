@@ -1,13 +1,13 @@
 using System.Linq;
+using Brutalsky.Base;
 using Controllers;
 using Controllers.Base;
-using Data.Base;
-using Systems;
+using Core;
 using UnityEngine;
 using Utils.Constants;
 using Utils.Path;
 
-namespace Data.Object
+namespace Brutalsky.Object
 {
     public class BsDecal : BsObject
     {

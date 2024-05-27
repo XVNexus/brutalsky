@@ -2,16 +2,16 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Brutalsky.Addon;
+using Brutalsky.Base;
+using Brutalsky.Object;
 using Controllers.Base;
-using Data.Addon;
-using Data.Base;
-using Data.Object;
 using UnityEngine;
 using Utils.Constants;
 using Utils.Lcs;
 using Random = Unity.Mathematics.Random;
 
-namespace Systems
+namespace Core
 {
     public class ResourceSystem : BsBehavior
     {

@@ -1,6 +1,6 @@
+using Brutalsky.Object;
 using Controllers.Base;
 using Controllers.Player;
-using Data.Object;
 using UnityEngine;
 using Utils.Constants;
 

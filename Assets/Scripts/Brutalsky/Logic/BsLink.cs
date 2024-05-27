@@ -1,6 +1,6 @@
 using Utils.Lcs;
 
-namespace Data.Logic
+namespace Brutalsky.Logic
 {
     public struct BsLink
     {

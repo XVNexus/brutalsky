@@ -1,5 +1,5 @@
+using Brutalsky.Object;
 using Controllers.Base;
-using Data.Object;
 using Utils.Constants;
 
 namespace Controllers

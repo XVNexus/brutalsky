@@ -1,14 +1,14 @@
 using System.Collections.Generic;
 using System.Linq;
+using Brutalsky.Logic;
 using Controllers.Base;
-using Data.Logic;
+using Core;
 using JetBrains.Annotations;
-using Systems;
 using UnityEngine;
 using Utils.Constants;
 using Utils.Lcs;
 
-namespace Data.Base
+namespace Brutalsky.Base
 {
     public abstract class BsObject
     {

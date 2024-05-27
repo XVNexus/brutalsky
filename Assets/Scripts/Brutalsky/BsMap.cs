@@ -1,17 +1,17 @@
 using System.Collections.Generic;
 using System.Linq;
-using Data.Base;
-using Data.Logic;
-using Data.Map;
+using Brutalsky.Base;
+using Brutalsky.Logic;
+using Brutalsky.Map;
+using Core;
 using JetBrains.Annotations;
-using Systems;
 using UnityEngine;
 using Utils.Constants;
 using Utils.Ext;
 using Utils.Lcs;
 using Color = UnityEngine.Color;
 
-namespace Data
+namespace Brutalsky
 {
     public class BsMap
     {

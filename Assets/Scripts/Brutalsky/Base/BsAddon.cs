@@ -1,11 +1,11 @@
 using System.Collections.Generic;
-using Data.Logic;
+using Brutalsky.Logic;
+using Core;
 using JetBrains.Annotations;
-using Systems;
 using UnityEngine;
 using Utils.Lcs;
 
-namespace Data.Base
+namespace Brutalsky.Base
 {
     public abstract class BsAddon
     {
