@@ -84,6 +84,7 @@ texture = ExtResource("3_ijp43")
 
 [node name="RingSprite" type="Sprite2D" parent="."]
 clip_children = 1
+z_index = -1
 scale = Vector2(0.25, 0.25)
 texture = ExtResource("4_a0evs")
 

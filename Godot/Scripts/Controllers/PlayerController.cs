@@ -24,6 +24,7 @@ public partial class PlayerController : RigidBody2D
     private Sprite2D _ringMask;
 
     // Config settings
+    [Export] public bool Dummy { get; set; } // TODO: TEMPORARY
     [Export] public float MovementForce { get; set; }
     [Export] public float JumpForce { get; set; }
     [Export] public float GroundSensitivity { get; set; }
@@ -35,6 +36,7 @@ public partial class PlayerController : RigidBody2D
     public bool Alive { get; private set; } = true;
     public float BoostCharge { get; private set; }
     public float BoostCooldown { get; private set; }
+    public float LastSpeed { get; private set; }
 
     // Local variables
     private string[]? _inputMap;
@@ -51,10 +53,8 @@ public partial class PlayerController : RigidBody2D
     private float _ringAlpha;
     private float _ringThickness;
     private float _ringSpin;
-
     private bool _lastBoostInput;
     private Vector2 _lastPosition;
-    private float _lastSpeed;
 
     // Init functions
     public override void _Ready()
@@ -68,7 +68,32 @@ public partial class PlayerController : RigidBody2D
         _ringSprite = GetNode<Sprite2D>(RingSprite);
         _ringMask = GetNode<Sprite2D>(RingMask);
 
-        _inputMap = new[] { "player_left", "player_right", "player_up", "player_down", "player_boost" };
+        // TODO: TEMPORARY
+        Player = Dummy
+            ? new BsPlayer("Player 2", BsPlayer.TypeDummy) { Color = Color.FromHsv(210f / 360f, 1f, 1f) }
+            : new BsPlayer("Player 1", BsPlayer.TypeMain) { Color = Color.FromHsv(30f / 360f, 1f, 1f) };
+
+        switch (Player.Type)
+        {
+            case BsPlayer.TypeMain:
+            {
+                const string prefix = "player";
+                _inputMap = new[]
+                {
+                    $"{prefix}_left", $"{prefix}_right", $"{prefix}_up", $"{prefix}_down", $"{prefix}_boost"
+                };
+                break;
+            }
+            case >= BsPlayer.TypeLocal1 and <= BsPlayer.TypeLocal4:
+            {
+                var prefix = $"player_{Player.Type - BsPlayer.TypeLocal1 + 1}";
+                _inputMap = new[]
+                {
+                    $"{prefix}_left", $"{prefix}_right", $"{prefix}_up", $"{prefix}_down", $"{prefix}_boost"
+                };
+                break;
+            }
+        }
 
         // TODO: TEMPORARY
         EventSystem.Inst.EmitMapBuild(new BsMap { InitialGravity = new Vector2(0f, 20f) });
@@ -179,14 +204,14 @@ public partial class PlayerController : RigidBody2D
     private void OnBodyEntered(Node2D body)
     {
         // Get collision info
-        var speed = LinearVelocity.Length() * GameManager.Mpp;
         var impactForce = body is PlayerController player
-            ? speed + player.LinearVelocity.Length() * GameManager.Mpp
-            : speed;
+            ? LastSpeed + player.LinearVelocity.Length() * GameManager.Mpp
+            : LastSpeed;
+        if (impactForce > 0f) GD.Print($"{Player.Name} - impact: {impactForce}");
 
         // Apply damage
         var damageApplied = Mathf.Max(impactForce - 20f, 0) * .5f;
-        var damageMultiplier = Mathf.Min(1f / (speed * 0.2f), 1f);
+        var damageMultiplier = Mathf.Min(1f / (LastSpeed * 0.2f), 1f);
         if (damageApplied > 0f)
         {
             Hurt(damageApplied * damageMultiplier);
@@ -252,6 +277,7 @@ public partial class PlayerController : RigidBody2D
         }
 
         // Apply boost movement
+        var speed = LinearVelocity.Length() * GameManager.Mpp;
         var boostInput = _boostInput && BoostCooldown == 0f;
         if (boostInput)
         {
@@ -262,7 +288,7 @@ public partial class PlayerController : RigidBody2D
             var boost = Mathf.Pow(BoostCharge, 1.5f) + 1.5f;
             LinearVelocity *= boost;
             BoostCharge = 0f;
-            BoostCooldown = Mathf.Min(boost, LinearVelocity.Length() * GameManager.Mpp);
+            BoostCooldown = Mathf.Min(boost, speed);
         }
         if (BoostCooldown > 0f)
         {
@@ -270,8 +296,9 @@ public partial class PlayerController : RigidBody2D
         }
         _lastBoostInput = boostInput;
 
-        // Save the current position for future reference
+        // Save the current position and speed for future reference
         _lastPosition = Position;
+        LastSpeed = speed;
     }
 
     public override void _IntegrateForces(PhysicsDirectBodyState2D state)

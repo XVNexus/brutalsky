@@ -24,6 +24,7 @@ position = Vector2(-128, -8)
 
 [node name="Player2" parent="PlayerContainer" instance=ExtResource("1_1a352")]
 position = Vector2(128, 0)
+Dummy = true
 
 [node name="MapContainer" type="Node" parent="."]
 
