@@ -6,8 +6,6 @@ using Data.Object;
 using UnityEngine;
 using Utils.Constants;
 using Utils.Ext;
-using Utils.Joint;
-using Utils.Path;
 
 namespace Utils.Map
 {
@@ -38,7 +36,7 @@ namespace Utils.Map
             var result = new BsMap("Brutalsky", Author)
             {
                 PlayArea = new Rect(-20f, -10f, 40f, 20f),
-                GravityDirection = Direction.Down,
+                GravityDirection = BsMap.DirectionDown,
                 GravityStrength = 20f,
                 AirResistance = .5f
             };
@@ -53,35 +51,35 @@ namespace Utils.Map
             result.AddObject(new BsShape("wall-left")
             {
                 Position = new Vector2(-19.5f, 0f),
-                Path = PathString.Rectangle(1f, 20f),
+                Path = Path.Rectangle(1f, 20f),
                 Material = MaterialExt.Stone,
                 Color = ColorExt.Stone
             });
             result.AddObject(new BsShape("wall-right")
             {
                 Position = new Vector2(19.5f, 0f),
-                Path = PathString.Rectangle(1f, 20f),
+                Path = Path.Rectangle(1f, 20f),
                 Material = MaterialExt.Stone,
                 Color = ColorExt.Stone
             });
             result.AddObject(new BsShape("wall-top")
             {
                 Position = new Vector2(0f, 10f),
-                Path = PathString.Polygon(-15f, 0f, 15f, 0f, 14f, -.5f, -14f, -.5f),
+                Path = Path.Polygon(-15f, 0f, 15f, 0f, 14f, -.5f, -14f, -.5f),
                 Material = MaterialExt.Stone,
                 Color = ColorExt.Stone
             });
             result.AddObject(new BsShape("wall-bottom")
             {
                 Position = new Vector2(0f, -10f),
-                Path = PathString.Polygon(-7f, 0f, -7f, .5f, 0f, 3f, 7f, .5f, 7f, 0f),
+                Path = Path.Polygon(-7f, 0f, -7f, .5f, 0f, 3f, 7f, .5f, 7f, 0f),
                 Material = MaterialExt.Stone,
                 Color = ColorExt.Stone
             });
             result.AddObject(new BsShape("platform-left")
             {
                 Position = new Vector2(-19f, 0f),
-                Path = PathString.Vector(-1f, 2.5f, 0f, 0f, 2.5f, 1f, 0f, .5f, 2f, .5f, 0f, 8f, .5f, 0f, 7.5f, 0f, 0f,
+                Path = Path.Vector(-1f, 2.5f, 0f, 0f, 2.5f, 1f, 0f, .5f, 2f, .5f, 0f, 8f, .5f, 0f, 7.5f, 0f, 0f,
                     8f, -.5f, 0f, 2f, -.5f, 1f, 0f, -.5f, 0f, -2.5f, 0f, -1f, -2.5f),
                 Material = MaterialExt.Stone,
                 Color = ColorExt.Stone
@@ -89,7 +87,7 @@ namespace Utils.Map
             result.AddObject(new BsShape("platform-right")
             {
                 Position = new Vector2(19f, 0f),
-                Path = PathString.Vector(1f, 2.5f, 0f, 0f, 2.5f, 1f, 0f, .5f, -2f, .5f, 0f, -8f, .5f, 0f, -7.5f, 0f, 0f,
+                Path = Path.Vector(1f, 2.5f, 0f, 0f, 2.5f, 1f, 0f, .5f, -2f, .5f, 0f, -8f, .5f, 0f, -7.5f, 0f, 0f,
                     -8f, -.5f, 0f, -2f, -.5f, 1f, 0f, -.5f, 0f, -2.5f, 0f, 1f, -2.5f),
                 Material = MaterialExt.Stone,
                 Color = ColorExt.Stone
@@ -97,42 +95,42 @@ namespace Utils.Map
             result.AddObject(new BsShape("glue-left")
             {
                 Position = new Vector2(-9f, 9.25f),
-                Path = PathString.Rectangle(10f, .5f),
+                Path = Path.Rectangle(10f, .5f),
                 Material = MaterialExt.Glue,
                 Color = ColorExt.Glue
             });
             result.AddObject(new BsShape("glue-right")
             {
                 Position = new Vector2(9f, 9.25f),
-                Path = PathString.Rectangle(10f, .5f),
+                Path = Path.Rectangle(10f, .5f),
                 Material = MaterialExt.Glue,
                 Color = ColorExt.Glue
             });
             result.AddObject(new BsShape("ice-left")
             {
                 Position = new Vector2(-14.5f, 9.5f),
-                Path = PathString.Polygon(-.5f, .5f, .5f, 0f, .5f, -.5f, -.5f, 0f),
+                Path = Path.Polygon(-.5f, .5f, .5f, 0f, .5f, -.5f, -.5f, 0f),
                 Material = MaterialExt.Ice,
                 Color = ColorExt.Ice
             });
             result.AddObject(new BsShape("ice-right")
             {
                 Position = new Vector2(14.5f, 9.5f),
-                Path = PathString.Polygon(.5f, .5f, -.5f, 0f, -.5f, -.5f, .5f, 0f),
+                Path = Path.Polygon(.5f, .5f, -.5f, 0f, -.5f, -.5f, .5f, 0f),
                 Material = MaterialExt.Ice,
                 Color = ColorExt.Ice
             });
             result.AddObject(new BsShape("ice-bottom")
             {
                 Position = new Vector2(0f, -9.5f),
-                Path = PathString.Polygon(-7f, 0f, -7f, .5f, 0f, 3f, 7f, .5f, 7f, 0f, 0f, 2.5f),
+                Path = Path.Polygon(-7f, 0f, -7f, .5f, 0f, 3f, 7f, .5f, 7f, 0f, 0f, 2.5f),
                 Material = MaterialExt.Ice,
                 Color = ColorExt.Ice
             });
             result.AddObject(new BsShape("rubber-top")
             {
                 Position = new Vector2(0f, 9.25f),
-                Path = PathString.Polygon(4f, .25f, 4f, -.25f, 0f, -1.25f, -4f, -.25f, -4f, .25f),
+                Path = Path.Polygon(4f, .25f, 4f, -.25f, 0f, -1.25f, -4f, -.25f, -4f, .25f),
                 Material = MaterialExt.Rubber,
                 Color = ColorExt.Rubber
             });
@@ -140,7 +138,7 @@ namespace Utils.Map
             {
                 Position = new Vector2(-11f, 0f),
                 Rotation = 45f,
-                Path = PathString.Square(.7f),
+                Path = Path.Square(.7f),
                 Material = MaterialExt.Electric,
                 Color = ColorExt.Electric
             });
@@ -148,7 +146,7 @@ namespace Utils.Map
             {
                 Position = new Vector2(11f, 0f),
                 Rotation = 45f,
-                Path = PathString.Square(.7f),
+                Path = Path.Square(.7f),
                 Material = MaterialExt.Electric,
                 Color = ColorExt.Electric
             });
@@ -156,20 +154,20 @@ namespace Utils.Map
             {
                 Position = new Vector2(-2.5f, 0f),
                 Layer = -1,
-                Path = PathString.Circle(5f),
+                Path = Path.Circle(5f),
                 Color = Color.white.SetAlpha(.05f)
             });
             result.AddObject(new BsShape("spinner-left")
             {
                 Position = new Vector2(-2.5f, 0f),
-                Path = PathString.Star(6, 5f, 3f),
+                Path = Path.Star(6, 5f, 3f),
                 Material = MaterialExt.Metal,
                 Dynamic = true,
                 Color = ColorExt.Metal
             }
             .AppendAddon(new BsJoint("spinner-left-motor")
             {
-                Type = JointType.Hinge,
+                Type = BsJoint.TypeHinge,
                 MountAnchor = new Vector2(-2.5f, 0f),
                 MotorEnabled = true,
                 MotorForce = 500f
@@ -178,21 +176,21 @@ namespace Utils.Map
             {
                 Position = new Vector2(2.5f, 0f),
                 Layer = -1,
-                Path = PathString.Circle(5f),
+                Path = Path.Circle(5f),
                 Color = Color.white.SetAlpha(.05f)
             });
             result.AddObject(new BsShape("spinner-right")
             {
                 Position = new Vector2(2.5f, 0f),
                 Rotation = 30f,
-                Path = PathString.Star(6, 5f, 3f),
+                Path = Path.Star(6, 5f, 3f),
                 Material = MaterialExt.Metal,
                 Dynamic = true,
                 Color = ColorExt.Metal
             }
             .AppendAddon(new BsJoint("spinner-right-motor")
             {
-                Type = JointType.Hinge,
+                Type = BsJoint.TypeHinge,
                 MountAnchor = new Vector2(2.5f, 0f),
                 MotorEnabled = true,
                 MotorForce = 500f
@@ -214,21 +212,21 @@ namespace Utils.Map
             result.AddObject(new BsShape("water-left-top")
             {
                 Position = new Vector2(-17f, 13.25f),
-                Path = PathString.Rectangle(5f, .5f),
+                Path = Path.Rectangle(5f, .5f),
                 Material = MaterialExt.Medkit,
                 Color = ColorExt.Water.MultiplyTint(.5f)
             });
             result.AddObject(new BsShape("water-left-left")
             {
                 Position = new Vector2(-19.25f, 11.5f),
-                Path = PathString.Rectangle(.5f, 3f),
+                Path = Path.Rectangle(.5f, 3f),
                 Material = MaterialExt.Stone,
                 Color = ColorExt.Water.MultiplyTint(.5f)
             });
             result.AddObject(new BsShape("water-left-right")
             {
                 Position = new Vector2(-14.75f, 11.5f),
-                Path = PathString.Rectangle(.5f, 3f),
+                Path = Path.Rectangle(.5f, 3f),
                 Material = MaterialExt.Stone,
                 Color = ColorExt.Water.MultiplyTint(.5f)
             });
@@ -244,21 +242,21 @@ namespace Utils.Map
             result.AddObject(new BsShape("water-right-top")
             {
                 Position = new Vector2(17f, 13.25f),
-                Path = PathString.Rectangle(5f, .5f),
+                Path = Path.Rectangle(5f, .5f),
                 Material = MaterialExt.Medkit,
                 Color = ColorExt.Water.MultiplyTint(.5f)
             });
             result.AddObject(new BsShape("water-right-left")
             {
                 Position = new Vector2(14.75f, 11.5f),
-                Path = PathString.Rectangle(.5f, 3f),
+                Path = Path.Rectangle(.5f, 3f),
                 Material = MaterialExt.Stone,
                 Color = ColorExt.Water.MultiplyTint(.5f)
             });
             result.AddObject(new BsShape("water-right-right")
             {
                 Position = new Vector2(19.25f, 11.5f),
-                Path = PathString.Rectangle(.5f, 3f),
+                Path = Path.Rectangle(.5f, 3f),
                 Material = MaterialExt.Stone,
                 Color = ColorExt.Water.MultiplyTint(.5f)
             });
@@ -274,21 +272,21 @@ namespace Utils.Map
             result.AddObject(new BsShape("lava-left-bottom")
             {
                 Position = new Vector2(-13f, -13.25f),
-                Path = PathString.Rectangle(13f, .5f),
+                Path = Path.Rectangle(13f, .5f),
                 Material = MaterialExt.Electric,
                 Color = ColorExt.Lava.MultiplyTint(.5f)
             });
             result.AddObject(new BsShape("lava-left-left")
             {
                 Position = new Vector2(-19.25f, -11.5f),
-                Path = PathString.Rectangle(.5f, 3f),
+                Path = Path.Rectangle(.5f, 3f),
                 Material = MaterialExt.Stone,
                 Color = ColorExt.Lava.MultiplyTint(.5f)
             });
             result.AddObject(new BsShape("lava-left-right")
             {
                 Position = new Vector2(-6.75f, -11.5f),
-                Path = PathString.Rectangle(.5f, 3f),
+                Path = Path.Rectangle(.5f, 3f),
                 Material = MaterialExt.Stone,
                 Color = ColorExt.Lava.MultiplyTint(.5f)
             });
@@ -304,21 +302,21 @@ namespace Utils.Map
             result.AddObject(new BsShape("lava-right-bottom")
             {
                 Position = new Vector2(13f, -13.25f),
-                Path = PathString.Rectangle(13f, .5f),
+                Path = Path.Rectangle(13f, .5f),
                 Material = MaterialExt.Electric,
                 Color = ColorExt.Lava.MultiplyTint(.5f)
             });
             result.AddObject(new BsShape("lava-right-left")
             {
                 Position = new Vector2(6.75f, -11.5f),
-                Path = PathString.Rectangle(.5f, 3f),
+                Path = Path.Rectangle(.5f, 3f),
                 Material = MaterialExt.Stone,
                 Color = ColorExt.Lava.MultiplyTint(.5f)
             });
             result.AddObject(new BsShape("lava-right-right")
             {
                 Position = new Vector2(19.25f, -11.5f),
-                Path = PathString.Rectangle(.5f, 3f),
+                Path = Path.Rectangle(.5f, 3f),
                 Material = MaterialExt.Stone,
                 Color = ColorExt.Lava.MultiplyTint(.5f)
             });
@@ -363,13 +361,13 @@ namespace Utils.Map
             {
                 Rotation = 45f,
                 Layer = -1,
-                Path = PathString.Vector(0f, 0f, 0f, 0f, 15f, 1f, 15f, 15f, 15f, 0f),
+                Path = Path.Vector(0f, 0f, 0f, 0f, 15f, 1f, 15f, 15f, 15f, 0f),
                 Color = new Color(1f, .2f, .2f, .05f)
             });
             result.AddObject(new BsShape("wall-top")
             {
                 Rotation = 45f,
-                Path = PathString.Vector(0f, 15f, 1f, 15f, 15f, 15f, 0f, 0f, 14f, 0f, 1f, 14f, 14f, 0f, 14f),
+                Path = Path.Vector(0f, 15f, 1f, 15f, 15f, 15f, 0f, 0f, 14f, 0f, 1f, 14f, 14f, 0f, 14f),
                 Material = (2f, 2f, 0f, 10f, -10f),
                 Color = new Color(1f, .2f, .2f)
             });
@@ -377,13 +375,13 @@ namespace Utils.Map
             {
                 Rotation = -45f,
                 Layer = -1,
-                Path = PathString.Vector(0f, 0f, 0f, 0f, 15f, 1f, 15f, 15f, 15f, 0f),
+                Path = Path.Vector(0f, 0f, 0f, 0f, 15f, 1f, 15f, 15f, 15f, 0f),
                 Color = new Color(.6f, 1f, .2f, .05f)
             });
             result.AddObject(new BsShape("wall-right")
             {
                 Rotation = -45f,
-                Path = PathString.Vector(0f, 15f, 1f, 15f, 15f, 15f, 0f, 0f, 14f, 0f, 1f, 14f, 14f, 0f, 14f),
+                Path = Path.Vector(0f, 15f, 1f, 15f, 15f, 15f, 0f, 0f, 14f, 0f, 1f, 14f, 14f, 0f, 14f),
                 Material = (2f, 2f, 0f, 10f, -10f),
                 Color = new Color(.6f, 1f, .2f)
             });
@@ -391,13 +389,13 @@ namespace Utils.Map
             {
                 Rotation = -135f,
                 Layer = -1,
-                Path = PathString.Vector(0f, 0f, 0f, 0f, 15f, 1f, 15f, 15f, 15f, 0f),
+                Path = Path.Vector(0f, 0f, 0f, 0f, 15f, 1f, 15f, 15f, 15f, 0f),
                 Color = new Color(.2f, 1f, 1f, .05f)
             });
             result.AddObject(new BsShape("wall-bottom")
             {
                 Rotation = -135f,
-                Path = PathString.Vector(0f, 15f, 1f, 15f, 15f, 15f, 0f, 0f, 14f, 0f, 1f, 14f, 14f, 0f, 14f),
+                Path = Path.Vector(0f, 15f, 1f, 15f, 15f, 15f, 0f, 0f, 14f, 0f, 1f, 14f, 14f, 0f, 14f),
                 Material = (2f, 2f, 0f, 10f, -10f),
                 Color = new Color(.2f, 1f, 1f)
             });
@@ -405,26 +403,26 @@ namespace Utils.Map
             {
                 Rotation = -225f,
                 Layer = -1,
-                Path = PathString.Vector(0f, 0f, 0f, 0f, 15f, 1f, 15f, 15f, 15f, 0f),
+                Path = Path.Vector(0f, 0f, 0f, 0f, 15f, 1f, 15f, 15f, 15f, 0f),
                 Color = new Color(.6f, .2f, 1f, .05f)
             });
             result.AddObject(new BsShape("wall-left")
             {
                 Rotation = -225f,
-                Path = PathString.Vector(0f, 15f, 1f, 15f, 15f, 15f, 0f, 0f, 14f, 0f, 1f, 14f, 14f, 0f, 14f),
+                Path = Path.Vector(0f, 15f, 1f, 15f, 15f, 15f, 0f, 0f, 14f, 0f, 1f, 14f, 14f, 0f, 14f),
                 Material = (2f, 2f, 0f, 10f, -10f),
                 Color = new Color(.6f, .2f, 1f)
             });
             result.AddObject(new BsShape("spinner")
             {
-                Path = PathString.Star(4, 4f, 1f),
+                Path = Path.Star(4, 4f, 1f),
                 Material = (5f, 0f, 0f, 100f, 0f),
                 Dynamic = true,
                 Color = ColorExt.Metal
             }
             .AppendAddon(new BsJoint("spinner-motor")
             {
-                Type = JointType.Hinge,
+                Type = BsJoint.TypeHinge,
                 MotorEnabled = true,
                 MotorSpeed = 50f,
                 MotorForce = 1000000f
@@ -432,14 +430,14 @@ namespace Utils.Map
             result.AddObject(new BsShape("spinner-arm-top")
             {
                 Position = new Vector2(0f, 10f),
-                Path = PathString.Ngon(3, 4f),
+                Path = Path.Ngon(3, 4f),
                 Material = MaterialExt.Metal,
                 Dynamic = true,
                 Color = ColorExt.Metal
             }
             .AppendAddon(new BsJoint("spinner-arm-top-link")
             {
-                Type = JointType.Hinge,
+                Type = BsJoint.TypeHinge,
                 MountShape = "spinner",
                 MountAnchor = new Vector2(0f, 10f),
                 MotorEnabled = true,
@@ -450,14 +448,14 @@ namespace Utils.Map
             {
                 Position = new Vector2(10f, 0f),
                 Rotation = -90f,
-                Path = PathString.Ngon(3, 4f),
+                Path = Path.Ngon(3, 4f),
                 Material = MaterialExt.Metal,
                 Dynamic = true,
                 Color = ColorExt.Metal
             }
             .AppendAddon(new BsJoint("spinner-arm-right-link")
             {
-                Type = JointType.Hinge,
+                Type = BsJoint.TypeHinge,
                 MountShape = "spinner",
                 MountAnchor = new Vector2(10f, 0f),
                 MotorEnabled = true,
@@ -468,14 +466,14 @@ namespace Utils.Map
             {
                 Position = new Vector2(0f, -10f),
                 Rotation = -180f,
-                Path = PathString.Ngon(3, 4f),
+                Path = Path.Ngon(3, 4f),
                 Material = MaterialExt.Metal,
                 Dynamic = true,
                 Color = ColorExt.Metal
             }
             .AppendAddon(new BsJoint("spinner-arm-bottom-link")
             {
-                Type = JointType.Hinge,
+                Type = BsJoint.TypeHinge,
                 MountShape = "spinner",
                 MountAnchor = new Vector2(0f, -10f),
                 MotorEnabled = true,
@@ -486,14 +484,14 @@ namespace Utils.Map
             {
                 Position = new Vector2(-10f, 0f),
                 Rotation = -270f,
-                Path = PathString.Ngon(3, 4f),
+                Path = Path.Ngon(3, 4f),
                 Material = MaterialExt.Metal,
                 Dynamic = true,
                 Color = ColorExt.Metal
             }
             .AppendAddon(new BsJoint("spinner-arm-left-link")
             {
-                Type = JointType.Hinge,
+                Type = BsJoint.TypeHinge,
                 MountShape = "spinner",
                 MountAnchor = new Vector2(-10f, 0f),
                 MotorEnabled = true,
@@ -510,7 +508,7 @@ namespace Utils.Map
             var result = new BsMap("Tossup", Author)
             {
                 PlayArea = new Rect(-20f, -10f, 40f, 20f),
-                GravityDirection = Direction.Down,
+                GravityDirection = BsMap.DirectionDown,
                 GravityStrength = 20f,
                 AirResistance = .5f
             };
@@ -525,21 +523,21 @@ namespace Utils.Map
             result.AddObject(new BsShape("wall-bottom")
             {
                 Position = new Vector2(0f, -10f),
-                Path = PathString.Polygon(-15f, 0f, -10f, 1f, 10f, 1f, 15f, 0f),
+                Path = Path.Polygon(-15f, 0f, -10f, 1f, 10f, 1f, 15f, 0f),
                 Material = MaterialExt.Stone,
                 Color = ColorExt.Stone
             });
             result.AddObject(new BsShape("wall-left")
             {
                 Position = new Vector2(-20f, 10f),
-                Path = PathString.Polygon(0f, 0f, 10f, 0f, 5f, -1f, 1f, -1f, 1f, -10f, 0f, -15f),
+                Path = Path.Polygon(0f, 0f, 10f, 0f, 5f, -1f, 1f, -1f, 1f, -10f, 0f, -15f),
                 Material = MaterialExt.Stone,
                 Color = ColorExt.Stone
             });
             result.AddObject(new BsShape("wall-right")
             {
                 Position = new Vector2(20f, 10f),
-                Path = PathString.Polygon(0f, 0f, -10f, 0f, -5f, -1f, -1f, -1f, -1f, -10f, 0f, -15f),
+                Path = Path.Polygon(0f, 0f, -10f, 0f, -5f, -1f, -1f, -1f, -1f, -10f, 0f, -15f),
                 Material = MaterialExt.Stone,
                 Color = ColorExt.Stone
             });
@@ -547,20 +545,20 @@ namespace Utils.Map
             {
                 Position = new Vector2(0f, 7f),
                 Layer = -1,
-                Path = PathString.Circle(4f),
+                Path = Path.Circle(4f),
                 Color = new Color(.2f, 1f, .2f, .05f)
             });
             result.AddObject(new BsShape("spinner-middle")
             {
                 Position = new Vector2(0f, 7f),
-                Path = PathString.Star(3, 4f, 1f),
+                Path = Path.Star(3, 4f, 1f),
                 Material = (5f, 0f, 20f, 1f, 0f),
                 Dynamic = true,
                 Color = new Color(.2f, 1f, .2f)
             }
             .AppendAddon(new BsJoint("spinner-middle-motor")
             {
-                Type = JointType.Hinge,
+                Type = BsJoint.TypeHinge,
                 MountAnchor = new Vector2(0f, 7f),
                 MotorEnabled = true,
                 MotorForce = 10000f
@@ -569,20 +567,20 @@ namespace Utils.Map
             {
                 Position = new Vector2(-17f, -7f),
                 Layer = -1,
-                Path = PathString.Circle(4f),
+                Path = Path.Circle(4f),
                 Color = new Color(1f, .2f, .2f, .05f)
             });
             result.AddObject(new BsShape("spinner-left")
             {
                 Position = new Vector2(-17f, -7f),
-                Path = PathString.Star(3, 4f, 1f),
+                Path = Path.Star(3, 4f, 1f),
                 Material = (5f, 0f, 20f, 1f, 0f),
                 Dynamic = true,
                 Color = new Color(1f, .2f, .2f)
             }
             .AppendAddon(new BsJoint("spinner-left-motor")
             {
-                Type = JointType.Hinge,
+                Type = BsJoint.TypeHinge,
                 MountAnchor = new Vector2(-17f, -7f),
                 MotorEnabled = true,
                 MotorForce = 10000f
@@ -591,20 +589,20 @@ namespace Utils.Map
             {
                 Position = new Vector2(17f, -7f),
                 Layer = -1,
-                Path = PathString.Circle(4f),
+                Path = Path.Circle(4f),
                 Color = new Color(.2f, .2f, 1f, .05f)
             });
             result.AddObject(new BsShape("spinner-right")
             {
                 Position = new Vector2(17f, -7f),
-                Path = PathString.Star(3, 4f, 1f),
+                Path = Path.Star(3, 4f, 1f),
                 Material = (5f, 0f, 20f, 1f, 0f),
                 Dynamic = true,
                 Color = new Color(.2f, .2f, 1f)
             }
             .AppendAddon(new BsJoint("spinner-right-motor")
             {
-                Type = JointType.Hinge,
+                Type = BsJoint.TypeHinge,
                 MountAnchor = new Vector2(17f, -7f),
                 MotorEnabled = true,
                 MotorForce = 10000f
@@ -643,7 +641,7 @@ namespace Utils.Map
             var result = new BsMap("Racetrack", Author)
             {
                 PlayArea = new Rect(-1250f, 0f, 2500f, 250f),
-                GravityDirection = Direction.Down,
+                GravityDirection = BsMap.DirectionDown,
                 GravityStrength = 20f,
                 AirResistance = .5f
             };
@@ -658,42 +656,42 @@ namespace Utils.Map
             result.AddObject(new BsShape("wall-bottom")
             {
                 Position = new Vector2(0f, -5f),
-                Path = PathString.Rectangle(2500f, 12f),
+                Path = Path.Rectangle(2500f, 12f),
                 Material = MaterialExt.Stone,
                 Color = ColorExt.Stone
             });
             result.AddObject(new BsShape("wall-left")
             {
                 Position = new Vector2(-1255f, 10f),
-                Path = PathString.Rectangle(12f, 42f),
+                Path = Path.Rectangle(12f, 42f),
                 Material = MaterialExt.Stone,
                 Color = ColorExt.Stone
             });
             result.AddObject(new BsShape("wall-right")
             {
                 Position = new Vector2(1255f, 10f),
-                Path = PathString.Rectangle(12f, 42f),
+                Path = Path.Rectangle(12f, 42f),
                 Material = MaterialExt.Stone,
                 Color = ColorExt.Stone
             });
             result.AddObject(new BsShape("corner-bl")
             {
                 Position = new Vector2(-1249f, 1f),
-                Path = PathString.Vector(0f, 0f, 0f, 0f, 20f, 1f, 0f, 0f, 20f, 0f),
+                Path = Path.Vector(0f, 0f, 0f, 0f, 20f, 1f, 0f, 0f, 20f, 0f),
                 Material = MaterialExt.Stone,
                 Color = ColorExt.Stone
             });
             result.AddObject(new BsShape("corner-br")
             {
                 Position = new Vector2(1249f, 1f),
-                Path = PathString.Vector(0f, 0f, 0f, 0f, 20f, 1f, 0f, 0f, -20f, 0f),
+                Path = Path.Vector(0f, 0f, 0f, 0f, 20f, 1f, 0f, 0f, -20f, 0f),
                 Material = MaterialExt.Stone,
                 Color = ColorExt.Stone
             });
             result.AddObject(new BsShape("car-body")
             {
                 Position = new Vector2(0f, 10f),
-                Path = PathString.Vector(-6f, .5f, 0f, -3f, .5f, 0f, -2.5f, 1f, 0f, -1.6f, 1f, 1f, -1.6f, .5f, -1f, .4f,
+                Path = Path.Vector(-6f, .5f, 0f, -3f, .5f, 0f, -2.5f, 1f, 0f, -1.6f, 1f, 1f, -1.6f, .5f, -1f, .4f,
                     1f, -.4f, .4f, -.4f, 1f, 0f, .4f, 1f, 1f, .4f, .5f, 1f, .4f, 1f, 1.6f, .4f, 1.6f, 1f, 0f, 2.5f, 1f,
                     0f, 3f, .5f, 0f, 6f, .5f, 0f, 3f, -1f, 0f, -3f, -1f),
                 Material = MaterialExt.Stone,
@@ -705,21 +703,21 @@ namespace Utils.Map
                 Position = new Vector2(-6f, 7f),
                 Rotation = 45f,
                 Layer = 1,
-                Path = PathString.Square(1f),
+                Path = Path.Square(1f),
                 Material = (0f, 0f, 0f, 1f, 0f),
                 Dynamic = true,
                 Color = Color.white
             }
             .AppendAddon(new BsJoint("car-wheel-1-anchor")
             {
-                Type = JointType.Slider,
+                Type = BsJoint.TypeSlider,
                 MountShape = "car-body",
                 MountAnchor = new Vector2(-6f, 0f),
                 AngleValue = 90f
             })
             .AppendAddon(new BsJoint("car-wheel-1-spring")
             {
-                Type = JointType.Spring,
+                Type = BsJoint.TypeSpring,
                 MountShape = "car-body",
                 MountAnchor = new Vector2(-6f, 0f),
                 DistanceValue = 3f,
@@ -729,14 +727,14 @@ namespace Utils.Map
             result.AddObject(new BsShape("car-wheel-1")
             {
                 Position = new Vector2(-6f, 7f),
-                Path = PathString.Circle(3f),
+                Path = Path.Circle(3f),
                 Material = (10f, 0f, 0f, 1f, 0f),
                 Dynamic = true,
                 Color = new Color(.15f, .15f, .15f)
             }
             .AppendAddon(new BsJoint("car-wheel-1-motor")
             {
-                Type = JointType.Hinge,
+                Type = BsJoint.TypeHinge,
                 MountShape = "car-wheel-1-axle",
                 MotorEnabled = true,
                 MotorForce = 2000f
@@ -746,21 +744,21 @@ namespace Utils.Map
                 Position = new Vector2(6f, 7f),
                 Rotation = 45f,
                 Layer = 1,
-                Path = PathString.Square(1f),
+                Path = Path.Square(1f),
                 Material = (0f, 0f, 0f, 1f, 0f),
                 Dynamic = true,
                 Color = Color.white
             }
             .AppendAddon(new BsJoint("car-wheel-2-anchor")
             {
-                Type = JointType.Slider,
+                Type = BsJoint.TypeSlider,
                 MountShape = "car-body",
                 MountAnchor = new Vector2(6f, 0f),
                 AngleValue = 90f
             })
             .AppendAddon(new BsJoint("car-wheel-2-spring")
             {
-                Type = JointType.Spring,
+                Type = BsJoint.TypeSpring,
                 MountShape = "car-body",
                 MountAnchor = new Vector2(6f, 0f),
                 DistanceValue = 3f,
@@ -770,14 +768,14 @@ namespace Utils.Map
             result.AddObject(new BsShape("car-wheel-2")
             {
                 Position = new Vector2(6f, 7f),
-                Path = PathString.Circle(3f),
+                Path = Path.Circle(3f),
                 Material = (10f, 0f, 0f, 1f, 0f),
                 Dynamic = true,
                 Color = new Color(.15f, .15f, .15f)
             }
             .AppendAddon(new BsJoint("car-wheel-2-motor")
             {
-                Type = JointType.Hinge,
+                Type = BsJoint.TypeHinge,
                 MountShape = "car-wheel-2-axle",
                 MotorEnabled = true,
                 MotorForce = 2000f

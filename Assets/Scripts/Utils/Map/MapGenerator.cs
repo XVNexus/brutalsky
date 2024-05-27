@@ -5,9 +5,7 @@ using Data.Map;
 using Data.Object;
 using Systems;
 using UnityEngine;
-using Utils.Constants;
 using Utils.Ext;
-using Utils.Path;
 using Random = Unity.Mathematics.Random;
 
 namespace Utils.Map
@@ -27,7 +25,7 @@ namespace Utils.Map
             {
                 PlayArea = new Rect(size * -.5f, size),
                 BackgroundColor = new Color(.2f, .2f, .2f),
-                GravityDirection = Direction.Down,
+                GravityDirection = BsMap.DirectionDown,
                 GravityStrength = 20f
             };
 
@@ -43,7 +41,7 @@ namespace Utils.Map
                 result.AddObject(new BsShape("wall-bottom")
                 {
                     Position = new Vector2(0f, size.y * -.5f + .5f),
-                    Path = PathString.Rectangle(size.x, 1f),
+                    Path = Path.Rectangle(size.x, 1f),
                     Material = MaterialExt.Stone
                 });
             }
@@ -52,7 +50,7 @@ namespace Utils.Map
                 result.AddObject(new BsShape("wall-top")
                 {
                     Position = new Vector2(0f, size.y * .5f - .5f),
-                    Path = PathString.Rectangle(size.x, 1f),
+                    Path = Path.Rectangle(size.x, 1f),
                     Material = MaterialExt.Stone
                 });
             }
@@ -61,7 +59,7 @@ namespace Utils.Map
                 result.AddObject(new BsShape("wall-left")
                 {
                     Position = new Vector2(size.x * -.5f + .5f, 0f),
-                    Path = PathString.Rectangle(1f, size.y),
+                    Path = Path.Rectangle(1f, size.y),
                     Material = MaterialExt.Stone
                 });
             }
@@ -70,7 +68,7 @@ namespace Utils.Map
                 result.AddObject(new BsShape("wall-right")
                 {
                     Position = new Vector2(size.x * .5f - .5f, 0f),
-                    Path = PathString.Rectangle(1f, size.y),
+                    Path = Path.Rectangle(1f, size.y),
                     Material = MaterialExt.Stone
                 });
             }
@@ -81,7 +79,7 @@ namespace Utils.Map
                 result.AddObject(new BsShape("corner-tl")
                 {
                     Position = new Vector2(size.x * -.5f + 1f, size.y * .5f - 1f),
-                    Path = PathString.Vector(0f, 0f, 0f, 3f, 0f, 1f, 0f, 0f, 0f, -3f),
+                    Path = Path.Vector(0f, 0f, 0f, 3f, 0f, 1f, 0f, 0f, 0f, -3f),
                     Material = MaterialExt.Stone
                 });
             }
@@ -90,7 +88,7 @@ namespace Utils.Map
                 result.AddObject(new BsShape("corner-tr")
                 {
                     Position = new Vector2(size.x * .5f - 1f, size.y * .5f - 1f),
-                    Path = PathString.Vector(0f, 0f, 0f, -3f, 0f, 1f, 0f, 0f, 0f, -3f),
+                    Path = Path.Vector(0f, 0f, 0f, -3f, 0f, 1f, 0f, 0f, 0f, -3f),
                     Material = MaterialExt.Stone
                 });
             }
@@ -99,7 +97,7 @@ namespace Utils.Map
                 result.AddObject(new BsShape("corner-bl")
                 {
                     Position = new Vector2(size.x * -.5f + 1f, size.y * -.5f + 1f),
-                    Path = PathString.Vector(0f, 0f, 0f, 3f, 0f, 1f, 0f, 0f, 0f, 3f),
+                    Path = Path.Vector(0f, 0f, 0f, 3f, 0f, 1f, 0f, 0f, 0f, 3f),
                     Material = MaterialExt.Stone
                 });
             }
@@ -108,7 +106,7 @@ namespace Utils.Map
                 result.AddObject(new BsShape("corner-br")
                 {
                     Position = new Vector2(size.x * .5f - 1f, size.y * -.5f + 1f),
-                    Path = PathString.Vector(0f, 0f, 0f, -3f, 0f, 1f, 0f, 0f, 0f, 3f),
+                    Path = Path.Vector(0f, 0f, 0f, -3f, 0f, 1f, 0f, 0f, 0f, 3f),
                     Material = MaterialExt.Stone
                 });
             }
@@ -129,7 +127,7 @@ namespace Utils.Map
                 PlayArea = new Rect(size * -.5f, size),
                 BackgroundColor = Color.HSVToRGB((1f - diffFraction) * 2f / 3f, .1f, .2f),
                 LightingColor = Color.white.SetAlpha(.75f),
-                GravityDirection = Direction.Down,
+                GravityDirection = BsMap.DirectionDown,
                 GravityStrength = 20f,
                 AirResistance = .5f
             };
@@ -145,13 +143,13 @@ namespace Utils.Map
             {
                 Position = new Vector2(spawnX, 0f),
                 Layer = -1,
-                Path = PathString.Vector(-5f, 0f, 0, 5f, 0f, 1, 5f, -3f, 0f, -3f, 1, -5f, -3f, -5f, 0f),
+                Path = Path.Vector(-5f, 0f, 0, 5f, 0f, 1, 5f, -3f, 0f, -3f, 1, -5f, -3f, -5f, 0f),
                 Color = ColorExt.Lava.MultiplyTint(.5f)
             });
             result.AddObject(new BsShape("spawn-platform")
             {
                 Position = new Vector2(spawnX, 0f),
-                Path = PathString.Polygon(-2.5f, -1f, -5f, 0f, 5f, 0f, 2.5f, -1f),
+                Path = Path.Polygon(-2.5f, -1f, -5f, 0f, 5f, 0f, 2.5f, -1f),
                 Material = MaterialExt.Metal,
                 Color = ColorExt.Lava,
                 Glow = true
@@ -160,20 +158,20 @@ namespace Utils.Map
             {
                 Position = new Vector2(spawnX, size.y * .5f),
                 Layer = -1,
-                Path = PathString.Rectangle(10f, size.y),
+                Path = Path.Rectangle(10f, size.y),
                 Color = ColorExt.Lava.SetAlpha(.1f)
             });
             result.AddObject(new BsDecal("goal-bg")
             {
                 Position = new Vector2(goalX, 0f),
-                Path = PathString.Vector(-5f, 0f, 0, 5f, 0f, 1, 5f, -3f, 0f, -3f, 1, -5f, -3f, -5f, 0f),
+                Path = Path.Vector(-5f, 0f, 0, 5f, 0f, 1, 5f, -3f, 0f, -3f, 1, -5f, -3f, -5f, 0f),
                 Layer = -1,
                 Color = ColorExt.Medicine.MultiplyTint(.5f)
             });
             result.AddObject(new BsShape("goal-platform")
             {
                 Position = new Vector2(goalX, 0f),
-                Path = PathString.Polygon(-2.5f, -1f, -5f, 0f, 5f, 0f, 2.5f, -1f),
+                Path = Path.Polygon(-2.5f, -1f, -5f, 0f, 5f, 0f, 2.5f, -1f),
                 Material = MaterialExt.Metal,
                 Color = ColorExt.Medicine,
                 Glow = true
@@ -182,7 +180,7 @@ namespace Utils.Map
             {
                 Position = new Vector2(goalX, size.y * .5f),
                 Layer = -1,
-                Path = PathString.Rectangle(10f, size.y),
+                Path = Path.Rectangle(10f, size.y),
                 Color = ColorExt.Medicine.SetAlpha(.1f)
             });
 
@@ -228,7 +226,7 @@ namespace Utils.Map
                 result.AddObject(new BsShape($"platform-{i + 1}")
                 {
                     Position = position + new Vector2(0f, .5f),
-                    Path = PathString.Rectangle(length, 1f),
+                    Path = Path.Rectangle(length, 1f),
                     Material = material,
                     Color = color
                 });
@@ -236,21 +234,21 @@ namespace Utils.Map
                 {
                     Position = position,
                     Layer = -1,
-                    Path = PathString.Polygon(0f, length * difficulty * -.5f, length * -.5f, 0f, length * .5f, 0f),
+                    Path = Path.Polygon(0f, length * difficulty * -.5f, length * -.5f, 0f, length * .5f, 0f),
                     Material = (0f, 0f, 0f, 0f, -100f),
                     Color = color.MultiplyTint(.5f)
                 });
                 result.AddObject(new BsDecal($"decal-{i + 1}")
                 {
                     Position = position,
-                    Path = PathString.Polygon(0f, length * difficulty * -.25f, length * -.4f, 0f, length * .4f, 0f),
+                    Path = Path.Polygon(0f, length * difficulty * -.25f, length * -.4f, 0f, length * .4f, 0f),
                     Color = color.MultiplyTint(.75f)
                 });
                 result.AddObject(new BsDecal($"beacon-{i + 1}")
                 {
                     Position = position + new Vector2(0f, 1f + size.y * .5f),
                     Layer = -1,
-                    Path = PathString.Rectangle(length, size.y),
+                    Path = Path.Rectangle(length, size.y),
                     Color = color.SetAlpha(.05f)
                 });
             }
@@ -278,7 +276,7 @@ namespace Utils.Map
                 PlayArea = new Rect(-15f, -15f, 30f, 30f),
                 BackgroundColor = Color.HSVToRGB(.5f, .75f, .2f),
                 LightingColor = Color.white.SetAlpha(.75f),
-                GravityDirection = Direction.Down,
+                GravityDirection = BsMap.DirectionDown,
                 GravityStrength = 20f
             };
 
@@ -292,12 +290,12 @@ namespace Utils.Map
             result.AddObject(new BsDecal("finish-bg")
             {
                 Layer = -1,
-                Path = PathString.Vector(-5f, 0f, 0, 5f, 0f, 1, 5f, -3f, 0f, -3f, 1, -5f, -3f, -5f, 0f),
+                Path = Path.Vector(-5f, 0f, 0, 5f, 0f, 1, 5f, -3f, 0f, -3f, 1, -5f, -3f, -5f, 0f),
                 Color = ColorExt.Medkit.MultiplyTint(.5f)
             });
             result.AddObject(new BsShape("finish-platform")
             {
-                Path = PathString.Polygon(-2.5f, -1f, -5f, 0f, 5f, 0f, 2.5f, -1f),
+                Path = Path.Polygon(-2.5f, -1f, -5f, 0f, 5f, 0f, 2.5f, -1f),
                 Material = MaterialExt.Metal,
                 Color = ColorExt.Medkit,
                 Glow = true
@@ -306,7 +304,7 @@ namespace Utils.Map
             {
                 Position = new Vector2(0f, 15f),
                 Layer = -1,
-                Path = PathString.Rectangle(10f, 30f),
+                Path = Path.Rectangle(10f, 30f),
                 Color = ColorExt.Medkit.SetAlpha(.1f)
             });
 

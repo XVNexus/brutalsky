@@ -4,17 +4,23 @@ using Data.Base;
 using Data.Logic;
 using Data.Map;
 using JetBrains.Annotations;
+using Lcs;
 using Systems;
 using UnityEngine;
 using Utils.Constants;
 using Utils.Ext;
-using Utils.Lcs;
 using Color = UnityEngine.Color;
 
 namespace Data
 {
     public class BsMap
     {
+        public const byte DirectionNone = 0;
+        public const byte DirectionDown = 1;
+        public const byte DirectionUp = 2;
+        public const byte DirectionLeft = 3;
+        public const byte DirectionRight = 4;
+
         public uint Id => MapSystem.GenerateId(Title, Author);
         public string Title { get; set; }
         public string Author { get; set; }
@@ -31,7 +37,7 @@ namespace Data
             get => LightingColor.a;
             set => LightingColor = new Color(LightingColor.r, LightingColor.g, LightingColor.b, value);
         }
-        public Direction GravityDirection { get; set; } = Direction.None;
+        public byte GravityDirection { get; set; } = DirectionNone;
         public float GravityStrength { get; set; }
         public float AirResistance { get; set; }
         public float PlayerHealth { get; set; } = 100f;
@@ -190,13 +196,13 @@ namespace Data
             lines.AddRange(Objects.Values.Select(obj => obj.ToLcs()));
             lines.AddRange(Nodes.Select(node => node.ToLcs()));
             lines.AddRange(Links.Values.Select(link => link.ToLcs()));
-            return new LcsDocument(1, lines, new[] { "!$#%^", "@" });
+            return new LcsDocument(1, new[] { "!$#%^", "@" }, lines.ToArray());
         }
 
         public static BsMap FromLcs(LcsDocument document)
         {
             var result = new BsMap();
-            if (document.Lines.Count == 0) throw Errors.EmptyLcsDocument();
+            if (document.Lines.Length == 0) throw Errors.EmptyLcsDocument();
             var metadata = document.Lines[0].Props;
             if (document.Lines[0].Prefix != '!') throw Errors.InvalidItem("map LCS metadata line", metadata);
             var i = 0;
@@ -205,12 +211,12 @@ namespace Data
             result.PlayArea = (Rect)metadata[i++];
             result.BackgroundColor = (Color)metadata[i++];
             result.LightingColor = (Color)metadata[i++];
-            result.GravityDirection = (Direction)metadata[i++];
+            result.GravityDirection = (byte)metadata[i++];
             result.GravityStrength = (float)metadata[i++];
             result.AirResistance = (float)metadata[i++];
             result.PlayerHealth = (float)metadata[i++];
             result.AllowDummies = (bool)metadata[i++];
-            for (var j = 1; j < document.Lines.Count; j++)
+            for (var j = 1; j < document.Lines.Length; j++)
             {
                 var line = document.Lines[j];
                 switch (line.Prefix)

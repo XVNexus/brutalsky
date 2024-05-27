@@ -3,10 +3,10 @@ using System.Linq;
 using Controllers.Base;
 using Data.Logic;
 using JetBrains.Annotations;
+using Lcs;
 using Systems;
 using UnityEngine;
 using Utils.Constants;
-using Utils.Lcs;
 
 namespace Data.Base
 {

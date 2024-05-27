@@ -141,7 +141,7 @@ namespace Controllers.Gui
             {
                 case Tags.ShapePrefix:
                     var shape = (BsShape)obj;
-                    PaintObjectPreview(painter, shape.Position, shape.Path.ToPoints(shape.Rotation),
+                    PaintObjectPreview(painter, shape.Position, shape.Path.GetPoints(shape.Rotation),
                         shape.Color * map.LightingTint);
                     break;
                 case Tags.PoolPrefix:
@@ -158,7 +158,7 @@ namespace Controllers.Gui
                     break;
                 case Tags.DecalPrefix:
                     var decal = (BsDecal)obj;
-                    PaintObjectPreview(painter, decal.Position, decal.Path.ToPoints(decal.Rotation),
+                    PaintObjectPreview(painter, decal.Position, decal.Path.GetPoints(decal.Rotation),
                         decal.Color * map.LightingTint);
                     break;
             }

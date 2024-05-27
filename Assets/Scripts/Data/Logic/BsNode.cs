@@ -1,8 +1,8 @@
 using System;
 using System.Linq;
+using Lcs;
 using UnityEngine;
 using Utils.Constants;
-using Utils.Lcs;
 using Random = UnityEngine.Random;
 
 namespace Data.Logic

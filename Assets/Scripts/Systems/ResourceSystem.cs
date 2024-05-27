@@ -6,9 +6,9 @@ using Controllers.Base;
 using Data.Addon;
 using Data.Base;
 using Data.Object;
+using Lcs;
 using UnityEngine;
 using Utils.Constants;
-using Utils.Lcs;
 using Random = Unity.Mathematics.Random;
 
 namespace Systems
@@ -36,7 +36,7 @@ namespace Systems
         public string stringExtension;
         public string binaryExtension;
         public string gzipExtension;
-        public LcsFormat saveFormat;
+        public byte saveFormat;
 
         // Local variables
         private string[] _formatExtensions;
@@ -137,18 +137,18 @@ namespace Systems
             throw Errors.NoItemFound("document file", $"{directory}/{filename}");
         }
 
-        public void SaveFile(string directory, string filename, LcsDocument document, LcsFormat? format = null)
+        public void SaveFile(string directory, string filename, LcsDocument document, byte? format = null)
         {
             switch (format ?? saveFormat)
             {
-                case LcsFormat.String:
+                case LcsDocument.FormatString:
                 {
                     var pathString = GetDataPath(directory, filename, stringExtension);
                     using var writer = new StreamWriter(pathString);
                     writer.Write(document.Stringify());
                     break;
                 }
-                case LcsFormat.Binary:
+                case LcsDocument.FormatBinary:
                 {
                     var pathGzip = GetDataPath(directory, filename, binaryExtension);
                     using var stream = new FileStream(pathGzip, FileMode.Create);
@@ -156,7 +156,7 @@ namespace Systems
                     writer.Write(document.Binify());
                     break;
                 }
-                case LcsFormat.Gzip:
+                case LcsDocument.FormatGzip:
                 {
                     var pathGzip = GetDataPath(directory, filename, gzipExtension);
                     using var stream = new FileStream(pathGzip, FileMode.Create);

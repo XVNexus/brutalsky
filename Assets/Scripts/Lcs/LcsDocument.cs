@@ -1,22 +1,40 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using Utils.Constants;
 
-namespace Utils.Lcs
+namespace Lcs
 {
     public struct LcsDocument
     {
-        public int Version { get; set; }
-        public List<LcsLine> Lines { get; set; }
-        public string[] LineLevels { get; set; }
+        public const byte FormatString = 0;
+        public const byte FormatBinary = 1;
+        public const byte FormatGzip = 2;
 
-        public LcsDocument(int version, List<LcsLine> lines, string[] lineLevels)
+        public int Version { get; }
+        public string[] LineLevels { get; }
+        public LcsLine[] Lines { get; }
+
+        public LcsDocument(int version, string[] lineLevels, params LcsLine[] lines)
         {
             Version = version;
-            Lines = lines;
             LineLevels = lineLevels;
+            Lines = lines;
+        }
+
+        public static LcsDocument Serialize<T>(T value) where T : ILcsDocument, new()
+        {
+            return value._ToLcs();
+        }
+
+        public static T Deserialize<T>(LcsDocument line) where T : ILcsDocument, new()
+        {
+            var result = new T();
+            result._FromLcs(line);
+            return result;
         }
 
         public byte[] Binify(bool useGzip = false)
@@ -32,12 +50,12 @@ namespace Utils.Lcs
             {
                 result.AddRange(line.Binify());
             }
-            return useGzip ? LcsInfo.GzipCompress(result.ToArray()) : result.ToArray();
+            return useGzip ? GzipCompress(result.ToArray()) : result.ToArray();
         }
 
         public static LcsDocument Parse(byte[] raw, bool useGzip = false)
         {
-            raw = useGzip ? LcsInfo.GzipDecompress(raw) : raw;
+            raw = useGzip ? GzipDecompress(raw) : raw;
             var lines = new List<LcsLine>();
             var version = BitConverter.ToInt32(raw[..4]);
             var lineLevels = new List<string> { "" };
@@ -77,13 +95,13 @@ namespace Utils.Lcs
                 }
                 cursor++;
             }
-            return new LcsDocument(version, lines, lineLevels.ToArray());
+            return new LcsDocument(version, lineLevels.ToArray(), lines.ToArray());
         }
 
         public string Stringify()
         {
             return Version + " " + string.Join(" ", LineLevels) + '\n' +
-                Lines.Aggregate("", (current, line) => current + line.Stringify());
+                   Lines.Aggregate("", (current, line) => current + line.Stringify());
         }
 
         public static LcsDocument Parse(string raw)
@@ -116,12 +134,26 @@ namespace Utils.Lcs
                     lineCache[lineLevel - 1].Children.Add(line);
                 }
             }
-            return new LcsDocument(version, lines, lineLevels);
+            return new LcsDocument(version, lineLevels, lines.ToArray());
         }
 
-        public override string ToString()
+        public static byte[] GzipCompress(byte[] source)
         {
-            return Lines.Aggregate("{{{\n", (current, line) => current + $"\t{line}\n") + "}}}";
+            using var memoryStream = new MemoryStream();
+            using (var gzipStream = new GZipStream(memoryStream, CompressionMode.Compress, true))
+            {
+                gzipStream.Write(source, 0, source.Length);
+            }
+            return memoryStream.ToArray();
+        }
+
+        public static byte[] GzipDecompress(byte[] source)
+        {
+            using var memoryStream = new MemoryStream(source);
+            using var gzipStream = new GZipStream(memoryStream, CompressionMode.Decompress);
+            using var decompressedStream = new MemoryStream();
+            gzipStream.CopyTo(decompressedStream);
+            return decompressedStream.ToArray();
         }
     }
 }

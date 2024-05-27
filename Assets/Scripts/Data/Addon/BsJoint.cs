@@ -5,15 +5,21 @@ using Data.Logic;
 using Data.Object;
 using UnityEngine;
 using Utils.Constants;
-using Utils.Joint;
 
 namespace Data.Addon
 {
     public class BsJoint : BsAddon
     {
+        public const byte TypeFixed = 0;
+        public const byte TypeDistance = 1;
+        public const byte TypeSpring = 2;
+        public const byte TypeHinge = 3;
+        public const byte TypeSlider = 4;
+        public const byte TypeWheel = 5;
+
         public override string Tag => Tags.JointPrefix;
 
-        public JointType Type { get; set; }
+        public byte Type { get; set; }
         public Vector2 Anchor { get; set; } = Vector2.zero;
 
         public string MountShape { get; set; } = "";
@@ -48,12 +54,12 @@ namespace Data.Addon
             // Create joint component
             AnchoredJoint2D component = Type switch
             {
-                JointType.Fixed => gameObject.AddComponent<FixedJoint2D>(),
-                JointType.Distance => gameObject.AddComponent<DistanceJoint2D>(),
-                JointType.Spring => gameObject.AddComponent<SpringJoint2D>(),
-                JointType.Hinge => gameObject.AddComponent<HingeJoint2D>(),
-                JointType.Slider => gameObject.AddComponent<SliderJoint2D>(),
-                JointType.Wheel => gameObject.AddComponent<WheelJoint2D>(),
+                TypeFixed => gameObject.AddComponent<FixedJoint2D>(),
+                TypeDistance => gameObject.AddComponent<DistanceJoint2D>(),
+                TypeSpring => gameObject.AddComponent<SpringJoint2D>(),
+                TypeHinge => gameObject.AddComponent<HingeJoint2D>(),
+                TypeSlider => gameObject.AddComponent<SliderJoint2D>(),
+                TypeWheel => gameObject.AddComponent<WheelJoint2D>(),
                 _ => throw Errors.InvalidItem("joint type", Type)
             };
 
@@ -65,20 +71,20 @@ namespace Data.Addon
             // Apply specific joint config
             switch (Type)
             {
-                case JointType.Fixed:
+                case TypeFixed:
                     var fixedJointComponent = (FixedJoint2D)component;
                     fixedJointComponent.dampingRatio = DampingRatio;
                     fixedJointComponent.frequency = DampingFrequency;
                     break;
 
-                case JointType.Distance:
+                case TypeDistance:
                     var distanceJointComponent = (DistanceJoint2D)component;
                     distanceJointComponent.distance = DistanceValue;
                     distanceJointComponent.autoConfigureDistance = DistanceAuto;
                     distanceJointComponent.maxDistanceOnly = DistanceMax;
                     break;
 
-                case JointType.Spring:
+                case TypeSpring:
                     var springJointComponent = (SpringJoint2D)component;
                     springJointComponent.distance = DistanceValue;
                     springJointComponent.autoConfigureDistance = DistanceAuto;
@@ -86,7 +92,7 @@ namespace Data.Addon
                     springJointComponent.frequency = DampingFrequency;
                     break;
 
-                case JointType.Hinge:
+                case TypeHinge:
                     var hingeJointComponent = (HingeJoint2D)component;
                     if (MotorEnabled)
                     {
@@ -106,7 +112,7 @@ namespace Data.Addon
                     }
                     break;
 
-                case JointType.Slider:
+                case TypeSlider:
                     var sliderJointComponent = (SliderJoint2D)component;
                     sliderJointComponent.angle = AngleValue;
                     sliderJointComponent.autoConfigureAngle = AngleAuto;
@@ -128,7 +134,7 @@ namespace Data.Addon
                     }
                     break;
 
-                case JointType.Wheel:
+                case TypeWheel:
                     var wheelJointComponent = (WheelJoint2D)component;
                     var wheelJointSuspension = wheelJointComponent.suspension;
                     wheelJointSuspension.dampingRatio = DampingRatio;
@@ -168,12 +174,12 @@ namespace Data.Addon
         {
             return Type switch
             {
-                JointType.Fixed => RegisterLogicFixed(),
-                JointType.Distance => RegisterLogicDistance(),
-                JointType.Spring => RegisterLogicSpring(),
-                JointType.Hinge => RegisterLogicHinge(),
-                JointType.Slider => RegisterLogicSlider(),
-                JointType.Wheel => RegisterLogicWheel(),
+                TypeFixed => RegisterLogicFixed(),
+                TypeDistance => RegisterLogicDistance(),
+                TypeSpring => RegisterLogicSpring(),
+                TypeHinge => RegisterLogicHinge(),
+                TypeSlider => RegisterLogicSlider(),
+                TypeWheel => RegisterLogicWheel(),
                 _ => throw Errors.InvalidItem("joint type", Type)
             };
         }
@@ -360,24 +366,24 @@ namespace Data.Addon
                 BreakTorque };
             switch (Type)
             {
-                case JointType.Fixed:
+                case TypeFixed:
                     result.AddRange(new object[] { DampingRatio, DampingFrequency });
                     break;
-                case JointType.Distance:
+                case TypeDistance:
                     result.AddRange(new object[] { DistanceValue, DistanceAuto, DistanceMax });
                     break;
-                case JointType.Spring:
+                case TypeSpring:
                     result.AddRange(new object[] { DistanceValue, DistanceAuto, DampingRatio, DampingFrequency });
                     break;
-                case JointType.Hinge:
+                case TypeHinge:
                     result.AddRange(new object[] { MotorEnabled, MotorSpeed, MotorForce, LimitEnabled, LimitMin,
                         LimitMax });
                     break;
-                case JointType.Slider:
+                case TypeSlider:
                     result.AddRange(new object[] { AngleValue, AngleAuto, MotorEnabled, MotorSpeed, MotorForce,
                         LimitEnabled, LimitMin, LimitMax });
                     break;
-                case JointType.Wheel:
+                case TypeWheel:
                     result.AddRange(new object[] { DampingRatio, DampingFrequency, AngleValue, AngleAuto, MotorEnabled,
                         MotorSpeed, MotorForce });
                     break;
@@ -390,7 +396,7 @@ namespace Data.Addon
         protected override void _FromLcs(object[] props)
         {
             var i = 0;
-            Type = (JointType)props[i++];
+            Type = (byte)props[i++];
             Anchor = (Vector2)props[i++];
             MountShape = (string)props[i++];
             MountAnchor = (Vector2)props[i++];
@@ -399,22 +405,22 @@ namespace Data.Addon
             BreakTorque = (float)props[i++];
             switch (Type)
             {
-                case JointType.Fixed:
+                case TypeFixed:
                     DampingRatio = (float)props[i++];
                     DampingFrequency = (float)props[i++];
                     break;
-                case JointType.Distance:
+                case TypeDistance:
                     DistanceValue = (float)props[i++];
                     DistanceAuto = (bool)props[i++];
                     DistanceMax = (bool)props[i++];
                     break;
-                case JointType.Spring:
+                case TypeSpring:
                     DistanceValue = (float)props[i++];
                     DistanceAuto = (bool)props[i++];
                     DampingRatio = (float)props[i++];
                     DampingFrequency = (float)props[i++];
                     break;
-                case JointType.Hinge:
+                case TypeHinge:
                     MotorEnabled = (bool)props[i++];
                     MotorSpeed = (float)props[i++];
                     MotorForce = (float)props[i++];
@@ -422,7 +428,7 @@ namespace Data.Addon
                     LimitMin = (float)props[i++];
                     LimitMax = (float)props[i++];
                     break;
-                case JointType.Slider:
+                case TypeSlider:
                     AngleValue = (float)props[i++];
                     AngleAuto = (bool)props[i++];
                     MotorEnabled = (bool)props[i++];
@@ -432,7 +438,7 @@ namespace Data.Addon
                     LimitMin = (float)props[i++];
                     LimitMax = (float)props[i++];
                     break;
-                case JointType.Wheel:
+                case TypeWheel:
                     DampingRatio = (float)props[i++];
                     DampingFrequency = (float)props[i++];
                     AngleValue = (float)props[i++];

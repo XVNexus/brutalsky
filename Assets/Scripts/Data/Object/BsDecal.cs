@@ -4,8 +4,9 @@ using Controllers.Base;
 using Data.Base;
 using Systems;
 using UnityEngine;
+using Utils;
 using Utils.Constants;
-using Utils.Path;
+using Utils.Ext;
 
 namespace Data.Object
 {
@@ -17,7 +18,7 @@ namespace Data.Object
         public Vector2 Position { get; set; } = Vector2.zero;
         public float Rotation { get; set; }
         public sbyte Layer { get; set; }
-        public PathString Path { get; set; }
+        public Path Path { get; set; }
         public Color Color { get; set; } = Color.white;
         public bool Glow { get; set; }
 
@@ -30,12 +31,12 @@ namespace Data.Object
             controller.Object = this;
 
             // Convert path to mesh
-            var points = Path.ToPoints(Rotation);
+            var points = Path.GetPoints(Rotation);
             var vertices = points.Select(point => (Vector3)point).ToArray();
             var mesh = new Mesh
             {
                 vertices = vertices,
-                triangles = new PathTriangulator(points).Triangulate()
+                triangles = new Triangulator(points).Triangulate()
             };
             mesh.RecalculateNormals();
             mesh.RecalculateBounds();
@@ -66,7 +67,7 @@ namespace Data.Object
             Position = (Vector2)props[i++];
             Rotation = (float)props[i++];
             Layer = (sbyte)props[i++];
-            Path = (PathString)props[i++];
+            Path = (Path)props[i++];
             Color = (Color)props[i++];
             Glow = (bool)props[i++];
         }

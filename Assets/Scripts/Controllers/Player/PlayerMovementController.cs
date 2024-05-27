@@ -6,7 +6,6 @@ using Systems;
 using UnityEngine;
 using Utils.Constants;
 using Utils.Ext;
-using Utils.Player;
 
 namespace Controllers.Player
 {
@@ -55,7 +54,7 @@ namespace Controllers.Player
             _cRigidbody2D = GetComponent<Rigidbody2D>();
 
             // Disable movement if the player is a dummy
-            Dummy = Master.Object.Type == PlayerType.Dummy;
+            Dummy = Master.Object.Type == BsPlayer.TypeDummy;
 
             // Automatically grab map settings if there is a loaded map
             if (MapSystem._.MapLoaded)
@@ -83,34 +82,34 @@ namespace Controllers.Player
             // Configure movement to fit with current map settings
             _movementScale = map.GravityDirection switch
             {
-                Direction.Down => new Vector2(movementForce, map.GravityStrength * .5f),
-                Direction.Up => new Vector2(movementForce, map.GravityStrength * .5f),
-                Direction.Left => new Vector2(map.GravityStrength * .5f, movementForce),
-                Direction.Right => new Vector2(map.GravityStrength * .5f, movementForce),
+                BsMap.DirectionDown => new Vector2(movementForce, map.GravityStrength * .5f),
+                BsMap.DirectionUp => new Vector2(movementForce, map.GravityStrength * .5f),
+                BsMap.DirectionLeft => new Vector2(map.GravityStrength * .5f, movementForce),
+                BsMap.DirectionRight => new Vector2(map.GravityStrength * .5f, movementForce),
                 _ => Vector2.one * movementForce
             };
             _jumpVector = map.GravityDirection switch
             {
-                Direction.Down => Vector2.up * jumpForce,
-                Direction.Up => Vector2.down * jumpForce,
-                Direction.Left => Vector2.right * jumpForce,
-                Direction.Right => Vector2.left * jumpForce,
+                BsMap.DirectionDown => Vector2.up * jumpForce,
+                BsMap.DirectionUp => Vector2.down * jumpForce,
+                BsMap.DirectionLeft => Vector2.right * jumpForce,
+                BsMap.DirectionRight => Vector2.left * jumpForce,
                 _ => Vector2.zero
             };
             TestGrounded = map.GravityDirection switch
             {
-                Direction.Down => (c, p) => c.y < p.y - .25f,
-                Direction.Up => (c, p) => c.y > p.y + .25f,
-                Direction.Left => (c, p) => c.x < p.x - .25f,
-                Direction.Right => (c, p) => c.x > p.x + .25f,
+                BsMap.DirectionDown => (c, p) => c.y < p.y - .25f,
+                BsMap.DirectionUp => (c, p) => c.y > p.y + .25f,
+                BsMap.DirectionLeft => (c, p) => c.x < p.x - .25f,
+                BsMap.DirectionRight => (c, p) => c.x > p.x + .25f,
                 _ => (_, _) => false
             };
             TestJumpInput = map.GravityDirection switch
             {
-                Direction.Down => m => m.y > 0f,
-                Direction.Up => m => m.y < 0f,
-                Direction.Left => m => m.x > 0f,
-                Direction.Right => m => m.x < 0f,
+                BsMap.DirectionDown => m => m.y > 0f,
+                BsMap.DirectionUp => m => m.y < 0f,
+                BsMap.DirectionLeft => m => m.x > 0f,
+                BsMap.DirectionRight => m => m.x < 0f,
                 _ => _ => false
             };
             _cRigidbody2D.drag = map.AirResistance;

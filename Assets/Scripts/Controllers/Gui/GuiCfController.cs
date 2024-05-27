@@ -4,7 +4,6 @@ using Systems;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Utils.Config;
-using Utils.Lcs;
 
 namespace Controllers.Gui
 {

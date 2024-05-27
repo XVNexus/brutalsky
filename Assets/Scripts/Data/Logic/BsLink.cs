@@ -1,4 +1,4 @@
-using Utils.Lcs;
+using Lcs;
 
 namespace Data.Logic
 {

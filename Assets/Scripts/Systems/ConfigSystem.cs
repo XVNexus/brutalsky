@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Controllers.Base;
+using Lcs;
 using Utils.Config;
-using Utils.Lcs;
 
 namespace Systems
 {
@@ -13,7 +13,7 @@ namespace Systems
 
         // Config options
         public ConfigSectionBlueprint[] blueprints;
-        public LcsFormat saveFormat;
+        public byte saveFormat;
 
         // Exposed properties
         public ConfigList List { get; private set; }

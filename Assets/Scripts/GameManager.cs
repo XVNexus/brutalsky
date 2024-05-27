@@ -8,7 +8,6 @@ using UnityEngine;
 using Utils.Config;
 using Utils.Ext;
 using Utils.Map;
-using Utils.Player;
 
 public class GameManager : BsBehavior
 {
@@ -29,8 +28,8 @@ public class GameManager : BsBehavior
     private bool _cfgEnableMazeMaps;
 
     // Local variables
-    private BsPlayer _player1 = new("Player 1") { Type = PlayerType.Local1, Color = new Color(1f, .5f, 0f) };
-    private BsPlayer _player2 = new("Player 2") { Type = PlayerType.Local2, Color = new Color(0f, .5f, 1f) };
+    private BsPlayer _player1 = new("Player 1") { Type = BsPlayer.TypeLocal1, Color = new Color(1f, .5f, 0f) };
+    private BsPlayer _player2 = new("Player 2") { Type = BsPlayer.TypeLocal2, Color = new Color(0f, .5f, 1f) };
     private Dictionary<string, BsPlayer> _livingPlayers = new();
     private bool _mapChangeActive;
 

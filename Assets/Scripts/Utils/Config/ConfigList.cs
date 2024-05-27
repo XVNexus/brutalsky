@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
+using Lcs;
 using Utils.Constants;
-using Utils.Lcs;
 
 namespace Utils.Config
 {
@@ -59,7 +59,7 @@ namespace Utils.Config
 
         public LcsDocument ToLcs()
         {
-            return new LcsDocument(1, Sections.Values.Select(section => section.ToLcs()).ToList(), new[] { "#", "$" });
+            return new LcsDocument(1, new[] { "#", "$" }, Sections.Values.Select(section => section.ToLcs()).ToArray());
         }
 
         public static ConfigList FromLcs(LcsDocument document)

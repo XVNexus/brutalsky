@@ -1,5 +1,5 @@
+using Lcs;
 using UnityEngine;
-using Utils.Lcs;
 
 namespace Data.Map
 {

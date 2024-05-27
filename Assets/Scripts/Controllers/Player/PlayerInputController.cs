@@ -1,10 +1,8 @@
-using System;
 using Controllers.Base;
 using Data.Object;
 using Systems;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using Utils.Player;
 
 namespace Controllers.Player
 {
@@ -38,14 +36,14 @@ namespace Controllers.Player
         {
             var inputSetId = Master.Object.Type switch
             {
-                PlayerType.Main => "Player Main",
-                PlayerType.Local1 => "Player Local1",
-                PlayerType.Local2 => "Player Local2",
+                BsPlayer.TypeMain => "Player Main",
+                BsPlayer.TypeLocal1 => "Player Local1",
+                BsPlayer.TypeLocal2 => "Player Local2",
                 _ => "Player Main"
             };
             _iMovement = EventSystem._.GetInputAction(inputSetId, "Movement");
             _iBoost = EventSystem._.GetInputAction(inputSetId, "Boost");
-            Dummy = Master.Object.Type == PlayerType.Dummy;
+            Dummy = Master.Object.Type == BsPlayer.TypeDummy;
         }
 
         protected override void OnLink()

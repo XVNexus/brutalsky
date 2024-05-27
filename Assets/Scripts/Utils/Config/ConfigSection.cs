@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
+using Lcs;
 using Utils.Constants;
-using Utils.Lcs;
 
 namespace Utils.Config
 {

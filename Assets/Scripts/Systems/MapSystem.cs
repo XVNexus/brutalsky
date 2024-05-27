@@ -7,12 +7,11 @@ using Data.Base;
 using Data.Logic;
 using Data.Object;
 using JetBrains.Annotations;
+using Lcs;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using Utils.Constants;
 using Utils.Ext;
-using Utils.Lcs;
-using Utils.Player;
 
 namespace Systems
 {
@@ -88,7 +87,7 @@ namespace Systems
             {
                 var index = ResourceSystem.Random.NextInt(playerList.Count);
                 var player = playerList[index];
-                SpawnPlayer(player, ActiveMap.AllowDummies || player.Type != PlayerType.Dummy);
+                SpawnPlayer(player, ActiveMap.AllowDummies || player.Type != BsPlayer.TypeDummy);
                 playerList.RemoveAt(index);
             }
         }
@@ -299,14 +298,14 @@ namespace Systems
         }
 
         // Utility functions
-        public static Vector2 GravityToVector(Direction direction, float strength)
+        public static Vector2 GravityToVector(byte direction, float strength)
         {
             return direction switch
             {
-                Direction.Down => Vector2.down,
-                Direction.Up => Vector2.up,
-                Direction.Left => Vector2.left,
-                Direction.Right => Vector2.right,
+                BsMap.DirectionDown => Vector2.down,
+                BsMap.DirectionUp => Vector2.up,
+                BsMap.DirectionLeft => Vector2.left,
+                BsMap.DirectionRight => Vector2.right,
                 _ => Vector2.zero
             } * strength;
         }
