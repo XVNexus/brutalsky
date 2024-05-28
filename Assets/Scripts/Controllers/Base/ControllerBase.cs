@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Data.Base;
 using JetBrains.Annotations;
-using Utils.Constants;
+using Utils;
 
 namespace Controllers.Base
 {

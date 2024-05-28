@@ -1,7 +1,7 @@
 using Controllers.Base;
 using Controllers.Player;
 using UnityEngine;
-using Utils.Constants;
+using Utils;
 
 namespace Controllers
 {

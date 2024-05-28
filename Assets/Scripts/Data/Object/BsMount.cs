@@ -6,7 +6,7 @@ using Data.Base;
 using Data.Logic;
 using Systems;
 using UnityEngine;
-using Utils.Constants;
+using Utils;
 
 namespace Data.Object
 {

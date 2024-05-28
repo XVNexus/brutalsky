@@ -7,7 +7,6 @@ using Lcs;
 using Systems;
 using UnityEngine;
 using Utils;
-using Utils.Constants;
 
 namespace Data.Base
 {

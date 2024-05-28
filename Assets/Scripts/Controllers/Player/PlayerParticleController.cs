@@ -5,7 +5,7 @@ using Extensions;
 using JetBrains.Annotations;
 using Systems;
 using UnityEngine;
-using Utils.Constants;
+using Utils;
 
 namespace Controllers.Player
 {
@@ -17,6 +17,7 @@ namespace Controllers.Player
 
         // Config options
         public float boostThreshold;
+        public float slideThreshold;
         public float particleMultiplier;
         public float deathParticleClamp;
 
@@ -34,7 +35,6 @@ namespace Controllers.Player
         public ParticleSystem cDeathParticleSystem;
         private ParticleSystem[] _cAllParticleSystems;
         private Rigidbody2D _cRigidbody2D;
-        private SpriteRenderer _cSpriteRenderer;
 
         // Linked modules
         [CanBeNull] private PlayerHealthController _mHealth;
@@ -46,7 +46,6 @@ namespace Controllers.Player
             EventSystem._.OnPlayerDie += OnPlayerDie;
 
             _cRigidbody2D = GetComponent<Rigidbody2D>();
-            _cSpriteRenderer = GetComponent<SpriteRenderer>();
 
             // Add all particle systems to a group for convenience
             _cAllParticleSystems = new[]
@@ -163,7 +162,8 @@ namespace Controllers.Player
 
         private void OnCollisionStay2D(Collision2D other)
         {
-            if (!other.gameObject.CompareTag(Tags.ShapeTag) || other.relativeVelocity.magnitude < 3f) return;
+            if (!other.gameObject.CompareTag(Tags.ShapeTag) || other.relativeVelocity.magnitude < slideThreshold)
+                return;
             DisplaySlideParticles(MathfExt.Atan2(
                 other.GetContact(0).point - (Vector2)transform.localPosition) * Mathf.Rad2Deg);
         }

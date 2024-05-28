@@ -1,6 +1,6 @@
+using Config;
 using Controllers.Base;
 using UnityEngine;
-using Utils.Config;
 
 namespace Systems
 {

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Config;
 using Controllers.Base;
 using Data;
 using Data.Base;
@@ -7,7 +8,6 @@ using Data.Object;
 using Extensions;
 using UnityEngine;
 using UnityEngine.Rendering;
-using Utils.Config;
 
 namespace Systems
 {

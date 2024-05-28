@@ -8,7 +8,7 @@ using Data.Base;
 using Data.Object;
 using Lcs;
 using UnityEngine;
-using Utils.Constants;
+using Utils;
 using Random = Unity.Mathematics.Random;
 
 namespace Systems

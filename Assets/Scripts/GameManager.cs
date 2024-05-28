@@ -1,13 +1,13 @@
 using System.Collections.Generic;
 using System.Linq;
+using Config;
 using Controllers.Base;
 using Data;
 using Data.Object;
 using Extensions;
+using Maps;
 using Systems;
 using UnityEngine;
-using Utils.Config;
-using Utils.Map;
 
 public class GameManager : BsBehavior
 {
@@ -66,11 +66,11 @@ public class GameManager : BsBehavior
         }
 
         // Load builtin maps
-        MapSystem._.RegisterMap(MapBuiltins.Void());
-        MapSystem._.RegisterMap(MapBuiltins.Brutalsky());
-        MapSystem._.RegisterMap(MapBuiltins.Doomring());
-        MapSystem._.RegisterMap(MapBuiltins.Tossup());
-        MapSystem._.RegisterMap(MapBuiltins.Racetrack());
+        MapSystem._.RegisterMap(new MapVoid().Generate());
+        MapSystem._.RegisterMap(new MapBrutalsky().Generate());
+        MapSystem._.RegisterMap(new MapDoomring().Generate());
+        MapSystem._.RegisterMap(new MapTossup().Generate());
+        MapSystem._.RegisterMap(new MapRacetrack().Generate());
 
         // Load custom maps
         if (_cfgEnableCustomMaps)
@@ -81,11 +81,11 @@ public class GameManager : BsBehavior
         // Generate box maps
         if (_cfgEnableBoxMaps)
         {
-            var shapes = new[] { 0b1000, 0b1011, 0b1111, 0b1100 };
+            var shapes = new byte[] { 0b1000, 0b1011, 0b1111, 0b1100 };
             var sizes = new[] { new Vector2(20f, 10f), new Vector2(40f, 20f), new Vector2(80f, 40f) };
             for (var i = 0; i < shapes.Length; i++) for (var j = 0; j < sizes.Length; j++)
             {
-                MapSystem._.RegisterMap(MapGenerator.Box($"Box {i * sizes.Length + j + 1}", shapes[i], sizes[j]));
+                MapSystem._.RegisterMap(new MapBox(i * sizes.Length + j + 1, shapes[i], sizes[j]).Generate());
             }
         }
 
@@ -94,9 +94,9 @@ public class GameManager : BsBehavior
         {
             for (var i = 1; i <= 12; i++)
             {
-                MapSystem._.RegisterMap(MapGenerator.Parkour($"Parkour {i}", i, (uint)(i * 0x69), i < 12));
+                MapSystem._.RegisterMap(new MapParkour(i, i, (uint)(i * 0x69), i < 12).Generate());
             }
-            MapSystem._.RegisterMap(MapGenerator.ParkourFinish("Parkour Finish"));
+            MapSystem._.RegisterMap(new MapParkourFinish().Generate());
         }
 
         // Generate terrain maps

@@ -3,7 +3,7 @@ using Data.Base;
 using Data.Logic;
 using Data.Object;
 using UnityEngine;
-using Utils.Constants;
+using Utils;
 
 namespace Data.Addon
 {

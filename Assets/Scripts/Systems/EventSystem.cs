@@ -1,10 +1,10 @@
 using System;
+using Config;
 using Controllers.Base;
 using Data;
 using Data.Object;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using Utils.Config;
 
 namespace Systems
 {

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
+using Config;
 using Controllers.Base;
 using Lcs;
-using Utils.Config;
 
 namespace Systems
 {
@@ -32,9 +32,9 @@ namespace Systems
                 {
                     var option = new ConfigOption(optionBlueprint.id, LcsInfo.Parse(optionBlueprint.value));
                     NameTable[(section.Id, option.Id)] = optionBlueprint.name;
-                    section.AddOption(option);
+                    section.Options.Add(option);
                 }
-                List.AddSection(section);
+                List.Sections.Add(section);
             }
         }
 
@@ -51,21 +51,21 @@ namespace Systems
         // System functions
         public void SaveFile()
         {
-            ResourceSystem._.SaveFile("Config", "Options", List.ToLcs(), saveFormat);
+            ResourceSystem._.SaveFile("Config", "Options", LcsDocument.Serialize(List), saveFormat);
             EventSystem._.EmitConfigUpdate(List);
         }
 
         public void LoadFile()
         {
-            var loadedList = ConfigList.FromLcs(ResourceSystem._.LoadFile("Config", "Options"));
+            var loadedList = LcsDocument.Deserialize<ConfigList>(ResourceSystem._.LoadFile("Config", "Options"));
             foreach (var loadedSection in loadedList.Sections.Values)
             {
-                if (!List.ContainsSection(loadedSection)) continue;
-                var section = List.GetSection(loadedSection.Id);
+                if (!List.Sections.Contains(loadedSection)) continue;
+                var section = List.Sections[loadedSection.Id];
                 foreach (var loadedOption in loadedSection.Options.Values)
                 {
-                    if (!section.ContainsOption(loadedOption)) continue;
-                    var option = section.GetOption(loadedOption.Id);
+                    if (!section.Options.Contains(loadedOption)) continue;
+                    var option = section.Options[loadedOption.Id];
                     option.Value = loadedOption.Value;
                 }
             }

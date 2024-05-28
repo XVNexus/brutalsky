@@ -8,7 +8,6 @@ using Lcs;
 using Systems;
 using UnityEngine;
 using Utils;
-using Utils.Constants;
 using Color = UnityEngine.Color;
 
 namespace Data

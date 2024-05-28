@@ -162,7 +162,7 @@ Rigidbody2D:
     serializedVersion: 2
     m_Bits: 0
   m_Interpolate: 0
-  m_SleepingMode: 1
+  m_SleepingMode: 0
   m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!114 &125284452002897716
@@ -245,6 +245,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   boostThreshold: 30
+  slideThreshold: 1
   particleMultiplier: 1
   deathParticleClamp: 3
   cTouchParticleSystem: {fileID: 799340086311092629}

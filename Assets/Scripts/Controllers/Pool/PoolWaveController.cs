@@ -3,7 +3,7 @@ using Controllers.Base;
 using Data.Object;
 using Extensions;
 using UnityEngine;
-using Utils.Pool;
+using Utils;
 
 namespace Controllers.Pool
 {
@@ -20,7 +20,7 @@ namespace Controllers.Pool
         private float _waveHeight;
         private int _wavePointCount;
         private float[] _wavePointOffsets;
-        private readonly List<PoolWave> _waves = new();
+        private readonly List<Wave> _waves = new();
 
         // External references
         public LineRenderer cLineRenderer;
@@ -80,7 +80,7 @@ namespace Controllers.Pool
         {
             // Trigger wave splash effect
             var splashPoint = transform.InverseTransformPoint(other.transform.localPosition).x * Master.Object.Size.x;
-            _waves.Add(new PoolWave(splashPoint, 50f, 2.5f, 5f));
+            _waves.Add(new Wave(splashPoint, 50f, 2.5f, 5f));
         }
 
         private void Update()

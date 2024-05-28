@@ -1,6 +1,6 @@
 using Controllers.Base;
 using Data.Object;
-using Utils.Constants;
+using Utils;
 
 namespace Controllers
 {

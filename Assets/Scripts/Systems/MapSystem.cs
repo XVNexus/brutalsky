@@ -11,7 +11,7 @@ using JetBrains.Annotations;
 using Lcs;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
-using Utils.Constants;
+using Utils;
 
 namespace Systems
 {
@@ -54,7 +54,7 @@ namespace Systems
 
         public void RegisterPlayer(BsPlayer player)
         {
-            if (player.Active) throw Errors.RegisterActivePlayer(player);
+            if (player.Active) throw Errors.RegisterActivePlayer(player.Id);
             player.Activate(gPlayerParent.transform, ActiveMap);
             ActivePlayers[player.Id] = player;
             EventSystem._.EmitPlayerRegister(player);
@@ -74,7 +74,7 @@ namespace Systems
 
         public void UnregisterPlayer(BsPlayer player)
         {
-            if (!player.Active) throw Errors.UnregisterInactivePlayer(player);
+            if (!player.Active) throw Errors.UnregisterInactivePlayer(player.Id);
             player.Deactivate();
             ActivePlayers.Remove(player.Id);
             EventSystem._.EmitPlayerUnregister(player);

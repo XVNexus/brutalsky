@@ -3,7 +3,7 @@ using Controllers.Base;
 using Data.Base;
 using Systems;
 using UnityEngine;
-using Utils.Constants;
+using Utils;
 
 namespace Data.Object
 {

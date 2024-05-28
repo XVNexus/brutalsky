@@ -5,7 +5,7 @@ using Extensions;
 using JetBrains.Annotations;
 using Systems;
 using UnityEngine;
-using Utils.Constants;
+using Utils;
 
 namespace Controllers.Player
 {

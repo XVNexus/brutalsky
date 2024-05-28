@@ -4,7 +4,6 @@ using JetBrains.Annotations;
 using Lcs;
 using UnityEngine;
 using Utils;
-using Utils.Constants;
 using Random = UnityEngine.Random;
 
 namespace Data.Logic

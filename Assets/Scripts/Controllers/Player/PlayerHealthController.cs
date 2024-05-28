@@ -4,7 +4,7 @@ using Data.Object;
 using Extensions;
 using Systems;
 using UnityEngine;
-using Utils.Constants;
+using Utils;
 
 namespace Controllers.Player
 {

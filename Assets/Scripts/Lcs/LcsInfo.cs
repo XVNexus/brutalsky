@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using UnityEngine;
-using Utils.Constants;
+using Utils;
 
 namespace Lcs
 {

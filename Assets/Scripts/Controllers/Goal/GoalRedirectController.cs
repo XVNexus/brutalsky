@@ -2,7 +2,7 @@ using System;
 using Controllers.Base;
 using Data.Object;
 using UnityEngine;
-using Utils.Constants;
+using Utils;
 
 namespace Controllers.Goal
 {
