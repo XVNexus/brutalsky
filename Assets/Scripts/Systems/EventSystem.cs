@@ -29,8 +29,8 @@ namespace Systems
         }
 
         // Event functions
-        public void EmitConfigUpdate(ConfigList cfg) => OnConfigUpdate?.Invoke(cfg);
-        public event Action<ConfigList> OnConfigUpdate;
+        public void EmitConfigUpdate(ConfigDelta cfg) => OnConfigUpdate?.Invoke(cfg);
+        public event Action<ConfigDelta> OnConfigUpdate;
 
         public void EmitPlayerRegister(BsPlayer player) => OnPlayerRegister?.Invoke(player);
         public event Action<BsPlayer> OnPlayerRegister;

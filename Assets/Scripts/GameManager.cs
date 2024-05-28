@@ -199,18 +199,17 @@ public class GameManager : BsBehavior
     }
 
     // Event functions
-    private void OnConfigUpdate(ConfigList cfg)
+    private void OnConfigUpdate(ConfigDelta cfg)
     {
-        var sec = cfg["gmmgr"];
-        _cfgStartingMap = (uint)sec["start"].Value;
-        _cfgAutoRestart = (bool)sec["arest"].Value;
-        _cfgUsePlayer1 = (bool)sec["uspl1"].Value;
-        _cfgUsePlayer2 = (bool)sec["uspl2"].Value;
-        _cfgEnableCustomMaps = (bool)sec["encst"].Value;
-        _cfgEnableBoxMaps = (bool)sec["enbox"].Value;
-        _cfgEnablePlatformerMaps = (bool)sec["enptf"].Value;
-        _cfgEnableTerrainMaps = (bool)sec["entrn"].Value;
-        _cfgEnableMazeMaps = (bool)sec["enmaz"].Value;
+        _cfgStartingMap = (uint)cfg.GetOrDefault("gmmgr", "start", _cfgStartingMap);
+        _cfgAutoRestart = (bool)cfg.GetOrDefault("gmmgr", "arest", _cfgAutoRestart);
+        _cfgUsePlayer1 = (bool)cfg.GetOrDefault("gmmgr", "uspl1", _cfgUsePlayer1);
+        _cfgUsePlayer2 = (bool)cfg.GetOrDefault("gmmgr", "uspl2", _cfgUsePlayer2);
+        _cfgEnableCustomMaps = (bool)cfg.GetOrDefault("gmmgr", "encst", _cfgEnableCustomMaps);
+        _cfgEnableBoxMaps = (bool)cfg.GetOrDefault("gmmgr", "enbox", _cfgEnableBoxMaps);
+        _cfgEnablePlatformerMaps = (bool)cfg.GetOrDefault("gmmgr", "enptf", _cfgEnablePlatformerMaps);
+        _cfgEnableTerrainMaps = (bool)cfg.GetOrDefault("gmmgr", "entrn", _cfgEnableTerrainMaps);
+        _cfgEnableMazeMaps = (bool)cfg.GetOrDefault("gmmgr", "enmaz", _cfgEnableMazeMaps);
 
         UpdatePlayerRegistration(_player1, _cfgUsePlayer1);
         UpdatePlayerRegistration(_player2, _cfgUsePlayer2);

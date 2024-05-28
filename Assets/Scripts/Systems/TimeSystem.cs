@@ -68,10 +68,9 @@ namespace Systems
         }
 
         // Event functions
-        private void OnConfigUpdate(ConfigList cfg)
+        private void OnConfigUpdate(ConfigDelta cfg)
         {
-            var sec = cfg["tmsys"];
-            _cfgMaxFps = (int)sec["mxfps"].Value;
+            _cfgMaxFps = (int)cfg.GetOrDefault("tmsys", "mxfps", _cfgMaxFps);
 
             Application.targetFrameRate = _cfgMaxFps;
         }

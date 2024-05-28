@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using Lcs;
 using Utils;
 
@@ -6,7 +7,17 @@ namespace Config
     public class ConfigOption : ILcsLine, IHasId
     {
         public string Id { get; set; } = "";
-        public object Value { get; set; } = false;
+        public object Value
+        {
+            get => _value;
+            set
+            {
+                _value = value;
+                Changed = true;
+            }
+        }
+        private object _value = false;
+        public bool Changed { get; private set; } = true;
 
         public ConfigOption(string id, object value)
         {
@@ -15,6 +26,14 @@ namespace Config
         }
 
         public ConfigOption() { }
+
+        [CanBeNull]
+        public object GetIfChanged()
+        {
+            var result = Changed ? Value : null;
+            Changed = false;
+            return result;
+        }
 
         public string Stringify()
         {
@@ -25,7 +44,11 @@ namespace Config
         {
             try
             {
-                Value = LcsInfo.Parse(raw);
+                var newValue = LcsInfo.Parse(raw);
+                if (newValue != _value)
+                {
+                    Value = newValue;
+                }
                 return true;
             }
             catch

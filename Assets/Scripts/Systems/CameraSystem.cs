@@ -133,11 +133,10 @@ namespace Systems
         }
 
         // Event functions
-        private void OnConfigUpdate(ConfigList cfg)
+        private void OnConfigUpdate(ConfigDelta cfg)
         {
-            var sec = cfg["cmsys"];
-            _cfgShakeScale = (float)sec["shake"].Value;
-            _cfgEnableBloom = (bool)sec["bloom"].Value;
+            _cfgShakeScale = (float)cfg.GetOrDefault("cmsys", "shake", _cfgShakeScale);
+            _cfgEnableBloom = (bool)cfg.GetOrDefault("cmsys", "bloom", _cfgEnableBloom);
 
             cVolume.sharedProfile.components.Find(component => component.name == "Bloom").active = _cfgEnableBloom;
         }

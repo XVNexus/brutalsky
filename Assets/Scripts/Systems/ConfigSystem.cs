@@ -52,7 +52,7 @@ namespace Systems
         public void SaveFile()
         {
             ResourceSystem._.SaveFile("Config", "Options", LcsDocument.Serialize(List), saveFormat);
-            EventSystem._.EmitConfigUpdate(List);
+            EventSystem._.EmitConfigUpdate(new ConfigDelta(List));
         }
 
         public void LoadFile()

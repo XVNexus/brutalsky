@@ -94,20 +94,28 @@ namespace Controllers.Player
             Revive();
         }
 
-        private void OnCollisionEnter2D(Collision2D other) => OnCollision(other);
+        private void OnCollisionEnter2D(Collision2D other)
+        {
+            if (!Alive) return;
 
-        private void OnCollisionStay2D(Collision2D other) => OnCollision(other);
+            OnCollision(other.gameObject.CompareTag(Tags.PlayerTag)
+                ? _lastSpeed + other.gameObject.GetComponent<PlayerHealthController>()._lastSpeed
+                : other.TotalNormalImpulse());
+        }
 
-        private void OnCollision(Collision2D other)
+        private void OnCollisionStay2D(Collision2D other)
         {
             if (!Alive) return;
 
             // Get collision info
-            var impactForce = other.TotalNormalImpulse() * (other.gameObject.CompareTag(Tags.PlayerTag) ? 2f : 1f);
+            OnCollision(other.TotalNormalImpulse());
+        }
+
+        private void OnCollision(float impactForce)
+        {
+            // Apply damage to player
             if (impactForce < 25f) return;
             var impactSpeed = _lastSpeed;
-
-            // Apply damage to player
             var damageApplied = CalculateDamage(impactForce);
             var damageMultiplier = Mathf.Min(1f / (impactSpeed * .2f), 1f);
             Hurt(damageApplied * damageMultiplier);
