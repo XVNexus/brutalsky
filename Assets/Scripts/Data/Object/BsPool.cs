@@ -29,9 +29,9 @@ namespace Data.Object
             }
         }
 
-        public BsPool(string id = "") : base(id) { }
+        public BsPool(string id = "", params string[] relatives) : base(id, relatives) { }
 
-        protected override BsBehavior _Init(GameObject gameObject, BsMap map)
+        protected override BsBehavior _Init(GameObject gameObject, BsObject[] relatedObjects)
         {
             // Link object to controller
             var controller = gameObject.GetComponent<PoolController>();

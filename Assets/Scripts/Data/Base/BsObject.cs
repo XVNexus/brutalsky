@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Controllers.Base;
@@ -15,9 +16,8 @@ namespace Data.Base
         public abstract GameObject Prefab { get; }
         public abstract string Tag { get; }
         public string Id { get; set; }
-        public string ParentTag { get; set; }
-        public string ParentId { get; set; }
-        public List<BsAddon> Addons { get; } = new();
+        public string[] Relatives { get; set; } = Array.Empty<string>();
+        public IdList<BsAddon> Addons { get; } = new();
 
         public Vector2 Position { get; set; } = Vector2.zero;
         public float Rotation { get; set; }
@@ -27,21 +27,18 @@ namespace Data.Base
         [CanBeNull] public BsBehavior InstanceController { get; private set; }
         public bool Active { get; private set; }
 
-        protected BsObject(string id, string parentTag, string parentId)
+        protected BsObject(string id, params string[] relatives)
         {
             Id = id;
-            ParentTag = parentTag;
-            ParentId = parentId;
+            Relatives = relatives;
         }
 
         protected BsObject(string id)
         {
             Id = id;
-            ParentTag = "";
-            ParentId = "";
         }
 
-        protected abstract BsBehavior _Init(GameObject gameObject, BsMap map);
+        protected abstract BsBehavior _Init(GameObject gameObject, BsObject[] relatedObjects);
 
         [CanBeNull]
         protected virtual BsNode _RegisterLogic()
@@ -64,7 +61,7 @@ namespace Data.Base
                 objectNode.Tag = Tag;
                 result.Add(objectNode);
             }
-            foreach (var addon in Addons)
+            foreach (var addon in Addons.Values)
             {
                 var addonNode = addon.RegisterLogic();
                 if (addonNode == null) continue;
@@ -74,24 +71,23 @@ namespace Data.Base
             return result;
         }
 
-        public void Activate(Transform rootGameObject, BsMap map)
+        public void Activate(Transform parent, BsObject[] relatedObjects,
+            Dictionary<string, BsObject[]> addonRelatedObjects)
         {
-            var parent = ParentId.Length == 0 ? rootGameObject
-                : map.GetObject<BsObject>(ParentId).InstanceObject.transform;
             if (!parent) throw Errors.ParentObjectUnbuilt();
             InstanceObject = UnityEngine.Object.Instantiate(Prefab, parent);
-            InstanceController = _Init(InstanceObject, map);
+            InstanceController = _Init(InstanceObject, relatedObjects);
             Active = true;
-            foreach (var addon in Addons)
+            foreach (var addon in Addons.Values)
             {
-                addon.Activate(InstanceObject, this, map);
+                addon.Activate(InstanceObject, this, addonRelatedObjects[addon.Id]);
             }
         }
 
         public void Deactivate()
         {
             UnityEngine.Object.Destroy(InstanceObject);
-            foreach (var addon in Addons)
+            foreach (var addon in Addons.Values)
             {
                 addon.Deactivate();
             }

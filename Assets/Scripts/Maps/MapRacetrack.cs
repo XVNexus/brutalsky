@@ -84,18 +84,16 @@ namespace Maps
                 Dynamic = true,
                 Color = Color.white
             }
-            .AppendAddon(new BsJoint("car-wheel-1-anchor")
+            .AppendAddon(new BsJoint("car-wheel-1-anchor", "car-body")
             {
                 Type = BsJoint.TypeSlider,
-                MountShape = "car-body",
-                MountAnchor = new Vector2(-6f, 0f),
+                OtherAnchor = new Vector2(-6f, 0f),
                 AngleValue = 90f
             })
-            .AppendAddon(new BsJoint("car-wheel-1-spring")
+            .AppendAddon(new BsJoint("car-wheel-1-spring", "car-body")
             {
                 Type = BsJoint.TypeSpring,
-                MountShape = "car-body",
-                MountAnchor = new Vector2(-6f, 0f),
+                OtherAnchor = new Vector2(-6f, 0f),
                 DistanceValue = 3f,
                 DampingRatio = .3f,
                 DampingFrequency = 15f
@@ -108,10 +106,9 @@ namespace Maps
                 Dynamic = true,
                 Color = new Color(.15f, .15f, .15f)
             }
-            .AppendAddon(new BsJoint("car-wheel-1-motor")
+            .AppendAddon(new BsJoint("car-wheel-1-motor", "car-wheel-1-axle")
             {
                 Type = BsJoint.TypeHinge,
-                MountShape = "car-wheel-1-axle",
                 MotorEnabled = true,
                 MotorForce = 2000f
             }));
@@ -125,18 +122,16 @@ namespace Maps
                 Dynamic = true,
                 Color = Color.white
             }
-            .AppendAddon(new BsJoint("car-wheel-2-anchor")
+            .AppendAddon(new BsJoint("car-wheel-2-anchor", "car-body")
             {
                 Type = BsJoint.TypeSlider,
-                MountShape = "car-body",
-                MountAnchor = new Vector2(6f, 0f),
+                OtherAnchor = new Vector2(6f, 0f),
                 AngleValue = 90f
             })
-            .AppendAddon(new BsJoint("car-wheel-2-spring")
+            .AppendAddon(new BsJoint("car-wheel-2-spring", "car-body")
             {
                 Type = BsJoint.TypeSpring,
-                MountShape = "car-body",
-                MountAnchor = new Vector2(6f, 0f),
+                OtherAnchor = new Vector2(6f, 0f),
                 DistanceValue = 3f,
                 DampingRatio = .3f,
                 DampingFrequency = 15f
@@ -149,23 +144,18 @@ namespace Maps
                 Dynamic = true,
                 Color = new Color(.15f, .15f, .15f)
             }
-            .AppendAddon(new BsJoint("car-wheel-2-motor")
+            .AppendAddon(new BsJoint("car-wheel-2-motor", "car-wheel-2-axle")
             {
                 Type = BsJoint.TypeHinge,
-                MountShape = "car-wheel-2-axle",
                 MotorEnabled = true,
                 MotorForce = 2000f
             }));
-            result.Objects.Add(new BsMount("car-seat-1")
+            result.Objects.Add(new BsMount("car-seat-1", "car-body")
             {
-                ParentTag = Tags.ShapePrefix,
-                ParentId = "car-body",
                 Position = new Vector2(1f, 1f)
             });
-            result.Objects.Add(new BsMount("car-seat-2")
+            result.Objects.Add(new BsMount("car-seat-2", "car-body")
             {
-                ParentTag = Tags.ShapePrefix,
-                ParentId = "car-body",
                 Position = new Vector2(-1f, 1f)
             });
 

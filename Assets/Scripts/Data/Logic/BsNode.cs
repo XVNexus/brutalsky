@@ -169,22 +169,44 @@ namespace Data.Logic
             };
         }
 
-        public static BsNode Clock(string id, int interval)
+        public static BsNode Clock(string id, float interval, bool precise)
         {
             var state = false;
+            var timer = 0f;
             var counter = 0;
-            return new BsNode("fclk", id, interval)
+            return new BsNode("fclk", id, interval, precise)
             {
-                Init = () => (Array.Empty<float>(), new float[1]),
-                Update = _ =>
+                Init = () =>
                 {
-                    if (counter++ >= interval)
+                    if (precise)
                     {
-                        state = !state;
+                        timer = Time.timeSinceLevelLoad;
+                    }
+                    else
+                    {
                         counter = 0;
                     }
-                    return new[] { ToLogic(state) };
-                }
+                    return (Array.Empty<float>(), new float[1]);
+                },
+                Update = precise
+                    ? _ =>
+                    {
+                        if (Time.timeSinceLevelLoad - timer >= interval)
+                        {
+                            state = !state;
+                            timer += interval;
+                        }
+                        return new[] { ToLogic(state) };
+                    }
+                    : _ =>
+                    {
+                        if (counter++ >= interval)
+                        {
+                            state = !state;
+                            counter = 0;
+                        }
+                        return new[] { ToLogic(state) };
+                    }
             };
         }
 

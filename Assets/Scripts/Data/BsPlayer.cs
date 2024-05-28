@@ -26,7 +26,7 @@ namespace Data
 
         public BsPlayer(string id = "") : base(id) { }
 
-        protected override BsBehavior _Init(GameObject gameObject, BsMap map)
+        protected override BsBehavior _Init(GameObject gameObject, BsObject[] relatedObjects)
         {
             // Link object to controller
             var controller = gameObject.GetComponent<PlayerController>();

@@ -1,6 +1,7 @@
 using System;
 using Controllers.Base;
 using Data.Object;
+using Systems;
 using UnityEngine;
 using Utils;
 
@@ -31,6 +32,7 @@ namespace Controllers.Goal
             if (!other.CompareTag(Tags.PlayerTag) || _redirecting) return;
             cParticleSystem.transform.position = other.transform.position;
             cParticleSystem.Play();
+            MapSystem._.SetPlayerFrozen(other.gameObject, true);
             _redirecting = true;
             GameManager._.StartRound(Master.Object.Redirect);
         }

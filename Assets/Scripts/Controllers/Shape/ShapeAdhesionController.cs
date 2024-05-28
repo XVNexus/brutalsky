@@ -29,7 +29,7 @@ namespace Controllers.Shape
             var playerRigidbody = other.rigidbody;
             var playerDirection = -playerRigidbody.velocity.normalized;
             var adhesionForce = Master.Object.Adhesion * playerDirection;
-            playerRigidbody.position += playerDirection * .025f;
+            playerRigidbody.position += playerDirection * .1f;
             playerRigidbody.AddForce(adhesionForce, ForceMode2D.Impulse);
         }
 

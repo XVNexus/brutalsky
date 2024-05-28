@@ -26,16 +26,6 @@ namespace Data
         public Rect PlayArea { get; set; } = new(-10f, -10f, 20f, 20f);
         public Color BackgroundColor { get; set; } = Color.white.MultiplyTint(.25f);
         public Color LightingColor = Color.white.SetAlpha(.8f);
-        public Color LightingTint
-        {
-            get => LightingColor.MergeAlpha();
-            set => LightingColor = new Color(value.r, value.g, value.b, LightingColor.a);
-        }
-        public float LightingIntensity
-        {
-            get => LightingColor.a;
-            set => LightingColor = new Color(LightingColor.r, LightingColor.g, LightingColor.b, value);
-        }
         public byte GravityDirection { get; set; } = DirectionNone;
         public float GravityStrength { get; set; }
         public float AirResistance { get; set; }
@@ -74,11 +64,6 @@ namespace Data
             {
                 spawn.Reset();
             }
-        }
-
-        public T GetObject<T>(string id) where T : BsObject
-        {
-            return Objects.Contains(id) ? (T)Objects[id] : throw Errors.NoItemFound("object", id);
         }
     }
 }

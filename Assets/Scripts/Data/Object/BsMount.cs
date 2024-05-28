@@ -17,9 +17,9 @@ namespace Data.Object
 
         public Vector2 EjectionForce { get; set; } = Vector2.zero;
 
-        public BsMount(string id = "") : base(id) { }
+        public BsMount(string id = "", params string[] relatives) : base(id, relatives) { }
 
-        protected override BsBehavior _Init(GameObject gameObject, BsMap map)
+        protected override BsBehavior _Init(GameObject gameObject, BsObject[] relatedObjects)
         {
             // Link object to controller
             var controller = gameObject.GetComponent<MountController>();

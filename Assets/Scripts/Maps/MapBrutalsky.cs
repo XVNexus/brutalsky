@@ -149,7 +149,7 @@ namespace Maps
             .AppendAddon(new BsJoint("spinner-left-motor")
             {
                 Type = BsJoint.TypeHinge,
-                MountAnchor = new Vector2(-2.5f, 0f),
+                OtherAnchor = new Vector2(-2.5f, 0f),
                 MotorEnabled = true,
                 MotorForce = 500f
             }));
@@ -172,7 +172,7 @@ namespace Maps
             .AppendAddon(new BsJoint("spinner-right-motor")
             {
                 Type = BsJoint.TypeHinge,
-                MountAnchor = new Vector2(2.5f, 0f),
+                OtherAnchor = new Vector2(2.5f, 0f),
                 MotorEnabled = true,
                 MotorForce = 500f
             }));

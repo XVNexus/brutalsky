@@ -30,9 +30,9 @@ namespace Data.Object
             }
         }
 
-        public BsSensor(string id = "") : base(id) { }
+        public BsSensor(string id = "", params string[] relatives) : base(id, relatives) { }
 
-        protected override BsBehavior _Init(GameObject gameObject, BsMap map)
+        protected override BsBehavior _Init(GameObject gameObject, BsObject[] relatedObjects)
         {
             // Link object to controller
             var controller = gameObject.GetComponent<SensorController>();

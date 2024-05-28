@@ -68,7 +68,7 @@ namespace Maps
             .AppendAddon(new BsJoint("spinner-left-motor")
             {
                 Type = BsJoint.TypeHinge,
-                MountAnchor = new Vector2(-17f, -7f),
+                OtherAnchor = new Vector2(-17f, -7f),
                 MotorEnabled = true,
                 MotorForce = 10000f
             }));
@@ -90,7 +90,7 @@ namespace Maps
             .AppendAddon(new BsJoint("spinner-middle-motor")
             {
                 Type = BsJoint.TypeHinge,
-                MountAnchor = new Vector2(0f, 7f),
+                OtherAnchor = new Vector2(0f, 7f),
                 MotorEnabled = true,
                 MotorForce = 10000f
             }));
@@ -112,7 +112,7 @@ namespace Maps
             .AppendAddon(new BsJoint("spinner-right-motor")
             {
                 Type = BsJoint.TypeHinge,
-                MountAnchor = new Vector2(17f, -7f),
+                OtherAnchor = new Vector2(17f, -7f),
                 MotorEnabled = true,
                 MotorForce = 10000f
             }));
@@ -124,7 +124,7 @@ namespace Maps
             result.Nodes.Add(BsNode.Sin("speed-scale"));
             result.Nodes.Add(BsNode.ConstantFloat("speed-max", 1000f));
             result.Nodes.Add(BsNode.Multiply("speed-output", 2));
-            result.Nodes.Add(BsNode.Clock("spinner-timer", 50));
+            result.Nodes.Add(BsNode.Clock("spinner-timer", 1f, true));
             result.Nodes.Add(BsNode.Monostable("spinner-switcher"));
             result.Nodes.Add(BsNode.RandomInt("spinner-selector", 0, 2));
             result.Nodes.Add(BsNode.Demultiplexer("spinner-controller", 3));

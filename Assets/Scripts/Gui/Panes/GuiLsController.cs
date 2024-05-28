@@ -140,8 +140,7 @@ namespace Gui.Panes
             {
                 case Tags.ShapePrefix:
                     var shape = (BsShape)obj;
-                    PaintObjectPreview(painter, shape.Position, shape.Path.GetPoints(shape.Rotation),
-                        shape.Color * map.LightingTint);
+                    PaintObjectPreview(painter, shape.Position, shape.Path.GetPoints(shape.Rotation), shape.Color);
                     break;
                 case Tags.PoolPrefix:
                     var pool = (BsPool)obj;
@@ -153,12 +152,11 @@ namespace Gui.Panes
                         MathfExt.RotateVector(new Vector2(pool.Size.x * .5f, pool.Size.y * .5f), rotation),
                         MathfExt.RotateVector(new Vector2(-pool.Size.x * .5f, pool.Size.y * .5f), rotation)
                     };
-                    PaintObjectPreview(painter, pool.Position, points, pool.Color * map.LightingTint);
+                    PaintObjectPreview(painter, pool.Position, points, pool.Color);
                     break;
                 case Tags.DecalPrefix:
                     var decal = (BsDecal)obj;
-                    PaintObjectPreview(painter, decal.Position, decal.Path.GetPoints(decal.Rotation),
-                        decal.Color * map.LightingTint);
+                    PaintObjectPreview(painter, decal.Position, decal.Path.GetPoints(decal.Rotation), decal.Color);
                     break;
             }
 

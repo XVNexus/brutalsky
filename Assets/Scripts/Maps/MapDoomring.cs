@@ -103,11 +103,10 @@ namespace Maps
                 Dynamic = true,
                 Color = ColorExt.Metal
             }
-            .AppendAddon(new BsJoint("spinner-arm-top-link")
+            .AppendAddon(new BsJoint("spinner-arm-top-link", "spinner")
             {
                 Type = BsJoint.TypeHinge,
-                MountShape = "spinner",
-                MountAnchor = new Vector2(0f, 10f),
+                OtherAnchor = new Vector2(0f, 10f),
                 MotorEnabled = true,
                 MotorSpeed = -1000f,
                 MotorForce = 100f
@@ -121,11 +120,10 @@ namespace Maps
                 Dynamic = true,
                 Color = ColorExt.Metal
             }
-            .AppendAddon(new BsJoint("spinner-arm-right-link")
+            .AppendAddon(new BsJoint("spinner-arm-right-link", "spinner")
             {
                 Type = BsJoint.TypeHinge,
-                MountShape = "spinner",
-                MountAnchor = new Vector2(10f, 0f),
+                OtherAnchor = new Vector2(10f, 0f),
                 MotorEnabled = true,
                 MotorSpeed = -1000f,
                 MotorForce = 100f
@@ -139,11 +137,10 @@ namespace Maps
                 Dynamic = true,
                 Color = ColorExt.Metal
             }
-            .AppendAddon(new BsJoint("spinner-arm-bottom-link")
+            .AppendAddon(new BsJoint("spinner-arm-bottom-link", "spinner")
             {
                 Type = BsJoint.TypeHinge,
-                MountShape = "spinner",
-                MountAnchor = new Vector2(0f, -10f),
+                OtherAnchor = new Vector2(0f, -10f),
                 MotorEnabled = true,
                 MotorSpeed = -1000f,
                 MotorForce = 100f
@@ -157,11 +154,10 @@ namespace Maps
                 Dynamic = true,
                 Color = ColorExt.Metal
             }
-            .AppendAddon(new BsJoint("spinner-arm-left-link")
+            .AppendAddon(new BsJoint("spinner-arm-left-link", "spinner")
             {
                 Type = BsJoint.TypeHinge,
-                MountShape = "spinner",
-                MountAnchor = new Vector2(-10f, 0f),
+                OtherAnchor = new Vector2(-10f, 0f),
                 MotorEnabled = true,
                 MotorSpeed = -1000f,
                 MotorForce = 100f

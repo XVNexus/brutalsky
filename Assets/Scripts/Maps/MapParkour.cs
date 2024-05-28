@@ -101,12 +101,17 @@ namespace Maps
             var placements = new List<Rect>();
             while (cursor < limit)
             {
-                var spacing = MathfExt.BellPoint(rand.NextFloat(-1f, 1f), Difficulty * 5f, Difficulty * 2f);
-                var length = MathfExt.BellPoint(rand.NextFloat(-1f, 1f), 26f - Difficulty * 2f, 13f - Difficulty);
+                var spacing = rand.NextFloat(Difficulty * 5f, Difficulty * 2f, 2f);
+                var length = rand.NextFloat(26f - Difficulty * 2f, 13f - Difficulty, 2f);
                 if (cursor + spacing + length >= limit) break;
-                var ice = rand.NextFloat(1f / Mathf.Pow(diffFraction, 2f)) < 1f;
-                placements.Add(new Rect(cursor + spacing, rand.NextFloat(size.y * -.25f, size.y * .25f),
-                    length, ice ? 1f : 0f));
+                var ice = rand.NextFloat() < Mathf.Pow(diffFraction, 1.5f);
+                placements.Add(new Rect
+                (
+                    cursor + spacing,
+                    rand.NextFloat(0f, size.y * .2f, 1.5f),
+                    length,
+                    ice ? 1f : 0f
+                ));
                 cursor += spacing + length;
             }
             var averageSpacing = 0f;
@@ -130,8 +135,8 @@ namespace Maps
             for (var i = 0; i < placements.Count; i++)
             {
                 var rect = placements[i];
-                var position = MathfExt.Round(rect.center);
-                var length = Mathf.Round(rect.width / 2f) * 2f;
+                var position = MathfExt.Round(rect.center + new Vector2(0f, -1f));
+                var length = Mathf.Round(rect.width * .5f) * 2f;
                 var material = Mathf.Approximately(rect.height, 1f) ? MaterialExt.Ice : MaterialExt.Stone;
                 var color = Mathf.Approximately(rect.height, 1f) ? ColorExt.Ice : ColorExt.Stone;
                 result.Objects.Add(new BsShape($"platform-{i + 1}")
@@ -160,7 +165,7 @@ namespace Maps
                     Position = position + new Vector2(0f, 1f + size.y * .5f),
                     Layer = -1,
                     Path = Path.Rectangle(length, size.y),
-                    Color = color.SetAlpha(.05f)
+                    Color = color.SetAlpha(.02f)
                 });
             }
 

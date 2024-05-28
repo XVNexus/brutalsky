@@ -55,7 +55,7 @@ namespace Systems
         public void RegisterPlayer(BsPlayer player)
         {
             if (player.Active) throw Errors.RegisterActivePlayer(player.Id);
-            player.Activate(gPlayerParent.transform, ActiveMap);
+            player.Activate(gPlayerParent.transform, Array.Empty<BsObject>(), new Dictionary<string, BsObject[]>());
             ActivePlayers[player.Id] = player;
             EventSystem._.EmitPlayerRegister(player);
             if (MapLoaded)
@@ -229,8 +229,8 @@ namespace Systems
                 };
                 gBackgroundOob.transform.localScale = new Vector2(backgroundField, backgroundField);
             }
-            cLight2D.color = map.LightingTint;
-            cLight2D.intensity = map.LightingIntensity;
+            cLight2D.color = map.LightingColor.StripAlpha();
+            cLight2D.intensity = map.LightingColor.a;
             Physics2D.gravity = GravityToVector(map.GravityDirection, map.GravityStrength);
 
             // Create all objects
@@ -282,7 +282,18 @@ namespace Systems
         public void CreateObject(BsObject obj)
         {
             if (obj.Active) return;
-            obj.Activate(gMapParent.transform, ActiveMap);
+            var parentTransform = obj.Relatives.Length == 0
+                ? gMapParent.transform
+                : ActiveMap.Objects[obj.Relatives[0]].InstanceObject.transform;
+            var relatedObjects = obj.Relatives.Length > 1
+                ? obj.Relatives[1..].Select(id => ActiveMap.Objects[id]).ToArray()
+                : Array.Empty<BsObject>();
+            var addonRelatedObjects = new Dictionary<string, BsObject[]>();
+            foreach (var addon in obj.Addons.Values)
+            {
+                addonRelatedObjects[addon.Id] = addon.Relatives.Select(id => ActiveMap.Objects[id]).ToArray();
+            }
+            obj.Activate(parentTransform, relatedObjects, addonRelatedObjects);
         }
 
         public void DeleteObject(BsObject obj)

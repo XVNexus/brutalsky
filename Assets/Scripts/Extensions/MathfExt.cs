@@ -48,12 +48,7 @@ namespace Extensions
 
         public static float PowSign(float f, float p)
         {
-            return Mathf.Abs(Mathf.Pow(f, p)) * Mathf.Sin(f);
-        }
-
-        public static float BellPoint(float t, float center, float variance, float power = 2f)
-        {
-            return PowSign(t, power) * variance + center;
+            return Mathf.Pow(Mathf.Abs(f), p) * Mathf.Sign(f);
         }
 
         // Vector tools

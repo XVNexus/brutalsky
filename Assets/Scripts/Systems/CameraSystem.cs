@@ -34,6 +34,7 @@ namespace Systems
         public Vector2 ViewPosition { get; private set; } = new(0f, 0f);
         public float ViewSize { get; private set; } = 10f;
         public Dictionary<string, Transform> FollowTargets { get; } = new();
+        public Vector2 LastFollowTarget { get; private set; } = Vector2.zero;
 
         // Local variables
         private Vector2 _shoveOffset;
@@ -43,7 +44,7 @@ namespace Systems
         private bool _enableFollow;
         private bool _hasFollowTargets;
         private Rect _followRect;
-        private int _followSmooth;
+        private int _smoothFollowCooldown;
         private int _lastFollowTargetCount;
         private Vector2 _lastFollowPosition;
         private float _lastCameraAspect;
@@ -95,15 +96,23 @@ namespace Systems
             _hasFollowTargets = true;
         }
 
-        public void StopFollowing(BsObject obj)
+        public void StopFollowing(BsObject obj, bool keepMomentum = false)
         {
-            StopFollowing(obj.Id);
+            StopFollowing(obj.Id, keepMomentum);
         }
 
-        public void StopFollowing(string id)
+        public void StopFollowing(string id, bool keepMomentum = false)
         {
+            if (!FollowTargets.TryGetValue(id, out var followTarget)) return;
+            if (FollowTargets.Count == 1)
+            {
+                _hasFollowTargets = false;
+                if (keepMomentum)
+                {
+                    LastFollowTarget = followTarget.localPosition;
+                }
+            }
             FollowTargets.Remove(id);
-            _hasFollowTargets = FollowTargets.Count > 0;
         }
 
         public void ClearFollowing()
@@ -160,12 +169,12 @@ namespace Systems
 
         private void OnPlayerDie(BsMap map, BsPlayer player)
         {
-            StopFollowing(player);
+            StopFollowing(player, true);
         }
 
         private void OnMapBuild(BsMap map)
         {
-            _followSmooth = 5;
+            _smoothFollowCooldown = 5;
         }
 
         private void FixedUpdate()
@@ -192,9 +201,10 @@ namespace Systems
             _cCamera.orthographicSize = ViewSize;
 
             // Focus on follow targets
-            if (!_enableFollow || !_hasFollowTargets) return;
-            var followPositions = FollowTargets.Values.Select(transform =>
-                MathfExt.Clamp(transform.position, BaseRect)).ToArray();
+            if (!_enableFollow) return;
+            var followPositions = _hasFollowTargets
+                ? FollowTargets.Values.Select(transform => MathfExt.Clamp(transform.position, BaseRect)).ToArray()
+                : new[] { MathfExt.Clamp(LastFollowTarget, BaseRect) };
             var min = followPositions[0];
             var max = followPositions[0];
             for (var i = 1; i < FollowTargets.Count; i++)
@@ -215,14 +225,14 @@ namespace Systems
             _lastFollowTargetCount = followTargetCount;
             var targetRect = new Rect(followPosition + lookAhead, Vector2.zero).Resize(MathfExt.Min(Vector2.one *
                 Mathf.Max((max - min).magnitude * followScale, followMinSize), BaseRect.size));
-            if (_followSmooth == 0)
+            if (_smoothFollowCooldown == 0)
             {
                 SetViewRectSmooth(targetRect, followSpeed.x * Time.fixedDeltaTime, followSpeed.y * Time.fixedDeltaTime);
             }
             else
             {
                 SetViewRect(targetRect);
-                _followSmooth--;
+                _smoothFollowCooldown--;
             }
         }
 

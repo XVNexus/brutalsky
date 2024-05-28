@@ -36,9 +36,9 @@ namespace Data.Object
             }
         }
 
-        public BsShape(string id = "") : base(id) { }
+        public BsShape(string id = "", params string[] relatives) : base(id, relatives) { }
 
-        protected override BsBehavior _Init(GameObject gameObject, BsMap map)
+        protected override BsBehavior _Init(GameObject gameObject, BsObject[] relatedObjects)
         {
             // Link object to controller
             var controller = gameObject.GetComponent<ShapeController>();
@@ -80,7 +80,7 @@ namespace Data.Object
                 rigidbody.bodyType = RigidbodyType2D.Dynamic;
                 polygonCollider.density = Density;
             }
-            if (ParentTag == Tags.ShapePrefix && ParentId.Length > 0)
+            if (Relatives.Length > 0)
             {
                 rigidbody.bodyType = RigidbodyType2D.Kinematic;
             }

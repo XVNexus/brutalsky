@@ -19,11 +19,9 @@ namespace Data.Addon
         public override string Tag => Tags.JointPrefix;
 
         public byte Type { get; set; }
-        public Vector2 Anchor { get; set; } = Vector2.zero;
-
-        public string MountShape { get; set; } = "";
-        public Vector2 MountAnchor { get; set; } = Vector2.zero;
-        public bool MountCollision { get; set; } // Universal
+        public Vector2 SelfAnchor { get; set; } = Vector2.zero;
+        public Vector2 OtherAnchor { get; set; } = Vector2.zero;
+        public bool OtherCollision { get; set; } // Universal
 
         public float BreakForce { get; set; } = float.PositiveInfinity; // Universal
         public float BreakTorque { get; set; } = float.PositiveInfinity; // Universal
@@ -46,9 +44,9 @@ namespace Data.Addon
         public float LimitMin { get; set; } // Hinge, Slider
         public float LimitMax { get; set; } // Hinge, Slider
 
-        public BsJoint(string id = "") : base(id) { }
+        public BsJoint(string id = "", params string[] relatives) : base(id, relatives) { }
 
-        protected override Component _Init(GameObject gameObject, BsObject parentObject, BsMap map)
+        protected override Component _Init(GameObject gameObject, BsObject parentObject, BsObject[] relatedObjects)
         {
             // Create joint component
             AnchoredJoint2D component = Type switch
@@ -63,7 +61,7 @@ namespace Data.Addon
             };
 
             // Apply universal joint config
-            component.anchor = Anchor;
+            component.anchor = SelfAnchor;
             component.breakForce = BreakForce;
             component.breakTorque = BreakTorque;
 
@@ -156,15 +154,15 @@ namespace Data.Addon
 
             // Set up connected rigidbody
             component.autoConfigureConnectedAnchor = false;
-            if (MountShape.Length > 0)
+            if (relatedObjects.Length > 0)
             {
-                component.enableCollision = MountCollision;
-                var mountShape = map.GetObject<BsShape>(MountShape);
+                component.enableCollision = OtherCollision;
+                var mountShape = (BsShape)relatedObjects[0];
                 if (!mountShape.InstanceObject) throw Errors.ParentObjectUnbuilt();
                 component.connectedBody = mountShape.InstanceObject.GetComponent<Rigidbody2D>();
-                component.connectedAnchor = MountAnchor;
+                component.connectedAnchor = OtherAnchor;
             }
-            component.connectedAnchor = MountAnchor;
+            component.connectedAnchor = OtherAnchor;
 
             return component;
         }
@@ -190,7 +188,7 @@ namespace Data.Addon
             {
                 Init = () =>
                 (
-                    new[] { BsNode.ToLogic(MountCollision), BreakForce, BreakTorque, DampingRatio, DampingFrequency },
+                    new[] { BsNode.ToLogic(OtherCollision), BreakForce, BreakTorque, DampingRatio, DampingFrequency },
                     Array.Empty<float>()
                 ),
                 Update = inputs =>
@@ -214,7 +212,7 @@ namespace Data.Addon
                 (
                     new[]
                     {
-                        BsNode.ToLogic(MountCollision), BreakForce, BreakTorque, DistanceValue,
+                        BsNode.ToLogic(OtherCollision), BreakForce, BreakTorque, DistanceValue,
                         BsNode.ToLogic(DistanceAuto), BsNode.ToLogic(DistanceMax)
                     },
                     Array.Empty<float>()
@@ -241,7 +239,7 @@ namespace Data.Addon
                 (
                     new[]
                     {
-                        BsNode.ToLogic(MountCollision), BreakForce, BreakTorque, DistanceValue,
+                        BsNode.ToLogic(OtherCollision), BreakForce, BreakTorque, DistanceValue,
                         BsNode.ToLogic(DistanceAuto), DampingRatio, DampingFrequency
                     },
                     Array.Empty<float>()
@@ -269,7 +267,7 @@ namespace Data.Addon
                 (
                     new[]
                     {
-                        BsNode.ToLogic(MountCollision), BreakForce, BreakTorque, BsNode.ToLogic(MotorEnabled),
+                        BsNode.ToLogic(OtherCollision), BreakForce, BreakTorque, BsNode.ToLogic(MotorEnabled),
                         MotorSpeed, MotorForce, BsNode.ToLogic(LimitEnabled), LimitMin, LimitMax
                     },
                     Array.Empty<float>()
@@ -309,7 +307,7 @@ namespace Data.Addon
                 (
                     new[]
                     {
-                        BsNode.ToLogic(MountCollision), BreakForce, BreakTorque, AngleValue, BsNode.ToLogic(AngleAuto),
+                        BsNode.ToLogic(OtherCollision), BreakForce, BreakTorque, AngleValue, BsNode.ToLogic(AngleAuto),
                         BsNode.ToLogic(MotorEnabled), MotorSpeed, MotorForce, BsNode.ToLogic(LimitEnabled), LimitMin,
                         LimitMax
                     },
@@ -352,7 +350,7 @@ namespace Data.Addon
                 (
                     new[]
                     {
-                        BsNode.ToLogic(MountCollision), BreakForce, BreakTorque, DampingRatio, DampingFrequency,
+                        BsNode.ToLogic(OtherCollision), BreakForce, BreakTorque, DampingRatio, DampingFrequency,
                         AngleValue, BsNode.ToLogic(MotorEnabled), MotorSpeed, MotorForce
                     },
                     Array.Empty<float>()
