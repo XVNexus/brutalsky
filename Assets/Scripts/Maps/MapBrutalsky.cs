@@ -1,7 +1,4 @@
 using Data;
-using Data.Addon;
-using Data.Logic;
-using Data.Map;
 using Data.Object;
 using Extensions;
 using UnityEngine;
@@ -145,14 +142,14 @@ namespace Maps
                 Material = MaterialExt.Metal,
                 Dynamic = true,
                 Color = ColorExt.Metal
-            }
-            .AppendAddon(new BsJoint("spinner-left-motor")
+            });
+            result.Objects.Add(new BsJoint("spinner-left-motor", "spinner-left")
             {
                 Type = BsJoint.TypeHinge,
                 OtherAnchor = new Vector2(-2.5f, 0f),
                 MotorEnabled = true,
                 MotorForce = 500f
-            }));
+            });
             result.Objects.Add(new BsDecal("spinner-right-bg")
             {
                 Position = new Vector2(2.5f, 0f),
@@ -168,14 +165,14 @@ namespace Maps
                 Material = MaterialExt.Metal,
                 Dynamic = true,
                 Color = ColorExt.Metal
-            }
-            .AppendAddon(new BsJoint("spinner-right-motor")
+            });
+            result.Objects.Add(new BsJoint("spinner-right-motor", "spinner-right")
             {
                 Type = BsJoint.TypeHinge,
                 OtherAnchor = new Vector2(2.5f, 0f),
                 MotorEnabled = true,
                 MotorForce = 500f
-            }));
+            });
             result.Objects.Add(new BsSensor("spinner-sensor")
             {
                 Position = new Vector2(0f, 5f),
@@ -301,24 +298,6 @@ namespace Maps
                 Material = MaterialExt.Stone,
                 Color = ColorExt.Lava.MultiplyTint(.5f)
             });
-
-            // Add logic
-            result.Nodes.Add(BsNode.ConstantFloat("speed-idle", 50f));
-            result.Nodes.Add(BsNode.ConstantFloat("speed-active", 5000f));
-            result.Nodes.Add(BsNode.Multiplexer("speed-selector", 2));
-            result.Nodes.Add(BsNode.ConstantFloat("direction-positive", 1f));
-            result.Nodes.Add(BsNode.ConstantFloat("direction-negative", -1f));
-            result.Nodes.Add(BsNode.Multiply("motor-left-controller", 2));
-            result.Nodes.Add(BsNode.Multiply("motor-right-controller", 2));
-            result.Links.Add(new BsLink("spinner-sensor", 0, "speed-selector", 0));
-            result.Links.Add(new BsLink("speed-idle", 0, "speed-selector", 1));
-            result.Links.Add(new BsLink("speed-active", 0, "speed-selector", 2));
-            result.Links.Add(new BsLink("speed-selector", 0, "motor-left-controller", 0));
-            result.Links.Add(new BsLink("speed-selector", 0, "motor-right-controller", 0));
-            result.Links.Add(new BsLink("direction-positive", 0, "motor-left-controller", 1));
-            result.Links.Add(new BsLink("direction-negative", 0, "motor-right-controller", 1));
-            result.Links.Add(new BsLink("motor-left-controller", 0, "spinner-left-motor", 4));
-            result.Links.Add(new BsLink("motor-right-controller", 0, "spinner-right-motor", 4));
 
             return result;
         }

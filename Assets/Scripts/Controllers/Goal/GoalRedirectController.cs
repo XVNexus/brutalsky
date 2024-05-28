@@ -1,4 +1,3 @@
-using System;
 using Controllers.Base;
 using Data.Object;
 using Systems;
@@ -32,7 +31,14 @@ namespace Controllers.Goal
             if (!other.CompareTag(Tags.PlayerTag) || _redirecting) return;
             cParticleSystem.transform.position = other.transform.position;
             cParticleSystem.Play();
-            MapSystem._.SetPlayerFrozen(other.gameObject, true);
+            MapSystem._.SetPlayerFrozen(other.gameObject, true, true);
+            other.gameObject.LeanScale(Vector3.zero,
+                GameManager._.transitionTime * .6f)
+                .setEaseOutCubic()
+                .setOnComplete(() =>
+                {
+                    other.transform.localScale = Vector3.one;
+                });
             _redirecting = true;
             GameManager._.StartRound(Master.Object.Redirect);
         }

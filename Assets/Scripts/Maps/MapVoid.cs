@@ -1,5 +1,4 @@
 using Data;
-using Data.Map;
 using UnityEngine;
 
 namespace Maps

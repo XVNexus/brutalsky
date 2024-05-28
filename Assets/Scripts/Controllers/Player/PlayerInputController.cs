@@ -1,6 +1,5 @@
 using Controllers.Base;
 using Data;
-using Data.Object;
 using Systems;
 using UnityEngine;
 using UnityEngine.InputSystem;

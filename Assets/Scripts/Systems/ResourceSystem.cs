@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using Controllers.Base;
 using Data;
-using Data.Addon;
 using Data.Base;
 using Data.Object;
 using Lcs;
@@ -44,12 +43,13 @@ namespace Systems
 
         // External references
         public GameObject pPlayer;
+        public GameObject pGoal;
+        public GameObject pDecal;
         public GameObject pShape;
+        public GameObject pJoint;
         public GameObject pPool;
         public GameObject pSensor;
         public GameObject pMount;
-        public GameObject pGoal;
-        public GameObject pDecal;
         public Material aLitMaterial;
         public Material aUnlitMaterial;
 
@@ -65,22 +65,14 @@ namespace Systems
             return tag switch
             {
                 Tags.PlayerPrefix => new BsPlayer(),
+                Tags.GoalPrefix => new BsGoal(),
+                Tags.DecalPrefix => new BsDecal(),
                 Tags.ShapePrefix => new BsShape(),
+                Tags.JointPrefix => new BsJoint(),
                 Tags.PoolPrefix => new BsPool(),
                 Tags.SensorPrefix => new BsSensor(),
                 Tags.MountPrefix => new BsMount(),
-                Tags.GoalPrefix => new BsGoal(),
-                Tags.DecalPrefix => new BsDecal(),
                 _ => throw Errors.InvalidItem("object tag", tag)
-            };
-        }
-
-        public static BsAddon GetTemplateAddon(string tag)
-        {
-            return tag switch
-            {
-                Tags.JointPrefix => new BsJoint(),
-                _ => throw Errors.InvalidItem("addon tag", tag)
             };
         }
 

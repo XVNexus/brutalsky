@@ -1,9 +1,6 @@
-using System;
 using Controllers;
 using Controllers.Base;
-using Controllers.Mount;
 using Data.Base;
-using Data.Logic;
 using Systems;
 using UnityEngine;
 using Utils;
@@ -29,17 +26,6 @@ namespace Data.Object
             gameObject.transform.localPosition = Position;
 
             return controller;
-        }
-
-        protected override BsNode _RegisterLogic()
-        {
-            var grabController = ((MountController)InstanceController).GetSub<MountGrabController>("grab");
-            return new BsNode(Tags.MountPrefix, Id)
-            {
-                Init = () => (Array.Empty<float>(), new float[3]),
-                Update = _ => new[] { BsNode.ToLogic(grabController.Active),
-                    grabController.Input.x, grabController.Input.y }
-            };
         }
     }
 }

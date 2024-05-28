@@ -1054,12 +1054,13 @@ MonoBehaviour:
   gzipExtension: lcz
   saveFormat: 2
   pPlayer: {fileID: 333419446728189740, guid: 375f78b96aebf21d19b4d456bb0d980e, type: 3}
+  pGoal: {fileID: 333419446728189740, guid: 36b23f01981ecce708363278d9b1d7f6, type: 3}
+  pDecal: {fileID: 3486895176260509872, guid: bd06742ca96a33587b0a2bbf2639c64f, type: 3}
   pShape: {fileID: 3486895176260509872, guid: 8015059a29a18574584e3375fa2053cc, type: 3}
+  pJoint: {fileID: 1211423270707303950, guid: d5cb907efed92954a8a4736eb8ac2d5d, type: 3}
   pPool: {fileID: 916318484910277029, guid: 03ad247d5d92f3916986acd6db4520cb, type: 3}
   pSensor: {fileID: 333419446728189740, guid: 6298eb93ba06640d9a7b525de23fc92d, type: 3}
   pMount: {fileID: 333419446728189740, guid: 9174c08f56d9ad1f6a579504c6b020c3, type: 3}
-  pGoal: {fileID: 333419446728189740, guid: 36b23f01981ecce708363278d9b1d7f6, type: 3}
-  pDecal: {fileID: 3486895176260509872, guid: bd06742ca96a33587b0a2bbf2639c64f, type: 3}
   aLitMaterial: {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   aUnlitMaterial: {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
 --- !u!114 &581734024
@@ -1074,6 +1075,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d69867b827df4193b3040d4e03c4d9dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  transitionTime: 1
   loadingColor: {r: 0.15, g: 0.15, b: 0.15, a: 1}
 --- !u!114 &581734025
 MonoBehaviour:

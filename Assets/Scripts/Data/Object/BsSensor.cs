@@ -1,9 +1,6 @@
-using System;
 using Controllers;
 using Controllers.Base;
-using Controllers.Sensor;
 using Data.Base;
-using Data.Logic;
 using Systems;
 using UnityEngine;
 using Utils;
@@ -43,16 +40,6 @@ namespace Data.Object
             gameObject.transform.localScale = Size;
 
             return controller;
-        }
-
-        protected override BsNode _RegisterLogic()
-        {
-            var triggerController = ((SensorController)InstanceController).GetSub<SensorTriggerController>("trigger");
-            return new BsNode(Tags.MountPrefix, Id)
-            {
-                Init = () => (Array.Empty<float>(), new float[1]),
-                Update = _ => new[] { BsNode.ToLogic(triggerController.Triggered) }
-            };
         }
     }
 }

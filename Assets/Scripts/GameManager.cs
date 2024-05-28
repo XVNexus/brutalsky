@@ -3,7 +3,6 @@ using System.Linq;
 using Config;
 using Controllers.Base;
 using Data;
-using Data.Object;
 using Extensions;
 using Maps;
 using Systems;
@@ -16,6 +15,7 @@ public class GameManager : BsBehavior
     private void Awake() => _ = this;
 
     // Config options
+    public float transitionTime;
     public Color loadingColor;
     private uint _cfgStartingMap;
     private bool _cfgAutoRestart;
@@ -114,12 +114,14 @@ public class GameManager : BsBehavior
 
     public bool StartRound(uint mapId)
     {
-        return mapId != (MapSystem._.ActiveMap?.Id ?? 0) ? ChangeMap(mapId, true, 1.5f) : RestartRound();
+        return mapId != (MapSystem._.ActiveMap?.Id ?? 0)
+            ? ChangeMap(mapId, true, transitionTime * 1.5f)
+            : RestartRound();
     }
 
     public bool RestartRound()
     {
-        return ChangeMap(0, false, 1f);
+        return ChangeMap(0, false, transitionTime);
     }
 
     public void UpdatePlayerRegistration(BsPlayer player, bool registered)

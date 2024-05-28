@@ -1,6 +1,4 @@
 using Data;
-using Data.Addon;
-using Data.Map;
 using Data.Object;
 using Extensions;
 using UnityEngine;
@@ -87,14 +85,14 @@ namespace Maps
                 Material = (5f, 0f, 0f, 100f, 0f),
                 Dynamic = true,
                 Color = ColorExt.Metal
-            }
-            .AppendAddon(new BsJoint("spinner-motor")
+            });
+            result.Objects.Add(new BsJoint("spinner-motor", "spinner")
             {
                 Type = BsJoint.TypeHinge,
                 MotorEnabled = true,
                 MotorSpeed = 50f,
                 MotorForce = 1000000f
-            }));
+            });
             result.Objects.Add(new BsShape("spinner-arm-top")
             {
                 Position = new Vector2(0f, 10f),
@@ -102,15 +100,15 @@ namespace Maps
                 Material = MaterialExt.Metal,
                 Dynamic = true,
                 Color = ColorExt.Metal
-            }
-            .AppendAddon(new BsJoint("spinner-arm-top-link", "spinner")
+            });
+            result.Objects.Add(new BsJoint("spinner-arm-top-link", "spinner-arm-top", "spinner")
             {
                 Type = BsJoint.TypeHinge,
                 OtherAnchor = new Vector2(0f, 10f),
                 MotorEnabled = true,
                 MotorSpeed = -1000f,
                 MotorForce = 100f
-            }));
+            });
             result.Objects.Add(new BsShape("spinner-arm-right")
             {
                 Position = new Vector2(10f, 0f),
@@ -119,15 +117,15 @@ namespace Maps
                 Material = MaterialExt.Metal,
                 Dynamic = true,
                 Color = ColorExt.Metal
-            }
-            .AppendAddon(new BsJoint("spinner-arm-right-link", "spinner")
+            });
+            result.Objects.Add(new BsJoint("spinner-arm-right-link", "spinner-arm-right", "spinner")
             {
                 Type = BsJoint.TypeHinge,
                 OtherAnchor = new Vector2(10f, 0f),
                 MotorEnabled = true,
                 MotorSpeed = -1000f,
                 MotorForce = 100f
-            }));
+            });
             result.Objects.Add(new BsShape("spinner-arm-bottom")
             {
                 Position = new Vector2(0f, -10f),
@@ -136,15 +134,15 @@ namespace Maps
                 Material = MaterialExt.Metal,
                 Dynamic = true,
                 Color = ColorExt.Metal
-            }
-            .AppendAddon(new BsJoint("spinner-arm-bottom-link", "spinner")
+            });
+            result.Objects.Add(new BsJoint("spinner-arm-bottom-link", "spinner-arm-bottom", "spinner")
             {
                 Type = BsJoint.TypeHinge,
                 OtherAnchor = new Vector2(0f, -10f),
                 MotorEnabled = true,
                 MotorSpeed = -1000f,
                 MotorForce = 100f
-            }));
+            });
             result.Objects.Add(new BsShape("spinner-arm-left")
             {
                 Position = new Vector2(-10f, 0f),
@@ -153,15 +151,15 @@ namespace Maps
                 Material = MaterialExt.Metal,
                 Dynamic = true,
                 Color = ColorExt.Metal
-            }
-            .AppendAddon(new BsJoint("spinner-arm-left-link", "spinner")
+            });
+            result.Objects.Add(new BsJoint("spinner-arm-left-link", "spinner-arm-left", "spinner")
             {
                 Type = BsJoint.TypeHinge,
                 OtherAnchor = new Vector2(-10f, 0f),
                 MotorEnabled = true,
                 MotorSpeed = -1000f,
                 MotorForce = 100f
-            }));
+            });
 
             return result;
         }

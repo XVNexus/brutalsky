@@ -1,6 +1,5 @@
 using Controllers.Base;
 using Data;
-using Data.Object;
 using Extensions;
 using JetBrains.Annotations;
 using Systems;

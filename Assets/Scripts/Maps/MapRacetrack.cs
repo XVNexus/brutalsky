@@ -1,7 +1,4 @@
 using Data;
-using Data.Addon;
-using Data.Logic;
-using Data.Map;
 using Data.Object;
 using Extensions;
 using UnityEngine;
@@ -83,21 +80,21 @@ namespace Maps
                 Material = (0f, 0f, 0f, 1f, 0f),
                 Dynamic = true,
                 Color = Color.white
-            }
-            .AppendAddon(new BsJoint("car-wheel-1-anchor", "car-body")
+            });
+            result.Objects.Add(new BsJoint("car-wheel-1-anchor", "car-wheel-1-axle", "car-body")
             {
                 Type = BsJoint.TypeSlider,
                 OtherAnchor = new Vector2(-6f, 0f),
                 AngleValue = 90f
-            })
-            .AppendAddon(new BsJoint("car-wheel-1-spring", "car-body")
+            });
+            result.Objects.Add(new BsJoint("car-wheel-1-spring", "car-wheel-1-axle", "car-body")
             {
                 Type = BsJoint.TypeSpring,
                 OtherAnchor = new Vector2(-6f, 0f),
                 DistanceValue = 3f,
                 DampingRatio = .3f,
                 DampingFrequency = 15f
-            }));
+            });
             result.Objects.Add(new BsShape("car-wheel-1")
             {
                 Position = new Vector2(-6f, 7f),
@@ -105,13 +102,13 @@ namespace Maps
                 Material = (10f, 0f, 0f, 1f, 0f),
                 Dynamic = true,
                 Color = new Color(.15f, .15f, .15f)
-            }
-            .AppendAddon(new BsJoint("car-wheel-1-motor", "car-wheel-1-axle")
+            });
+            result.Objects.Add(new BsJoint("car-wheel-1-motor", "car-wheel-1", "car-wheel-1-axle")
             {
                 Type = BsJoint.TypeHinge,
                 MotorEnabled = true,
                 MotorForce = 2000f
-            }));
+            });
             result.Objects.Add(new BsShape("car-wheel-2-axle")
             {
                 Position = new Vector2(6f, 7f),
@@ -121,21 +118,21 @@ namespace Maps
                 Material = (0f, 0f, 0f, 1f, 0f),
                 Dynamic = true,
                 Color = Color.white
-            }
-            .AppendAddon(new BsJoint("car-wheel-2-anchor", "car-body")
+            });
+            result.Objects.Add(new BsJoint("car-wheel-2-anchor", "car-wheel-2-axle", "car-body")
             {
                 Type = BsJoint.TypeSlider,
                 OtherAnchor = new Vector2(6f, 0f),
                 AngleValue = 90f
-            })
-            .AppendAddon(new BsJoint("car-wheel-2-spring", "car-body")
+            });
+            result.Objects.Add(new BsJoint("car-wheel-2-spring", "car-wheel-2-axle", "car-body")
             {
                 Type = BsJoint.TypeSpring,
                 OtherAnchor = new Vector2(6f, 0f),
                 DistanceValue = 3f,
                 DampingRatio = .3f,
                 DampingFrequency = 15f
-            }));
+            });
             result.Objects.Add(new BsShape("car-wheel-2")
             {
                 Position = new Vector2(6f, 7f),
@@ -143,13 +140,13 @@ namespace Maps
                 Material = (10f, 0f, 0f, 1f, 0f),
                 Dynamic = true,
                 Color = new Color(.15f, .15f, .15f)
-            }
-            .AppendAddon(new BsJoint("car-wheel-2-motor", "car-wheel-2-axle")
+            });
+            result.Objects.Add(new BsJoint("car-wheel-2-motor", "car-wheel-2", "car-wheel-2-axle")
             {
                 Type = BsJoint.TypeHinge,
                 MotorEnabled = true,
                 MotorForce = 2000f
-            }));
+            });
             result.Objects.Add(new BsMount("car-seat-1", "car-body")
             {
                 Position = new Vector2(1f, 1f)
@@ -158,14 +155,6 @@ namespace Maps
             {
                 Position = new Vector2(-1f, 1f)
             });
-
-            // Add logic
-            result.Nodes.Add(BsNode.ConstantFloat("wheel-speed", 15000f));
-            result.Nodes.Add(BsNode.Multiply("wheel-output", 2));
-            result.Links.Add(new BsLink("car-seat-1", 1, "wheel-output", 0));
-            result.Links.Add(new BsLink("wheel-speed", 0, "wheel-output", 1));
-            result.Links.Add(new BsLink("wheel-output", 0, "car-wheel-1-motor", 4));
-            result.Links.Add(new BsLink("wheel-output", 0, "car-wheel-2-motor", 4));
 
             return result;
         }

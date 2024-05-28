@@ -1,10 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Data.Base;
-using Data.Logic;
-using Data.Map;
 using Extensions;
-using Lcs;
 using Systems;
 using UnityEngine;
 using Utils;
@@ -34,8 +31,6 @@ namespace Data
 
         public List<BsSpawn> Spawns { get; } = new();
         public IdList<BsObject> Objects { get; } = new();
-        public List<BsNode> Nodes { get; } = new();
-        public List<BsLink> Links { get; } = new();
 
         public BsMap(string title = "Untitled Map", string author = "Anonymous Marble")
         {

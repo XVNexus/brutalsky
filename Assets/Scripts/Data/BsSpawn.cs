@@ -1,7 +1,6 @@
-using Lcs;
 using UnityEngine;
 
-namespace Data.Map
+namespace Data
 {
     public class BsSpawn
     {

@@ -1,7 +1,4 @@
 using Data;
-using Data.Addon;
-using Data.Logic;
-using Data.Map;
 using Data.Object;
 using Extensions;
 using UnityEngine;
@@ -64,14 +61,14 @@ namespace Maps
                 Material = (5f, 0f, 20f, 1f, 0f),
                 Dynamic = true,
                 Color = new Color(1f, .2f, .2f)
-            }
-            .AppendAddon(new BsJoint("spinner-left-motor")
+            });
+            result.Objects.Add(new BsJoint("spinner-left-motor", "spinner-left")
             {
                 Type = BsJoint.TypeHinge,
                 OtherAnchor = new Vector2(-17f, -7f),
                 MotorEnabled = true,
                 MotorForce = 10000f
-            }));
+            });
             result.Objects.Add(new BsDecal("spinner-middle-bg")
             {
                 Position = new Vector2(0f, 7f),
@@ -86,14 +83,14 @@ namespace Maps
                 Material = (5f, 0f, 20f, 1f, 0f),
                 Dynamic = true,
                 Color = new Color(.2f, 1f, .2f)
-            }
-            .AppendAddon(new BsJoint("spinner-middle-motor")
+            });
+            result.Objects.Add(new BsJoint("spinner-middle-motor", "spinner-middle")
             {
                 Type = BsJoint.TypeHinge,
                 OtherAnchor = new Vector2(0f, 7f),
                 MotorEnabled = true,
                 MotorForce = 10000f
-            }));
+            });
             result.Objects.Add(new BsDecal("spinner-right-bg")
             {
                 Position = new Vector2(17f, -7f),
@@ -108,38 +105,14 @@ namespace Maps
                 Material = (5f, 0f, 20f, 1f, 0f),
                 Dynamic = true,
                 Color = new Color(.2f, .2f, 1f)
-            }
-            .AppendAddon(new BsJoint("spinner-right-motor")
+            });
+            result.Objects.Add(new BsJoint("spinner-right-motor", "spinner-right")
             {
                 Type = BsJoint.TypeHinge,
                 OtherAnchor = new Vector2(17f, -7f),
                 MotorEnabled = true,
                 MotorForce = 10000f
-            }));
-
-            // Add logic
-            result.Nodes.Add(BsNode.Timer("map-timer"));
-            result.Nodes.Add(BsNode.ConstantFloat("pi", Mathf.PI));
-            result.Nodes.Add(BsNode.Multiply("timer-scaled", 2));
-            result.Nodes.Add(BsNode.Sin("speed-scale"));
-            result.Nodes.Add(BsNode.ConstantFloat("speed-max", 1000f));
-            result.Nodes.Add(BsNode.Multiply("speed-output", 2));
-            result.Nodes.Add(BsNode.Clock("spinner-timer", 1f, true));
-            result.Nodes.Add(BsNode.Monostable("spinner-switcher"));
-            result.Nodes.Add(BsNode.RandomInt("spinner-selector", 0, 2));
-            result.Nodes.Add(BsNode.Demultiplexer("spinner-controller", 3));
-            result.Links.Add(new BsLink("map-timer", 0, "timer-scaled", 0));
-            result.Links.Add(new BsLink("pi", 0, "timer-scaled", 1));
-            result.Links.Add(new BsLink("timer-scaled", 0, "speed-scale", 0));
-            result.Links.Add(new BsLink("speed-scale", 0, "speed-output", 0));
-            result.Links.Add(new BsLink("speed-max", 0, "speed-output", 1));
-            result.Links.Add(new BsLink("speed-output", 0, "spinner-controller", 1));
-            result.Links.Add(new BsLink("spinner-timer", 0, "spinner-switcher", 0));
-            result.Links.Add(new BsLink("spinner-switcher", 0, "spinner-selector", 0));
-            result.Links.Add(new BsLink("spinner-selector", 0, "spinner-controller", 0));
-            result.Links.Add(new BsLink("spinner-controller", 0, "spinner-left-motor", 4));
-            result.Links.Add(new BsLink("spinner-controller", 1, "spinner-middle-motor", 4));
-            result.Links.Add(new BsLink("spinner-controller", 2, "spinner-right-motor", 4));
+            });
 
             return result;
         }

@@ -4,11 +4,8 @@ using System.Linq;
 using Controllers.Base;
 using Data;
 using Data.Base;
-using Data.Logic;
-using Data.Object;
 using Extensions;
 using JetBrains.Annotations;
-using Lcs;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using Utils;
@@ -30,7 +27,6 @@ namespace Systems
         public Dictionary<uint, BsMap> MapList { get; } = new();
         [CanBeNull] public BsMap ActiveMap { get; private set; }
         public Dictionary<string, BsPlayer> ActivePlayers { get; } = new();
-        [CanBeNull] public BsMatrix Matrix { get; private set; }
         public bool MapLoaded { get; private set; }
 
         // External references
@@ -55,7 +51,7 @@ namespace Systems
         public void RegisterPlayer(BsPlayer player)
         {
             if (player.Active) throw Errors.RegisterActivePlayer(player.Id);
-            player.Activate(gPlayerParent.transform, Array.Empty<BsObject>(), new Dictionary<string, BsObject[]>());
+            player.Activate(gPlayerParent.transform, Array.Empty<BsObject>());
             ActivePlayers[player.Id] = player;
             EventSystem._.EmitPlayerRegister(player);
             if (MapLoaded)
@@ -238,21 +234,7 @@ namespace Systems
             {
                 CreateObject(obj);
             }
-
-            Invoke(nameof(StartMap), 0f);
-        }
-
-        private void StartMap()
-        {
-            // Start the logic system
-            var logicNodes = new List<BsNode>();
-            logicNodes.AddRange(ActiveMap.Nodes);
             EventSystem._.EmitMapBuild(ActiveMap);
-            foreach (var obj in ActiveMap.Objects.Values)
-            {
-                logicNodes.AddRange(obj.RegisterLogic());
-            }
-            Matrix = new BsMatrix(logicNodes, ActiveMap.Links);
         }
 
         public void UnbuildMap()
@@ -270,9 +252,6 @@ namespace Systems
             }
             ActiveMap.ResetSpawns();
 
-            // Stop the logic system
-            Matrix = null;
-
             // Note map as inactive
             EventSystem._.EmitMapUnbuild(ActiveMap);
             ActiveMap = null;
@@ -285,27 +264,16 @@ namespace Systems
             var parentTransform = obj.Relatives.Length == 0
                 ? gMapParent.transform
                 : ActiveMap.Objects[obj.Relatives[0]].InstanceObject.transform;
-            var relatedObjects = obj.Relatives.Length > 1
-                ? obj.Relatives[1..].Select(id => ActiveMap.Objects[id]).ToArray()
+            var relatedObjects = obj.Relatives.Length > 0
+                ? obj.Relatives.Select(id => ActiveMap.Objects[id]).ToArray()
                 : Array.Empty<BsObject>();
-            var addonRelatedObjects = new Dictionary<string, BsObject[]>();
-            foreach (var addon in obj.Addons.Values)
-            {
-                addonRelatedObjects[addon.Id] = addon.Relatives.Select(id => ActiveMap.Objects[id]).ToArray();
-            }
-            obj.Activate(parentTransform, relatedObjects, addonRelatedObjects);
+            obj.Activate(parentTransform, relatedObjects);
         }
 
         public void DeleteObject(BsObject obj)
         {
             if (!obj.Active) return;
             obj.Deactivate();
-        }
-
-        // Event functions
-        private void FixedUpdate()
-        {
-            Matrix?.Update();
         }
 
         // Utility functions
