@@ -2,11 +2,11 @@ using System.Linq;
 using Controllers;
 using Controllers.Base;
 using Data.Base;
+using Lcs;
 using Systems;
 using UnityEngine;
 using Utils;
 using Utils.Constants;
-using Utils.Ext;
 
 namespace Data.Object
 {
@@ -15,10 +15,15 @@ namespace Data.Object
         public override GameObject Prefab => ResourceSystem._.pShape;
         public override string Tag => Tags.ShapePrefix;
 
-        public Vector2 Position { get; set; } = Vector2.zero;
-        public float Rotation { get; set; }
-        public sbyte Layer { get; set; }
         public Path Path { get; set; }
+        public float Friction { get; set; }
+        public float Restitution { get; set; }
+        public float Adhesion { get; set; }
+        public float Density { get; set; }
+        public float Health { get; set; }
+        public bool Dynamic { get; set; }
+        public Color Color { get; set; } = Color.white;
+        public bool Glow { get; set; }
         public (float, float, float, float, float) Material
         {
             get => (Friction, Restitution, Adhesion, Density, Health);
@@ -31,14 +36,6 @@ namespace Data.Object
                 Health = value.Item5;
             }
         }
-        public float Friction { get; set; }
-        public float Restitution { get; set; }
-        public float Adhesion { get; set; }
-        public float Density { get; set; }
-        public float Health { get; set; }
-        public bool Dynamic { get; set; }
-        public Color Color { get; set; } = Color.white;
-        public bool Glow { get; set; }
 
         public BsShape(string id = "") : base(id) { }
 
@@ -93,29 +90,6 @@ namespace Data.Object
             gameObject.transform.localPosition = Position;
 
             return controller;
-        }
-
-        protected override object[] _ToLcs()
-        {
-            return new object[] { Position, Rotation, Layer, Path, Friction, Restitution, Adhesion, Density, Health,
-                Dynamic, Color, Glow };
-        }
-
-        protected override void _FromLcs(object[] props)
-        {
-            var i = 0;
-            Position = (Vector2)props[i++];
-            Rotation = (float)props[i++];
-            Layer = (sbyte)props[i++];
-            Path = (Path)props[i++];
-            Friction = (float)props[i++];
-            Restitution = (float)props[i++];
-            Adhesion = (float)props[i++];
-            Density = (float)props[i++];
-            Health = (float)props[i++];
-            Dynamic = (bool)props[i++];
-            Color = (Color)props[i++];
-            Glow = (bool)props[i++];
         }
     }
 }

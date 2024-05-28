@@ -15,7 +15,6 @@ namespace Data.Object
         public override GameObject Prefab => ResourceSystem._.pMount;
         public override string Tag => Tags.MountPrefix;
 
-        public Vector2 Position { get; set; } = Vector2.zero;
         public Vector2 EjectionForce { get; set; } = Vector2.zero;
 
         public BsMount(string id = "") : base(id) { }
@@ -35,23 +34,12 @@ namespace Data.Object
         protected override BsNode _RegisterLogic()
         {
             var grabController = ((MountController)InstanceController).GetSub<MountGrabController>("grab");
-            return new BsNode(Array.Empty<float>(), new float[3], (_, _) =>
+            return new BsNode(Tags.MountPrefix, Id)
             {
-                return new[] { BsMatrix.ToLogic(grabController.Active),
-                    grabController.Input.x, grabController.Input.y };
-            });
-        }
-
-        protected override object[] _ToLcs()
-        {
-            return new object[] { Position, EjectionForce };
-        }
-
-        protected override void _FromLcs(object[] props)
-        {
-            var i = 0;
-            Position = (Vector2)props[i++];
-            EjectionForce = (Vector2)props[i++];
+                Init = () => (Array.Empty<float>(), new float[3]),
+                Update = _ => new[] { BsNode.ToLogic(grabController.Active),
+                    grabController.Input.x, grabController.Input.y }
+            };
         }
     }
 }

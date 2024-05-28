@@ -1,7 +1,7 @@
 using Controllers.Base;
 using Data.Object;
+using Extensions;
 using UnityEngine;
-using Utils.Ext;
 
 namespace Controllers.Pool
 {

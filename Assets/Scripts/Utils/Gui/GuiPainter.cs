@@ -1,6 +1,6 @@
+using Extensions;
 using UnityEngine;
 using UnityEngine.UIElements;
-using Utils.Ext;
 
 namespace Utils.Gui
 {

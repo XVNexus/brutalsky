@@ -13,25 +13,10 @@ namespace Data.Logic
             ToPort = toPort;
         }
 
-        public BsLink(ushort fromNode, byte fromPort, ushort toNode, byte toPort)
+        public BsLink(string fromNode, int fromPort, string toNode, int toPort)
         {
             FromPort = new BsPort(fromNode, fromPort);
             ToPort = new BsPort(toNode, toPort);
-        }
-
-        public LcsLine ToLcs()
-        {
-            return new LcsLine('^', FromPort, ToPort);
-        }
-
-        public static BsLink FromLcs(LcsLine line)
-        {
-            return new BsLink((BsPort)line.Props[0], (BsPort)line.Props[1]);
-        }
-
-        public override string ToString()
-        {
-            return $"LINK :: {FromPort} > {ToPort}";
         }
     }
 }

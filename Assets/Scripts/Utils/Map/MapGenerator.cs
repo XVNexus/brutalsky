@@ -3,9 +3,9 @@ using System.Text.RegularExpressions;
 using Data;
 using Data.Map;
 using Data.Object;
+using Extensions;
 using Systems;
 using UnityEngine;
-using Utils.Ext;
 using Random = Unity.Mathematics.Random;
 
 namespace Utils.Map
@@ -30,15 +30,15 @@ namespace Utils.Map
             };
 
             // Add spawns
-            result.AddSpawn(new BsSpawn(new Vector2(-3f, -size.y * .5f + 1.5f), 0));
-            result.AddSpawn(new BsSpawn(new Vector2(-1f, -size.y * .5f + 1.5f), 0));
-            result.AddSpawn(new BsSpawn(new Vector2(1f, -size.y * .5f + 1.5f), 0));
-            result.AddSpawn(new BsSpawn(new Vector2(3f, -size.y * .5f + 1.5f), 0));
+            result.Spawns.Add(new BsSpawn(new Vector2(-3f, -size.y * .5f + 1.5f), 0));
+            result.Spawns.Add(new BsSpawn(new Vector2(-1f, -size.y * .5f + 1.5f), 0));
+            result.Spawns.Add(new BsSpawn(new Vector2(1f, -size.y * .5f + 1.5f), 0));
+            result.Spawns.Add(new BsSpawn(new Vector2(3f, -size.y * .5f + 1.5f), 0));
 
             // Add walls
             if (bottom)
             {
-                result.AddObject(new BsShape("wall-bottom")
+                result.Objects.Add(new BsShape("wall-bottom")
                 {
                     Position = new Vector2(0f, size.y * -.5f + .5f),
                     Path = Path.Rectangle(size.x, 1f),
@@ -47,7 +47,7 @@ namespace Utils.Map
             }
             if (top)
             {
-                result.AddObject(new BsShape("wall-top")
+                result.Objects.Add(new BsShape("wall-top")
                 {
                     Position = new Vector2(0f, size.y * .5f - .5f),
                     Path = Path.Rectangle(size.x, 1f),
@@ -56,7 +56,7 @@ namespace Utils.Map
             }
             if (left)
             {
-                result.AddObject(new BsShape("wall-left")
+                result.Objects.Add(new BsShape("wall-left")
                 {
                     Position = new Vector2(size.x * -.5f + .5f, 0f),
                     Path = Path.Rectangle(1f, size.y),
@@ -65,7 +65,7 @@ namespace Utils.Map
             }
             if (right)
             {
-                result.AddObject(new BsShape("wall-right")
+                result.Objects.Add(new BsShape("wall-right")
                 {
                     Position = new Vector2(size.x * .5f - .5f, 0f),
                     Path = Path.Rectangle(1f, size.y),
@@ -76,7 +76,7 @@ namespace Utils.Map
             // Add corners
             if (top && left)
             {
-                result.AddObject(new BsShape("corner-tl")
+                result.Objects.Add(new BsShape("corner-tl")
                 {
                     Position = new Vector2(size.x * -.5f + 1f, size.y * .5f - 1f),
                     Path = Path.Vector(0f, 0f, 0f, 3f, 0f, 1f, 0f, 0f, 0f, -3f),
@@ -85,7 +85,7 @@ namespace Utils.Map
             }
             if (top && right)
             {
-                result.AddObject(new BsShape("corner-tr")
+                result.Objects.Add(new BsShape("corner-tr")
                 {
                     Position = new Vector2(size.x * .5f - 1f, size.y * .5f - 1f),
                     Path = Path.Vector(0f, 0f, 0f, -3f, 0f, 1f, 0f, 0f, 0f, -3f),
@@ -94,7 +94,7 @@ namespace Utils.Map
             }
             if (bottom && left)
             {
-                result.AddObject(new BsShape("corner-bl")
+                result.Objects.Add(new BsShape("corner-bl")
                 {
                     Position = new Vector2(size.x * -.5f + 1f, size.y * -.5f + 1f),
                     Path = Path.Vector(0f, 0f, 0f, 3f, 0f, 1f, 0f, 0f, 0f, 3f),
@@ -103,7 +103,7 @@ namespace Utils.Map
             }
             if (bottom && right)
             {
-                result.AddObject(new BsShape("corner-br")
+                result.Objects.Add(new BsShape("corner-br")
                 {
                     Position = new Vector2(size.x * .5f - 1f, size.y * -.5f + 1f),
                     Path = Path.Vector(0f, 0f, 0f, -3f, 0f, 1f, 0f, 0f, 0f, 3f),
@@ -133,20 +133,20 @@ namespace Utils.Map
             };
 
             // Add spawns
-            result.AddSpawn(new BsSpawn(new Vector2(spawnX - 3f, .5f), 0));
-            result.AddSpawn(new BsSpawn(new Vector2(spawnX - 1f, .5f), 1));
-            result.AddSpawn(new BsSpawn(new Vector2(spawnX + 1f, .5f), 2));
-            result.AddSpawn(new BsSpawn(new Vector2(spawnX + 3f, .5f), 3));
+            result.Spawns.Add(new BsSpawn(new Vector2(spawnX - 3f, .5f), 0));
+            result.Spawns.Add(new BsSpawn(new Vector2(spawnX - 1f, .5f), 1));
+            result.Spawns.Add(new BsSpawn(new Vector2(spawnX + 1f, .5f), 2));
+            result.Spawns.Add(new BsSpawn(new Vector2(spawnX + 3f, .5f), 3));
 
             // Add start and finish platforms
-            result.AddObject(new BsDecal("spawn-bg")
+            result.Objects.Add(new BsDecal("spawn-bg")
             {
                 Position = new Vector2(spawnX, 0f),
                 Layer = -1,
                 Path = Path.Vector(-5f, 0f, 0, 5f, 0f, 1, 5f, -3f, 0f, -3f, 1, -5f, -3f, -5f, 0f),
                 Color = ColorExt.Lava.MultiplyTint(.5f)
             });
-            result.AddObject(new BsShape("spawn-platform")
+            result.Objects.Add(new BsShape("spawn-platform")
             {
                 Position = new Vector2(spawnX, 0f),
                 Path = Path.Polygon(-2.5f, -1f, -5f, 0f, 5f, 0f, 2.5f, -1f),
@@ -154,21 +154,21 @@ namespace Utils.Map
                 Color = ColorExt.Lava,
                 Glow = true
             });
-            result.AddObject(new BsDecal("spawn-beacon")
+            result.Objects.Add(new BsDecal("spawn-beacon")
             {
                 Position = new Vector2(spawnX, size.y * .5f),
                 Layer = -1,
                 Path = Path.Rectangle(10f, size.y),
                 Color = ColorExt.Lava.SetAlpha(.1f)
             });
-            result.AddObject(new BsDecal("goal-bg")
+            result.Objects.Add(new BsDecal("goal-bg")
             {
                 Position = new Vector2(goalX, 0f),
                 Path = Path.Vector(-5f, 0f, 0, 5f, 0f, 1, 5f, -3f, 0f, -3f, 1, -5f, -3f, -5f, 0f),
                 Layer = -1,
                 Color = ColorExt.Medicine.MultiplyTint(.5f)
             });
-            result.AddObject(new BsShape("goal-platform")
+            result.Objects.Add(new BsShape("goal-platform")
             {
                 Position = new Vector2(goalX, 0f),
                 Path = Path.Polygon(-2.5f, -1f, -5f, 0f, 5f, 0f, 2.5f, -1f),
@@ -176,7 +176,7 @@ namespace Utils.Map
                 Color = ColorExt.Medicine,
                 Glow = true
             });
-            result.AddObject(new BsDecal("goal-beacon")
+            result.Objects.Add(new BsDecal("goal-beacon")
             {
                 Position = new Vector2(goalX, size.y * .5f),
                 Layer = -1,
@@ -223,14 +223,14 @@ namespace Utils.Map
                 var length = Mathf.Round(rect.width / 2f) * 2f;
                 var material = Mathf.Approximately(rect.height, 1f) ? MaterialExt.Ice : MaterialExt.Stone;
                 var color = Mathf.Approximately(rect.height, 1f) ? ColorExt.Ice : ColorExt.Stone;
-                result.AddObject(new BsShape($"platform-{i + 1}")
+                result.Objects.Add(new BsShape($"platform-{i + 1}")
                 {
                     Position = position + new Vector2(0f, .5f),
                     Path = Path.Rectangle(length, 1f),
                     Material = material,
                     Color = color
                 });
-                result.AddObject(new BsShape($"spike-{i + 1}")
+                result.Objects.Add(new BsShape($"spike-{i + 1}")
                 {
                     Position = position,
                     Layer = -1,
@@ -238,13 +238,13 @@ namespace Utils.Map
                     Material = (0f, 0f, 0f, 0f, -100f),
                     Color = color.MultiplyTint(.5f)
                 });
-                result.AddObject(new BsDecal($"decal-{i + 1}")
+                result.Objects.Add(new BsDecal($"decal-{i + 1}")
                 {
                     Position = position,
                     Path = Path.Polygon(0f, length * difficulty * -.25f, length * -.4f, 0f, length * .4f, 0f),
                     Color = color.MultiplyTint(.75f)
                 });
-                result.AddObject(new BsDecal($"beacon-{i + 1}")
+                result.Objects.Add(new BsDecal($"beacon-{i + 1}")
                 {
                     Position = position + new Vector2(0f, 1f + size.y * .5f),
                     Layer = -1,
@@ -257,7 +257,7 @@ namespace Utils.Map
             var nextLevelTitle = hasNextLevel
                 ? Regex.Replace(title, @"\d+", match => $"{int.Parse(match.Value) + 1}")
                 : Regex.Replace(title, @"\d+", "Finish");
-            result.AddObject(new BsGoal("goal")
+            result.Objects.Add(new BsGoal("goal")
             {
                 Position = new Vector2(goalX + 2.75f, size.y * .5f),
                 Size = new Vector2(4.5f, size.y),
@@ -281,26 +281,26 @@ namespace Utils.Map
             };
 
             // Add spawns
-            result.AddSpawn(new BsSpawn(new Vector2(-3f, .5f), 0));
-            result.AddSpawn(new BsSpawn(new Vector2(-1f, .5f), 0));
-            result.AddSpawn(new BsSpawn(new Vector2(1f, .5f), 0));
-            result.AddSpawn(new BsSpawn(new Vector2(3f, .5f), 0));
+            result.Spawns.Add(new BsSpawn(new Vector2(-3f, .5f), 0));
+            result.Spawns.Add(new BsSpawn(new Vector2(-1f, .5f), 0));
+            result.Spawns.Add(new BsSpawn(new Vector2(1f, .5f), 0));
+            result.Spawns.Add(new BsSpawn(new Vector2(3f, .5f), 0));
 
             // Add finish platform
-            result.AddObject(new BsDecal("finish-bg")
+            result.Objects.Add(new BsDecal("finish-bg")
             {
                 Layer = -1,
                 Path = Path.Vector(-5f, 0f, 0, 5f, 0f, 1, 5f, -3f, 0f, -3f, 1, -5f, -3f, -5f, 0f),
                 Color = ColorExt.Medkit.MultiplyTint(.5f)
             });
-            result.AddObject(new BsShape("finish-platform")
+            result.Objects.Add(new BsShape("finish-platform")
             {
                 Path = Path.Polygon(-2.5f, -1f, -5f, 0f, 5f, 0f, 2.5f, -1f),
                 Material = MaterialExt.Metal,
                 Color = ColorExt.Medkit,
                 Glow = true
             });
-            result.AddObject(new BsDecal("finish-beacon")
+            result.Objects.Add(new BsDecal("finish-beacon")
             {
                 Position = new Vector2(0f, 15f),
                 Layer = -1,

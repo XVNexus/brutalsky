@@ -1,4 +1,4 @@
-namespace Utils.Ext
+namespace Extensions
 {
     public static class ChemicalExt
     {

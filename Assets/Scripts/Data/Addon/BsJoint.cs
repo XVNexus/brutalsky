@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using Data.Base;
 using Data.Logic;
 using Data.Object;
@@ -160,7 +159,7 @@ namespace Data.Addon
             if (MountShape.Length > 0)
             {
                 component.enableCollision = MountCollision;
-                var mountShape = map.GetObject<BsShape>(Tags.ShapePrefix, MountShape);
+                var mountShape = map.GetObject<BsShape>(MountShape);
                 if (!mountShape.InstanceObject) throw Errors.ParentObjectUnbuilt();
                 component.connectedBody = mountShape.InstanceObject.GetComponent<Rigidbody2D>();
                 component.connectedAnchor = MountAnchor;
@@ -187,87 +186,100 @@ namespace Data.Addon
         private BsNode RegisterLogicFixed()
         {
             var fixedJoint = (FixedJoint2D)InstanceComponent;
-            return new BsNode
-            (
-                new[]
+            return new BsNode(Tags.JointPrefix, Id)
+            {
+                Init = () =>
+                (
+                    new[] { BsNode.ToLogic(MountCollision), BreakForce, BreakTorque, DampingRatio, DampingFrequency },
+                    Array.Empty<float>()
+                ),
+                Update = inputs =>
                 {
-                    BsMatrix.ToLogic(MountCollision), BreakForce, BreakTorque, DampingRatio, DampingFrequency
-                },
-                Array.Empty<float>(), (inputs, _) =>
-                {
-                    fixedJoint.enableCollision = BsMatrix.ToBool(inputs[0]);
+                    fixedJoint.enableCollision = BsNode.ToBool(inputs[0]);
                     fixedJoint.breakForce = inputs[1];
                     fixedJoint.breakTorque = inputs[2];
                     fixedJoint.dampingRatio = inputs[3];
                     fixedJoint.frequency = inputs[4];
                     return Array.Empty<float>();
                 }
-            );
+            };
         }
 
         private BsNode RegisterLogicDistance()
         {
             var distanceJoint = (DistanceJoint2D)InstanceComponent;
-            return new BsNode
-            (
-                new[]
+            return new BsNode(Tags.JointPrefix, Id)
+            {
+                Init = () =>
+                (
+                    new[]
+                    {
+                        BsNode.ToLogic(MountCollision), BreakForce, BreakTorque, DistanceValue,
+                        BsNode.ToLogic(DistanceAuto), BsNode.ToLogic(DistanceMax)
+                    },
+                    Array.Empty<float>()
+                ),
+                Update = inputs =>
                 {
-                    BsMatrix.ToLogic(MountCollision), BreakForce, BreakTorque, DistanceValue,
-                    BsMatrix.ToLogic(DistanceAuto), BsMatrix.ToLogic(DistanceMax)
-                },
-                Array.Empty<float>(), (inputs, _) =>
-                {
-                    distanceJoint.enableCollision = BsMatrix.ToBool(inputs[0]);
+                    distanceJoint.enableCollision = BsNode.ToBool(inputs[0]);
                     distanceJoint.breakForce = inputs[1];
                     distanceJoint.breakTorque = inputs[2];
                     distanceJoint.distance = inputs[3];
-                    distanceJoint.autoConfigureDistance = BsMatrix.ToBool(inputs[4]);
-                    distanceJoint.maxDistanceOnly = BsMatrix.ToBool(inputs[5]);
+                    distanceJoint.autoConfigureDistance = BsNode.ToBool(inputs[4]);
+                    distanceJoint.maxDistanceOnly = BsNode.ToBool(inputs[5]);
                     return Array.Empty<float>();
                 }
-            );
+            };
         }
 
         private BsNode RegisterLogicSpring()
         {
             var springJoint = (SpringJoint2D)InstanceComponent;
-            return new BsNode
-            (
-                new[]
+            return new BsNode(Tags.JointPrefix, Id)
+            {
+                Init = () =>
+                (
+                    new[]
+                    {
+                        BsNode.ToLogic(MountCollision), BreakForce, BreakTorque, DistanceValue,
+                        BsNode.ToLogic(DistanceAuto), DampingRatio, DampingFrequency
+                    },
+                    Array.Empty<float>()
+                ),
+                Update = inputs =>
                 {
-                    BsMatrix.ToLogic(MountCollision), BreakForce, BreakTorque, DistanceValue,
-                    BsMatrix.ToLogic(DistanceAuto), DampingRatio, DampingFrequency
-                },
-                Array.Empty<float>(), (inputs, _) =>
-                {
-                    springJoint.enableCollision = BsMatrix.ToBool(inputs[0]);
+                    springJoint.enableCollision = BsNode.ToBool(inputs[0]);
                     springJoint.breakForce = inputs[1];
                     springJoint.breakTorque = inputs[2];
                     springJoint.distance = inputs[3];
-                    springJoint.autoConfigureDistance = BsMatrix.ToBool(inputs[4]);
+                    springJoint.autoConfigureDistance = BsNode.ToBool(inputs[4]);
                     springJoint.dampingRatio = inputs[5];
                     springJoint.frequency = inputs[6];
                     return Array.Empty<float>();
                 }
-            );
+            };
         }
 
         private BsNode RegisterLogicHinge()
         {
             var hingeJoint = (HingeJoint2D)InstanceComponent;
-            return new BsNode
-            (
-                new[]
+            return new BsNode(Tags.JointPrefix, Id)
+            {
+                Init = () =>
+                (
+                    new[]
+                    {
+                        BsNode.ToLogic(MountCollision), BreakForce, BreakTorque, BsNode.ToLogic(MotorEnabled),
+                        MotorSpeed, MotorForce, BsNode.ToLogic(LimitEnabled), LimitMin, LimitMax
+                    },
+                    Array.Empty<float>()
+                ),
+                Update = inputs =>
                 {
-                    BsMatrix.ToLogic(MountCollision), BreakForce, BreakTorque, BsMatrix.ToLogic(MotorEnabled),
-                    MotorSpeed, MotorForce, BsMatrix.ToLogic(LimitEnabled), LimitMin, LimitMax
-                },
-                Array.Empty<float>(), (inputs, _) =>
-                {
-                    hingeJoint.enableCollision = BsMatrix.ToBool(inputs[0]);
+                    hingeJoint.enableCollision = BsNode.ToBool(inputs[0]);
                     hingeJoint.breakForce = inputs[1];
                     hingeJoint.breakTorque = inputs[2];
-                    hingeJoint.useMotor = BsMatrix.ToBool(inputs[3]);
+                    hingeJoint.useMotor = BsNode.ToBool(inputs[3]);
                     if (hingeJoint.useMotor)
                     {
                         var motor = hingeJoint.motor;
@@ -275,7 +287,7 @@ namespace Data.Addon
                         motor.maxMotorTorque = inputs[5];
                         hingeJoint.motor = motor;
                     }
-                    hingeJoint.useLimits = BsMatrix.ToBool(inputs[6]);
+                    hingeJoint.useLimits = BsNode.ToBool(inputs[6]);
                     if (hingeJoint.useLimits)
                     {
                         var limits = hingeJoint.limits;
@@ -285,28 +297,32 @@ namespace Data.Addon
                     }
                     return Array.Empty<float>();
                 }
-            );
+            };
         }
 
         private BsNode RegisterLogicSlider()
         {
             var sliderJoint = (SliderJoint2D)InstanceComponent;
-            return new BsNode
-            (
-                new[]
+            return new BsNode(Tags.JointPrefix, Id)
+            {
+                Init = () =>
+                (
+                    new[]
+                    {
+                        BsNode.ToLogic(MountCollision), BreakForce, BreakTorque, AngleValue, BsNode.ToLogic(AngleAuto),
+                        BsNode.ToLogic(MotorEnabled), MotorSpeed, MotorForce, BsNode.ToLogic(LimitEnabled), LimitMin,
+                        LimitMax
+                    },
+                    Array.Empty<float>()
+                ),
+                Update = inputs =>
                 {
-                    BsMatrix.ToLogic(MountCollision), BreakForce, BreakTorque, AngleValue,
-                    BsMatrix.ToLogic(AngleAuto), BsMatrix.ToLogic(MotorEnabled), MotorSpeed, MotorForce,
-                    BsMatrix.ToLogic(LimitEnabled), LimitMin, LimitMax
-                },
-                Array.Empty<float>(), (inputs, _) =>
-                {
-                    sliderJoint.enableCollision = BsMatrix.ToBool(inputs[0]);
+                    sliderJoint.enableCollision = BsNode.ToBool(inputs[0]);
                     sliderJoint.breakForce = inputs[1];
                     sliderJoint.breakTorque = inputs[2];
                     sliderJoint.angle = inputs[3];
-                    sliderJoint.autoConfigureAngle = BsMatrix.ToBool(inputs[4]);
-                    sliderJoint.useMotor = BsMatrix.ToBool(inputs[5]);
+                    sliderJoint.autoConfigureAngle = BsNode.ToBool(inputs[4]);
+                    sliderJoint.useMotor = BsNode.ToBool(inputs[5]);
                     if (sliderJoint.useMotor)
                     {
                         var motor = sliderJoint.motor;
@@ -314,7 +330,7 @@ namespace Data.Addon
                         motor.maxMotorTorque = inputs[7];
                         sliderJoint.motor = motor;
                     }
-                    sliderJoint.useLimits = BsMatrix.ToBool(inputs[8]);
+                    sliderJoint.useLimits = BsNode.ToBool(inputs[8]);
                     if (sliderJoint.useLimits)
                     {
                         var limits = sliderJoint.limits;
@@ -324,22 +340,26 @@ namespace Data.Addon
                     }
                     return Array.Empty<float>();
                 }
-            );
+            };
         }
 
         private BsNode RegisterLogicWheel()
         {
             var wheelJoint = (WheelJoint2D)InstanceComponent;
-            return new BsNode
-            (
-                new[]
+            return new BsNode(Tags.JointPrefix, Id)
+            {
+                Init = () =>
+                (
+                    new[]
+                    {
+                        BsNode.ToLogic(MountCollision), BreakForce, BreakTorque, DampingRatio, DampingFrequency,
+                        AngleValue, BsNode.ToLogic(MotorEnabled), MotorSpeed, MotorForce
+                    },
+                    Array.Empty<float>()
+                ),
+                Update = inputs =>
                 {
-                    BsMatrix.ToLogic(MountCollision), BreakForce, BreakTorque, DampingRatio, DampingFrequency,
-                    AngleValue, BsMatrix.ToLogic(MotorEnabled), MotorSpeed, MotorForce
-                },
-                Array.Empty<float>(), (inputs, _) =>
-                {
-                    wheelJoint.enableCollision = BsMatrix.ToBool(inputs[0]);
+                    wheelJoint.enableCollision = BsNode.ToBool(inputs[0]);
                     wheelJoint.breakForce = inputs[1];
                     wheelJoint.breakTorque = inputs[2];
                     var suspension = wheelJoint.suspension;
@@ -347,7 +367,7 @@ namespace Data.Addon
                     suspension.frequency = inputs[4];
                     suspension.angle = inputs[5];
                     wheelJoint.suspension = suspension;
-                    wheelJoint.useMotor = BsMatrix.ToBool(inputs[6]);
+                    wheelJoint.useMotor = BsNode.ToBool(inputs[6]);
                     if (wheelJoint.useMotor)
                     {
                         var motor = wheelJoint.motor;
@@ -357,99 +377,7 @@ namespace Data.Addon
                     }
                     return Array.Empty<float>();
                 }
-            );
-        }
-
-        protected override object[] _ToLcs()
-        {
-            var result = new List<object> { Type, Anchor, MountShape, MountAnchor, MountCollision, BreakForce,
-                BreakTorque };
-            switch (Type)
-            {
-                case TypeFixed:
-                    result.AddRange(new object[] { DampingRatio, DampingFrequency });
-                    break;
-                case TypeDistance:
-                    result.AddRange(new object[] { DistanceValue, DistanceAuto, DistanceMax });
-                    break;
-                case TypeSpring:
-                    result.AddRange(new object[] { DistanceValue, DistanceAuto, DampingRatio, DampingFrequency });
-                    break;
-                case TypeHinge:
-                    result.AddRange(new object[] { MotorEnabled, MotorSpeed, MotorForce, LimitEnabled, LimitMin,
-                        LimitMax });
-                    break;
-                case TypeSlider:
-                    result.AddRange(new object[] { AngleValue, AngleAuto, MotorEnabled, MotorSpeed, MotorForce,
-                        LimitEnabled, LimitMin, LimitMax });
-                    break;
-                case TypeWheel:
-                    result.AddRange(new object[] { DampingRatio, DampingFrequency, AngleValue, AngleAuto, MotorEnabled,
-                        MotorSpeed, MotorForce });
-                    break;
-                default:
-                    throw Errors.InvalidItem("joint type", Type);
-            }
-            return result.ToArray();
-        }
-
-        protected override void _FromLcs(object[] props)
-        {
-            var i = 0;
-            Type = (byte)props[i++];
-            Anchor = (Vector2)props[i++];
-            MountShape = (string)props[i++];
-            MountAnchor = (Vector2)props[i++];
-            MountCollision = (bool)props[i++];
-            BreakForce = (float)props[i++];
-            BreakTorque = (float)props[i++];
-            switch (Type)
-            {
-                case TypeFixed:
-                    DampingRatio = (float)props[i++];
-                    DampingFrequency = (float)props[i++];
-                    break;
-                case TypeDistance:
-                    DistanceValue = (float)props[i++];
-                    DistanceAuto = (bool)props[i++];
-                    DistanceMax = (bool)props[i++];
-                    break;
-                case TypeSpring:
-                    DistanceValue = (float)props[i++];
-                    DistanceAuto = (bool)props[i++];
-                    DampingRatio = (float)props[i++];
-                    DampingFrequency = (float)props[i++];
-                    break;
-                case TypeHinge:
-                    MotorEnabled = (bool)props[i++];
-                    MotorSpeed = (float)props[i++];
-                    MotorForce = (float)props[i++];
-                    LimitEnabled = (bool)props[i++];
-                    LimitMin = (float)props[i++];
-                    LimitMax = (float)props[i++];
-                    break;
-                case TypeSlider:
-                    AngleValue = (float)props[i++];
-                    AngleAuto = (bool)props[i++];
-                    MotorEnabled = (bool)props[i++];
-                    MotorSpeed = (float)props[i++];
-                    MotorForce = (float)props[i++];
-                    LimitEnabled = (bool)props[i++];
-                    LimitMin = (float)props[i++];
-                    LimitMax = (float)props[i++];
-                    break;
-                case TypeWheel:
-                    DampingRatio = (float)props[i++];
-                    DampingFrequency = (float)props[i++];
-                    AngleValue = (float)props[i++];
-                    AngleAuto = (bool)props[i++];
-                    MotorEnabled = (bool)props[i++];
-                    MotorSpeed = (float)props[i++];
-                    MotorForce = (float)props[i++];
-                    break;
-                default:
-                    throw Errors.InvalidItem("joint type", Type);
-            }
+            };
         }
     }
 }

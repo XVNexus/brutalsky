@@ -3,10 +3,10 @@ using System.Linq;
 using Controllers.Base;
 using Data;
 using Data.Object;
+using Extensions;
 using Systems;
 using UnityEngine;
 using Utils.Config;
-using Utils.Ext;
 using Utils.Map;
 
 public class GameManager : BsBehavior
@@ -75,7 +75,7 @@ public class GameManager : BsBehavior
         // Load custom maps
         if (_cfgEnableCustomMaps)
         {
-            MapSystem._.RegisterMaps(ResourceSystem._.LoadFolder("Maps").Select(BsMap.FromLcs));
+            // MapSystem._.RegisterMaps(ResourceSystem._.LoadFolder("Maps").Select(BsMap.FromLcs));
         }
 
         // Generate box maps

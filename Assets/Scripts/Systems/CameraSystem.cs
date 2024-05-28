@@ -4,10 +4,10 @@ using Controllers.Base;
 using Data;
 using Data.Base;
 using Data.Object;
+using Extensions;
 using UnityEngine;
 using UnityEngine.Rendering;
 using Utils.Config;
-using Utils.Ext;
 
 namespace Systems
 {
@@ -43,6 +43,7 @@ namespace Systems
         private bool _enableFollow;
         private bool _hasFollowTargets;
         private Rect _followRect;
+        private int _followSmooth;
         private int _lastFollowTargetCount;
         private Vector2 _lastFollowPosition;
         private float _lastCameraAspect;
@@ -60,6 +61,7 @@ namespace Systems
             EventSystem._.OnPlayerUnregister += OnPlayerUnregister;
             EventSystem._.OnPlayerSpawn += OnPlayerSpawn;
             EventSystem._.OnPlayerDie += OnPlayerDie;
+            EventSystem._.OnMapBuild += OnMapBuild;
 
             _cCamera = Camera.main;
 
@@ -72,6 +74,7 @@ namespace Systems
             EventSystem._.OnPlayerUnregister -= OnPlayerUnregister;
             EventSystem._.OnPlayerSpawn -= OnPlayerSpawn;
             EventSystem._.OnPlayerDie -= OnPlayerDie;
+            EventSystem._.OnMapBuild -= OnMapBuild;
         }
 
         // System functions
@@ -161,6 +164,11 @@ namespace Systems
             StopFollowing(player);
         }
 
+        private void OnMapBuild(BsMap map)
+        {
+            _followSmooth = 5;
+        }
+
         private void FixedUpdate()
         {
             // Convert shake to shove
@@ -201,7 +209,6 @@ namespace Systems
             _lastFollowPosition = followPosition;
             var lookAhead = Vector2.zero;
             var followTargetCount = FollowTargets.Count;
-            // Do not lead the target during teleportation
             if (followVelocity.magnitude <= 1000f && followTargetCount == _lastFollowTargetCount)
             {
                 lookAhead = followVelocity * (followLead.x * Mathf.Min(followVelocity.magnitude / followLead.y, 1f));
@@ -209,7 +216,15 @@ namespace Systems
             _lastFollowTargetCount = followTargetCount;
             var targetRect = new Rect(followPosition + lookAhead, Vector2.zero).Resize(MathfExt.Min(Vector2.one *
                 Mathf.Max((max - min).magnitude * followScale, followMinSize), BaseRect.size));
-            SetViewRectSmooth(targetRect, followSpeed.x * Time.fixedDeltaTime, followSpeed.y * Time.fixedDeltaTime);
+            if (_followSmooth == 0)
+            {
+                SetViewRectSmooth(targetRect, followSpeed.x * Time.fixedDeltaTime, followSpeed.y * Time.fixedDeltaTime);
+            }
+            else
+            {
+                SetViewRect(targetRect);
+                _followSmooth--;
+            }
         }
 
         private void RareUpdate()

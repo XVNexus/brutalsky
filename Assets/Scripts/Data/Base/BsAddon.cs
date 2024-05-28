@@ -22,10 +22,6 @@ namespace Data.Base
 
         protected abstract Component _Init(GameObject gameObject, BsObject parentObject, BsMap map);
 
-        protected abstract object[] _ToLcs();
-
-        protected abstract void _FromLcs(object[] props);
-
         [CanBeNull]
         public virtual BsNode RegisterLogic()
         {
@@ -42,31 +38,6 @@ namespace Data.Base
         {
             InstanceComponent = null;
             Active = false;
-        }
-
-        public LcsLine ToLcs()
-        {
-            var props = new List<object> { Tag, Id };
-            props.AddRange(_ToLcs());
-            return new LcsLine('@', props.ToArray());
-        }
-
-        public static BsAddon FromLcs(LcsLine line)
-        {
-            var result = ResourceSystem.GetTemplateAddon((string)line.Props[0]);
-            result.ParseLcs(line);
-            return result;
-        }
-
-        private void ParseLcs(LcsLine line)
-        {
-            Id = (string)line.Props[1];
-            _FromLcs(line.Props[2..]);
-        }
-
-        public override string ToString()
-        {
-            return $"ADDON :: {Tag}.{Id}";
         }
     }
 }

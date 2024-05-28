@@ -37,18 +37,5 @@ namespace Data.Object
 
             return controller;
         }
-
-        protected override object[] _ToLcs()
-        {
-            return new object[] { Type, Color, Health };
-        }
-
-        protected override void _FromLcs(object[] props)
-        {
-            var i = 0;
-            Type = (byte)props[i++];
-            Color = (Color)props[i++];
-            Health = (float)props[i++];
-        }
     }
 }

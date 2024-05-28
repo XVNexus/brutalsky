@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Extensions;
 using Lcs;
 using UnityEngine;
 using Utils.Constants;
-using Utils.Ext;
 
 namespace Utils
 {
@@ -25,18 +25,18 @@ namespace Utils
         public float[] Args { get; private set; } = Array.Empty<float>();
         public List<Vector2> Points { get; private set; } = new();
 
-        public Path(int type, float[] args, Vector2 start)
+        public Path(int type, float[] args)
         {
             Type = type;
             Args = args;
-            Points = new List<Vector2> { start };
         }
 
         public Path() { }
 
         public static Path Vector(params float[] args)
         {
-            var result = new Path(TypeVector, args, new Vector2(args[0], args[1]));
+            var result = new Path(TypeVector, args);
+            result.StartAt(args[0], args[1]);
             for (var i = 2; i < args.Length; i++)
             {
                 switch (args[i])
@@ -64,7 +64,8 @@ namespace Utils
 
         public static Path Polygon(params float[] args)
         {
-            var result = new Path(TypePolygon, args, new Vector2(args[0], args[1]));
+            var result = new Path(TypePolygon, args);
+            result.StartAt(args[0], args[1]);
             for (var i = 2; i < args.Length; i += 2)
             {
                 result.LineTo(args[i], args[i + 1]);
@@ -72,27 +73,34 @@ namespace Utils
             return result;
         }
 
-        public static Path Square(float radius)
+        public static Path Square(float diameter)
         {
-            var result = new Path(TypeSquare, new[] { radius }, new Vector2(-radius, radius));
+            var radius = diameter * .5f;
+            var result = new Path(TypeSquare, new[] { radius });
+            result.StartAt(-radius, radius);
             result.LineTo(radius, radius);
             result.LineTo(radius, -radius);
             result.LineTo(-radius, -radius);
             return result;
         }
 
-        public static Path Rectangle(float radiusX, float radiusY)
+        public static Path Rectangle(float diameterX, float diameterY)
         {
-            var result = new Path(TypeRectangle, new[] { radiusX, radiusY }, new Vector2(-radiusX, radiusY));
+            var radiusX = diameterX * .5f;
+            var radiusY = diameterY * .5f;
+            var result = new Path(TypeRectangle, new[] { radiusX, radiusY });
+            result.StartAt(-radiusX, radiusY);
             result.LineTo(radiusX, radiusY);
             result.LineTo(radiusX, -radiusY);
             result.LineTo(-radiusX, -radiusY);
             return result;
         }
 
-        public static Path Circle(float radius)
+        public static Path Circle(float diameter)
         {
-            var result = new Path(TypeCircle, new[] { radius }, new Vector2(0f, radius));
+            var radius = diameter * .5f;
+            var result = new Path(TypeCircle, new[] { radius });
+            result.StartAt(0f, radius);
             result.ArcTo(radius, radius, radius, 0f);
             result.ArcTo(radius, -radius, 0f, -radius);
             result.ArcTo(-radius, -radius, -radius, 0f);
@@ -100,9 +108,12 @@ namespace Utils
             return result;
         }
 
-        public static Path Ellipse(float radiusX, float radiusY)
+        public static Path Ellipse(float diameterX, float diameterY)
         {
-            var result = new Path(TypeEllipse, new[] { radiusX, radiusY }, new Vector2(0f, radiusY));
+            var radiusX = diameterX * .5f;
+            var radiusY = diameterY * .5f;
+            var result = new Path(TypeEllipse, new[] { radiusX, radiusY });
+            result.StartAt(0f, radiusY);
             result.ArcTo(radiusX, radiusY, radiusX, 0f);
             result.ArcTo(radiusX, -radiusY, 0f, -radiusY);
             result.ArcTo(-radiusX, -radiusY, -radiusX, 0f);
@@ -110,9 +121,11 @@ namespace Utils
             return result;
         }
 
-        public static Path Ngon(int points, float radius)
+        public static Path Ngon(int points, float diameter)
         {
-            var result = new Path(TypeNgon, new[] { points, radius }, new Vector2(0f, radius));
+            var radius = diameter * .5f;
+            var result = new Path(TypeNgon, new[] { points, radius });
+            result.StartAt(0f, radius);
             for (var i = 1; i < points; i++)
             {
                 var vertexAngle = (i / (float)points * 2f + .5f) * Mathf.PI;
@@ -121,9 +134,12 @@ namespace Utils
             return result;
         }
 
-        public static Path Star(int points, float radiusInner, float radiusOuter)
+        public static Path Star(int points, float diameterInner, float diameterOuter)
         {
-            var result = new Path(TypeStar, new[] { points, radiusInner, radiusOuter }, new Vector2(0f, radiusOuter));
+            var radiusInner = diameterInner * .5f;
+            var radiusOuter = diameterOuter * .5f;
+            var result = new Path(TypeStar, new[] { points, radiusInner, radiusOuter });
+            result.StartAt(0f, radiusInner);
             var pointsReal = points * 2;
             var radii = new[] { radiusInner, radiusOuter };
             for (var i = 1; i < pointsReal; i++)
@@ -138,6 +154,16 @@ namespace Utils
         public Vector2[] GetPoints(float rotation)
         {
             return Points.Select(point => MathfExt.RotateVector(point, rotation)).ToArray();
+        }
+
+        public void StartAt(float x, float y)
+        {
+            StartAt(new Vector2(x, y));
+        }
+
+        public void StartAt(Vector2 point)
+        {
+            Points.Add(point);
         }
 
         public void LineTo(float x, float y)

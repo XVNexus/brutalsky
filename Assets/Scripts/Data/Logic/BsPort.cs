@@ -2,18 +2,13 @@ namespace Data.Logic
 {
     public struct BsPort
     {
-        public ushort NodeId { get; }
-        public byte PortId { get; }
+        public string NodeId { get; }
+        public int PortId { get; }
 
-        public BsPort(ushort nodeId, byte portId)
+        public BsPort(string nodeId, int portId)
         {
             NodeId = nodeId;
             PortId = portId;
-        }
-
-        public override string ToString()
-        {
-            return $"{NodeId}:{PortId}";
         }
     }
 }

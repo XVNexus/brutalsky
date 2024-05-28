@@ -12,7 +12,6 @@ namespace Data.Object
         public override GameObject Prefab => ResourceSystem._.pGoal;
         public override string Tag => Tags.GoalPrefix;
 
-        public Vector2 Position { get; set; } = Vector2.zero;
         public Vector2 Size { get; set; } = Vector2.one;
         public Color Color { get; set; } = Color.white;
         public uint Redirect { get; set; }
@@ -30,20 +29,6 @@ namespace Data.Object
             gameObject.transform.localScale = Size;
 
             return controller;
-        }
-
-        protected override object[] _ToLcs()
-        {
-            return new object[] { Position, Size, Color, Redirect };
-        }
-
-        protected override void _FromLcs(object[] props)
-        {
-            var i = 0;
-            Position = (Vector2)props[i++];
-            Size = (Vector2)props[i++];
-            Color = (Color)props[i++];
-            Redirect = (uint)props[i++];
         }
     }
 }

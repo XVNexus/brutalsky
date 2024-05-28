@@ -6,11 +6,12 @@ using JetBrains.Annotations;
 using Lcs;
 using Systems;
 using UnityEngine;
+using Utils;
 using Utils.Constants;
 
 namespace Data.Base
 {
-    public abstract class BsObject
+    public abstract class BsObject : IHasId
     {
         public abstract GameObject Prefab { get; }
         public abstract string Tag { get; }
@@ -18,6 +19,10 @@ namespace Data.Base
         public string ParentTag { get; set; }
         public string ParentId { get; set; }
         public List<BsAddon> Addons { get; } = new();
+
+        public Vector2 Position { get; set; } = Vector2.zero;
+        public float Rotation { get; set; }
+        public sbyte Layer { get; set; }
 
         [CanBeNull] public GameObject InstanceObject { get; private set; }
         [CanBeNull] public BsBehavior InstanceController { get; private set; }
@@ -44,10 +49,6 @@ namespace Data.Base
         {
             return null;
         }
-
-        protected abstract object[] _ToLcs();
-
-        protected abstract void _FromLcs(object[] props);
 
         public BsObject AppendAddon(BsAddon addon)
         {
@@ -77,7 +78,7 @@ namespace Data.Base
         public void Activate(Transform rootGameObject, BsMap map)
         {
             var parent = ParentId.Length == 0 ? rootGameObject
-                : map.GetObject<BsObject>(ParentTag, ParentId).InstanceObject.transform;
+                : map.GetObject<BsObject>(ParentId).InstanceObject.transform;
             if (!parent) throw Errors.ParentObjectUnbuilt();
             InstanceObject = UnityEngine.Object.Instantiate(Prefab, parent);
             InstanceController = _Init(InstanceObject, map);
@@ -98,37 +99,6 @@ namespace Data.Base
             InstanceObject = null;
             InstanceController = null;
             Active = false;
-        }
-
-        public LcsLine ToLcs()
-        {
-            var props = new List<object> { Tag, Id, ParentTag, ParentId };
-            props.AddRange(_ToLcs());
-            return new LcsLine('#', props.ToArray(), Addons.Select(addon => addon.ToLcs()).ToList());
-        }
-
-        public static BsObject FromLcs(LcsLine line)
-        {
-            var result = ResourceSystem.GetTemplateObject((string)line.Props[0]);
-            result.ParseLcs(line);
-            return result;
-        }
-
-        private void ParseLcs(LcsLine line)
-        {
-            Id = (string)line.Props[1];
-            ParentTag = (string)line.Props[2];
-            ParentId = (string)line.Props[3];
-            _FromLcs(line.Props[4..]);
-            foreach (var child in line.Children)
-            {
-                Addons.Add(BsAddon.FromLcs(child));
-            }
-        }
-
-        public override string ToString()
-        {
-            return $"OBJECT :: {Tag}.{Id}";
         }
     }
 }

@@ -29,20 +29,5 @@ namespace Data.Map
         {
             Usages = 0;
         }
-
-        public LcsLine ToLcs()
-        {
-            return new LcsLine('$', Position, Priority);
-        }
-
-        public static BsSpawn FromLcs(LcsLine line)
-        {
-            return new BsSpawn((Vector2)line.Props[0], (int)line.Props[1]);
-        }
-
-        public override string ToString()
-        {
-            return $"SPAWN :: {Position}";
-        }
     }
 }

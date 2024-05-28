@@ -1,7 +1,7 @@
 using System.Linq;
 using UnityEngine;
 
-namespace Utils.Ext
+namespace Extensions
 {
     public static class Collision2DExt
     {
