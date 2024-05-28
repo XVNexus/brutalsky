@@ -1,6 +1,7 @@
 ## *Nightly δ24.05.27*
 
 #### UPDATES
+- player on player collisions now deal damage based on relative speed instead of real impact force (which means that being hit at 20 m/s in air will do the same damage as being slammed against the wall at 20 m/s, fixing the op wall slam issue)
 - logic system now uses string ids instead of int indices for nodes
 
 
