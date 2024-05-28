@@ -1,0 +1,62 @@
+using Data.Base;
+using JetBrains.Annotations;
+using Utils;
+
+namespace Controllers.Base
+{
+    public abstract class ControllerBase : BsBehavior
+    {
+        public abstract string Tag { get; }
+
+        public BsObject Object { get; set; }
+        public IdList<SubControllerBase> Subs = new();
+
+        protected override void OnStart()
+        {
+            OnInit();
+        }
+
+        public abstract void OnInit();
+
+        [CanBeNull]
+        public TC GetSub<TC>(string id) where TC : SubControllerBase
+        {
+            return ContainsSub(id) ? (TC)Subs[id] : null;
+        }
+
+        public TC RequireSub<TC>(string id, string callerId) where TC : SubControllerBase
+        {
+            if (!Subs.Contains(id)) throw Errors.MissingSubController(Tag, callerId, id);
+            return (TC)Subs[id];
+        }
+
+        public bool AddSub(SubControllerBase sub)
+        {
+            if (ContainsSub(sub)) return false;
+            Subs.Add(sub);
+            return true;
+        }
+
+        public bool RemoveSub(SubControllerBase sub)
+        {
+            return RemoveSub(sub.Id);
+        }
+
+        public bool RemoveSub(string id)
+        {
+            if (!ContainsSub(id)) return false;
+            Subs.Remove(id);
+            return true;
+        }
+
+        public bool ContainsSub(SubControllerBase sub)
+        {
+            return ContainsSub(sub.Id);
+        }
+
+        public bool ContainsSub(string id)
+        {
+            return Subs.Contains(id);
+        }
+    }
+}

@@ -5,7 +5,7 @@ using Systems;
 using UnityEngine;
 using Utils;
 
-namespace Data.Object
+namespace Data
 {
     public class BsPlayer : BsObject
     {
