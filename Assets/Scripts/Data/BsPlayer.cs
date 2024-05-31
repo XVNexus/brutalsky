@@ -1,5 +1,6 @@
 using System;
 using Controllers;
+using Controllers.Base;
 using Data.Base;
 using Extensions;
 using Systems;
@@ -21,25 +22,40 @@ namespace Data
         public override GameObject Prefab => ResourceSystem._.pPlayer;
         public override string Tag => Tags.PlayerPrefix;
 
-        public byte Type { get => (byte)Props[0]; set => Props[0] = value; }
-        public Color Color { get => ColorExt.FromLcs(Props[1]); set => Props[1] = value.ToLcs(); }
-        public float Health { get => (float)Props[2]; set => Props[2] = value; }
+        public override Func<GameObject, BsObject, BsObject[], BsBehavior> Init => (gob, obj, _) =>
+        {
+            // Link object to controller
+            var player = obj.As<BsPlayer>();
+            var controller = gob.GetComponent<PlayerController>();
+            controller.Object = player;
+
+            // Apply config
+            controller.GetComponent<SpriteRenderer>().color = player.Color;
+
+            return controller;
+        };
+
+        public byte Type
+        {
+            get => (byte)Props[0];
+            set => Props[0] = value;
+        }
+
+        public Color Color
+        {
+            get => ColorExt.FromLcs(Props[1]);
+            set => Props[1] = value.ToLcs();
+        }
+
+        public float Health
+        {
+            get => (float)Props[2];
+            set => Props[2] = value;
+        }
 
         public BsPlayer(string id = "") : base(id, Array.Empty<string>())
         {
             Props = new[] { TypeDummy, Color.white.ToLcs(), 100f };
-            Init = (gob, obj, _) =>
-            {
-                // Link object to controller
-                var player = obj.As<BsPlayer>();
-                var controller = gob.GetComponent<PlayerController>();
-                controller.Object = player;
-
-                // Apply config
-                controller.GetComponent<SpriteRenderer>().color = player.Color;
-
-                return controller;
-            };
         }
 
         public BsPlayer() { }

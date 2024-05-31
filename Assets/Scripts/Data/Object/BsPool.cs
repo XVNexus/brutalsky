@@ -1,4 +1,6 @@
+using System;
 using Controllers;
+using Controllers.Base;
 using Data.Base;
 using Extensions;
 using Systems;
@@ -11,6 +13,29 @@ namespace Data.Object
     {
         public override GameObject Prefab => ResourceSystem._.pPool;
         public override string Tag => Tags.PoolPrefix;
+
+        public override Func<GameObject, BsObject, BsObject[], BsBehavior> Init => (gob, obj, _) =>
+        {
+            // Link object to controller
+            var pool = obj.As<BsPool>();
+            var controller = gob.GetComponent<PoolController>();
+            controller.Object = pool;
+
+            // Apply size
+            gob.transform.localScale = pool.Size;
+
+            // Apply color and layer
+            var spriteRenderer = gob.GetComponent<SpriteRenderer>();
+            spriteRenderer.material = pool.Glow ? ResourceSystem._.aUnlitMaterial : ResourceSystem._.aLitMaterial;
+            spriteRenderer.material.color = pool.Color;
+            spriteRenderer.sortingOrder = pool.Layer * 2;
+
+            // Apply transform
+            gob.transform.localPosition = pool.Position;
+            gob.transform.localRotation = Quaternion.Euler(0f, 0f, pool.Rotation);
+
+            return controller;
+        };
 
         public Vector2 Size
         {
@@ -62,28 +87,6 @@ namespace Data.Object
         public BsPool(string id = "", params string[] relatives) : base(id, relatives)
         {
             Props = new[] { Vector2.zero.ToLcs(), 0f, 0f, 0f, Color.white.ToLcs(), false };
-            Init = (gob, obj, _) =>
-            {
-                // Link object to controller
-                var pool = obj.As<BsPool>();
-                var controller = gob.GetComponent<PoolController>();
-                controller.Object = pool;
-
-                // Apply size
-                gob.transform.localScale = pool.Size;
-
-                // Apply color and layer
-                var spriteRenderer = gob.GetComponent<SpriteRenderer>();
-                spriteRenderer.material = pool.Glow ? ResourceSystem._.aUnlitMaterial : ResourceSystem._.aLitMaterial;
-                spriteRenderer.material.color = pool.Color;
-                spriteRenderer.sortingOrder = pool.Layer * 2;
-
-                // Apply transform
-                gob.transform.localPosition = pool.Position;
-                gob.transform.localRotation = Quaternion.Euler(0f, 0f, pool.Rotation);
-
-                return controller;
-            };
         }
 
         public BsPool() { }

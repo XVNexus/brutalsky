@@ -22,7 +22,7 @@ namespace Data.Base
         public sbyte Layer { get; set; }
         public object[] Props { get; set; }
 
-        public Func<GameObject, BsObject, BsObject[], BsBehavior> Init { get; set; }
+        public virtual Func<GameObject, BsObject, BsObject[], BsBehavior> Init { get; set; }
         [CanBeNull] public GameObject InstanceObject { get; private set; }
         [CanBeNull] public BsBehavior InstanceController { get; private set; }
         public bool Active { get; private set; }
@@ -47,7 +47,10 @@ namespace Data.Base
                 Rotation = Rotation,
                 Layer = Layer,
                 Props = Props,
-                Init = Init
+                Init = Init,
+                InstanceObject = InstanceObject,
+                InstanceController = InstanceController,
+                Active = Active
             };
         }
 
@@ -79,7 +82,6 @@ namespace Data.Base
             Tag = line.Get<string>(0);
             var result = ResourceSystem.GetTemplateObject(Tag);
             Prefab = result.Prefab;
-            Debug.Log($"{Tag} {result.Init}");
             Init = result.Init;
             Id = line.Get<string>(1);
             var rawRelatives = line.Get<object[]>(2);

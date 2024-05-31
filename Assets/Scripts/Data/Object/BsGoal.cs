@@ -1,4 +1,6 @@
+using System;
 using Controllers;
+using Controllers.Base;
 using Data.Base;
 using Extensions;
 using Systems;
@@ -11,6 +13,20 @@ namespace Data.Object
     {
         public override GameObject Prefab => ResourceSystem._.pGoal;
         public override string Tag => Tags.GoalPrefix;
+
+        public override Func<GameObject, BsObject, BsObject[], BsBehavior> Init => (gob, obj, _) =>
+        {
+            // Link object to controller
+            var goal = obj.As<BsGoal>();
+            var controller = gob.GetComponent<GoalController>();
+            controller.Object = goal;
+
+            // Apply transform
+            gob.transform.localPosition = goal.Position;
+            gob.transform.localScale = goal.Size;
+
+            return controller;
+        };
 
         public Vector2 Size
         {
@@ -33,19 +49,6 @@ namespace Data.Object
         public BsGoal(string id = "", params string[] relatives) : base(id, relatives)
         {
             Props = new[] { Vector2.one.ToLcs(), Color.white.ToLcs(), (uint)0 };
-            Init = (gob, obj, _) =>
-            {
-                // Link object to controller
-                var goal = obj.As<BsGoal>();
-                var controller = gob.GetComponent<GoalController>();
-                controller.Object = goal;
-
-                // Apply transform
-                gob.transform.localPosition = goal.Position;
-                gob.transform.localScale = goal.Size;
-
-                return controller;
-            };
         }
 
         public BsGoal() { }

@@ -1,5 +1,7 @@
+using System;
 using System.Linq;
 using Controllers;
+using Controllers.Base;
 using Data.Base;
 using Extensions;
 using Systems;
@@ -12,6 +14,61 @@ namespace Data.Object
     {
         public override GameObject Prefab => ResourceSystem._.pShape;
         public override string Tag => Tags.ShapePrefix;
+
+        public override Func<GameObject, BsObject, BsObject[], BsBehavior> Init => (gob, obj, _) =>
+        {
+            // Link object to controller
+            var shape = obj.As<BsShape>();
+            var controller = gob.GetComponent<ShapeController>();
+            controller.Object = shape;
+
+            // Convert path to mesh
+            var points = shape.Path.GetPoints(shape.Rotation);
+            var vertices = points.Select(point => (Vector3)point).ToArray();
+            var mesh = new Mesh
+            {
+                vertices = vertices,
+                triangles = new Triangulator(points).Triangulate()
+            };
+            mesh.RecalculateNormals();
+            mesh.RecalculateBounds();
+
+            // Apply mesh
+            gob.GetComponent<MeshFilter>().mesh = mesh;
+            var polygonCollider = gob.GetComponent<PolygonCollider2D>();
+            polygonCollider.SetPath(0, points);
+
+            // Apply color and layer
+            var meshRenderer = gob.GetComponent<MeshRenderer>();
+            meshRenderer.material = shape.Glow ? ResourceSystem._.aUnlitMaterial : ResourceSystem._.aLitMaterial;
+            meshRenderer.material.color = shape.Color;
+            meshRenderer.sortingOrder = shape.Layer * 2;
+
+            // Apply material
+            var rigidbody = gob.GetComponent<Rigidbody2D>();
+            var physicsMaterial = new PhysicsMaterial2D
+            {
+                friction = shape.Friction,
+                bounciness = shape.Restitution
+            };
+            polygonCollider.sharedMaterial = physicsMaterial;
+            rigidbody.sharedMaterial = physicsMaterial;
+            if (shape.Dynamic)
+            {
+                rigidbody.bodyType = RigidbodyType2D.Dynamic;
+                polygonCollider.density = shape.Density;
+            }
+
+            if (shape.Relatives.Length > 0)
+            {
+                rigidbody.bodyType = RigidbodyType2D.Kinematic;
+            }
+
+            // Apply transform
+            gob.transform.localPosition = shape.Position;
+
+            return controller;
+        };
 
         public Path Path
         {
@@ -85,60 +142,6 @@ namespace Data.Object
             Props = new[]
             {
                 Path.Ngon(3, 1f).ToLcs(), 0f, 0f, 0f, 0f, 0f, false, Color.white.ToLcs(), false
-            };
-            Init = (gob, obj, _) =>
-            {
-                // Link object to controller
-                var shape = obj.As<BsShape>();
-                var controller = gob.GetComponent<ShapeController>();
-                controller.Object = shape;
-
-                // Convert path to mesh
-                var points = shape.Path.GetPoints(shape.Rotation);
-                var vertices = points.Select(point => (Vector3)point).ToArray();
-                var mesh = new Mesh
-                {
-                    vertices = vertices,
-                    triangles = new Triangulator(points).Triangulate()
-                };
-                mesh.RecalculateNormals();
-                mesh.RecalculateBounds();
-
-                // Apply mesh
-                gob.GetComponent<MeshFilter>().mesh = mesh;
-                var polygonCollider = gob.GetComponent<PolygonCollider2D>();
-                polygonCollider.SetPath(0, points);
-
-                // Apply color and layer
-                var meshRenderer = gob.GetComponent<MeshRenderer>();
-                meshRenderer.material = shape.Glow ? ResourceSystem._.aUnlitMaterial : ResourceSystem._.aLitMaterial;
-                meshRenderer.material.color = shape.Color;
-                meshRenderer.sortingOrder = shape.Layer * 2;
-
-                // Apply material
-                var rigidbody = gob.GetComponent<Rigidbody2D>();
-                var physicsMaterial = new PhysicsMaterial2D
-                {
-                    friction = shape.Friction,
-                    bounciness = shape.Restitution
-                };
-                polygonCollider.sharedMaterial = physicsMaterial;
-                rigidbody.sharedMaterial = physicsMaterial;
-                if (shape.Dynamic)
-                {
-                    rigidbody.bodyType = RigidbodyType2D.Dynamic;
-                    polygonCollider.density = shape.Density;
-                }
-
-                if (shape.Relatives.Length > 0)
-                {
-                    rigidbody.bodyType = RigidbodyType2D.Kinematic;
-                }
-
-                // Apply transform
-                gob.transform.localPosition = shape.Position;
-
-                return controller;
             };
         }
 

@@ -1,4 +1,6 @@
+using System;
 using Controllers;
+using Controllers.Base;
 using Data.Base;
 using Extensions;
 using Systems;
@@ -11,6 +13,18 @@ namespace Data.Object
     {
         public override GameObject Prefab => ResourceSystem._.pMount;
         public override string Tag => Tags.MountPrefix;
+        public override Func<GameObject, BsObject, BsObject[], BsBehavior> Init => (gob, obj, _) =>
+        {
+            // Link object to controller
+            var mount = obj.As<BsMount>();
+            var controller = gob.GetComponent<MountController>();
+            controller.Object = mount;
+
+            // Apply transform
+            gob.transform.localPosition = mount.Position;
+
+            return controller;
+        };
 
         public Vector2 EjectionForce
         {
@@ -21,18 +35,6 @@ namespace Data.Object
         public BsMount(string id = "", params string[] relatives) : base(id, relatives)
         {
             Props = new[] { Vector2.zero.ToLcs() };
-            Init = (gob, obj, _) =>
-            {
-                // Link object to controller
-                var mount = obj.As<BsMount>();
-                var controller = gob.GetComponent<MountController>();
-                controller.Object = mount;
-
-                // Apply transform
-                gob.transform.localPosition = mount.Position;
-
-                return controller;
-            };
         }
 
         public BsMount() { }

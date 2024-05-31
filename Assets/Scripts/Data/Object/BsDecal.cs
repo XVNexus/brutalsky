@@ -1,5 +1,7 @@
+using System;
 using System.Linq;
 using Controllers;
+using Controllers.Base;
 using Data.Base;
 using Extensions;
 using Systems;
@@ -12,6 +14,39 @@ namespace Data.Object
     {
         public override GameObject Prefab => ResourceSystem._.pDecal;
         public override string Tag => Tags.DecalPrefix;
+
+        public override Func<GameObject, BsObject, BsObject[], BsBehavior> Init => (gob, obj, _) =>
+        {
+            // Link object to controller
+            var decal = obj.As<BsDecal>();
+            var controller = gob.GetComponent<DecalController>();
+            controller.Object = decal;
+
+            // Convert path to mesh
+            var points = decal.Path.GetPoints(decal.Rotation);
+            var vertices = points.Select(point => (Vector3)point).ToArray();
+            var mesh = new Mesh
+            {
+                vertices = vertices,
+                triangles = new Triangulator(points).Triangulate()
+            };
+            mesh.RecalculateNormals();
+            mesh.RecalculateBounds();
+
+            // Apply mesh
+            gob.GetComponent<MeshFilter>().mesh = mesh;
+
+            // Apply color and layer
+            var meshRenderer = gob.GetComponent<MeshRenderer>();
+            meshRenderer.material = decal.Glow ? ResourceSystem._.aUnlitMaterial : ResourceSystem._.aLitMaterial;
+            meshRenderer.material.color = decal.Color;
+            meshRenderer.sortingOrder = decal.Layer * 2;
+
+            // Apply transform
+            gob.transform.localPosition = decal.Position;
+
+            return controller;
+        };
 
         public Path Path
         {
@@ -34,38 +69,6 @@ namespace Data.Object
         public BsDecal(string id = "", params string[] relatives) : base(id, relatives)
         {
             Props = new[] { Path.Ngon(3, 1f).ToLcs(), Color.white.ToLcs(), false };
-            Init = (gob, obj, _) =>
-            {
-                // Link object to controller
-                var decal = obj.As<BsDecal>();
-                var controller = gob.GetComponent<DecalController>();
-                controller.Object = decal;
-
-                // Convert path to mesh
-                var points = decal.Path.GetPoints(decal.Rotation);
-                var vertices = points.Select(point => (Vector3)point).ToArray();
-                var mesh = new Mesh
-                {
-                    vertices = vertices,
-                    triangles = new Triangulator(points).Triangulate()
-                };
-                mesh.RecalculateNormals();
-                mesh.RecalculateBounds();
-
-                // Apply mesh
-                gob.GetComponent<MeshFilter>().mesh = mesh;
-
-                // Apply color and layer
-                var meshRenderer = gob.GetComponent<MeshRenderer>();
-                meshRenderer.material = decal.Glow ? ResourceSystem._.aUnlitMaterial : ResourceSystem._.aLitMaterial;
-                meshRenderer.material.color = decal.Color;
-                meshRenderer.sortingOrder = decal.Layer * 2;
-
-                // Apply transform
-                gob.transform.localPosition = decal.Position;
-
-                return controller;
-            };
         }
 
         public BsDecal() { }

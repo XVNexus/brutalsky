@@ -35,6 +35,9 @@ namespace Data
         public List<BsNode> Nodes { get; } = new();
         public List<BsLink> Links { get; } = new();
 
+        public List<BsNode> ActiveNodes { get; } = new();
+        public Dictionary<int, BsLink> ActiveLinks { get; } = new();
+
         public BsMap(string title = "Untitled Map", string author = "Anonymous Marble")
         {
             Title = title;
@@ -59,6 +62,29 @@ namespace Data
             foreach (var spawn in Spawns)
             {
                 spawn.Reset();
+            }
+        }
+
+        public void InitMatrix()
+        {
+            ActiveNodes.Clear();
+            foreach (var node in Nodes)
+            {
+                node.Init?.Invoke();
+                ActiveNodes.Add(node);
+            }
+            ActiveLinks.Clear();
+            foreach (var link in Links)
+            {
+                ActiveLinks[link.To] = link;
+            }
+        }
+
+        public void CalcMatrix()
+        {
+            foreach (var node in ActiveNodes)
+            {
+                
             }
         }
 

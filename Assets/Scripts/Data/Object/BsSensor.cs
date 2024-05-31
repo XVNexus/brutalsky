@@ -1,4 +1,6 @@
+using System;
 using Controllers;
+using Controllers.Base;
 using Data.Base;
 using Extensions;
 using Systems;
@@ -11,6 +13,20 @@ namespace Data.Object
     {
         public override GameObject Prefab => ResourceSystem._.pSensor;
         public override string Tag => Tags.SensorPrefix;
+
+        public override Func<GameObject, BsObject, BsObject[], BsBehavior> Init => (gob, obj, _) =>
+        {
+            // Link object to controller
+            var sensor = obj.As<BsSensor>();
+            var controller = gob.GetComponent<SensorController>();
+            controller.Object = sensor;
+
+            // Apply transform
+            gob.transform.localPosition = sensor.Position;
+            gob.transform.localScale = sensor.Size;
+
+            return controller;
+        };
 
         public Vector2 Size
         {
@@ -50,19 +66,6 @@ namespace Data.Object
         public BsSensor(string id = "", params string[] relatives) : base(id, relatives)
         {
             Props = new[] { Vector2.one.ToLcs(), false, true, false };
-            Init = (gob, obj, _) =>
-            {
-                // Link object to controller
-                var sensor = obj.As<BsSensor>();
-                var controller = gob.GetComponent<SensorController>();
-                controller.Object = sensor;
-
-                // Apply transform
-                gob.transform.localPosition = sensor.Position;
-                gob.transform.localScale = sensor.Size;
-
-                return controller;
-            };
         }
 
         public BsSensor() { }
