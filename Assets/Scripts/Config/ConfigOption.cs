@@ -4,7 +4,7 @@ using Utils;
 
 namespace Config
 {
-    public class ConfigOption : ILcsLine, IHasId
+    public class ConfigOption : IHasId, ILcsLine
     {
         public string Id { get; set; } = "";
         public object Value
@@ -64,8 +64,8 @@ namespace Config
 
         public void _FromLcs(LcsLine line)
         {
-            Id = (string)line.Props[0];
-            Value = line.Props[1];
+            Id = line.Get<string>(0);
+            Value = line.Get(1);
         }
     }
 }

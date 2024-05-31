@@ -1,9 +1,9 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using UnityEngine;
 using Utils;
 
 namespace Lcs
@@ -41,6 +41,7 @@ namespace Lcs
         private Func<object, string> _toStr;
         private Func<string, object> _fromStr;
 
+        // TODO: OPTIMIZE REGEX PATTERNS
         public LcsInfo(int size, byte byteTag, string stringPattern,
             Func<object, byte[]> toBin, Func<byte[], object> fromBin,
             Func<object, string> toStr, Func<string, object> fromStr)
@@ -54,15 +55,18 @@ namespace Lcs
             _fromStr = fromStr;
         }
 
-        public static object Serialize<T>(T value) where T : ILcsProp, new()
+        public static object[] Compress(params object[] values)
         {
-            return value._ToLcs();
+            return values;
         }
 
-        public static T Deserialize<T>(object prop) where T : ILcsProp, new()
+        public static object[] Convert(IList array)
         {
-            var result = new T();
-            result._FromLcs(prop);
+            var result = new object[array.Count];
+            for (var i = 0; i < array.Count; i++)
+            {
+                result[i] = array[i];
+            }
             return result;
         }
 

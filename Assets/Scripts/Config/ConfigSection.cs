@@ -5,7 +5,7 @@ using Utils;
 
 namespace Config
 {
-    public class ConfigSection : ILcsLine, IHasId
+    public class ConfigSection : IHasId, ILcsLine
     {
         public string Id { get; set; } = "";
         public IdList<ConfigOption> Options { get; } = new();

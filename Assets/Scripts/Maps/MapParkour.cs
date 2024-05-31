@@ -101,15 +101,15 @@ namespace Maps
             while (cursor < limit)
             {
                 var spacing = rand.NextFloat(Difficulty * 5f, Difficulty * 2f, 2f);
-                var length = rand.NextFloat(26f - Difficulty * 2f, 13f - Difficulty, 2f);
+                var length = rand.NextFloat(20f - Difficulty, 10f - Difficulty * .5f, 2f);
                 if (cursor + spacing + length >= limit) break;
-                var ice = rand.NextFloat() < Mathf.Pow(diffFraction, 1.5f);
+                var material = rand.NextFloat() < Mathf.Pow(diffFraction, 1.5f);
                 placements.Add(new Rect
                 (
                     cursor + spacing,
                     rand.NextFloat(0f, size.y * .2f, 1.5f),
                     length,
-                    ice ? 1f : 0f
+                    material ? rand.NextFloat() >= .75f ? 2 : 1 : 0
                 ));
                 cursor += spacing + length;
             }
@@ -136,8 +136,18 @@ namespace Maps
                 var rect = placements[i];
                 var position = MathfExt.Round(rect.center + new Vector2(0f, -1f));
                 var length = Mathf.Round(rect.width * .5f) * 2f;
-                var material = Mathf.Approximately(rect.height, 1f) ? MaterialExt.Ice : MaterialExt.Stone;
-                var color = Mathf.Approximately(rect.height, 1f) ? ColorExt.Ice : ColorExt.Stone;
+                var material = (int)rect.height switch
+                {
+                    1 => MaterialExt.Ice,
+                    2 => MaterialExt.Rubber,
+                    _ => MaterialExt.Stone
+                };
+                var color = (int)rect.height switch
+                {
+                    1 => ColorExt.Ice,
+                    2 => ColorExt.Rubber,
+                    _ => ColorExt.Stone
+                };
                 result.Objects.Add(new BsShape($"platform-{i + 1}")
                 {
                     Position = position + new Vector2(0f, .5f),

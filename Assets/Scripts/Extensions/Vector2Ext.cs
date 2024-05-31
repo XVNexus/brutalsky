@@ -1,3 +1,4 @@
+using Lcs;
 using UnityEngine;
 
 namespace Extensions
@@ -14,6 +15,17 @@ namespace Extensions
             return (minifyOrMaxify ? _.Aspect() > aspect : _.Aspect() < aspect)
                 ? new Vector2(_.x, _.x / aspect)
                 : new Vector2(_.y * aspect, _.y);
+        }
+
+        public static object ToLcs(this Vector2 _)
+        {
+            return new object[] { _.x, _.y };
+        }
+
+        public static Vector2 FromLcs(object prop)
+        {
+            var parts = (object[])prop;
+            return new Vector2((float)parts[0], (float)parts[1]);
         }
     }
 }

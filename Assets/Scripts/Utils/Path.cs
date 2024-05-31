@@ -2,35 +2,32 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Extensions;
-using Lcs;
 using UnityEngine;
 
 namespace Utils
 {
-    public class Path : ILcsProp
+    public class Path
     {
-        public const int TypeVector = 0;
-        public const int TypePolygon = 1;
-        public const int TypeSquare = 2;
-        public const int TypeRectangle = 3;
-        public const int TypeCircle = 4;
-        public const int TypeEllipse = 5;
-        public const int TypeNgon = 6;
-        public const int TypeStar = 7;
+        public const byte TypeVector = 0;
+        public const byte TypePolygon = 1;
+        public const byte TypeSquare = 2;
+        public const byte TypeRectangle = 3;
+        public const byte TypeCircle = 4;
+        public const byte TypeEllipse = 5;
+        public const byte TypeNgon = 6;
+        public const byte TypeStar = 7;
 
         public static float ArcHandleFactor = Mathf.Pow(1f / 6f, 1f / 3f);
 
-        public int Type { get; private set; }
-        public float[] Args { get; private set; } = Array.Empty<float>();
-        public List<Vector2> Points { get; private set; } = new();
+        public byte Type { get; }
+        public float[] Args { get; }
+        public List<Vector2> Points { get; } = new();
 
-        public Path(int type, float[] args)
+        public Path(byte type, float[] args)
         {
             Type = type;
             Args = args;
         }
-
-        public Path() { }
 
         public static Path Vector(params float[] args)
         {
@@ -74,8 +71,8 @@ namespace Utils
 
         public static Path Square(float diameter)
         {
+            var result = new Path(TypeSquare, new[] { diameter });
             var radius = diameter * .5f;
-            var result = new Path(TypeSquare, new[] { radius });
             result.StartAt(-radius, radius);
             result.LineTo(radius, radius);
             result.LineTo(radius, -radius);
@@ -85,9 +82,9 @@ namespace Utils
 
         public static Path Rectangle(float diameterX, float diameterY)
         {
+            var result = new Path(TypeRectangle, new[] { diameterX, diameterY });
             var radiusX = diameterX * .5f;
             var radiusY = diameterY * .5f;
-            var result = new Path(TypeRectangle, new[] { radiusX, radiusY });
             result.StartAt(-radiusX, radiusY);
             result.LineTo(radiusX, radiusY);
             result.LineTo(radiusX, -radiusY);
@@ -97,8 +94,8 @@ namespace Utils
 
         public static Path Circle(float diameter)
         {
+            var result = new Path(TypeCircle, new[] { diameter });
             var radius = diameter * .5f;
-            var result = new Path(TypeCircle, new[] { radius });
             result.StartAt(0f, radius);
             result.ArcTo(radius, radius, radius, 0f);
             result.ArcTo(radius, -radius, 0f, -radius);
@@ -109,9 +106,9 @@ namespace Utils
 
         public static Path Ellipse(float diameterX, float diameterY)
         {
+            var result = new Path(TypeEllipse, new[] { diameterX, diameterY });
             var radiusX = diameterX * .5f;
             var radiusY = diameterY * .5f;
-            var result = new Path(TypeEllipse, new[] { radiusX, radiusY });
             result.StartAt(0f, radiusY);
             result.ArcTo(radiusX, radiusY, radiusX, 0f);
             result.ArcTo(radiusX, -radiusY, 0f, -radiusY);
@@ -122,8 +119,8 @@ namespace Utils
 
         public static Path Ngon(int points, float diameter)
         {
+            var result = new Path(TypeNgon, new[] { points, diameter });
             var radius = diameter * .5f;
-            var result = new Path(TypeNgon, new[] { points, radius });
             result.StartAt(0f, radius);
             for (var i = 1; i < points; i++)
             {
@@ -135,9 +132,9 @@ namespace Utils
 
         public static Path Star(int points, float diameterInner, float diameterOuter)
         {
+            var result = new Path(TypeStar, new[] { points, diameterInner, diameterOuter });
             var radiusInner = diameterInner * .5f;
             var radiusOuter = diameterOuter * .5f;
-            var result = new Path(TypeStar, new[] { points, radiusInner, radiusOuter });
             result.StartAt(0f, radiusInner);
             var pointsReal = points * 2;
             var radii = new[] { radiusInner, radiusOuter };
@@ -228,7 +225,7 @@ namespace Utils
             }
         }
 
-        public object _ToLcs()
+        public object ToLcs()
         {
             var result = new object[Args.Length + 1];
             result[0] = Type;
@@ -239,30 +236,27 @@ namespace Utils
             return result;
         }
 
-        public void _FromLcs(object prop)
+        public static Path FromLcs(object prop)
         {
             var parts = (object[])prop;
-            var type = (int)parts[0];
+            var type = (byte)parts[0];
             var args = new float[parts.Length - 1];
             for (var i = 1; i < parts.Length; i++)
             {
                 args[i - 1] = (float)parts[i];
             }
-            var result = type switch
+            return type switch
             {
                 TypeVector => Vector(args),
-                TypePolygon => Vector(args),
-                TypeSquare => Vector(args),
-                TypeRectangle => Vector(args),
-                TypeCircle => Vector(args),
-                TypeEllipse => Vector(args),
-                TypeNgon => Vector(args),
-                TypeStar => Vector(args),
+                TypePolygon => Polygon(args),
+                TypeSquare => Square(args[0]),
+                TypeRectangle => Rectangle(args[0], args[1]),
+                TypeCircle => Circle(args[0]),
+                TypeEllipse => Ellipse(args[0], args[1]),
+                TypeNgon => Ngon((int)args[0], args[1]),
+                TypeStar => Star((int)args[0], args[1], args[2]),
                 _ => throw Errors.InvalidItem("path type", type)
             };
-            Type = result.Type;
-            Args = result.Args;
-            Points = result.Points;
         }
     }
 }

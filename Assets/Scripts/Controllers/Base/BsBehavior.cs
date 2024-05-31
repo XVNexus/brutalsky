@@ -4,12 +4,12 @@ namespace Controllers.Base
 {
     public abstract class BsBehavior : MonoBehaviour
     {
-        public const int Unloaded = 0;
-        public const int Started = 1;
-        public const int Loaded = 2;
-        public const int Ready = 3;
+        public const byte Unloaded = 0;
+        public const byte Started = 1;
+        public const byte Loaded = 2;
+        public const byte Ready = 3;
 
-        public int Status { get; private set; } = Unloaded;
+        public byte Status { get; private set; } = Unloaded;
 
         // Phase 1: Initialize all components and subscribe to event system events
         public void Start()

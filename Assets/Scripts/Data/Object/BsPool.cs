@@ -1,6 +1,6 @@
 using Controllers;
-using Controllers.Base;
 using Data.Base;
+using Extensions;
 using Systems;
 using UnityEngine;
 using Utils;
@@ -12,12 +12,42 @@ namespace Data.Object
         public override GameObject Prefab => ResourceSystem._.pPool;
         public override string Tag => Tags.PoolPrefix;
 
-        public Vector2 Size { get; set; } = Vector2.zero;
-        public float Buoyancy { get; set; }
-        public float Viscosity { get; set; }
-        public float Health { get; set; }
-        public Color Color { get; set; } = Color.white;
-        public bool Glow { get; set; }
+        public Vector2 Size
+        {
+            get => Vector2Ext.FromLcs(Props[0]);
+            set => Props[0] = value.ToLcs();
+        }
+
+        public float Buoyancy
+        {
+            get => (float)Props[1];
+            set => Props[1] = value;
+        }
+
+        public float Viscosity
+        {
+            get => (float)Props[2];
+            set => Props[2] = value;
+        }
+
+        public float Health
+        {
+            get => (float)Props[3];
+            set => Props[3] = value;
+        }
+
+        public Color Color
+        {
+            get => ColorExt.FromLcs(Props[4]);
+            set => Props[4] = value.ToLcs();
+        }
+
+        public bool Glow
+        {
+            get => (bool)Props[5];
+            set => Props[5] = value;
+        }
+
         public (float, float, float) Chemical
         {
             get => (Buoyancy, Viscosity, Health);
@@ -29,28 +59,33 @@ namespace Data.Object
             }
         }
 
-        public BsPool(string id = "", params string[] relatives) : base(id, relatives) { }
-
-        protected override BsBehavior _Init(GameObject gameObject, BsObject[] relatedObjects)
+        public BsPool(string id = "", params string[] relatives) : base(id, relatives)
         {
-            // Link object to controller
-            var controller = gameObject.GetComponent<PoolController>();
-            controller.Object = this;
+            Props = new[] { Vector2.zero.ToLcs(), 0f, 0f, 0f, Color.white.ToLcs(), false };
+            Init = (gob, obj, _) =>
+            {
+                // Link object to controller
+                var pool = obj.As<BsPool>();
+                var controller = gob.GetComponent<PoolController>();
+                controller.Object = pool;
 
-            // Apply size
-            gameObject.transform.localScale = Size;
+                // Apply size
+                gob.transform.localScale = pool.Size;
 
-            // Apply color and layer
-            var spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
-            spriteRenderer.material = Glow ? ResourceSystem._.aUnlitMaterial : ResourceSystem._.aLitMaterial;
-            spriteRenderer.material.color = Color;
-            spriteRenderer.sortingOrder = Layer * 2;
+                // Apply color and layer
+                var spriteRenderer = gob.GetComponent<SpriteRenderer>();
+                spriteRenderer.material = pool.Glow ? ResourceSystem._.aUnlitMaterial : ResourceSystem._.aLitMaterial;
+                spriteRenderer.material.color = pool.Color;
+                spriteRenderer.sortingOrder = pool.Layer * 2;
 
-            // Apply transform
-            gameObject.transform.localPosition = Position;
-            gameObject.transform.localRotation = Quaternion.Euler(0f, 0f, Rotation);
+                // Apply transform
+                gob.transform.localPosition = pool.Position;
+                gob.transform.localRotation = Quaternion.Euler(0f, 0f, pool.Rotation);
 
-            return controller;
+                return controller;
+            };
         }
+
+        public BsPool() { }
     }
 }

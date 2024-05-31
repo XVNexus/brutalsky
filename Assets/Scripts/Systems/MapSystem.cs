@@ -6,6 +6,7 @@ using Data;
 using Data.Base;
 using Extensions;
 using JetBrains.Annotations;
+using Lcs;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using Utils;
@@ -24,7 +25,7 @@ namespace Systems
         public float maxMapSize;
 
         // Exposed properties
-        public Dictionary<uint, BsMap> MapList { get; } = new();
+        public Dictionary<uint, byte[]> MapList { get; } = new();
         [CanBeNull] public BsMap ActiveMap { get; private set; }
         public Dictionary<string, BsPlayer> ActivePlayers { get; } = new();
         public bool MapLoaded { get; private set; }
@@ -131,7 +132,7 @@ namespace Systems
         public void RegisterMap(BsMap map)
         {
             EventSystem._.EmitMapPreload(map);
-            MapList[map.Id] = map;
+            MapList[map.Id] = LcsDocument.Serialize(map).Binify(true);
         }
 
         public void UnregisterMaps()
@@ -147,7 +148,7 @@ namespace Systems
 
         public void BuildMap(uint id)
         {
-            BuildMap(id > 0 ? MapList[id] : null);
+            BuildMap(id > 0 ? LcsDocument.Deserialize<BsMap>(LcsDocument.Parse(MapList[id], true)) : null);
         }
 
         public void BuildMap([CanBeNull] BsMap map = null)

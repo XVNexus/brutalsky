@@ -16,6 +16,7 @@ namespace Lcs
 
         public int Version { get; }
         public string[] LineLevels { get; }
+        // TODO: MAKE LINES AUTO SERIALIZE AND STORE THIS AS ILCSLINE[]
         public LcsLine[] Lines { get; }
 
         public LcsDocument(int version, string[] lineLevels, params LcsLine[] lines)

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Data.Base;
 using Extensions;
+using Lcs;
 using Systems;
 using UnityEngine;
 using Utils;
@@ -9,7 +10,7 @@ using Color = UnityEngine.Color;
 
 namespace Data
 {
-    public class BsMap
+    public class BsMap : ILcsDocument
     {
         public const byte DirectionNone = 0;
         public const byte DirectionDown = 1;
@@ -31,6 +32,8 @@ namespace Data
 
         public List<BsSpawn> Spawns { get; } = new();
         public IdList<BsObject> Objects { get; } = new();
+        public List<BsNode> Nodes { get; } = new();
+        public List<BsLink> Links { get; } = new();
 
         public BsMap(string title = "Untitled Map", string author = "Anonymous Marble")
         {
@@ -38,9 +41,7 @@ namespace Data
             Author = author;
         }
 
-        public BsMap()
-        {
-        }
+        public BsMap() { }
 
         public Vector2 SelectSpawn()
         {
@@ -58,6 +59,53 @@ namespace Data
             foreach (var spawn in Spawns)
             {
                 spawn.Reset();
+            }
+        }
+
+        public LcsDocument _ToLcs()
+        {
+            var result = new List<LcsLine>
+            {
+                new('!', Title, Author, PlayArea.ToLcs(), BackgroundColor.ToLcs(), LightingColor.ToLcs(),
+                    GravityDirection, GravityStrength, AirResistance, PlayerHealth, AllowDummies)
+            };
+            result.AddRange(Spawns.Select(LcsLine.Serialize));
+            result.AddRange(Objects.Values.Select(LcsLine.Serialize));
+            result.AddRange(Nodes.Select(LcsLine.Serialize));
+            result.AddRange(Links.Select(LcsLine.Serialize));
+            return new LcsDocument(1, new[] { "!$#%^" }, result.ToArray());
+        }
+
+        public void _FromLcs(LcsDocument document)
+        {
+            var metadata = document.Lines[0];
+            Title = metadata.Get<string>(0);
+            Author = metadata.Get<string>(1);
+            PlayArea = RectExt.FromLcs(metadata.Get(2));
+            BackgroundColor = ColorExt.FromLcs(metadata.Get(3));
+            LightingColor = ColorExt.FromLcs(metadata.Get(4));
+            GravityDirection = metadata.Get<byte>(5);
+            GravityStrength = metadata.Get<float>(6);
+            AirResistance = metadata.Get<float>(7);
+            PlayerHealth = metadata.Get<float>(8);
+            AllowDummies = metadata.Get<bool>(9);
+            foreach (var line in document.Lines[1..])
+            {
+                switch (line.Prefix)
+                {
+                    case '$':
+                        Spawns.Add(LcsLine.Deserialize<BsSpawn>(line));
+                        break;
+                    case '#':
+                        Objects.Add(LcsLine.Deserialize<BsObject>(line));
+                        break;
+                    case '%':
+                        Nodes.Add(LcsLine.Deserialize<BsNode>(line));
+                        break;
+                    case '^':
+                        Links.Add(LcsLine.Deserialize<BsLink>(line));
+                        break;
+                }
             }
         }
     }

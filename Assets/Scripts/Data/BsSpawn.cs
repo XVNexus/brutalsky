@@ -1,8 +1,9 @@
+using Lcs;
 using UnityEngine;
 
 namespace Data
 {
-    public class BsSpawn
+    public class BsSpawn : ILcsLine
     {
         public Vector2 Position { get; set; }
         public int Priority { get; set; }
@@ -14,9 +15,7 @@ namespace Data
             Priority = priority;
         }
 
-        public BsSpawn()
-        {
-        }
+        public BsSpawn() { }
 
         public Vector2 Use()
         {
@@ -27,6 +26,17 @@ namespace Data
         public void Reset()
         {
             Usages = 0;
+        }
+
+        public LcsLine _ToLcs()
+        {
+            return new LcsLine('$', LcsInfo.Compress(Position.x, Position.y), Priority);
+        }
+
+        public void _FromLcs(LcsLine line)
+        {
+            Position = new Vector2(line.Get<float>(0, 0), line.Get<float>(0, 1));
+            Priority = line.Get<int>(1);
         }
     }
 }

@@ -1,6 +1,6 @@
 using Controllers;
-using Controllers.Base;
 using Data.Base;
+using Extensions;
 using Systems;
 using UnityEngine;
 using Utils;
@@ -12,23 +12,42 @@ namespace Data.Object
         public override GameObject Prefab => ResourceSystem._.pGoal;
         public override string Tag => Tags.GoalPrefix;
 
-        public Vector2 Size { get; set; } = Vector2.one;
-        public Color Color { get; set; } = Color.white;
-        public uint Redirect { get; set; }
-
-        public BsGoal(string id = "", params string[] relatives) : base(id, relatives) { }
-
-        protected override BsBehavior _Init(GameObject gameObject, BsObject[] relatedObjects)
+        public Vector2 Size
         {
-            // Link object to controller
-            var controller = gameObject.GetComponent<GoalController>();
-            controller.Object = this;
-
-            // Apply transform
-            gameObject.transform.localPosition = Position;
-            gameObject.transform.localScale = Size;
-
-            return controller;
+            get => Vector2Ext.FromLcs(Props[0]);
+            set => Props[0] = value.ToLcs();
         }
+
+        public Color Color
+        {
+            get => ColorExt.FromLcs(Props[1]);
+            set => Props[1] = value.ToLcs();
+        }
+
+        public uint Redirect
+        {
+            get => (uint)Props[2];
+            set => Props[2] = value;
+        }
+
+        public BsGoal(string id = "", params string[] relatives) : base(id, relatives)
+        {
+            Props = new[] { Vector2.one.ToLcs(), Color.white.ToLcs(), (uint)0 };
+            Init = (gob, obj, _) =>
+            {
+                // Link object to controller
+                var goal = obj.As<BsGoal>();
+                var controller = gob.GetComponent<GoalController>();
+                controller.Object = goal;
+
+                // Apply transform
+                gob.transform.localPosition = goal.Position;
+                gob.transform.localScale = goal.Size;
+
+                return controller;
+            };
+        }
+
+        public BsGoal() { }
     }
 }

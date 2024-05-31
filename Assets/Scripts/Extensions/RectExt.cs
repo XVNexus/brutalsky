@@ -25,5 +25,16 @@ namespace Extensions
         {
             return new Rect(_.x - growth, _.y - growth, _.width + growth * 2f, _.height + growth * 2f);
         }
+
+        public static object ToLcs(this Rect _)
+        {
+            return new object[] { _.x, _.y, _.width, _.height };
+        }
+
+        public static Rect FromLcs(object prop)
+        {
+            var parts = (object[])prop;
+            return new Rect((float)parts[0], (float)parts[1], (float)parts[2], (float)parts[3]);
+        }
     }
 }

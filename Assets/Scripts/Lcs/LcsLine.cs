@@ -25,6 +25,26 @@ namespace Lcs
             Children = new List<LcsLine>();
         }
 
+        public object Get(int index)
+        {
+            return Props[index];
+        }
+
+        public object Get(int index, int subIndex)
+        {
+            return ((object[])Props[index])[subIndex];
+        }
+
+        public T Get<T>(int index)
+        {
+            return (T)Get(index);
+        }
+
+        public T Get<T>(int index, int subIndex)
+        {
+            return (T)Get(index, subIndex);
+        }
+
         public static LcsLine Serialize<T>(T value) where T : ILcsLine, new()
         {
             return value._ToLcs();

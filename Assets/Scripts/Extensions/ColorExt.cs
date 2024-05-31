@@ -37,5 +37,16 @@ namespace Extensions
         {
             return new Color(_.r, _.g, _.b);
         }
+
+        public static object ToLcs(this Color _)
+        {
+            return new object[] { _.r, _.g, _.b, _.a };
+        }
+
+        public static Color FromLcs(object prop)
+        {
+            var parts = (object[])prop;
+            return new Color((float)parts[0], (float)parts[1], (float)parts[2], (float)parts[3]);
+        }
     }
 }

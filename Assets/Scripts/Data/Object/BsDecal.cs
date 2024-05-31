@@ -1,7 +1,7 @@
 using System.Linq;
 using Controllers;
-using Controllers.Base;
 using Data.Base;
+using Extensions;
 using Systems;
 using UnityEngine;
 using Utils;
@@ -13,42 +13,61 @@ namespace Data.Object
         public override GameObject Prefab => ResourceSystem._.pDecal;
         public override string Tag => Tags.DecalPrefix;
 
-        public Path Path { get; set; }
-        public Color Color { get; set; } = Color.white;
-        public bool Glow { get; set; }
-
-        public BsDecal(string id = "", params string[] relatives) : base(id, relatives) { }
-
-        protected override BsBehavior _Init(GameObject gameObject, BsObject[] relatedObjects)
+        public Path Path
         {
-            // Link object to controller
-            var controller = gameObject.GetComponent<DecalController>();
-            controller.Object = this;
-
-            // Convert path to mesh
-            var points = Path.GetPoints(Rotation);
-            var vertices = points.Select(point => (Vector3)point).ToArray();
-            var mesh = new Mesh
-            {
-                vertices = vertices,
-                triangles = new Triangulator(points).Triangulate()
-            };
-            mesh.RecalculateNormals();
-            mesh.RecalculateBounds();
-
-            // Apply mesh
-            gameObject.GetComponent<MeshFilter>().mesh = mesh;
-
-            // Apply color and layer
-            var meshRenderer = gameObject.GetComponent<MeshRenderer>();
-            meshRenderer.material = Glow ? ResourceSystem._.aUnlitMaterial : ResourceSystem._.aLitMaterial;
-            meshRenderer.material.color = Color;
-            meshRenderer.sortingOrder = Layer * 2;
-
-            // Apply transform
-            gameObject.transform.localPosition = Position;
-
-            return controller;
+            get => Path.FromLcs(Props[0]);
+            set => Props[0] = value.ToLcs();
         }
+
+        public Color Color
+        {
+            get => ColorExt.FromLcs(Props[1]);
+            set => Props[1] = value.ToLcs();
+        }
+
+        public bool Glow
+        {
+            get => (bool)Props[2];
+            set => Props[2] = value;
+        }
+
+        public BsDecal(string id = "", params string[] relatives) : base(id, relatives)
+        {
+            Props = new[] { Path.Ngon(3, 1f).ToLcs(), Color.white.ToLcs(), false };
+            Init = (gob, obj, _) =>
+            {
+                // Link object to controller
+                var decal = obj.As<BsDecal>();
+                var controller = gob.GetComponent<DecalController>();
+                controller.Object = decal;
+
+                // Convert path to mesh
+                var points = decal.Path.GetPoints(decal.Rotation);
+                var vertices = points.Select(point => (Vector3)point).ToArray();
+                var mesh = new Mesh
+                {
+                    vertices = vertices,
+                    triangles = new Triangulator(points).Triangulate()
+                };
+                mesh.RecalculateNormals();
+                mesh.RecalculateBounds();
+
+                // Apply mesh
+                gob.GetComponent<MeshFilter>().mesh = mesh;
+
+                // Apply color and layer
+                var meshRenderer = gob.GetComponent<MeshRenderer>();
+                meshRenderer.material = decal.Glow ? ResourceSystem._.aUnlitMaterial : ResourceSystem._.aLitMaterial;
+                meshRenderer.material.color = decal.Color;
+                meshRenderer.sortingOrder = decal.Layer * 2;
+
+                // Apply transform
+                gob.transform.localPosition = decal.Position;
+
+                return controller;
+            };
+        }
+
+        public BsDecal() { }
     }
 }
