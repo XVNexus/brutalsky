@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 using Utils;
 
 namespace Lcs
@@ -15,8 +14,6 @@ namespace Lcs
             {'\'', 'q'},
             {'"', 'u'},
             {',', 'i'},
-            {'(', 'o'},
-            {')', 'c'},
             {' ', 's'},
             {'\t', 't'},
             {'\n', 'n'}
@@ -31,24 +28,25 @@ namespace Lcs
         };
         public static readonly Dictionary<byte, LcsInfo> ByteTagTable =
             TypeInfoList.ToDictionary(type => type.ByteTag, type => type);
+        public static readonly Dictionary<char, LcsInfo> CharTagTable =
+            TypeInfoList.ToDictionary(type => type.CharTag, type => type);
 
         public int Size { get; }
         public byte ByteTag { get; }
-        public Regex StringPattern { get; }
+        public char CharTag { get; }
 
         private Func<object, byte[]> _toBin;
         private Func<byte[], object> _fromBin;
         private Func<object, string> _toStr;
         private Func<string, object> _fromStr;
 
-        // TODO: OPTIMIZE REGEX PATTERNS
-        public LcsInfo(int size, byte byteTag, string stringPattern,
+        public LcsInfo(int size, byte byteTag, char charTag,
             Func<object, byte[]> toBin, Func<byte[], object> fromBin,
             Func<object, string> toStr, Func<string, object> fromStr)
         {
             Size = size;
             ByteTag = byteTag;
-            StringPattern = new Regex('^' + stringPattern + '$');
+            CharTag = charTag;
             _toBin = toBin;
             _fromBin = fromBin;
             _toStr = toStr;
@@ -126,11 +124,11 @@ namespace Lcs
 
         public static object Parse(string raw)
         {
-            return TypeInfoList.First(type => type.StringPattern.IsMatch(raw))._fromStr(raw);
+            return CharTagTable[raw[^1]]._fromStr(raw);
         }
 
         public static LcsInfo BoolInfo() {
-            return new LcsInfo(1, 0x01, "True|False",
+            return new LcsInfo(1, 0x01, 'e',
                 value => BitConverter.GetBytes((bool)value),
                 raw => BitConverter.ToBoolean(raw),
                 value => value.ToString(),
@@ -138,7 +136,7 @@ namespace Lcs
         }
 
         public static LcsInfo ByteInfo() {
-            return new LcsInfo(1, 0x02, @"\d+B",
+            return new LcsInfo(1, 0x02, 'B',
                 value => new[] { (byte)value },
                 raw => raw[0],
                 value => value.ToString() + 'B',
@@ -146,7 +144,7 @@ namespace Lcs
         }
 
         public static LcsInfo UShortInfo() {
-            return new LcsInfo(2, 0x03, @"\d+S",
+            return new LcsInfo(2, 0x03, 'S',
                 value => BitConverter.GetBytes((ushort)value),
                 raw => BitConverter.ToUInt16(raw),
                 value => value.ToString() + 'S',
@@ -154,7 +152,7 @@ namespace Lcs
         }
 
         public static LcsInfo UIntInfo() {
-            return new LcsInfo(4, 0x04, @"\d+I",
+            return new LcsInfo(4, 0x04, 'I',
                 value => BitConverter.GetBytes((uint)value),
                 raw => BitConverter.ToUInt32(raw),
                 value => value.ToString() + 'I',
@@ -162,7 +160,7 @@ namespace Lcs
         }
 
         public static LcsInfo ULongInfo() {
-            return new LcsInfo(8, 0x05, @"\d+L",
+            return new LcsInfo(8, 0x05, 'L',
                 value => BitConverter.GetBytes((ulong)value),
                 raw => BitConverter.ToUInt64(raw),
                 value => value.ToString() + 'L',
@@ -170,7 +168,7 @@ namespace Lcs
         }
 
         public static LcsInfo SByteInfo() {
-            return new LcsInfo(1, 0x06, @"\d+b",
+            return new LcsInfo(1, 0x06, 'b',
                 value => new[] { (byte)(sbyte)value },
                 raw => (sbyte)raw[0],
                 value => value.ToString() + 'b',
@@ -178,7 +176,7 @@ namespace Lcs
         }
 
         public static LcsInfo ShortInfo() {
-            return new LcsInfo(2, 0x07, @"\d+s",
+            return new LcsInfo(2, 0x07, 's',
                 value => BitConverter.GetBytes((short)value),
                 raw => BitConverter.ToInt16(raw),
                 value => value.ToString() + 's',
@@ -186,7 +184,7 @@ namespace Lcs
         }
 
         public static LcsInfo IntInfo() {
-            return new LcsInfo(4, 0x08, @"\d+i",
+            return new LcsInfo(4, 0x08, 'i',
                 value => BitConverter.GetBytes((int)value),
                 raw => BitConverter.ToInt32(raw),
                 value => value.ToString() + 'i',
@@ -194,7 +192,7 @@ namespace Lcs
         }
 
         public static LcsInfo LongInfo() {
-            return new LcsInfo(8, 0x09, @"\d+l",
+            return new LcsInfo(8, 0x09, 'l',
                 value => BitConverter.GetBytes((long)value),
                 raw => BitConverter.ToInt64(raw),
                 value => value.ToString() + 'l',
@@ -202,7 +200,7 @@ namespace Lcs
         }
 
         public static LcsInfo FloatInfo() {
-            return new LcsInfo(4, 0x0A, @"([\d\.]+|NaN|Infinity|-Infinity)f",
+            return new LcsInfo(4, 0x0A, 'f',
                 value => BitConverter.GetBytes((float)value),
                 raw => BitConverter.ToSingle(raw),
                 value => value.ToString() + 'f',
@@ -210,7 +208,7 @@ namespace Lcs
         }
 
         public static LcsInfo DoubleInfo() {
-            return new LcsInfo(8, 0x0B, @"([\d\.]+|NaN|Infinity|-Infinity)d",
+            return new LcsInfo(8, 0x0B, 'd',
                 value => BitConverter.GetBytes((double)value),
                 raw => BitConverter.ToDouble(raw),
                 value => value.ToString() + 'd',
@@ -218,29 +216,29 @@ namespace Lcs
         }
 
         public static LcsInfo CharInfo() {
-            return new LcsInfo(2, 0x0C, @"'(.|\\.)'",
+            return new LcsInfo(2, 0x0C, '-',
                 value => BitConverter.GetBytes((char)value),
                 raw => BitConverter.ToChar(raw),
                 value =>
                 {
                     var cast = (char)value;
-                    return !SpecialChars.ContainsKey(cast) ? $"'{value}'" : $@"'\{SpecialChars[cast]}'";
+                    return !SpecialChars.ContainsKey(cast) ? $"{value}-" : $@"\{SpecialChars[cast]}-";
                 },
                 raw => !raw.StartsWith(@"\") ? raw[0] : SpecialCodes[raw[1]]);
         }
 
         public static LcsInfo StringInfo() {
-            return new LcsInfo(-1, 0x0D, @"\""\S*\""",
+            return new LcsInfo(-1, 0x0D, '+',
                 value => Encoding.UTF8.GetBytes((string)value),
                 raw => Encoding.UTF8.GetString(raw),
-                value => '"' + SpecialChars.Keys.Aggregate(((string)value).Replace(@"\", @"\\"),
-                    (current, to) => current.Replace($"{to}", $@"\{SpecialChars[to]}")) + '"',
-                raw => SpecialChars.Keys.Aggregate(raw[1..^1].Replace(@"\\", @"\\ "),
+                value => SpecialChars.Keys.Aggregate(((string)value).Replace(@"\", @"\\"),
+                    (current, to) => current.Replace($"{to}", $@"\{SpecialChars[to]}")) + '+',
+                raw => SpecialChars.Keys.Aggregate(raw[..^1].Replace(@"\\", @"\\ "),
                     (current, to) => current.Replace($@"\{SpecialChars[to]}", $"{to}")).Replace(@"\\ ", @"\"));
         }
 
         public static LcsInfo ArrayInfo() {
-            return new LcsInfo(-1, 0x10, @"\([^()]+?\)",
+            return new LcsInfo(-1, 0x10, ';',
                 value =>
                 {
                     var cast = (object[])value;
@@ -261,8 +259,8 @@ namespace Lcs
                     }
                     return result.ToArray();
                 },
-                value => '(' + string.Join(',', ((object[])value).Select(Stringify)) + ')',
-                raw => raw[1..^1].Split(',').Select(Parse).ToArray());
+                value => string.Join(',', ((object[])value).Select(Stringify)) + ';',
+                raw => raw.Length > 1 ? raw[..^1].Split(',').Select(Parse).ToArray() : Array.Empty<object>());
         }
 
         // Utility functions

@@ -41,14 +41,6 @@ namespace Systems
         public Light2D cLight2D;
 
         // System functions
-        public void RegisterPlayers(IEnumerable<BsPlayer> players)
-        {
-            foreach (var player in players)
-            {
-                RegisterPlayer(player);
-            }
-        }
-
         public void RegisterPlayer(BsPlayer player)
         {
             if (player.Active) throw Errors.RegisterActivePlayer(player.Id);
@@ -58,14 +50,6 @@ namespace Systems
             if (MapLoaded)
             {
                 SpawnPlayer(player);
-            }
-        }
-
-        public void UnregisterPlayers()
-        {
-            foreach (var player in ActivePlayers.Values)
-            {
-                UnregisterPlayer(player);
             }
         }
 
@@ -121,18 +105,13 @@ namespace Systems
             rigidbody.angularVelocity = 0f;
         }
 
-        public void RegisterMaps(IEnumerable<BsMap> maps)
-        {
-            foreach (var map in maps)
-            {
-                RegisterMap(map);
-            }
-        }
-
         public void RegisterMap(BsMap map)
         {
             EventSystem._.EmitMapPreload(map);
-            MapList[map.Id] = LcsDocument.Serialize(map).Binify(true);
+            var document = LcsDocument.Serialize(map);
+            MapList[map.Id] = document.Binify(true);
+            // TODO: TEMPORARY
+            ResourceSystem._.SaveFile("Maps", $"{map.Author} - {map.Title}", document, LcsDocument.FormatString);
         }
 
         public void UnregisterMaps()
