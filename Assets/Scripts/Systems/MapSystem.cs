@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Controllers.Base;
+using Controllers.Player;
 using Data;
 using Data.Base;
 using Extensions;
@@ -80,6 +81,14 @@ namespace Systems
             player.Health = ActiveMap.PlayerHealth;
             player.InstanceObject.transform.localPosition = position;
             EventSystem._.EmitPlayerSpawn(ActiveMap, player, position, visible);
+        }
+
+        public void SpawnPlayer(BsPlayer player, Vector2 position)
+        {
+            SetPlayerFrozen(player.InstanceObject, false);
+            player.Health = ActiveMap.PlayerHealth;
+            player.InstanceObject.transform.localPosition = position;
+            EventSystem._.EmitPlayerSpawn(ActiveMap, player, position, true);
         }
 
         public bool GetPlayerFrozen(GameObject playerInstanceObject)
@@ -215,6 +224,9 @@ namespace Systems
                 CreateObject(obj);
             }
             EventSystem._.EmitMapBuild(ActiveMap);
+
+            // Initialize the logic system
+            ActiveMap.InitMatrix();
         }
 
         public void UnbuildMap()
@@ -254,6 +266,15 @@ namespace Systems
         {
             if (!obj.Active) return;
             obj.Deactivate();
+        }
+
+        // Event functions
+        private void FixedUpdate()
+        {
+            if (!MapLoaded) return;
+
+            // Update the logic system
+            ActiveMap.CalcMatrix();
         }
 
         // Utility functions

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Data.Base;
@@ -36,7 +37,9 @@ namespace Data
         public List<BsLink> Links { get; } = new();
 
         public List<BsNode> ActiveNodes { get; } = new();
-        public Dictionary<int, BsLink> ActiveLinks { get; } = new();
+        public Dictionary<int, float[]> InputBuffer { get; } = new();
+        public Dictionary<int, int> InputPorts { get; } = new();
+        public Dictionary<int, float> OutputBuffer { get; } = new();
 
         public BsMap(string title = "Untitled Map", string author = "Anonymous Marble")
         {
@@ -67,24 +70,49 @@ namespace Data
 
         public void InitMatrix()
         {
+            // Add all explicit nodes and implicit nodes
             ActiveNodes.Clear();
             foreach (var node in Nodes)
             {
                 node.Init?.Invoke();
                 ActiveNodes.Add(node);
+                // TODO: ADD COVER NODES FOR OBJECTS
             }
-            ActiveLinks.Clear();
-            foreach (var link in Links)
+
+            // Set up link buffers
+            var inputCounts = new Dictionary<int, int>();
+            InputBuffer.Clear();
+            InputPorts.Clear();
+            OutputBuffer.Clear();
+            for (var i = 0; i < Links.Count; i++)
             {
-                ActiveLinks[link.To] = link;
+                var link = Links[i];
+                if (!inputCounts.TryAdd(link.To, 0))
+                {
+                    inputCounts[link.To]++;
+                }
+                InputPorts[i] = inputCounts[link.To];
+                OutputBuffer.TryAdd(link.From, 0f);
+            }
+            foreach (var key in inputCounts.Keys)
+            {
+                InputBuffer[key] = new float[inputCounts[key] + 1];
             }
         }
 
         public void CalcMatrix()
         {
-            foreach (var node in ActiveNodes)
+            // Update the input buffers with values from last frame's output buffer
+            for (var i = 0; i < Links.Count; i++)
             {
-                
+                var link = Links[i];
+                InputBuffer[link.To][InputPorts[i]] = OutputBuffer[link.From];
+            }
+
+            // Recalculate node outputs based on the input buffer and update the output buffer with the new values
+            foreach (var link in Links)
+            {
+                OutputBuffer[link.To] = ActiveNodes[link.To].Calc(InputBuffer[link.To]);
             }
         }
 

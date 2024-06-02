@@ -6,7 +6,6 @@ namespace Data
     {
         public int From { get; set; }
         public int To { get; set; }
-        public float Buffer { get; set; }
 
         public BsLink(int from, int to)
         {
@@ -15,11 +14,6 @@ namespace Data
         }
 
         public BsLink() { }
-
-        public void Init()
-        {
-            Buffer = 0f;
-        }
 
         public LcsLine _ToLcs()
         {

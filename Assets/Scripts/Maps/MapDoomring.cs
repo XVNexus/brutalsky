@@ -34,7 +34,7 @@ namespace Maps
             {
                 Rotation = 45f,
                 Path = Path.Vector(0f, 15f, 1f, 15f, 15f, 15f, 0f, 0f, 14f, 0f, 1f, 14f, 14f, 0f, 14f),
-                Material = (2f, 2f, 0f, 10f, -10f),
+                Material = (2f, 2f, 0f, 10f, 0f),
                 Color = new Color(1f, .2f, .2f)
             });
             result.Objects.Add(new BsDecal("background-right")
@@ -48,7 +48,7 @@ namespace Maps
             {
                 Rotation = -45f,
                 Path = Path.Vector(0f, 15f, 1f, 15f, 15f, 15f, 0f, 0f, 14f, 0f, 1f, 14f, 14f, 0f, 14f),
-                Material = (2f, 2f, 0f, 10f, -10f),
+                Material = (2f, 2f, 0f, 10f, 0f),
                 Color = new Color(.6f, 1f, .2f)
             });
             result.Objects.Add(new BsDecal("background-bottom")
@@ -62,7 +62,7 @@ namespace Maps
             {
                 Rotation = -135f,
                 Path = Path.Vector(0f, 15f, 1f, 15f, 15f, 15f, 0f, 0f, 14f, 0f, 1f, 14f, 14f, 0f, 14f),
-                Material = (2f, 2f, 0f, 10f, -10f),
+                Material = (2f, 2f, 0f, 10f, 0f),
                 Color = new Color(.2f, 1f, 1f)
             });
             result.Objects.Add(new BsDecal("background-left")
@@ -76,7 +76,7 @@ namespace Maps
             {
                 Rotation = -225f,
                 Path = Path.Vector(0f, 15f, 1f, 15f, 15f, 15f, 0f, 0f, 14f, 0f, 1f, 14f, 14f, 0f, 14f),
-                Material = (2f, 2f, 0f, 10f, -10f),
+                Material = (2f, 2f, 0f, 10f, 0f),
                 Color = new Color(.6f, .2f, 1f)
             });
             result.Objects.Add(new BsShape("spinner")

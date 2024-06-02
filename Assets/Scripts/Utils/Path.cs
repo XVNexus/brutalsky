@@ -31,6 +31,7 @@ namespace Utils
 
         public static Path Vector(params float[] args)
         {
+            // TODO: ITS BROKEN LMAO
             var result = new Path(TypeVector, args);
             result.StartAt(args[0], args[1]);
             for (var i = 2; i < args.Length; i++)
