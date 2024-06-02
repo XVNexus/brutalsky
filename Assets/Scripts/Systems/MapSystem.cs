@@ -224,9 +224,6 @@ namespace Systems
                 CreateObject(obj);
             }
             EventSystem._.EmitMapBuild(ActiveMap);
-
-            // Initialize the logic system
-            ActiveMap.InitMatrix();
         }
 
         public void UnbuildMap()
@@ -273,8 +270,7 @@ namespace Systems
         {
             if (!MapLoaded) return;
 
-            // Update the logic system
-            ActiveMap.CalcMatrix();
+            // TODO: LOGIC SYSTEM
         }
 
         // Utility functions
