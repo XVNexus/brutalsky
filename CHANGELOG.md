@@ -1,3 +1,16 @@
+## *Nightly δ24.06.02*
+
+#### UPDATES
+- removed logic system
+
+
+## *Nightly δ24.05.28*
+
+#### UPDATES
+- parkour platforms now have slightly lower height variance
+- parkour platform ice chance now increases more linearly with difficulty
+
+
 ## *Nightly δ24.05.27*
 
 #### UPDATES
