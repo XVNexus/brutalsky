@@ -38,6 +38,7 @@ namespace Data
         public List<BsNode> ActiveNodes { get; } = new();
         public Dictionary<(int, string), BsPort> ActivePorts { get; } = new();
         public Dictionary<(int, string), object> LinkBuffer { get; } = new();
+        public bool MatrixActive { get; private set; }
 
         public BsMap(string title = "Untitled Map", string author = "Anonymous Marble")
         {
@@ -71,7 +72,7 @@ namespace Data
             // Initialize all nodes
             foreach (var node in Nodes)
             {
-                node.Init(node.State);
+                node.Init?.Invoke(node.State);
                 ActiveNodes.Add(node);
             }
             foreach (var obj in Objects.Values.Where(obj => obj.GetNode != null))
@@ -79,7 +80,7 @@ namespace Data
                 ActiveNodes.Add(obj.GetNode(obj.InstanceController));
             }
 
-            // Add all node ports
+            // Add all ports
             for (var i = 0; i < ActiveNodes.Count; i++)
             {
                 var node = ActiveNodes[i];
@@ -94,28 +95,34 @@ namespace Data
             {
                 LinkBuffer[(link.ToNode, link.ToPort)] = false;
             }
+
+            MatrixActive = true;
         }
 
         public void UpdateMatrix()
         {
+            if (!MatrixActive) return;
+
             // Update all nodes
             foreach (var node in Nodes)
             {
-                node.Update(node.State);
+                node.Update?.Invoke(node.State);
             }
 
             // Copy values between linked ports
             foreach (var link in Links)
             {
-                var value = ActivePorts[(link.FromNode, link.FromPort)].GetValue(ActiveNodes[link.FromNode].State);
-                var fromType = ActivePorts[(link.FromNode, link.FromPort)].Type;
-                var toType = ActivePorts[(link.ToNode, link.ToPort)].Type;
-                LinkBuffer[(link.ToNode, link.ToPort)] = BsPort.Convert(value, fromType, toType);
+                var fromNode = ActiveNodes[link.FromNode];
+                var fromPort = ActivePorts[(link.FromNode, link.FromPort)];
+                var toPort = ActivePorts[(link.ToNode, link.ToPort)];
+                LinkBuffer[(link.ToNode, link.ToPort)] =
+                    BsPort.Convert(fromPort.GetValue(fromNode.State), fromPort.Type, toPort.Type);
             }
             foreach (var link in Links)
             {
-                ActivePorts[(link.ToNode, link.ToPort)].SetValue(
-                    ActiveNodes[link.ToNode].State, LinkBuffer[(link.ToNode, link.ToPort)]);
+                var toNode = ActiveNodes[link.ToNode];
+                var toPort = ActivePorts[(link.ToNode, link.ToPort)];
+                toPort.SetValue(toNode.State, LinkBuffer[(link.ToNode, link.ToPort)]);
             }
         }
 
@@ -124,6 +131,8 @@ namespace Data
             ActiveNodes.Clear();
             ActivePorts.Clear();
             LinkBuffer.Clear();
+
+            MatrixActive = false;
         }
 
         public LcsDocument _ToLcs()

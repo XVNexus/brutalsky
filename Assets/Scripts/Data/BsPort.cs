@@ -39,10 +39,20 @@ namespace Data
         {
             switch (typeFrom)
             {
+                case TypeAny:
+                    return Convert(value, value switch
+                    {
+                        bool => TypeBool,
+                        int => TypeInt,
+                        float => TypeFloat,
+                        string => TypeString,
+                        _ => throw Errors.InvalidItem("logic type", value)
+                    }, typeTo);
                 case TypeBool:
                     var valueBool = (bool)value;
                     return typeTo switch
                     {
+                        TypeAny => value,
                         TypeBool => valueBool,
                         TypeInt => valueBool ? 1 : 0,
                         TypeFloat => valueBool ? 1f : 0f,
@@ -53,6 +63,7 @@ namespace Data
                     var valueInt = (int)value;
                     return typeTo switch
                     {
+                        TypeAny => value,
                         TypeBool => valueInt >= 1,
                         TypeInt => valueInt,
                         TypeFloat => (float)valueInt,
@@ -63,6 +74,7 @@ namespace Data
                     var valueFloat = (float)value;
                     return typeTo switch
                     {
+                        TypeAny => value,
                         TypeBool => valueFloat >= .5f,
                         TypeInt => Mathf.RoundToInt(valueFloat),
                         TypeFloat => valueFloat,
@@ -73,6 +85,7 @@ namespace Data
                     var valueString = (string)value;
                     return typeTo switch
                     {
+                        TypeAny => value,
                         TypeBool => valueString.Length > 0,
                         TypeInt => valueString.Length,
                         TypeFloat => (float)valueString.Length,

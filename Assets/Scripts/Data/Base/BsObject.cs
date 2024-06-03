@@ -22,7 +22,7 @@ namespace Data.Base
         public sbyte Layer { get; set; }
         public object[] Props { get; set; }
 
-        [CanBeNull] public virtual Func<BsBehavior, BsNode> GetNode { get; set; }
+        [CanBeNull] public virtual Func<BsBehavior, BsNode> GetNode { get; set; } = null;
         public virtual Func<GameObject, BsObject, BsObject[], BsBehavior> Init { get; set; }
         [CanBeNull] public GameObject InstanceObject { get; private set; }
         [CanBeNull] public BsBehavior InstanceController { get; private set; }
@@ -83,6 +83,7 @@ namespace Data.Base
             Tag = line.Get<string>(0);
             var result = ResourceSystem.GetTemplateObject(Tag);
             Prefab = result.Prefab;
+            GetNode = result.GetNode;
             Init = result.Init;
             Id = line.Get<string>(1);
             var rawRelatives = line.Get<object[]>(2);

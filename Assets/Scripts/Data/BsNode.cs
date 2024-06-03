@@ -29,7 +29,7 @@ namespace Data
         {
             return new BsNode("bol", value)
             {
-                GetPorts = () => new[] { new BsPort("value", BsPort.TypeBool, _ => value) }
+                GetPorts = () => new[] { new BsPort("val", BsPort.TypeBool, _ => value) }
             };
         }
 
@@ -37,7 +37,7 @@ namespace Data
         {
             return new BsNode("int", value)
             {
-                GetPorts = () => new[] { new BsPort("value", BsPort.TypeInt, _ => value) }
+                GetPorts = () => new[] { new BsPort("val", BsPort.TypeInt, _ => value) }
             };
         }
 
@@ -45,7 +45,7 @@ namespace Data
         {
             return new BsNode("flt", value)
             {
-                GetPorts = () => new[] { new BsPort("value", BsPort.TypeFloat, _ => value) }
+                GetPorts = () => new[] { new BsPort("val", BsPort.TypeFloat, _ => value) }
             };
         }
 
@@ -53,7 +53,7 @@ namespace Data
         {
             return new BsNode("str", value)
             {
-                GetPorts = () => new[] { new BsPort("value", BsPort.TypeString, _ => value) }
+                GetPorts = () => new[] { new BsPort("val", BsPort.TypeString, _ => value) }
             };
         }
 
@@ -63,14 +63,14 @@ namespace Data
             {
                 GetPorts = () => new[]
                 {
-                    new BsPort("regen", BsPort.TypeBool, (state, value) =>
+                    new BsPort("gen", BsPort.TypeBool, (state, value) =>
                     {
                         if ((bool)value)
                         {
                             state["value"] = Random.Range(0, 2) == 1;
                         }
                     }),
-                    new BsPort("value", BsPort.TypeBool, state => state["value"])
+                    new BsPort("val", BsPort.TypeBool, state => state["value"])
                 },
                 Init = state =>
                 {
@@ -85,7 +85,7 @@ namespace Data
             {
                 GetPorts = () => new[]
                 {
-                    new BsPort("regen", BsPort.TypeBool, (state, value) =>
+                    new BsPort("gen", BsPort.TypeBool, (state, value) =>
                     {
                         if ((bool)value)
                         {
@@ -94,7 +94,7 @@ namespace Data
                     }),
                     new BsPort("min", BsPort.TypeInt, (state, value) => state["min"] = value),
                     new BsPort("max", BsPort.TypeInt, (state, value) => state["max"] = value),
-                    new BsPort("value", BsPort.TypeInt, state => state["value"])
+                    new BsPort("val", BsPort.TypeInt, state => state["value"])
                 },
                 Init = state =>
                 {
@@ -111,7 +111,7 @@ namespace Data
             {
                 GetPorts = () => new[]
                 {
-                    new BsPort("regen", BsPort.TypeBool, (state, value) =>
+                    new BsPort("gen", BsPort.TypeBool, (state, value) =>
                     {
                         if ((bool)value)
                         {
@@ -120,7 +120,7 @@ namespace Data
                     }),
                     new BsPort("min", BsPort.TypeFloat, (state, value) => state["min"] = value),
                     new BsPort("max", BsPort.TypeFloat, (state, value) => state["max"] = value),
-                    new BsPort("value", BsPort.TypeFloat, state => state["value"])
+                    new BsPort("val", BsPort.TypeFloat, state => state["value"])
                 },
                 Init = state =>
                 {
@@ -137,7 +137,7 @@ namespace Data
             {
                 GetPorts = () => new[]
                 {
-                    new BsPort("value", BsPort.TypeInt, state => (int)state["value"])
+                    new BsPort("val", BsPort.TypeInt, state => (int)state["value"])
                 },
                 Init = state =>
                 {
@@ -156,7 +156,7 @@ namespace Data
             {
                 GetPorts = () => new[]
                 {
-                    new BsPort("value", BsPort.TypeFloat, state => (bool)state["value"])
+                    new BsPort("val", BsPort.TypeFloat, state => (bool)state["value"])
                 },
                 Init = state =>
                 {
@@ -182,8 +182,8 @@ namespace Data
             {
                 GetPorts = () => new[]
                 {
-                    new BsPort("input", BsPort.TypeAny, (state, value) => state["input"] = value),
-                    new BsPort("value", BsPort.TypeAny, state => state["value"])
+                    new BsPort("inp", BsPort.TypeAny, (state, value) => state["input"] = value),
+                    new BsPort("out", BsPort.TypeAny, state => state["value"])
                 },
                 Init = state =>
                 {
@@ -213,13 +213,13 @@ namespace Data
                 {
                     var result = new List<BsPort>
                     {
-                        new("select", BsPort.TypeInt, (state, value) => state["select"] = value),
-                        new("value", BsPort.TypeAny, state => state["value"])
+                        new("sel", BsPort.TypeInt, (state, value) => state["select"] = value),
+                        new("out", BsPort.TypeAny, state => state["value"])
                     };
                     for (var i = 0; i < size; i++)
                     {
-                        result.Add(new BsPort($"input-{i}", BsPort.TypeAny,
-                            (state, value) => state[$"input-{i}"] = value));
+                        var id = $"i{i.ToString().PadLeft(2, '0')}";
+                        result.Add(new BsPort(id, BsPort.TypeAny, (state, value) => state[id] = value));
                     }
                     return result.ToArray();
                 },
@@ -248,12 +248,13 @@ namespace Data
                 {
                     var result = new List<BsPort>
                     {
-                        new("select", BsPort.TypeInt, (state, value) => state["select"] = value),
-                        new("input", BsPort.TypeAny, (state, value) => state["input"] = value)
+                        new("sel", BsPort.TypeInt, (state, value) => state["select"] = value),
+                        new("inp", BsPort.TypeAny, (state, value) => state["input"] = value)
                     };
                     for (var i = 0; i < size; i++)
                     {
-                        result.Add(new BsPort($"value-{i}", BsPort.TypeAny, state => state[$"value-{i}"]));
+                        var id = $"o{i.ToString().PadLeft(2, '0')}";
+                        result.Add(new BsPort(id, BsPort.TypeAny, state => state[id]));
                     }
                     return result.ToArray();
                 },
@@ -284,8 +285,8 @@ namespace Data
             {
                 GetPorts = () => new[]
                 {
-                    new BsPort("input", BsPort.TypeBool, (state, value) => state["value"] = value),
-                    new BsPort("value", BsPort.TypeBool, state => state["value"])
+                    new BsPort("inp", BsPort.TypeBool, (state, value) => state["value"] = value),
+                    new BsPort("out", BsPort.TypeBool, state => state["value"])
                 },
                 Init = state =>
                 {
@@ -300,8 +301,8 @@ namespace Data
             {
                 GetPorts = () => new[]
                 {
-                    new BsPort("input", BsPort.TypeBool, (state, value) => state["value"] = !(bool)value),
-                    new BsPort("value", BsPort.TypeBool, state => state["value"])
+                    new BsPort("inp", BsPort.TypeBool, (state, value) => state["value"] = !(bool)value),
+                    new BsPort("out", BsPort.TypeBool, state => state["value"])
                 },
                 Init = state =>
                 {
@@ -316,11 +317,11 @@ namespace Data
             {
                 GetPorts = () =>
                 {
-                    var result = new List<BsPort> { new("value", BsPort.TypeBool, state => state["value"]) };
+                    var result = new List<BsPort> { new("out", BsPort.TypeBool, state => state["value"]) };
                     for (var i = 0; i < size; i++)
                     {
-                        result.Add(new BsPort($"input-{i}", BsPort.TypeBool,
-                            (state, value) => state[$"input-{i}"] = value));
+                        var id = $"i{i.ToString().PadLeft(2, '0')}";
+                        result.Add(new BsPort(id, BsPort.TypeBool, (state, value) => state[id] = value));
                     }
                     return result.ToArray();
                 },
@@ -350,11 +351,11 @@ namespace Data
             {
                 GetPorts = () =>
                 {
-                    var result = new List<BsPort> { new("value", BsPort.TypeBool, state => state["value"]) };
+                    var result = new List<BsPort> { new("out", BsPort.TypeBool, state => state["value"]) };
                     for (var i = 0; i < size; i++)
                     {
-                        result.Add(new BsPort($"input-{i}", BsPort.TypeBool,
-                            (state, value) => state[$"input-{i}"] = value));
+                        var id = $"i{i.ToString().PadLeft(2, '0')}";
+                        result.Add(new BsPort(id, BsPort.TypeBool, (state, value) => state[id] = value));
                     }
                     return result.ToArray();
                 },
@@ -384,11 +385,11 @@ namespace Data
             {
                 GetPorts = () =>
                 {
-                    var result = new List<BsPort> { new("value", BsPort.TypeBool, state => state["value"]) };
+                    var result = new List<BsPort> { new("out", BsPort.TypeBool, state => state["value"]) };
                     for (var i = 0; i < size; i++)
                     {
-                        result.Add(new BsPort($"input-{i}", BsPort.TypeBool,
-                            (state, value) => state[$"input-{i}"] = value));
+                        var id = $"i{i.ToString().PadLeft(2, '0')}";
+                        result.Add(new BsPort(id, BsPort.TypeBool, (state, value) => state[id] = value));
                     }
                     return result.ToArray();
                 },
@@ -418,11 +419,11 @@ namespace Data
             {
                 GetPorts = () =>
                 {
-                    var result = new List<BsPort> { new("value", BsPort.TypeBool, state => state["value"]) };
+                    var result = new List<BsPort> { new("out", BsPort.TypeBool, state => state["value"]) };
                     for (var i = 0; i < size; i++)
                     {
-                        result.Add(new BsPort($"input-{i}", BsPort.TypeBool,
-                            (state, value) => state[$"input-{i}"] = value));
+                        var id = $"i{i.ToString().PadLeft(2, '0')}";
+                        result.Add(new BsPort(id, BsPort.TypeBool, (state, value) => state[id] = value));
                     }
                     return result.ToArray();
                 },
@@ -452,11 +453,11 @@ namespace Data
             {
                 GetPorts = () =>
                 {
-                    var result = new List<BsPort> { new("value", BsPort.TypeBool, state => state["value"]) };
+                    var result = new List<BsPort> { new("out", BsPort.TypeBool, state => state["value"]) };
                     for (var i = 0; i < size; i++)
                     {
-                        result.Add(new BsPort($"input-{i}", BsPort.TypeBool,
-                            (state, value) => state[$"input-{i}"] = value));
+                        var id = $"i{i.ToString().PadLeft(2, '0')}";
+                        result.Add(new BsPort(id, BsPort.TypeBool, (state, value) => state[id] = value));
                     }
                     return result.ToArray();
                 },
@@ -486,11 +487,11 @@ namespace Data
             {
                 GetPorts = () =>
                 {
-                    var result = new List<BsPort> { new("value", BsPort.TypeBool, state => state["value"]) };
+                    var result = new List<BsPort> { new("out", BsPort.TypeBool, state => state["value"]) };
                     for (var i = 0; i < size; i++)
                     {
-                        result.Add(new BsPort($"input-{i}", BsPort.TypeBool,
-                            (state, value) => state[$"input-{i}"] = value));
+                        var id = $"i{i.ToString().PadLeft(2, '0')}";
+                        result.Add(new BsPort(id, BsPort.TypeBool, (state, value) => state[id] = value));
                     }
                     return result.ToArray();
                 },
@@ -520,11 +521,11 @@ namespace Data
             {
                 GetPorts = () =>
                 {
-                    var result = new List<BsPort> { new("value", BsPort.TypeFloat, state => state["value"]) };
+                    var result = new List<BsPort> { new("out", BsPort.TypeFloat, state => state["value"]) };
                     for (var i = 0; i < size; i++)
                     {
-                        result.Add(new BsPort($"input-{i}", BsPort.TypeFloat,
-                            (state, value) => state[$"input-{i}"] = value));
+                        var id = $"i{i.ToString().PadLeft(2, '0')}";
+                        result.Add(new BsPort(id, BsPort.TypeFloat, (state, value) => state[id] = value));
                     }
                     return result.ToArray();
                 },
@@ -554,11 +555,11 @@ namespace Data
             {
                 GetPorts = () =>
                 {
-                    var result = new List<BsPort> { new("value", BsPort.TypeFloat, state => state["value"]) };
+                    var result = new List<BsPort> { new("out", BsPort.TypeFloat, state => state["value"]) };
                     for (var i = 0; i < size; i++)
                     {
-                        result.Add(new BsPort($"input-{i}", BsPort.TypeFloat,
-                            (state, value) => state[$"input-{i}"] = value));
+                        var id = $"i{i.ToString().PadLeft(2, '0')}";
+                        result.Add(new BsPort(id, BsPort.TypeFloat, (state, value) => state[id] = value));
                     }
                     return result.ToArray();
                 },
@@ -601,11 +602,11 @@ namespace Data
             {
                 GetPorts = () =>
                 {
-                    var result = new List<BsPort> { new("value", BsPort.TypeFloat, state => state["value"]) };
+                    var result = new List<BsPort> { new("out", BsPort.TypeFloat, state => state["value"]) };
                     for (var i = 0; i < size; i++)
                     {
-                        result.Add(new BsPort($"input-{i}", BsPort.TypeFloat,
-                            (state, value) => state[$"input-{i}"] = value));
+                        var id = $"i{i.ToString().PadLeft(2, '0')}";
+                        result.Add(new BsPort(id, BsPort.TypeFloat, (state, value) => state[id] = value));
                     }
                     return result.ToArray();
                 },
@@ -635,11 +636,11 @@ namespace Data
             {
                 GetPorts = () =>
                 {
-                    var result = new List<BsPort> { new("value", BsPort.TypeFloat, state => state["value"]) };
+                    var result = new List<BsPort> { new("out", BsPort.TypeFloat, state => state["value"]) };
                     for (var i = 0; i < size; i++)
                     {
-                        result.Add(new BsPort($"input-{i}", BsPort.TypeFloat,
-                            (state, value) => state[$"input-{i}"] = value));
+                        var id = $"i{i.ToString().PadLeft(2, '0')}";
+                        result.Add(new BsPort(id, BsPort.TypeFloat, (state, value) => state[id] = value));
                     }
                     return result.ToArray();
                 },
@@ -682,9 +683,9 @@ namespace Data
             {
                 GetPorts = () => new[]
                 {
-                    new BsPort("base", BsPort.TypeFloat, (state, value) => state["base"] = value),
-                    new BsPort("power", BsPort.TypeFloat, (state, value) => state["power"] = value),
-                    new BsPort("value", BsPort.TypeFloat, state => state["value"])
+                    new BsPort("bas", BsPort.TypeFloat, (state, value) => state["base"] = value),
+                    new BsPort("pow", BsPort.TypeFloat, (state, value) => state["power"] = value),
+                    new BsPort("out", BsPort.TypeFloat, state => state["value"])
                 },
                 Init = state =>
                 {
@@ -705,9 +706,9 @@ namespace Data
             {
                 GetPorts = () => new[]
                 {
-                    new BsPort("base", BsPort.TypeFloat, (state, value) => state["base"] = value),
-                    new BsPort("power", BsPort.TypeFloat, (state, value) => state["power"] = value),
-                    new BsPort("value", BsPort.TypeFloat, state => state["value"])
+                    new BsPort("bas", BsPort.TypeFloat, (state, value) => state["base"] = value),
+                    new BsPort("pow", BsPort.TypeFloat, (state, value) => state["power"] = value),
+                    new BsPort("out", BsPort.TypeFloat, state => state["value"])
                 },
                 Init = state =>
                 {
@@ -728,8 +729,8 @@ namespace Data
             {
                 GetPorts = () => new[]
                 {
-                    new BsPort("input", BsPort.TypeFloat, (state, value) => state["value"] = Mathf.Sin((float)value)),
-                    new BsPort("value", BsPort.TypeFloat, state => state["value"])
+                    new BsPort("inp", BsPort.TypeFloat, (state, value) => state["value"] = Mathf.Sin((float)value)),
+                    new BsPort("out", BsPort.TypeFloat, state => state["value"])
                 },
                 Init = state =>
                 {
@@ -744,8 +745,8 @@ namespace Data
             {
                 GetPorts = () => new[]
                 {
-                    new BsPort("input", BsPort.TypeFloat, (state, value) => state["value"] = Mathf.Cos((float)value)),
-                    new BsPort("value", BsPort.TypeFloat, state => state["value"])
+                    new BsPort("inp", BsPort.TypeFloat, (state, value) => state["value"] = Mathf.Cos((float)value)),
+                    new BsPort("out", BsPort.TypeFloat, state => state["value"])
                 },
                 Init = state =>
                 {
@@ -760,8 +761,8 @@ namespace Data
             {
                 GetPorts = () => new[]
                 {
-                    new BsPort("input", BsPort.TypeFloat, (state, value) => state["value"] = Mathf.Tan((float)value)),
-                    new BsPort("value", BsPort.TypeFloat, state => state["value"])
+                    new BsPort("inp", BsPort.TypeFloat, (state, value) => state["value"] = Mathf.Tan((float)value)),
+                    new BsPort("out", BsPort.TypeFloat, state => state["value"])
                 },
                 Init = state =>
                 {
@@ -776,8 +777,8 @@ namespace Data
             {
                 GetPorts = () => new[]
                 {
-                    new BsPort("input", BsPort.TypeFloat, (state, value) => state["value"] = Mathf.Asin((float)value)),
-                    new BsPort("value", BsPort.TypeFloat, state => state["value"])
+                    new BsPort("inp", BsPort.TypeFloat, (state, value) => state["value"] = Mathf.Asin((float)value)),
+                    new BsPort("out", BsPort.TypeFloat, state => state["value"])
                 },
                 Init = state =>
                 {
@@ -792,8 +793,8 @@ namespace Data
             {
                 GetPorts = () => new[]
                 {
-                    new BsPort("input", BsPort.TypeFloat, (state, value) => state["value"] = Mathf.Acos((float)value)),
-                    new BsPort("value", BsPort.TypeFloat, state => state["value"])
+                    new BsPort("inp", BsPort.TypeFloat, (state, value) => state["value"] = Mathf.Acos((float)value)),
+                    new BsPort("out", BsPort.TypeFloat, state => state["value"])
                 },
                 Init = state =>
                 {
@@ -808,8 +809,8 @@ namespace Data
             {
                 GetPorts = () => new[]
                 {
-                    new BsPort("input", BsPort.TypeFloat, (state, value) => state["value"] = Mathf.Atan((float)value)),
-                    new BsPort("value", BsPort.TypeFloat, state => state["value"])
+                    new BsPort("inp", BsPort.TypeFloat, (state, value) => state["value"] = Mathf.Atan((float)value)),
+                    new BsPort("out", BsPort.TypeFloat, state => state["value"])
                 },
                 Init = state =>
                 {
@@ -826,7 +827,7 @@ namespace Data
             {
                 props[i + 1] = Config[i];
             }
-            return new LcsLine('$', Tag, props);
+            return new LcsLine('$', props);
         }
 
         public void _FromLcs(LcsLine line)

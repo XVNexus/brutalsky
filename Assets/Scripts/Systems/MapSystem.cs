@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Controllers.Base;
-using Controllers.Player;
 using Data;
 using Data.Base;
 using Extensions;
@@ -226,6 +225,11 @@ namespace Systems
             EventSystem._.EmitMapBuild(ActiveMap);
 
             // Start the logic system
+            Invoke(nameof(InitMatrix), 0f);
+        }
+
+        private void InitMatrix()
+        {
             ActiveMap.InitMatrix();
         }
 

@@ -22,82 +22,86 @@ namespace Data.Object
 
         public override Func<BsBehavior, BsNode> GetNode => controller =>
         {
-            var joint = controller.transform.parent.GetComponent<AnchoredJoint2D>();
-            switch (Type)
+            var shape = controller.transform.parent;
+            switch (((JointController)controller).Object.Type)
             {
                 case TypeFixed:
-                    var fixedJoint = (FixedJoint2D)joint;
+                    var fixedJoint = shape.GetComponent<FixedJoint2D>();
                     return new BsNode(Tag)
                     {
                         GetPorts = () => new[]
                         {
-                            new BsPort("frequency", BsPort.TypeFloat,
+                            new BsPort("frq", BsPort.TypeFloat,
                                 (_, value) => fixedJoint.frequency = (float)value),
-                            new BsPort("damping", BsPort.TypeFloat,
+                            new BsPort("dmp", BsPort.TypeFloat,
                                 (_, value) => fixedJoint.dampingRatio = (float)value)
                         }
                     };
 
                 case TypeDistance:
-                    var distanceJoint = (DistanceJoint2D)joint;
+                    var distanceJoint = shape.GetComponent<DistanceJoint2D>();
                     return new BsNode(Tag)
                     {
                         GetPorts = () => new[]
                         {
-                            new BsPort("frequency", BsPort.TypeFloat,
+                            new BsPort("dst", BsPort.TypeFloat,
                                 (_, value) => distanceJoint.distance = (float)value),
-                            new BsPort("distance-auto", BsPort.TypeBool,
+                            new BsPort("dsa", BsPort.TypeBool,
                                 (_, value) => distanceJoint.autoConfigureDistance = (bool)value),
-                            new BsPort("distance-max", BsPort.TypeBool,
+                            new BsPort("dsm", BsPort.TypeBool,
                                 (_, value) => distanceJoint.maxDistanceOnly = (bool)value)
                         }
                     };
 
                 case TypeSpring:
-                    var springJoint = (SpringJoint2D)joint;
+                    var springJoint = shape.GetComponent<SpringJoint2D>();
                     return new BsNode(Tag)
                     {
                         GetPorts = () => new[]
                         {
-                            new BsPort("frequency", BsPort.TypeFloat,
+                            new BsPort("frq", BsPort.TypeFloat,
                                 (_, value) => springJoint.frequency = (float)value),
-                            new BsPort("damping", BsPort.TypeFloat,
+                            new BsPort("dmp", BsPort.TypeFloat,
                                 (_, value) => springJoint.dampingRatio = (float)value),
-                            new BsPort("frequency", BsPort.TypeFloat,
+                            new BsPort("dst", BsPort.TypeFloat,
                                 (_, value) => springJoint.distance = (float)value),
-                            new BsPort("distance-auto", BsPort.TypeBool,
+                            new BsPort("dsa", BsPort.TypeBool,
                                 (_, value) => springJoint.autoConfigureDistance = (bool)value)
                         }
                     };
 
                 case TypeHinge:
-                    var hingeJoint = (HingeJoint2D)joint;
+                    var hingeJoint = shape.GetComponent<HingeJoint2D>();
                     return new BsNode(Tag)
                     {
                         GetPorts = () => new[]
                         {
-                            new BsPort("motor", BsPort.TypeBool, (_, value) => hingeJoint.useMotor = (bool)value),
-                            new BsPort("motor-speed", BsPort.TypeFloat, (_, value) =>
+                            new BsPort("mot", BsPort.TypeBool, (_, value) => hingeJoint.useMotor = (bool)value),
+                            new BsPort("mts", BsPort.TypeFloat, (_, value) =>
                             {
+                                if (!hingeJoint.useMotor) return;
                                 var motor = hingeJoint.motor;
                                 motor.motorSpeed = (float)value;
                                 hingeJoint.motor = motor;
                             }),
-                            new BsPort("motor-force", BsPort.TypeFloat, (_, value) =>
+                            new BsPort("mtf", BsPort.TypeFloat, (_, value) =>
                             {
+                                if (!hingeJoint.useMotor) return;
                                 var motor = hingeJoint.motor;
                                 motor.maxMotorTorque = (float)value;
                                 hingeJoint.motor = motor;
                             }),
-                            new BsPort("limit", BsPort.TypeBool, (_, value) => hingeJoint.useLimits = (bool)value),
-                            new BsPort("limit-min", BsPort.TypeFloat, (_, value) =>
+                            new BsPort("lim", BsPort.TypeBool, (_, value) => hingeJoint.useLimits = (bool)value),
+                            new BsPort("lmn", BsPort.TypeFloat, (_, value) =>
                             {
+                                if (!hingeJoint.useLimits) return;
                                 var limits = hingeJoint.limits;
                                 limits.min = (float)value;
                                 hingeJoint.limits = limits;
                             }),
-                            new BsPort("limit-max", BsPort.TypeFloat, (_, value) =>
+                            new BsPort("lmx", BsPort.TypeFloat, (_, value) =>
                             {
+                                if (!hingeJoint.useLimits) return;
                                 var limits = hingeJoint.limits;
                                 limits.max = (float)value;
                                 hingeJoint.limits = limits;
@@ -106,36 +110,40 @@ namespace Data.Object
                     };
 
                 case TypeSlider:
-                    var sliderJoint = (SliderJoint2D)joint;
+                    var sliderJoint = shape.GetComponent<SliderJoint2D>();
                     return new BsNode(Tag)
                     {
                         GetPorts = () => new[]
                         {
-                            new BsPort("angle", BsPort.TypeFloat, (_, value) => sliderJoint.angle = (float)value),
-                            new BsPort("angle-auto", BsPort.TypeBool,
+                            new BsPort("ang", BsPort.TypeFloat, (_, value) => sliderJoint.angle = (float)value),
+                            new BsPort("aga", BsPort.TypeBool,
                                 (_, value) => sliderJoint.autoConfigureAngle = (bool)value),
-                            new BsPort("motor", BsPort.TypeBool, (_, value) => sliderJoint.useMotor = (bool)value),
-                            new BsPort("motor-speed", BsPort.TypeFloat, (_, value) =>
+                            new BsPort("mot", BsPort.TypeBool, (_, value) => sliderJoint.useMotor = (bool)value),
+                            new BsPort("mts", BsPort.TypeFloat, (_, value) =>
                             {
+                                if (!sliderJoint.useMotor) return;
                                 var motor = sliderJoint.motor;
                                 motor.motorSpeed = (float)value;
                                 sliderJoint.motor = motor;
                             }),
-                            new BsPort("motor-force", BsPort.TypeFloat, (_, value) =>
+                            new BsPort("mtf", BsPort.TypeFloat, (_, value) =>
                             {
+                                if (!sliderJoint.useMotor) return;
                                 var motor = sliderJoint.motor;
                                 motor.maxMotorTorque = (float)value;
                                 sliderJoint.motor = motor;
                             }),
-                            new BsPort("limit", BsPort.TypeBool, (_, value) => sliderJoint.useLimits = (bool)value),
-                            new BsPort("limit-min", BsPort.TypeFloat, (_, value) =>
+                            new BsPort("lim", BsPort.TypeBool, (_, value) => sliderJoint.useLimits = (bool)value),
+                            new BsPort("lmn", BsPort.TypeFloat, (_, value) =>
                             {
+                                if (!sliderJoint.useLimits) return;
                                 var limits = sliderJoint.limits;
                                 limits.min = (float)value;
                                 sliderJoint.limits = limits;
                             }),
-                            new BsPort("limit-max", BsPort.TypeFloat, (_, value) =>
+                            new BsPort("lmx", BsPort.TypeFloat, (_, value) =>
                             {
+                                if (!sliderJoint.useLimits) return;
                                 var limits = sliderJoint.limits;
                                 limits.max = (float)value;
                                 sliderJoint.limits = limits;

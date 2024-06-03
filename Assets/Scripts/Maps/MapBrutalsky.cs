@@ -310,15 +310,15 @@ namespace Maps
             // 7 Joint ("spinner-left-motor")
             // 8 Joint ("spinner-right-motor")
             // 9 Sensor ("spinner-sensor")
-            result.Links.Add(new BsLink(9, "triggered", 4, "select"));
-            result.Links.Add(new BsLink(2, "value", 4, "input-0"));
-            result.Links.Add(new BsLink(3, "value", 4, "input-1"));
-            result.Links.Add(new BsLink(4, "value", 5, "input-0"));
-            result.Links.Add(new BsLink(4, "value", 6, "input-0"));
-            result.Links.Add(new BsLink(0, "value", 5, "input-1"));
-            result.Links.Add(new BsLink(1, "value", 6, "input-1"));
-            result.Links.Add(new BsLink(5, "value", 7, "motor-speed"));
-            result.Links.Add(new BsLink(6, "value", 8, "motor-speed"));
+            result.Links.Add(new BsLink(9, "trg", 4, "sel"));
+            result.Links.Add(new BsLink(2, "val", 4, "i00"));
+            result.Links.Add(new BsLink(3, "val", 4, "i01"));
+            result.Links.Add(new BsLink(4, "out", 5, "i00"));
+            result.Links.Add(new BsLink(4, "out", 6, "i00"));
+            result.Links.Add(new BsLink(0, "val", 5, "i01"));
+            result.Links.Add(new BsLink(1, "val", 6, "i01"));
+            result.Links.Add(new BsLink(5, "out", 7, "mts"));
+            result.Links.Add(new BsLink(6, "out", 8, "mts"));
 
             return result;
         }
