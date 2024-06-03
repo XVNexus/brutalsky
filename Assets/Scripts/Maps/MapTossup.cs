@@ -66,7 +66,7 @@ namespace Maps
             {
                 Type = BsJoint.TypeHinge,
                 OtherAnchor = new Vector2(-17f, -7f),
-                MotorEnabled = true,
+                Motor = true,
                 MotorForce = 10000f
             });
             result.Objects.Add(new BsDecal("spinner-middle-bg")
@@ -88,7 +88,7 @@ namespace Maps
             {
                 Type = BsJoint.TypeHinge,
                 OtherAnchor = new Vector2(0f, 7f),
-                MotorEnabled = true,
+                Motor = true,
                 MotorForce = 10000f
             });
             result.Objects.Add(new BsDecal("spinner-right-bg")
@@ -110,7 +110,7 @@ namespace Maps
             {
                 Type = BsJoint.TypeHinge,
                 OtherAnchor = new Vector2(17f, -7f),
-                MotorEnabled = true,
+                Motor = true,
                 MotorForce = 10000f
             });
 

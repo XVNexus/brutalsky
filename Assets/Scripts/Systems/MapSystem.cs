@@ -120,7 +120,7 @@ namespace Systems
             var document = LcsDocument.Serialize(map);
             MapList[map.Id] = document.Binify(true);
             // TODO: TEMPORARY
-            ResourceSystem._.SaveFile("Maps", $"{map.Author} - {map.Title}", document, LcsDocument.FormatString);
+            // ResourceSystem._.SaveFile("Maps", $"{map.Author} - {map.Title}", document, LcsDocument.FormatString);
         }
 
         public void UnregisterMaps()
@@ -224,6 +224,9 @@ namespace Systems
                 CreateObject(obj);
             }
             EventSystem._.EmitMapBuild(ActiveMap);
+
+            // Start the logic system
+            ActiveMap.InitMatrix();
         }
 
         public void UnbuildMap()
@@ -240,6 +243,9 @@ namespace Systems
                 DeleteObject(obj);
             }
             ActiveMap.ResetSpawns();
+
+            // Stop the logic system
+            ActiveMap.ClearMatrix();
 
             // Note map as inactive
             EventSystem._.EmitMapUnbuild(ActiveMap);
@@ -270,7 +276,8 @@ namespace Systems
         {
             if (!MapLoaded) return;
 
-            // TODO: LOGIC SYSTEM
+            // Update the logic system
+            ActiveMap.UpdateMatrix();
         }
 
         // Utility functions

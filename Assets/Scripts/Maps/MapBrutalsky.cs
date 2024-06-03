@@ -147,7 +147,7 @@ namespace Maps
             {
                 Type = BsJoint.TypeHinge,
                 OtherAnchor = new Vector2(-2.5f, 0f),
-                MotorEnabled = true,
+                Motor = true,
                 MotorForce = 500f
             });
             result.Objects.Add(new BsDecal("spinner-right-bg")
@@ -170,7 +170,7 @@ namespace Maps
             {
                 Type = BsJoint.TypeHinge,
                 OtherAnchor = new Vector2(2.5f, 0f),
-                MotorEnabled = true,
+                Motor = true,
                 MotorForce = 500f
             });
             result.Objects.Add(new BsSensor("spinner-sensor")
@@ -298,6 +298,27 @@ namespace Maps
                 Material = MaterialExt.Stone,
                 Color = ColorExt.Lava.MultiplyTint(.5f)
             });
+
+            // Add logic
+            /* 0 */ result.Nodes.Add(BsNode.Float(1f));
+            /* 1 */ result.Nodes.Add(BsNode.Float(-1f));
+            /* 2 */ result.Nodes.Add(BsNode.Float(50f));
+            /* 3 */ result.Nodes.Add(BsNode.Float(5000f));
+            /* 4 */ result.Nodes.Add(BsNode.Multiplex(2));
+            /* 5 */ result.Nodes.Add(BsNode.Multiply(2));
+            /* 6 */ result.Nodes.Add(BsNode.Multiply(2));
+            // 7 Joint ("spinner-left-motor")
+            // 8 Joint ("spinner-right-motor")
+            // 9 Sensor ("spinner-sensor")
+            result.Links.Add(new BsLink(9, "triggered", 4, "select"));
+            result.Links.Add(new BsLink(2, "value", 4, "input-0"));
+            result.Links.Add(new BsLink(3, "value", 4, "input-1"));
+            result.Links.Add(new BsLink(4, "value", 5, "input-0"));
+            result.Links.Add(new BsLink(4, "value", 6, "input-0"));
+            result.Links.Add(new BsLink(0, "value", 5, "input-1"));
+            result.Links.Add(new BsLink(1, "value", 6, "input-1"));
+            result.Links.Add(new BsLink(5, "value", 7, "motor-speed"));
+            result.Links.Add(new BsLink(6, "value", 8, "motor-speed"));
 
             return result;
         }

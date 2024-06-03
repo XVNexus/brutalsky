@@ -89,7 +89,7 @@ namespace Maps
             result.Objects.Add(new BsJoint("spinner-motor", "spinner")
             {
                 Type = BsJoint.TypeHinge,
-                MotorEnabled = true,
+                Motor = true,
                 MotorSpeed = 50f,
                 MotorForce = 1000000f
             });
@@ -105,7 +105,7 @@ namespace Maps
             {
                 Type = BsJoint.TypeHinge,
                 OtherAnchor = new Vector2(0f, 10f),
-                MotorEnabled = true,
+                Motor = true,
                 MotorSpeed = -1000f,
                 MotorForce = 100f
             });
@@ -122,7 +122,7 @@ namespace Maps
             {
                 Type = BsJoint.TypeHinge,
                 OtherAnchor = new Vector2(10f, 0f),
-                MotorEnabled = true,
+                Motor = true,
                 MotorSpeed = -1000f,
                 MotorForce = 100f
             });
@@ -139,7 +139,7 @@ namespace Maps
             {
                 Type = BsJoint.TypeHinge,
                 OtherAnchor = new Vector2(0f, -10f),
-                MotorEnabled = true,
+                Motor = true,
                 MotorSpeed = -1000f,
                 MotorForce = 100f
             });
@@ -156,7 +156,7 @@ namespace Maps
             {
                 Type = BsJoint.TypeHinge,
                 OtherAnchor = new Vector2(-10f, 0f),
-                MotorEnabled = true,
+                Motor = true,
                 MotorSpeed = -1000f,
                 MotorForce = 100f
             });

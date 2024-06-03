@@ -30,7 +30,7 @@ namespace Data
 
         public LcsLine _ToLcs()
         {
-            return new LcsLine('$', LcsInfo.Compress(Position.x, Position.y), Priority);
+            return new LcsLine('@', LcsInfo.Compress(Position.x, Position.y), Priority);
         }
 
         public void _FromLcs(LcsLine line)

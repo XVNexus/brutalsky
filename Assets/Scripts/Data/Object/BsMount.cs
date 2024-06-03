@@ -1,6 +1,7 @@
 using System;
 using Controllers;
 using Controllers.Base;
+using Controllers.Mount;
 using Data.Base;
 using Extensions;
 using Systems;
@@ -13,6 +14,21 @@ namespace Data.Object
     {
         public override GameObject Prefab => ResourceSystem._.pMount;
         public override string Tag => Tags.MountPrefix;
+
+        public override Func<BsBehavior, BsNode> GetNode => controller =>
+        {
+            var grabController = ((MountController)controller).GetSub<MountGrabController>("grab");
+            return new BsNode(Tag)
+            {
+                GetPorts = () => new[]
+                {
+                    new BsPort("active", BsPort.TypeBool, _ => grabController.Active),
+                    new BsPort("horizontal", BsPort.TypeBool, _ => grabController.Input.x),
+                    new BsPort("vertical", BsPort.TypeBool, _ => grabController.Input.y)
+                }
+            };
+        };
+
         public override Func<GameObject, BsObject, BsObject[], BsBehavior> Init => (gob, obj, _) =>
         {
             // Link object to controller

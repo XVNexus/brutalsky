@@ -1,6 +1,7 @@
 using System;
 using Controllers;
 using Controllers.Base;
+using Controllers.Sensor;
 using Data.Base;
 using Extensions;
 using Systems;
@@ -13,6 +14,18 @@ namespace Data.Object
     {
         public override GameObject Prefab => ResourceSystem._.pSensor;
         public override string Tag => Tags.SensorPrefix;
+
+        public override Func<BsBehavior, BsNode> GetNode => controller =>
+        {
+            var triggerController = ((SensorController)controller).GetSub<SensorTriggerController>("trigger");
+            return new BsNode(Tag)
+            {
+                GetPorts = () => new[]
+                {
+                    new BsPort("triggered", BsPort.TypeBool, _ => triggerController.Triggered)
+                }
+            };
+        };
 
         public override Func<GameObject, BsObject, BsObject[], BsBehavior> Init => (gob, obj, _) =>
         {

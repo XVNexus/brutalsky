@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Data.Base;
 using Extensions;
-using JetBrains.Annotations;
 using Lcs;
 using Systems;
 using UnityEngine;
@@ -33,6 +32,12 @@ namespace Data
 
         public List<BsSpawn> Spawns { get; } = new();
         public IdList<BsObject> Objects { get; } = new();
+        public List<BsNode> Nodes { get; } = new();
+        public List<BsLink> Links { get; } = new();
+
+        public List<BsNode> ActiveNodes { get; } = new();
+        public Dictionary<(int, string), BsPort> ActivePorts { get; } = new();
+        public Dictionary<(int, string), object> LinkBuffer { get; } = new();
 
         public BsMap(string title = "Untitled Map", string author = "Anonymous Marble")
         {
@@ -61,6 +66,66 @@ namespace Data
             }
         }
 
+        public void InitMatrix()
+        {
+            // Initialize all nodes
+            foreach (var node in Nodes)
+            {
+                node.Init(node.State);
+                ActiveNodes.Add(node);
+            }
+            foreach (var obj in Objects.Values.Where(obj => obj.GetNode != null))
+            {
+                ActiveNodes.Add(obj.GetNode(obj.InstanceController));
+            }
+
+            // Add all node ports
+            for (var i = 0; i < ActiveNodes.Count; i++)
+            {
+                var node = ActiveNodes[i];
+                foreach (var port in node.GetPorts())
+                {
+                    ActivePorts[(i, port.Id)] = port;
+                }
+            }
+
+            // Create link buffer
+            foreach (var link in Links)
+            {
+                LinkBuffer[(link.ToNode, link.ToPort)] = false;
+            }
+        }
+
+        public void UpdateMatrix()
+        {
+            // Update all nodes
+            foreach (var node in Nodes)
+            {
+                node.Update(node.State);
+            }
+
+            // Copy values between linked ports
+            foreach (var link in Links)
+            {
+                var value = ActivePorts[(link.FromNode, link.FromPort)].GetValue(ActiveNodes[link.FromNode].State);
+                var fromType = ActivePorts[(link.FromNode, link.FromPort)].Type;
+                var toType = ActivePorts[(link.ToNode, link.ToPort)].Type;
+                LinkBuffer[(link.ToNode, link.ToPort)] = BsPort.Convert(value, fromType, toType);
+            }
+            foreach (var link in Links)
+            {
+                ActivePorts[(link.ToNode, link.ToPort)].SetValue(
+                    ActiveNodes[link.ToNode].State, LinkBuffer[(link.ToNode, link.ToPort)]);
+            }
+        }
+
+        public void ClearMatrix()
+        {
+            ActiveNodes.Clear();
+            ActivePorts.Clear();
+            LinkBuffer.Clear();
+        }
+
         public LcsDocument _ToLcs()
         {
             var result = new List<LcsLine>
@@ -70,7 +135,9 @@ namespace Data
             };
             result.AddRange(Spawns.Select(LcsLine.Serialize));
             result.AddRange(Objects.Values.Select(LcsLine.Serialize));
-            return new LcsDocument(1, new[] { "!@#" }, result.ToArray());
+            result.AddRange(Nodes.Select(LcsLine.Serialize));
+            result.AddRange(Links.Select(LcsLine.Serialize));
+            return new LcsDocument(1, new[] { "!@#$%" }, result.ToArray());
         }
 
         public void _FromLcs(LcsDocument document)
@@ -95,6 +162,12 @@ namespace Data
                         break;
                     case '#':
                         Objects.Add(LcsLine.Deserialize<BsObject>(line));
+                        break;
+                    case '$':
+                        Nodes.Add(LcsLine.Deserialize<BsNode>(line));
+                        break;
+                    case '%':
+                        Links.Add(LcsLine.Deserialize<BsLink>(line));
                         break;
                 }
             }

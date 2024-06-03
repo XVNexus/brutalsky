@@ -85,15 +85,15 @@ namespace Maps
             {
                 Type = BsJoint.TypeSlider,
                 OtherAnchor = new Vector2(-6f, 0f),
-                AngleValue = 90f
+                Angle = 90f
             });
             result.Objects.Add(new BsJoint("car-wheel-1-spring", "car-wheel-1-axle", "car-body")
             {
                 Type = BsJoint.TypeSpring,
                 OtherAnchor = new Vector2(-6f, 0f),
-                DistanceValue = 3f,
-                DampingRatio = .3f,
-                DampingFrequency = 15f
+                Distance = 3f,
+                Damping = .3f,
+                Frequency = 15f
             });
             result.Objects.Add(new BsShape("car-wheel-1")
             {
@@ -106,7 +106,7 @@ namespace Maps
             result.Objects.Add(new BsJoint("car-wheel-1-motor", "car-wheel-1", "car-wheel-1-axle")
             {
                 Type = BsJoint.TypeHinge,
-                MotorEnabled = true,
+                Motor = true,
                 MotorForce = 2000f
             });
             result.Objects.Add(new BsShape("car-wheel-2-axle")
@@ -123,15 +123,15 @@ namespace Maps
             {
                 Type = BsJoint.TypeSlider,
                 OtherAnchor = new Vector2(6f, 0f),
-                AngleValue = 90f
+                Angle = 90f
             });
             result.Objects.Add(new BsJoint("car-wheel-2-spring", "car-wheel-2-axle", "car-body")
             {
                 Type = BsJoint.TypeSpring,
                 OtherAnchor = new Vector2(6f, 0f),
-                DistanceValue = 3f,
-                DampingRatio = .3f,
-                DampingFrequency = 15f
+                Distance = 3f,
+                Damping = .3f,
+                Frequency = 15f
             });
             result.Objects.Add(new BsShape("car-wheel-2")
             {
@@ -144,7 +144,7 @@ namespace Maps
             result.Objects.Add(new BsJoint("car-wheel-2-motor", "car-wheel-2", "car-wheel-2-axle")
             {
                 Type = BsJoint.TypeHinge,
-                MotorEnabled = true,
+                Motor = true,
                 MotorForce = 2000f
             });
             result.Objects.Add(new BsMount("car-seat-1", "car-body")

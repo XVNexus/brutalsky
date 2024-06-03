@@ -22,6 +22,7 @@ namespace Data.Base
         public sbyte Layer { get; set; }
         public object[] Props { get; set; }
 
+        [CanBeNull] public virtual Func<BsBehavior, BsNode> GetNode { get; set; }
         public virtual Func<GameObject, BsObject, BsObject[], BsBehavior> Init { get; set; }
         [CanBeNull] public GameObject InstanceObject { get; private set; }
         [CanBeNull] public BsBehavior InstanceController { get; private set; }
