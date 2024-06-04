@@ -22,7 +22,7 @@ namespace Data.Object
             {
                 GetPorts = () => new[]
                 {
-                    new BsPort("trg", BsPort.TypeBool, _ => triggerController.Triggered)
+                    BsPort.Getter("trg", BsPort.TypeBool, _ => triggerController.Triggered)
                 }
             };
         };

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Data.Base;
@@ -36,6 +37,7 @@ namespace Data
         public List<BsLink> Links { get; } = new();
 
         public List<BsNode> ActiveNodes { get; } = new();
+        public List<Dictionary<string, object>> NodeStates { get; } = new();
         public Dictionary<(int, string), BsPort> ActivePorts { get; } = new();
         public Dictionary<(int, string), object> LinkBuffer { get; } = new();
         public bool MatrixActive { get; private set; }
@@ -72,11 +74,14 @@ namespace Data
             // Initialize all nodes
             foreach (var node in Nodes)
             {
-                node.Init?.Invoke(node.State);
+                var state = new Dictionary<string, object>();
+                NodeStates.Add(state);
+                node.Init?.Invoke(state);
                 ActiveNodes.Add(node);
             }
             foreach (var obj in Objects.Values.Where(obj => obj.GetNode != null))
             {
+                NodeStates.Add(new Dictionary<string, object>());
                 ActiveNodes.Add(obj.GetNode(obj.InstanceController));
             }
 
@@ -104,32 +109,40 @@ namespace Data
             if (!MatrixActive) return;
 
             // Update all nodes
-            foreach (var node in Nodes)
+            for (var i = 0; i < Nodes.Count; i++)
             {
-                node.Update?.Invoke(node.State);
+                var node = Nodes[i];
+                node.Update?.Invoke(NodeStates[i]);
             }
 
             // Copy values between linked ports
             foreach (var link in Links)
             {
-                var fromNode = ActiveNodes[link.FromNode];
+                var fromState = NodeStates[link.FromNode];
                 var fromPort = ActivePorts[(link.FromNode, link.FromPort)];
                 var toPort = ActivePorts[(link.ToNode, link.ToPort)];
-                Debug.Log($"{fromNode}\t{link}\t{ActiveNodes[link.ToNode]}");
-                LinkBuffer[(link.ToNode, link.ToPort)] =
-                    BsPort.Convert(fromPort.GetValue(fromNode.State), fromPort.Type, toPort.Type);
+                try
+                {
+                    LinkBuffer[(link.ToNode, link.ToPort)] =
+                        BsPort.Convert(fromPort.GetValue(fromState), fromPort.Type, toPort.Type);
+                }
+                catch (Exception ex)
+                {
+                    throw Errors.ErrorWhile($"copying '{fromPort.GetValue(fromState)}' from {ActiveNodes[link.FromNode]} {fromPort} to {ActiveNodes[link.ToNode]} {toPort}", ex);
+                }
             }
             foreach (var link in Links)
             {
-                var toNode = ActiveNodes[link.ToNode];
+                var toState = NodeStates[link.ToNode];
                 var toPort = ActivePorts[(link.ToNode, link.ToPort)];
-                toPort.SetValue(toNode.State, LinkBuffer[(link.ToNode, link.ToPort)]);
+                toPort.SetValue(toState, LinkBuffer[(link.ToNode, link.ToPort)]);
             }
         }
 
         public void ClearMatrix()
         {
             ActiveNodes.Clear();
+            NodeStates.Clear();
             ActivePorts.Clear();
             LinkBuffer.Clear();
 

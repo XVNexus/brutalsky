@@ -19,7 +19,7 @@ namespace Data
         public Func<Dictionary<string, object>, object> GetValue { get; set; }
         public Action<Dictionary<string, object>, object> SetValue { get; set; }
 
-        public BsPort(string id, byte type, Func<Dictionary<string, object>, object> getValue)
+        private BsPort(string id, byte type, Func<Dictionary<string, object>, object> getValue)
         {
             Id = id;
             Type = type;
@@ -27,12 +27,17 @@ namespace Data
             IsInput = false;
         }
 
-        public BsPort(string id, byte type, Action<Dictionary<string, object>, object> setValue)
+        private BsPort(string id, byte type, Action<Dictionary<string, object>, object> setValue)
         {
             Id = id;
             Type = type;
             SetValue = setValue;
             IsInput = true;
+        }
+
+        public static BsPort Value(string id, byte type, object value)
+        {
+            return new BsPort(id, type, _ => value);
         }
 
         public static BsPort Input(string id, byte type)
@@ -43,6 +48,16 @@ namespace Data
         public static BsPort Output(string id, byte type)
         {
             return new BsPort(id, type, state => state[id]);
+        }
+
+        public static BsPort Getter(string id, byte type, Func<Dictionary<string, object>, object> get)
+        {
+            return new BsPort(id, type, get);
+        }
+
+        public static BsPort Setter(string id, byte type, Action<Dictionary<string, object>, object> set)
+        {
+            return new BsPort(id, type, set);
         }
 
         public static object Convert(object value, byte typeFrom, byte typeTo)
@@ -56,7 +71,7 @@ namespace Data
                         int => TypeInt,
                         float => TypeFloat,
                         string => TypeString,
-                        _ => throw Errors.InvalidItem("logic type", value)
+                        _ => throw Errors.InvalidItem("logic value", value)
                     }, typeTo);
                 case TypeBool:
                     var valueBool = (bool)value;
@@ -109,7 +124,17 @@ namespace Data
 
         public override string ToString()
         {
-            return $"PORT: {(IsInput ? "inp" : "out")}:{Id} ({Type})";
+            var typeString = Type switch
+            {
+                TypeAny => "any",
+                TypeBool => "bol",
+                TypeInt => "int",
+                TypeFloat => "flt",
+                TypeString => "str",
+                _ => throw Errors.InvalidItem("port type", Type)
+            };
+            var ioString = IsInput ? "i" : "o";
+            return $"PORT: {ioString}:{Id}.{typeString}";
         }
     }
 }

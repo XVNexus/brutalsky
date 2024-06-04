@@ -22,9 +22,9 @@ namespace Data.Object
             {
                 GetPorts = () => new[]
                 {
-                    new BsPort("act", BsPort.TypeBool, _ => grabController.Active),
-                    new BsPort("hrz", BsPort.TypeBool, _ => grabController.Input.x),
-                    new BsPort("vrt", BsPort.TypeBool, _ => grabController.Input.y)
+                    BsPort.Getter("act", BsPort.TypeBool, _ => grabController.Active),
+                    BsPort.Getter("hrz", BsPort.TypeBool, _ => grabController.Input.x),
+                    BsPort.Getter("vrt", BsPort.TypeBool, _ => grabController.Input.y)
                 }
             };
         };

@@ -126,7 +126,7 @@ namespace Maps
             /*  8 */ result.Nodes.Add(BsNode.Clock(60));
             /*  9 */ result.Nodes.Add(BsNode.Monostable());
             /* 10 */ result.Nodes.Add(BsNode.RandomInt(0, 2));
-            /* 11 */ result.Nodes.Add(BsNode.Delay(30));
+            /* 11 */ result.Nodes.Add(BsNode.Delay(1));
             /* 12 */ result.Nodes.Add(BsNode.Demultiplex(3));
             // 13 Joint ("spinner-left-motor")
             // 14 Joint ("spinner-middle-motor")

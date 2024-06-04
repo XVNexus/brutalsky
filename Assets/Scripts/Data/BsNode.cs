@@ -12,7 +12,6 @@ namespace Data
         public string Tag { get; set; }
         public object[] Config { get; set; }
 
-        public Dictionary<string, object> State { get; set; } = new();
         public Func<BsPort[]> GetPorts { get; set; }
         public Action<Dictionary<string, object>> Init { get; set; }
         public Action<Dictionary<string, object>> Update { get; set; }
@@ -29,7 +28,7 @@ namespace Data
         {
             return new BsNode("bol", value)
             {
-                GetPorts = () => new[] { new BsPort("val", BsPort.TypeBool, _ => value) }
+                GetPorts = () => new[] { BsPort.Value("val", BsPort.TypeBool, value) }
             };
         }
 
@@ -37,7 +36,7 @@ namespace Data
         {
             return new BsNode("int", value)
             {
-                GetPorts = () => new[] { new BsPort("val", BsPort.TypeInt, _ => value) }
+                GetPorts = () => new[] { BsPort.Value("val", BsPort.TypeInt, value) }
             };
         }
 
@@ -45,7 +44,7 @@ namespace Data
         {
             return new BsNode("flt", value)
             {
-                GetPorts = () => new[] { new BsPort("val", BsPort.TypeFloat, _ => value) }
+                GetPorts = () => new[] { BsPort.Value("val", BsPort.TypeFloat, value) }
             };
         }
 
@@ -53,7 +52,7 @@ namespace Data
         {
             return new BsNode("str", value)
             {
-                GetPorts = () => new[] { new BsPort("val", BsPort.TypeString, _ => value) }
+                GetPorts = () => new[] { BsPort.Value("val", BsPort.TypeString, value) }
             };
         }
 
@@ -194,13 +193,18 @@ namespace Data
                 Init = state =>
                 {
                     state["inp"] = false;
-                    state["buf"] = new object[duration + 1];
+                    var buffer = new object[duration + 1];
+                    for (var i = 0; i < buffer.Length; i++)
+                    {
+                        buffer[i] = false;
+                    }
+                    state["buf"] = buffer;
                     state["out"] = false;
                 },
                 Update = state =>
                 {
                     var buffer = (object[])state["buf"];
-                    for (var i = 1; i <= duration; i++)
+                    for (var i = duration; i > 0; i--)
                     {
                         buffer[i] = buffer[i - 1];
                     }
@@ -283,8 +287,8 @@ namespace Data
                 {
                     var result = new List<BsPort>
                     {
-                        new("sel", BsPort.TypeInt, (state, value) => state["sel"] = value),
-                        new("inp", BsPort.TypeAny, (state, value) => state["inp"] = value)
+                        BsPort.Input("sel", BsPort.TypeInt),
+                        BsPort.Input("inp", BsPort.TypeAny)
                     };
                     for (var i = 0; i < size; i++)
                     {
@@ -320,12 +324,17 @@ namespace Data
             {
                 GetPorts = () => new[]
                 {
-                    new BsPort("inp", BsPort.TypeBool, (state, value) => state["out"] = value),
+                    BsPort.Input("inp", BsPort.TypeBool),
                     BsPort.Output("out", BsPort.TypeBool)
                 },
                 Init = state =>
                 {
+                    state["inp"] = false;
                     state["out"] = false;
+                },
+                Update = state =>
+                {
+                    state["out"] = state["inp"];
                 }
             };
         }
@@ -336,12 +345,17 @@ namespace Data
             {
                 GetPorts = () => new[]
                 {
-                    new BsPort("inp", BsPort.TypeBool, (state, value) => state["out"] = !(bool)value),
+                    BsPort.Input("inp", BsPort.TypeBool),
                     BsPort.Output("out", BsPort.TypeBool)
                 },
                 Init = state =>
                 {
+                    state["inp"] = false;
                     state["out"] = false;
+                },
+                Update = state =>
+                {
+                    state["out"] = !(bool)state["inp"];
                 }
             };
         }
@@ -764,12 +778,17 @@ namespace Data
             {
                 GetPorts = () => new[]
                 {
-                    new BsPort("inp", BsPort.TypeFloat, (state, value) => state["out"] = Mathf.Sin((float)value)),
+                    BsPort.Input("inp", BsPort.TypeFloat),
                     BsPort.Output("out", BsPort.TypeFloat)
                 },
                 Init = state =>
                 {
+                    state["inp"] = 0f;
                     state["out"] = 0f;
+                },
+                Update = state =>
+                {
+                    state["out"] = Mathf.Sin((float)state["inp"]);
                 }
             };
         }
@@ -780,12 +799,17 @@ namespace Data
             {
                 GetPorts = () => new[]
                 {
-                    new BsPort("inp", BsPort.TypeFloat, (state, value) => state["out"] = Mathf.Cos((float)value)),
+                    BsPort.Input("inp", BsPort.TypeFloat),
                     BsPort.Output("out", BsPort.TypeFloat)
                 },
                 Init = state =>
                 {
+                    state["inp"] = 0f;
                     state["out"] = 0f;
+                },
+                Update = state =>
+                {
+                    state["out"] = Mathf.Cos((float)state["inp"]);
                 }
             };
         }
@@ -796,12 +820,17 @@ namespace Data
             {
                 GetPorts = () => new[]
                 {
-                    new BsPort("inp", BsPort.TypeFloat, (state, value) => state["out"] = Mathf.Tan((float)value)),
+                    BsPort.Input("inp", BsPort.TypeFloat),
                     BsPort.Output("out", BsPort.TypeFloat)
                 },
                 Init = state =>
                 {
+                    state["inp"] = 0f;
                     state["out"] = 0f;
+                },
+                Update = state =>
+                {
+                    state["out"] = Mathf.Tan((float)state["inp"]);
                 }
             };
         }
@@ -812,12 +841,17 @@ namespace Data
             {
                 GetPorts = () => new[]
                 {
-                    new BsPort("inp", BsPort.TypeFloat, (state, value) => state["out"] = Mathf.Asin((float)value)),
+                    BsPort.Input("inp", BsPort.TypeFloat),
                     BsPort.Output("out", BsPort.TypeFloat)
                 },
                 Init = state =>
                 {
+                    state["inp"] = 0f;
                     state["out"] = 0f;
+                },
+                Update = state =>
+                {
+                    state["out"] = Mathf.Asin((float)state["inp"]);
                 }
             };
         }
@@ -828,12 +862,17 @@ namespace Data
             {
                 GetPorts = () => new[]
                 {
-                    new BsPort("inp", BsPort.TypeFloat, (state, value) => state["out"] = Mathf.Acos((float)value)),
+                    BsPort.Input("inp", BsPort.TypeFloat),
                     BsPort.Output("out", BsPort.TypeFloat)
                 },
                 Init = state =>
                 {
+                    state["inp"] = 0f;
                     state["out"] = 0f;
+                },
+                Update = state =>
+                {
+                    state["out"] = Mathf.Acos((float)state["inp"]);
                 }
             };
         }
@@ -844,12 +883,17 @@ namespace Data
             {
                 GetPorts = () => new[]
                 {
-                    new BsPort("inp", BsPort.TypeFloat, (state, value) => state["out"] = Mathf.Atan((float)value)),
+                    BsPort.Input("inp", BsPort.TypeFloat),
                     BsPort.Output("out", BsPort.TypeFloat)
                 },
                 Init = state =>
                 {
+                    state["inp"] = 0f;
                     state["out"] = 0f;
+                },
+                Update = state =>
+                {
+                    state["out"] = Mathf.Atan((float)state["inp"]);
                 }
             };
         }

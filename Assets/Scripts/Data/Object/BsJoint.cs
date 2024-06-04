@@ -31,9 +31,9 @@ namespace Data.Object
                     {
                         GetPorts = () => new[]
                         {
-                            new BsPort("frq", BsPort.TypeFloat,
+                            BsPort.Setter("frq", BsPort.TypeFloat,
                                 (_, value) => fixedJoint.frequency = (float)value),
-                            new BsPort("dmp", BsPort.TypeFloat,
+                            BsPort.Setter("dmp", BsPort.TypeFloat,
                                 (_, value) => fixedJoint.dampingRatio = (float)value)
                         }
                     };
@@ -44,11 +44,11 @@ namespace Data.Object
                     {
                         GetPorts = () => new[]
                         {
-                            new BsPort("dst", BsPort.TypeFloat,
+                            BsPort.Setter("dst", BsPort.TypeFloat,
                                 (_, value) => distanceJoint.distance = (float)value),
-                            new BsPort("dsa", BsPort.TypeBool,
+                            BsPort.Setter("dsa", BsPort.TypeBool,
                                 (_, value) => distanceJoint.autoConfigureDistance = (bool)value),
-                            new BsPort("dsm", BsPort.TypeBool,
+                            BsPort.Setter("dsm", BsPort.TypeBool,
                                 (_, value) => distanceJoint.maxDistanceOnly = (bool)value)
                         }
                     };
@@ -59,13 +59,13 @@ namespace Data.Object
                     {
                         GetPorts = () => new[]
                         {
-                            new BsPort("frq", BsPort.TypeFloat,
+                            BsPort.Setter("frq", BsPort.TypeFloat,
                                 (_, value) => springJoint.frequency = (float)value),
-                            new BsPort("dmp", BsPort.TypeFloat,
+                            BsPort.Setter("dmp", BsPort.TypeFloat,
                                 (_, value) => springJoint.dampingRatio = (float)value),
-                            new BsPort("dst", BsPort.TypeFloat,
+                            BsPort.Setter("dst", BsPort.TypeFloat,
                                 (_, value) => springJoint.distance = (float)value),
-                            new BsPort("dsa", BsPort.TypeBool,
+                            BsPort.Setter("dsa", BsPort.TypeBool,
                                 (_, value) => springJoint.autoConfigureDistance = (bool)value)
                         }
                     };
@@ -76,30 +76,30 @@ namespace Data.Object
                     {
                         GetPorts = () => new[]
                         {
-                            new BsPort("mot", BsPort.TypeBool, (_, value) => hingeJoint.useMotor = (bool)value),
-                            new BsPort("mts", BsPort.TypeFloat, (_, value) =>
+                            BsPort.Setter("mot", BsPort.TypeBool, (_, value) => hingeJoint.useMotor = (bool)value),
+                            BsPort.Setter("mts", BsPort.TypeFloat, (_, value) =>
                             {
                                 if (!hingeJoint.useMotor) return;
                                 var motor = hingeJoint.motor;
                                 motor.motorSpeed = (float)value;
                                 hingeJoint.motor = motor;
                             }),
-                            new BsPort("mtf", BsPort.TypeFloat, (_, value) =>
+                            BsPort.Setter("mtf", BsPort.TypeFloat, (_, value) =>
                             {
                                 if (!hingeJoint.useMotor) return;
                                 var motor = hingeJoint.motor;
                                 motor.maxMotorTorque = (float)value;
                                 hingeJoint.motor = motor;
                             }),
-                            new BsPort("lim", BsPort.TypeBool, (_, value) => hingeJoint.useLimits = (bool)value),
-                            new BsPort("lmn", BsPort.TypeFloat, (_, value) =>
+                            BsPort.Setter("lim", BsPort.TypeBool, (_, value) => hingeJoint.useLimits = (bool)value),
+                            BsPort.Setter("lmn", BsPort.TypeFloat, (_, value) =>
                             {
                                 if (!hingeJoint.useLimits) return;
                                 var limits = hingeJoint.limits;
                                 limits.min = (float)value;
                                 hingeJoint.limits = limits;
                             }),
-                            new BsPort("lmx", BsPort.TypeFloat, (_, value) =>
+                            BsPort.Setter("lmx", BsPort.TypeFloat, (_, value) =>
                             {
                                 if (!hingeJoint.useLimits) return;
                                 var limits = hingeJoint.limits;
@@ -115,33 +115,33 @@ namespace Data.Object
                     {
                         GetPorts = () => new[]
                         {
-                            new BsPort("ang", BsPort.TypeFloat, (_, value) => sliderJoint.angle = (float)value),
-                            new BsPort("aga", BsPort.TypeBool,
+                            BsPort.Setter("ang", BsPort.TypeFloat, (_, value) => sliderJoint.angle = (float)value),
+                            BsPort.Setter("ana", BsPort.TypeBool,
                                 (_, value) => sliderJoint.autoConfigureAngle = (bool)value),
-                            new BsPort("mot", BsPort.TypeBool, (_, value) => sliderJoint.useMotor = (bool)value),
-                            new BsPort("mts", BsPort.TypeFloat, (_, value) =>
+                            BsPort.Setter("mot", BsPort.TypeBool, (_, value) => sliderJoint.useMotor = (bool)value),
+                            BsPort.Setter("mts", BsPort.TypeFloat, (_, value) =>
                             {
                                 if (!sliderJoint.useMotor) return;
                                 var motor = sliderJoint.motor;
                                 motor.motorSpeed = (float)value;
                                 sliderJoint.motor = motor;
                             }),
-                            new BsPort("mtf", BsPort.TypeFloat, (_, value) =>
+                            BsPort.Setter("mtf", BsPort.TypeFloat, (_, value) =>
                             {
                                 if (!sliderJoint.useMotor) return;
                                 var motor = sliderJoint.motor;
                                 motor.maxMotorTorque = (float)value;
                                 sliderJoint.motor = motor;
                             }),
-                            new BsPort("lim", BsPort.TypeBool, (_, value) => sliderJoint.useLimits = (bool)value),
-                            new BsPort("lmn", BsPort.TypeFloat, (_, value) =>
+                            BsPort.Setter("lim", BsPort.TypeBool, (_, value) => sliderJoint.useLimits = (bool)value),
+                            BsPort.Setter("lmn", BsPort.TypeFloat, (_, value) =>
                             {
                                 if (!sliderJoint.useLimits) return;
                                 var limits = sliderJoint.limits;
                                 limits.min = (float)value;
                                 sliderJoint.limits = limits;
                             }),
-                            new BsPort("lmx", BsPort.TypeFloat, (_, value) =>
+                            BsPort.Setter("lmx", BsPort.TypeFloat, (_, value) =>
                             {
                                 if (!sliderJoint.useLimits) return;
                                 var limits = sliderJoint.limits;
@@ -286,31 +286,31 @@ namespace Data.Object
             set => Props[2] = value.ToLcs();
         }
 
-        public bool OtherCollision // Universal
+        public bool OtherCollision
         {
             get => (bool)Props[3];
             set => Props[3] = value;
         }
 
-        public float BreakForce // Universal
+        public float BreakForce
         {
             get => (float)Props[4];
             set => Props[4] = value;
         }
 
-        public float BreakTorque // Universal
+        public float BreakTorque
         {
             get => (float)Props[5];
             set => Props[5] = value;
         }
 
-        public float Angle // Slider, Wheel
+        public float Angle // Slider
         {
             get => (float)Props[6];
             set => Props[6] = value;
         }
 
-        public bool AngleAuto // Slider, Wheel
+        public bool AngleAuto // Slider
         {
             get => (bool)Props[7];
             set => Props[7] = value;
@@ -334,31 +334,31 @@ namespace Data.Object
             set => Props[10] = value;
         }
 
-        public float Frequency // Fixed, Spring, Wheel
+        public float Frequency // Fixed, Spring
         {
             get => (float)Props[11];
             set => Props[11] = value;
         }
 
-        public float Damping // Fixed, Spring, Wheel
+        public float Damping // Fixed, Spring
         {
             get => (float)Props[12];
             set => Props[12] = value;
         }
 
-        public bool Motor // Hinge, Slider, Wheel
+        public bool Motor // Hinge, Slider
         {
             get => (bool)Props[13];
             set => Props[13] = value;
         }
 
-        public float MotorSpeed // Hinge, Slider, Wheel
+        public float MotorSpeed // Hinge, Slider
         {
             get => (float)Props[14];
             set => Props[14] = value;
         }
 
-        public float MotorForce // Hinge, Slider, Wheel
+        public float MotorForce // Hinge, Slider
         {
             get => (float)Props[15];
             set => Props[15] = value;
