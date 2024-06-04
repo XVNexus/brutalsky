@@ -114,6 +114,39 @@ namespace Maps
                 MotorForce = 10000f
             });
 
+            // Add logic
+            /*  0 */ result.Nodes.Add(BsNode.Timer());
+            /*  1 */ result.Nodes.Add(BsNode.Int(60));
+            /*  2 */ result.Nodes.Add(BsNode.Divide(2));
+            /*  3 */ result.Nodes.Add(BsNode.Float(Mathf.PI));
+            /*  4 */ result.Nodes.Add(BsNode.Multiply(2));
+            /*  5 */ result.Nodes.Add(BsNode.Sin());
+            /*  6 */ result.Nodes.Add(BsNode.Float(1000f));
+            /*  7 */ result.Nodes.Add(BsNode.Multiply(2));
+            /*  8 */ result.Nodes.Add(BsNode.Clock(60));
+            /*  9 */ result.Nodes.Add(BsNode.Monostable());
+            /* 10 */ result.Nodes.Add(BsNode.RandomInt(0, 2));
+            /* 11 */ result.Nodes.Add(BsNode.Delay(30));
+            /* 12 */ result.Nodes.Add(BsNode.Demultiplex(3));
+            // 13 Joint ("spinner-left-motor")
+            // 14 Joint ("spinner-middle-motor")
+            // 15 Joint ("spinner-right-motor")
+            result.Links.Add(new BsLink(0, "out", 2, "i00"));
+            result.Links.Add(new BsLink(1, "val", 2, "i01"));
+            result.Links.Add(new BsLink(2, "out", 4, "i00"));
+            result.Links.Add(new BsLink(3, "val", 4, "i01"));
+            result.Links.Add(new BsLink(4, "out", 5, "inp"));
+            result.Links.Add(new BsLink(5, "out", 7, "i00"));
+            result.Links.Add(new BsLink(6, "val", 7, "i01"));
+            result.Links.Add(new BsLink(8, "out", 9, "inp"));
+            result.Links.Add(new BsLink(9, "out", 10, "gen"));
+            result.Links.Add(new BsLink(10, "out", 11, "inp"));
+            result.Links.Add(new BsLink(11, "out", 12, "sel"));
+            result.Links.Add(new BsLink(7, "out", 12, "inp"));
+            result.Links.Add(new BsLink(12, "o00", 13, "mts"));
+            result.Links.Add(new BsLink(12, "o01", 14, "mts"));
+            result.Links.Add(new BsLink(12, "o02", 15, "mts"));
+
             return result;
         }
     }

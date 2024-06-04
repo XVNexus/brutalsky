@@ -35,6 +35,16 @@ namespace Data
             IsInput = true;
         }
 
+        public static BsPort Input(string id, byte type)
+        {
+            return new BsPort(id, type, (state, value) => state[id] = value);
+        }
+
+        public static BsPort Output(string id, byte type)
+        {
+            return new BsPort(id, type, state => state[id]);
+        }
+
         public static object Convert(object value, byte typeFrom, byte typeTo)
         {
             switch (typeFrom)

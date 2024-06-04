@@ -7,7 +7,7 @@ namespace Utils
     public static class Errors
     {
         public static ArgumentOutOfRangeException InvalidItem(string type, object value)
-            => new("", $"'{value}' is not a valid {type}");
+            => new("", $"'{value ?? "Null"}' is not a valid {type}");
 
         public static ArgumentOutOfRangeException NoItemFound(string type, object id)
             => new("", $"No {type} found with id '{id}'");
