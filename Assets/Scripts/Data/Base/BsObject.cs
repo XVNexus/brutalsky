@@ -97,5 +97,10 @@ namespace Data.Base
             Layer = line.Get<sbyte>(5);
             Props = line.Props[6..];
         }
+
+        public override string ToString()
+        {
+            return $"OBJECT: {Tag}:{Id}";
+        }
     }
 }

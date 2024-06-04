@@ -115,6 +115,7 @@ namespace Data
                 var fromNode = ActiveNodes[link.FromNode];
                 var fromPort = ActivePorts[(link.FromNode, link.FromPort)];
                 var toPort = ActivePorts[(link.ToNode, link.ToPort)];
+                Debug.Log($"{fromNode}\t{link}\t{ActiveNodes[link.ToNode]}");
                 LinkBuffer[(link.ToNode, link.ToPort)] =
                     BsPort.Convert(fromPort.GetValue(fromNode.State), fromPort.Type, toPort.Type);
             }
@@ -180,6 +181,11 @@ namespace Data
                         break;
                 }
             }
+        }
+
+        public override string ToString()
+        {
+            return $"MAP: {Title} by {Author}";
         }
     }
 }

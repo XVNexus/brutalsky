@@ -915,5 +915,10 @@ namespace Data
             Init = result.Init;
             Update = result.Update;
         }
+
+        public override string ToString()
+        {
+            return $"NODE: {Tag}";
+        }
     }
 }

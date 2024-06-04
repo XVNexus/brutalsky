@@ -38,5 +38,10 @@ namespace Data
             Position = new Vector2(line.Get<float>(0, 0), line.Get<float>(0, 1));
             Priority = line.Get<int>(1);
         }
+
+        public override string ToString()
+        {
+            return $"SPAWN: {Position.x} {Position.y} @ {Priority}";
+        }
     }
 }

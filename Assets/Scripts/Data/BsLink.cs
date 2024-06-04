@@ -31,5 +31,10 @@ namespace Data
             ToNode = line.Get<int>(2);
             ToPort = line.Get<string>(3);
         }
+
+        public override string ToString()
+        {
+            return $"LINK: {FromNode:D3}:{FromPort} --> {ToNode:D3}:{ToPort}";
+        }
     }
 }

@@ -106,5 +106,10 @@ namespace Data
                     throw Errors.InvalidItem("logic type", typeFrom);
             }
         }
+
+        public override string ToString()
+        {
+            return $"PORT: {(IsInput ? "inp" : "out")}:{Id} ({Type})";
+        }
     }
 }
