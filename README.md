@@ -1,3 +1,6 @@
+NOTICE: Development is suspended until mid-august due to having a 60 hour work week for the duration of summer break
+
+
 # Brutalsky
 
 A physics-based PVP game featuring balls and fully interactive levels
